@@ -1,3 +1,12 @@
+# Lightweight Two-Stage Game Template
+
+- [x] Establish `junnyboi/proto-td-simple` as the canonical simplification repository and synchronize clean `master`.
+- [x] Audit deterministic gameplay, campaign/UI, media footprint, infrastructure/branches, and the `proto-scroller` leaderboard reference.
+- [x] Publish the dependency-ordered simplification proposal, measured footprint evidence, and implementation acceptance matrix.
+- [ ] Approve the S1/S2, Recruit → Defender/Gunner, and compact-save contract.
+- [ ] Implement phases 0–8: characterize invariants, replace P16 ownership, build the compact loop, convert media, and prune unreachable systems.
+- [ ] Implement the separate local-first leaderboard, select and deploy a hosted backend, then add CI and enable GitHub template mode.
+
 # Unified 21+ Anime-Gacha UI Revamp
 
 - [x] Synchronize clean `master` with `origin/master` and verify Godot 4.7.2 compatibility.

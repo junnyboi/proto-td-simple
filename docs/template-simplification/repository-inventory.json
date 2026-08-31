@@ -1,0 +1,3819 @@
+{
+  "repository": "/home/ubuntu/workspace/proto-td-simple",
+  "file_count": 2909,
+  "total_bytes": 1427100083,
+  "total_human": "1.33 GiB",
+  "categories": {
+    "image": {
+      "count": 948,
+      "bytes": 966579137,
+      "human": "921.80 MiB"
+    },
+    "video": {
+      "count": 42,
+      "bytes": 370171165,
+      "human": "353.02 MiB"
+    },
+    "audio": {
+      "count": 71,
+      "bytes": 50426350,
+      "human": "48.09 MiB"
+    },
+    "other": {
+      "count": 1091,
+      "bytes": 34073425,
+      "human": "32.49 MiB"
+    },
+    "script": {
+      "count": 357,
+      "bytes": 3456034,
+      "human": "3.30 MiB"
+    },
+    "document": {
+      "count": 198,
+      "bytes": 2005881,
+      "human": "1.91 MiB"
+    },
+    "godot_resource": {
+      "count": 166,
+      "bytes": 359680,
+      "human": "351.25 KiB"
+    },
+    "godot_scene": {
+      "count": 36,
+      "bytes": 28411,
+      "human": "27.75 KiB"
+    }
+  },
+  "extensions": {
+    ".png": {
+      "count": 461,
+      "bytes": 545091441,
+      "human": "519.84 MiB"
+    },
+    ".webp": {
+      "count": 478,
+      "bytes": 388312614,
+      "human": "370.32 MiB"
+    },
+    ".ogv": {
+      "count": 23,
+      "bytes": 270243916,
+      "human": "257.72 MiB"
+    },
+    ".mp4": {
+      "count": 19,
+      "bytes": 99927249,
+      "human": "95.30 MiB"
+    },
+    ".ogg": {
+      "count": 49,
+      "bytes": 33607486,
+      "human": "32.05 MiB"
+    },
+    ".jpg": {
+      "count": 8,
+      "bytes": 33174786,
+      "human": "31.64 MiB"
+    },
+    ".gif": {
+      "count": 1,
+      "bytes": 16800767,
+      "human": "16.02 MiB"
+    },
+    ".otf": {
+      "count": 1,
+      "bytes": 16437364,
+      "human": "15.68 MiB"
+    },
+    ".flac": {
+      "count": 1,
+      "bytes": 9219770,
+      "human": "8.79 MiB"
+    },
+    ".wav": {
+      "count": 20,
+      "bytes": 6204784,
+      "human": "5.92 MiB"
+    },
+    ".gd": {
+      "count": 321,
+      "bytes": 3257986,
+      "human": "3.11 MiB"
+    },
+    ".md": {
+      "count": 126,
+      "bytes": 1443376,
+      "human": "1.38 MiB"
+    },
+    ".mp3": {
+      "count": 1,
+      "bytes": 1394310,
+      "human": "1.33 MiB"
+    },
+    ".import": {
+      "count": 704,
+      "bytes": 650425,
+      "human": "635.18 KiB"
+    },
+    ".json": {
+      "count": 66,
+      "bytes": 525806,
+      "human": "513.48 KiB"
+    },
+    ".tres": {
+      "count": 166,
+      "bytes": 359680,
+      "human": "351.25 KiB"
+    },
+    ".py": {
+      "count": 17,
+      "bytes": 157839,
+      "human": "154.14 KiB"
+    },
+    ".ttf": {
+      "count": 1,
+      "bytes": 125468,
+      "human": "122.53 KiB"
+    },
+    ".sh": {
+      "count": 19,
+      "bytes": 40209,
+      "human": "39.27 KiB"
+    },
+    "<none>": {
+      "count": 34,
+      "bytes": 38886,
+      "human": "37.97 KiB"
+    },
+    ".txt": {
+      "count": 5,
+      "bytes": 36009,
+      "human": "35.17 KiB"
+    },
+    ".tscn": {
+      "count": 36,
+      "bytes": 28411,
+      "human": "27.75 KiB"
+    },
+    ".uid": {
+      "count": 344,
+      "bytes": 6796,
+      "human": "6.64 KiB"
+    },
+    ".sha256": {
+      "count": 3,
+      "bytes": 6691,
+      "human": "6.53 KiB"
+    },
+    ".godot": {
+      "count": 1,
+      "bytes": 3999,
+      "human": "3.91 KiB"
+    },
+    ".cfg": {
+      "count": 1,
+      "bytes": 2441,
+      "human": "2.38 KiB"
+    },
+    ".csv": {
+      "count": 1,
+      "bytes": 690,
+      "human": "690.00 B"
+    },
+    ".tsv": {
+      "count": 1,
+      "bytes": 588,
+      "human": "588.00 B"
+    },
+    ".svg": {
+      "count": 1,
+      "bytes": 296,
+      "human": "296.00 B"
+    }
+  },
+  "directories": {
+    "assets": {
+      "count": 1498,
+      "bytes": 721800072,
+      "human": "688.36 MiB"
+    },
+    "docs": {
+      "count": 530,
+      "bytes": 701446209,
+      "human": "668.95 MiB"
+    },
+    "assets/sprites": {
+      "count": 802,
+      "bytes": 279218714,
+      "human": "266.28 MiB"
+    },
+    "assets/cinematics": {
+      "count": 130,
+      "bytes": 245565366,
+      "human": "234.19 MiB"
+    },
+    "docs/portraits": {
+      "count": 42,
+      "bytes": 161337436,
+      "human": "153.86 MiB"
+    },
+    "docs/enemy-variants": {
+      "count": 75,
+      "bytes": 105701101,
+      "human": "100.80 MiB"
+    },
+    "docs/animations": {
+      "count": 10,
+      "bytes": 94460865,
+      "human": "90.08 MiB"
+    },
+    "docs/mission-cinematics": {
+      "count": 23,
+      "bytes": 93374427,
+      "human": "89.05 MiB"
+    },
+    "docs/enemy-redesign": {
+      "count": 18,
+      "bytes": 77293252,
+      "human": "73.71 MiB"
+    },
+    "docs/narrative": {
+      "count": 13,
+      "bytes": 60713964,
+      "human": "57.90 MiB"
+    },
+    "assets/enemy-variants": {
+      "count": 72,
+      "bytes": 40402630,
+      "human": "38.53 MiB"
+    },
+    "docs/factions": {
+      "count": 11,
+      "bytes": 38345203,
+      "human": "36.57 MiB"
+    },
+    "assets/title": {
+      "count": 2,
+      "bytes": 36091059,
+      "human": "34.42 MiB"
+    },
+    "assets/music": {
+      "count": 47,
+      "bytes": 27124672,
+      "human": "25.87 MiB"
+    },
+    "docs/lunaris-reliquary": {
+      "count": 13,
+      "bytes": 26776394,
+      "human": "25.54 MiB"
+    },
+    "docs/ui-concepts": {
+      "count": 224,
+      "bytes": 17725002,
+      "human": "16.90 MiB"
+    },
+    "assets/experimental_salvage": {
+      "count": 88,
+      "bytes": 17361767,
+      "human": "16.56 MiB"
+    },
+    "assets/portraits": {
+      "count": 94,
+      "bytes": 16828401,
+      "human": "16.05 MiB"
+    },
+    "assets/fonts": {
+      "count": 6,
+      "bytes": 16583482,
+      "human": "15.82 MiB"
+    },
+    "docs/audio": {
+      "count": 12,
+      "bytes": 10666010,
+      "human": "10.17 MiB"
+    },
+    "assets/ui": {
+      "count": 93,
+      "bytes": 8626750,
+      "human": "8.23 MiB"
+    },
+    "assets/world": {
+      "count": 18,
+      "bytes": 8442991,
+      "human": "8.05 MiB"
+    },
+    "assets/sfx": {
+      "count": 43,
+      "bytes": 6217506,
+      "human": "5.93 MiB"
+    },
+    "assets/loading": {
+      "count": 2,
+      "bytes": 5934103,
+      "human": "5.66 MiB"
+    },
+    "assets/terrain": {
+      "count": 35,
+      "bytes": 5708908,
+      "human": "5.44 MiB"
+    },
+    "docs/Faction - Crimson Aegis.webp": {
+      "count": 1,
+      "bytes": 4370956,
+      "human": "4.17 MiB"
+    },
+    "docs/Faction - Solcrest Accord.webp": {
+      "count": 1,
+      "bytes": 4285648,
+      "human": "4.09 MiB"
+    },
+    "assets/audio": {
+      "count": 16,
+      "bytes": 4194361,
+      "human": "4.00 MiB"
+    },
+    "docs/Faction - Vesper Circuit.webp": {
+      "count": 1,
+      "bytes": 3743522,
+      "human": "3.57 MiB"
+    },
+    "docs/operator-specializations": {
+      "count": 22,
+      "bytes": 1416370,
+      "human": "1.35 MiB"
+    },
+    "scripts": {
+      "count": 165,
+      "bytes": 1293474,
+      "human": "1.23 MiB"
+    },
+    "assets/vfx": {
+      "count": 26,
+      "bytes": 1274093,
+      "human": "1.22 MiB"
+    },
+    "assets/narrative": {
+      "count": 9,
+      "bytes": 1084374,
+      "human": "1.03 MiB"
+    },
+    "scripts/ui": {
+      "count": 120,
+      "bytes": 1076521,
+      "human": "1.03 MiB"
+    },
+    "tests": {
+      "count": 183,
+      "bytes": 966115,
+      "human": "943.47 KiB"
+    },
+    "assets/tutorial": {
+      "count": 8,
+      "bytes": 928943,
+      "human": "907.17 KiB"
+    },
+    "sim": {
+      "count": 146,
+      "bytes": 648143,
+      "human": "632.95 KiB"
+    },
+    "docs/Faction - Lunaris Reliquary.webp": {
+      "count": 1,
+      "bytes": 429514,
+      "human": "419.45 KiB"
+    },
+    "data": {
+      "count": 219,
+      "bytes": 240461,
+      "human": "234.83 KiB"
+    },
+    "scripts/view": {
+      "count": 42,
+      "bytes": 205144,
+      "human": "200.34 KiB"
+    },
+    "docs/balance": {
+      "count": 6,
+      "bytes": 177631,
+      "human": "173.47 KiB"
+    },
+    "assets/manifest.tres": {
+      "count": 1,
+      "bytes": 176444,
+      "human": "172.31 KiB"
+    },
+    "localization": {
+      "count": 2,
+      "bytes": 169443,
+      "human": "165.47 KiB"
+    },
+    "tools": {
+      "count": 35,
+      "bytes": 164970,
+      "human": "161.10 KiB"
+    },
+    "test": {
+      "count": 85,
+      "bytes": 162738,
+      "human": "158.92 KiB"
+    },
+    "autoloads": {
+      "count": 20,
+      "bytes": 136728,
+      "human": "133.52 KiB"
+    },
+    "data/presentation": {
+      "count": 116,
+      "bytes": 136304,
+      "human": "133.11 KiB"
+    },
+    "localization/en-US.json": {
+      "count": 1,
+      "bytes": 85838,
+      "human": "83.83 KiB"
+    },
+    "localization/zh-CN.json": {
+      "count": 1,
+      "bytes": 83605,
+      "human": "81.65 KiB"
+    },
+    "tools/operator_sprites": {
+      "count": 9,
+      "bytes": 80137,
+      "human": "78.26 KiB"
+    },
+    "sim/campaign_v3_codec.gd": {
+      "count": 1,
+      "bytes": 55872,
+      "human": "54.56 KiB"
+    },
+    "docs/ANIMA_WAR_IMPLEMENTATION_PLAN.md": {
+      "count": 1,
+      "bytes": 51159,
+      "human": "49.96 KiB"
+    },
+    "tests/battle_ui_layout_test.gd": {
+      "count": 1,
+      "bytes": 50667,
+      "human": "49.48 KiB"
+    },
+    "tests/mission_ui_layout_test.gd": {
+      "count": 1,
+      "bytes": 45566,
+      "human": "44.50 KiB"
+    },
+    "sim/campaign_codec.gd": {
+      "count": 1,
+      "bytes": 43248,
+      "human": "42.23 KiB"
+    },
+    "docs/ADVANCED_OPERATOR_SPRITE_IMPLEMENTATION_PLAN.md": {
+      "count": 1,
+      "bytes": 42440,
+      "human": "41.45 KiB"
+    },
+    "tests/premium_gacha_ui_test.gd": {
+      "count": 1,
+      "bytes": 40495,
+      "human": "39.55 KiB"
+    },
+    "docs/NARRATIVE_CANON.md": {
+      "count": 1,
+      "bytes": 39785,
+      "human": "38.85 KiB"
+    },
+    "data/stages": {
+      "count": 16,
+      "bytes": 38804,
+      "human": "37.89 KiB"
+    },
+    "tests/training_readability_layout_test.gd": {
+      "count": 1,
+      "bytes": 38651,
+      "human": "37.75 KiB"
+    },
+    "tests/results_ui_test.gd": {
+      "count": 1,
+      "bytes": 37875,
+      "human": "36.99 KiB"
+    },
+    "tests/campaign_ui_layout_test.gd": {
+      "count": 1,
+      "bytes": 37156,
+      "human": "36.29 KiB"
+    },
+    "docs/GACHA_CINEMATIC_PRODUCTION_PLAN.md": {
+      "count": 1,
+      "bytes": 35701,
+      "human": "34.86 KiB"
+    },
+    "autoloads/game.gd": {
+      "count": 1,
+      "bytes": 33469,
+      "human": "32.68 KiB"
+    },
+    "sim/battle_model.gd": {
+      "count": 1,
+      "bytes": 32998,
+      "human": "32.22 KiB"
+    },
+    "sim/campaign_hash.gd": {
+      "count": 1,
+      "bytes": 30963,
+      "human": "30.24 KiB"
+    },
+    "tests/staging_command_layout_test.gd": {
+      "count": 1,
+      "bytes": 30910,
+      "human": "30.19 KiB"
+    },
+    "sim/campaign_v3_history.gd": {
+      "count": 1,
+      "bytes": 30242,
+      "human": "29.53 KiB"
+    },
+    "docs/localization": {
+      "count": 2,
+      "bytes": 30069,
+      "human": "29.36 KiB"
+    },
+    "docs/UI_IMPLEMENTATION_GAP_AUDIT.md": {
+      "count": 1,
+      "bytes": 28644,
+      "human": "27.97 KiB"
+    },
+    "sim/campaign_strategic_commands.gd": {
+      "count": 1,
+      "bytes": 27354,
+      "human": "26.71 KiB"
+    },
+    "tests/title_ui_scale_test.gd": {
+      "count": 1,
+      "bytes": 27296,
+      "human": "26.66 KiB"
+    },
+    "sim/campaign_v3_state_codec.gd": {
+      "count": 1,
+      "bytes": 26261,
+      "human": "25.65 KiB"
+    },
+    "sim/campaign_state.gd": {
+      "count": 1,
+      "bytes": 26221,
+      "human": "25.61 KiB"
+    },
+    "docs/operator-proportions": {
+      "count": 3,
+      "bytes": 25746,
+      "human": "25.14 KiB"
+    },
+    "docs/FACTION_MUSIC_REDESIGN_PROPOSAL.md": {
+      "count": 1,
+      "bytes": 24809,
+      "human": "24.23 KiB"
+    },
+    "scenes": {
+      "count": 17,
+      "bytes": 24373,
+      "human": "23.80 KiB"
+    },
+    "sim/campaign_invariants.gd": {
+      "count": 1,
+      "bytes": 23831,
+      "human": "23.27 KiB"
+    },
+    "tests/operator_rename_confirmation_ui_test.gd": {
+      "count": 1,
+      "bytes": 23160,
+      "human": "22.62 KiB"
+    },
+    "todo.md": {
+      "count": 1,
+      "bytes": 22185,
+      "human": "21.67 KiB"
+    },
+    "sim/campaign_v3_command_codec.gd": {
+      "count": 1,
+      "bytes": 22056,
+      "human": "21.54 KiB"
+    },
+    "sim/campaign_save_store.gd": {
+      "count": 1,
+      "bytes": 21779,
+      "human": "21.27 KiB"
+    },
+    "tests/advanced_operator_processor_test.py": {
+      "count": 1,
+      "bytes": 20922,
+      "human": "20.43 KiB"
+    },
+    "scenes/ui": {
+      "count": 6,
+      "bytes": 20766,
+      "human": "20.28 KiB"
+    },
+    "docs/LEVEL_DESIGNS.md": {
+      "count": 1,
+      "bytes": 20565,
+      "human": "20.08 KiB"
+    },
+    "tests/vahalla_ui_test.gd": {
+      "count": 1,
+      "bytes": 20534,
+      "human": "20.05 KiB"
+    },
+    "tests/squad_operator_interaction_test.gd": {
+      "count": 1,
+      "bytes": 20029,
+      "human": "19.56 KiB"
+    },
+    "autoloads/content_pack_loader.gd": {
+      "count": 1,
+      "bytes": 18621,
+      "human": "18.18 KiB"
+    },
+    "sim/campaign_v3_attempts.gd": {
+      "count": 1,
+      "bytes": 18530,
+      "human": "18.10 KiB"
+    },
+    "tests/title_settings_test.gd": {
+      "count": 1,
+      "bytes": 18260,
+      "human": "17.83 KiB"
+    },
+    "sim/replay_codec.gd": {
+      "count": 1,
+      "bytes": 17837,
+      "human": "17.42 KiB"
+    },
+    "autoloads/cinematic_prefetch.gd": {
+      "count": 1,
+      "bytes": 17425,
+      "human": "17.02 KiB"
+    },
+    "tests/premium_gacha_pity_economy_test.gd": {
+      "count": 1,
+      "bytes": 17051,
+      "human": "16.65 KiB"
+    },
+    "tools/audit_localization.py": {
+      "count": 1,
+      "bytes": 16782,
+      "human": "16.39 KiB"
+    },
+    "docs/ADVANCED_OPERATOR_SPRITE_REGENERATION_V2_PLAN.md": {
+      "count": 1,
+      "bytes": 16642,
+      "human": "16.25 KiB"
+    },
+    "sim/campaign_v3_command_history.gd": {
+      "count": 1,
+      "bytes": 16024,
+      "human": "15.65 KiB"
+    },
+    "tests/lunaris_ui_foundation_test.gd": {
+      "count": 1,
+      "bytes": 15921,
+      "human": "15.55 KiB"
+    },
+    "docs/LUNARIS_CHARACTER_DESIGNS.md": {
+      "count": 1,
+      "bytes": 15917,
+      "human": "15.54 KiB"
+    },
+    "docs/ProtosUnifiedInterfaceConcept.md": {
+      "count": 1,
+      "bytes": 15515,
+      "human": "15.15 KiB"
+    },
+    "autoloads/mission_cinematic_prefetch.gd": {
+      "count": 1,
+      "bytes": 15415,
+      "human": "15.05 KiB"
+    },
+    "tests/narrative_canon_test.gd": {
+      "count": 1,
+      "bytes": 15275,
+      "human": "14.92 KiB"
+    },
+    "docs/NONPREMIUM_PORTRAIT_IMPLEMENTATION_PLAN.md": {
+      "count": 1,
+      "bytes": 15224,
+      "human": "14.87 KiB"
+    },
+    "tests/act2_balance_playtest_test.gd": {
+      "count": 1,
+      "bytes": 15162,
+      "human": "14.81 KiB"
+    },
+    "tests/staging_settings_test.gd": {
+      "count": 1,
+      "bytes": 14724,
+      "human": "14.38 KiB"
+    },
+    "docs/ProtosUnifiedUIRevamp\u2014ImplementationPlan.md": {
+      "count": 1,
+      "bytes": 14511,
+      "human": "14.17 KiB"
+    },
+    "sim/campaign_state_v3.gd": {
+      "count": 1,
+      "bytes": 13901,
+      "human": "13.58 KiB"
+    },
+    "autoloads/music.gd": {
+      "count": 1,
+      "bytes": 13666,
+      "human": "13.35 KiB"
+    },
+    "assets/experimental_salvage_manifest.tres": {
+      "count": 1,
+      "bytes": 13463,
+      "human": "13.15 KiB"
+    },
+    "tests/slow_field_balance_telemetry_test.gd": {
+      "count": 1,
+      "bytes": 13228,
+      "human": "12.92 KiB"
+    },
+    "docs/TITLE_ANIMATION.md": {
+      "count": 1,
+      "bytes": 13187,
+      "human": "12.88 KiB"
+    },
+    "docs/OPERATOR_PROPORTION_NORMALIZATION_PLAN.md": {
+      "count": 1,
+      "bytes": 13149,
+      "human": "12.84 KiB"
+    },
+    "README.md": {
+      "count": 1,
+      "bytes": 13129,
+      "human": "12.82 KiB"
+    },
+    "sim/battle_observation.gd": {
+      "count": 1,
+      "bytes": 13090,
+      "human": "12.78 KiB"
+    },
+    "sim/targeting.gd": {
+      "count": 1,
+      "bytes": 13069,
+      "human": "12.76 KiB"
+    },
+    "tests/localization_ui_parity_test.gd": {
+      "count": 1,
+      "bytes": 12995,
+      "human": "12.69 KiB"
+    },
+    "tests/title_onboarding_navigation_test.gd": {
+      "count": 1,
+      "bytes": 12993,
+      "human": "12.69 KiB"
+    },
+    "test/stage_redesign_smoke.gd": {
+      "count": 1,
+      "bytes": 12392,
+      "human": "12.10 KiB"
+    },
+    "autoloads/sfx.gd": {
+      "count": 1,
+      "bytes": 11867,
+      "human": "11.59 KiB"
+    },
+    "tests/cinematic_streaming_test.gd": {
+      "count": 1,
+      "bytes": 11867,
+      "human": "11.59 KiB"
+    },
+    "docs/gacha-cinematics": {
+      "count": 4,
+      "bytes": 11841,
+      "human": "11.56 KiB"
+    },
+    "docs/MISSION_CINEMATIC_PROPOSAL.md": {
+      "count": 1,
+      "bytes": 11660,
+      "human": "11.39 KiB"
+    },
+    "docs/ART_DIRECTION.md": {
+      "count": 1,
+      "bytes": 11623,
+      "human": "11.35 KiB"
+    },
+    "tests/act1_s2_s4_balance_playtest_test.gd": {
+      "count": 1,
+      "bytes": 11336,
+      "human": "11.07 KiB"
+    },
+    "docs/PREMIUM_HERO_SYSTEM.md": {
+      "count": 1,
+      "bytes": 11304,
+      "human": "11.04 KiB"
+    },
+    "docs/CHINESE_LOCALIZATION_AUDIT.md": {
+      "count": 1,
+      "bytes": 11285,
+      "human": "11.02 KiB"
+    },
+    "tests/strategic_onboarding_test.gd": {
+      "count": 1,
+      "bytes": 11181,
+      "human": "10.92 KiB"
+    },
+    "docs/RESONANCE_UI_REDESIGN_PROPOSAL.md": {
+      "count": 1,
+      "bytes": 11141,
+      "human": "10.88 KiB"
+    },
+    "tests/hire_recruit_interaction_test.gd": {
+      "count": 1,
+      "bytes": 11081,
+      "human": "10.82 KiB"
+    },
+    "tests/enemy_static_sprite_test.gd": {
+      "count": 1,
+      "bytes": 10932,
+      "human": "10.68 KiB"
+    },
+    "test/premium_portrait_visual_harness.gd": {
+      "count": 1,
+      "bytes": 10915,
+      "human": "10.66 KiB"
+    },
+    "docs/FACTION_REDESIGN_PROPOSAL.md": {
+      "count": 1,
+      "bytes": 10885,
+      "human": "10.63 KiB"
+    },
+    "tests/basic_recruit_hiring_test.gd": {
+      "count": 1,
+      "bytes": 10827,
+      "human": "10.57 KiB"
+    },
+    "sim/campaign_progression.gd": {
+      "count": 1,
+      "bytes": 10663,
+      "human": "10.41 KiB"
+    },
+    "sim/battle_ticket.gd": {
+      "count": 1,
+      "bytes": 10516,
+      "human": "10.27 KiB"
+    },
+    "sim/battle_ticket_runtime.gd": {
+      "count": 1,
+      "bytes": 10465,
+      "human": "10.22 KiB"
+    },
+    "tests/advanced_operator_animation_test.gd": {
+      "count": 1,
+      "bytes": 10424,
+      "human": "10.18 KiB"
+    },
+    "tests/premium_hero_system_test.gd": {
+      "count": 1,
+      "bytes": 10371,
+      "human": "10.13 KiB"
+    },
+    "assets/asset_manifest.gd": {
+      "count": 1,
+      "bytes": 10341,
+      "human": "10.10 KiB"
+    },
+    "tools/build_nonpremium_portraits.py": {
+      "count": 1,
+      "bytes": 10241,
+      "human": "10.00 KiB"
+    },
+    "sim/campaign_promotion.gd": {
+      "count": 1,
+      "bytes": 10170,
+      "human": "9.93 KiB"
+    },
+    "tests/early_enemy_variety_test.gd": {
+      "count": 1,
+      "bytes": 10060,
+      "human": "9.82 KiB"
+    },
+    "tests/nonpremium_portrait_catalog_test.gd": {
+      "count": 1,
+      "bytes": 10047,
+      "human": "9.81 KiB"
+    },
+    "tests/ui_audio_direction_test.gd": {
+      "count": 1,
+      "bytes": 9825,
+      "human": "9.59 KiB"
+    },
+    "data/operators": {
+      "count": 12,
+      "bytes": 9718,
+      "human": "9.49 KiB"
+    },
+    "test/advanced_operator_live_quality_harness.gd": {
+      "count": 1,
+      "bytes": 9543,
+      "human": "9.32 KiB"
+    },
+    "docs/MISSION_CINEMATIC_IMPLEMENTATION_PLAN.md": {
+      "count": 1,
+      "bytes": 9310,
+      "human": "9.09 KiB"
+    },
+    "scripts/tools": {
+      "count": 1,
+      "bytes": 9281,
+      "human": "9.06 KiB"
+    },
+    "tests/music_redesign_test.gd": {
+      "count": 1,
+      "bytes": 9262,
+      "human": "9.04 KiB"
+    },
+    "data/class_def.gd": {
+      "count": 1,
+      "bytes": 9224,
+      "human": "9.01 KiB"
+    },
+    "sim/campaign_v3_gacha.gd": {
+      "count": 1,
+      "bytes": 8993,
+      "human": "8.78 KiB"
+    },
+    "tests/web_content_pack_test.gd": {
+      "count": 1,
+      "bytes": 8954,
+      "human": "8.74 KiB"
+    },
+    "docs/ENEMY_STATIC_SPRITE_IMPLEMENTATION_PLAN.md": {
+      "count": 1,
+      "bytes": 8901,
+      "human": "8.69 KiB"
+    },
+    "tools/audio": {
+      "count": 4,
+      "bytes": 8826,
+      "human": "8.62 KiB"
+    },
+    "tools/enemy_sprites": {
+      "count": 1,
+      "bytes": 8735,
+      "human": "8.53 KiB"
+    },
+    "tests/act2_campaign_test.gd": {
+      "count": 1,
+      "bytes": 8604,
+      "human": "8.40 KiB"
+    },
+    "test/map_navigator_orientation_smoke.gd": {
+      "count": 1,
+      "bytes": 8482,
+      "human": "8.28 KiB"
+    },
+    "assets/enemy_variant_manifest.tres": {
+      "count": 1,
+      "bytes": 8472,
+      "human": "8.27 KiB"
+    },
+    "docs/ANIMA_WAR_VISUAL_REVIEW.md": {
+      "count": 1,
+      "bytes": 8464,
+      "human": "8.27 KiB"
+    },
+    "docs/PREMIUM_GACHA_PITY_AND_PACING.md": {
+      "count": 1,
+      "bytes": 8351,
+      "human": "8.16 KiB"
+    },
+    "sim/battle_hash.gd": {
+      "count": 1,
+      "bytes": 8282,
+      "human": "8.09 KiB"
+    },
+    "tests/battle_dialogue_test.gd": {
+      "count": 1,
+      "bytes": 8220,
+      "human": "8.03 KiB"
+    },
+    "autoloads/i18n.gd": {
+      "count": 1,
+      "bytes": 8165,
+      "human": "7.97 KiB"
+    },
+    "tests/advanced_operator_compression_quality_test.gd": {
+      "count": 1,
+      "bytes": 7928,
+      "human": "7.74 KiB"
+    },
+    "tests/terminal_persistence_performance_test.gd": {
+      "count": 1,
+      "bytes": 7901,
+      "human": "7.72 KiB"
+    },
+    "tests/title_interaction_feedback_test.gd": {
+      "count": 1,
+      "bytes": 7826,
+      "human": "7.64 KiB"
+    },
+    "test/mission_cinematic_visual_harness.gd": {
+      "count": 1,
+      "bytes": 7817,
+      "human": "7.63 KiB"
+    },
+    "data/stage_def.gd": {
+      "count": 1,
+      "bytes": 7742,
+      "human": "7.56 KiB"
+    },
+    "test/roster_density_visual_harness.gd": {
+      "count": 1,
+      "bytes": 7718,
+      "human": "7.54 KiB"
+    },
+    "docs/FACTIONS.md": {
+      "count": 1,
+      "bytes": 7700,
+      "human": "7.52 KiB"
+    },
+    "tests/mission_launch_retry_test.gd": {
+      "count": 1,
+      "bytes": 7698,
+      "human": "7.52 KiB"
+    },
+    "sim/campaign_v3_recruitment.gd": {
+      "count": 1,
+      "bytes": 7623,
+      "human": "7.44 KiB"
+    },
+    "docs/PREMIUM_GACHA_HISTORY_CONVERSION_DESIGN.md": {
+      "count": 1,
+      "bytes": 7599,
+      "human": "7.42 KiB"
+    },
+    "tests/restoration_lattice_test.gd": {
+      "count": 1,
+      "bytes": 7595,
+      "human": "7.42 KiB"
+    },
+    "data/classes": {
+      "count": 12,
+      "bytes": 7462,
+      "human": "7.29 KiB"
+    },
+    "tests/mission_cinematic_runtime_test.gd": {
+      "count": 1,
+      "bytes": 7451,
+      "human": "7.28 KiB"
+    },
+    "tests/chinese_training_ui_test.gd": {
+      "count": 1,
+      "bytes": 7422,
+      "human": "7.25 KiB"
+    },
+    "autoloads/ui_feedback.gd": {
+      "count": 1,
+      "bytes": 7298,
+      "human": "7.13 KiB"
+    },
+    "tests/early_enemy_variety_balance_telemetry_test.gd": {
+      "count": 1,
+      "bytes": 7207,
+      "human": "7.04 KiB"
+    },
+    "docs/TITLE_ONBOARDING_IMPLEMENTATION_PLAN.md": {
+      "count": 1,
+      "bytes": 7078,
+      "human": "6.91 KiB"
+    },
+    "sim/campaign_hero_codec.gd": {
+      "count": 1,
+      "bytes": 7062,
+      "human": "6.90 KiB"
+    },
+    "test/basic_hire_visual_harness.gd": {
+      "count": 1,
+      "bytes": 6953,
+      "human": "6.79 KiB"
+    },
+    "docs/PREMIUM_PORTRAIT_IMPLEMENTATION_PLAN.md": {
+      "count": 1,
+      "bytes": 6952,
+      "human": "6.79 KiB"
+    },
+    "docs/ENEMY_VISUAL_REDESIGN_PROPOSAL.md": {
+      "count": 1,
+      "bytes": 6895,
+      "human": "6.73 KiB"
+    },
+    "sim/campaign_mutation.gd": {
+      "count": 1,
+      "bytes": 6891,
+      "human": "6.73 KiB"
+    },
+    "tests/training_immediate_promotion_test.gd": {
+      "count": 1,
+      "bytes": 6869,
+      "human": "6.71 KiB"
+    },
+    "sim/campaign_legacy_hash.gd": {
+      "count": 1,
+      "bytes": 6775,
+      "human": "6.62 KiB"
+    },
+    "sim/battle_outcome_v3.gd": {
+      "count": 1,
+      "bytes": 6766,
+      "human": "6.61 KiB"
+    },
+    "autoloads/text_scale.gd": {
+      "count": 1,
+      "bytes": 6710,
+      "human": "6.55 KiB"
+    },
+    "tests/mission_cinematic_stage_select_test.gd": {
+      "count": 1,
+      "bytes": 6693,
+      "human": "6.54 KiB"
+    },
+    "sim/campaign_save_upgrade.gd": {
+      "count": 1,
+      "bytes": 6677,
+      "human": "6.52 KiB"
+    },
+    "tests/lunaris_vessel_animation_test.gd": {
+      "count": 1,
+      "bytes": 6608,
+      "human": "6.45 KiB"
+    },
+    "sim/campaign_migration.gd": {
+      "count": 1,
+      "bytes": 6550,
+      "human": "6.40 KiB"
+    },
+    "sim/campaign_runtime_authority.gd": {
+      "count": 1,
+      "bytes": 6472,
+      "human": "6.32 KiB"
+    },
+    "tests/advanced_operator_schema_test.gd": {
+      "count": 1,
+      "bytes": 6462,
+      "human": "6.31 KiB"
+    },
+    "test/narrative_canon_visual_harness.gd": {
+      "count": 1,
+      "bytes": 6453,
+      "human": "6.30 KiB"
+    },
+    "tests/archive_audio_log_test.gd": {
+      "count": 1,
+      "bytes": 6378,
+      "human": "6.23 KiB"
+    },
+    "tests/archive_caster_animation_test.gd": {
+      "count": 1,
+      "bytes": 6281,
+      "human": "6.13 KiB"
+    },
+    "tests/reliquary_duelist_animation_test.gd": {
+      "count": 1,
+      "bytes": 6278,
+      "human": "6.13 KiB"
+    },
+    "tests/campaign_save_fast_path_test.gd": {
+      "count": 1,
+      "bytes": 6257,
+      "human": "6.11 KiB"
+    },
+    "tests/slow_field_tutorial_ui_test.gd": {
+      "count": 1,
+      "bytes": 6232,
+      "human": "6.09 KiB"
+    },
+    "tests/high_threat_wave_warning_test.gd": {
+      "count": 1,
+      "bytes": 6225,
+      "human": "6.08 KiB"
+    },
+    "tests/premium_portrait_entrance_test.gd": {
+      "count": 1,
+      "bytes": 6214,
+      "human": "6.07 KiB"
+    },
+    "test/act1_s2_s4_playtest_visual_harness.gd": {
+      "count": 1,
+      "bytes": 6192,
+      "human": "6.05 KiB"
+    },
+    "tests/slow_field_spell_test.gd": {
+      "count": 1,
+      "bytes": 6002,
+      "human": "5.86 KiB"
+    },
+    "tests/player_data_clear_test.gd": {
+      "count": 1,
+      "bytes": 5972,
+      "human": "5.83 KiB"
+    },
+    "sim/campaign_v3_promotion.gd": {
+      "count": 1,
+      "bytes": 5906,
+      "human": "5.77 KiB"
+    },
+    "tests/global_button_press_feedback_test.gd": {
+      "count": 1,
+      "bytes": 5882,
+      "human": "5.74 KiB"
+    },
+    "tests/resign_xp_policy_test.gd": {
+      "count": 1,
+      "bytes": 5839,
+      "human": "5.70 KiB"
+    },
+    "docs/ACT_II_BALANCE_PLAYTEST.md": {
+      "count": 1,
+      "bytes": 5791,
+      "human": "5.66 KiB"
+    },
+    "test/stage_orientation_smoke.gd": {
+      "count": 1,
+      "bytes": 5772,
+      "human": "5.64 KiB"
+    },
+    "docs/FACTION_ROSTER_AND_VAHALLA.md": {
+      "count": 1,
+      "bytes": 5692,
+      "human": "5.56 KiB"
+    },
+    "tests/audio_master_volume_test.gd": {
+      "count": 1,
+      "bytes": 5467,
+      "human": "5.34 KiB"
+    },
+    "docs/act2-stage-balance.json": {
+      "count": 1,
+      "bytes": 5430,
+      "human": "5.30 KiB"
+    },
+    "docs/ISOMETRIC_MAP_RENDERER.md": {
+      "count": 1,
+      "bytes": 5408,
+      "human": "5.28 KiB"
+    },
+    "docs/gacha-history": {
+      "count": 2,
+      "bytes": 5379,
+      "human": "5.25 KiB"
+    },
+    "docs/ADVANCED_OPERATOR_FACING_AUDIT.md": {
+      "count": 1,
+      "bytes": 5328,
+      "human": "5.20 KiB"
+    },
+    "tools/build_premium_portraits.py": {
+      "count": 1,
+      "bytes": 5284,
+      "human": "5.16 KiB"
+    },
+    "tests/act2_music_transition_test.gd": {
+      "count": 1,
+      "bytes": 5277,
+      "human": "5.15 KiB"
+    },
+    "tests/chinese_confirmation_layout_test.gd": {
+      "count": 1,
+      "bytes": 5222,
+      "human": "5.10 KiB"
+    },
+    "data/campaigns": {
+      "count": 3,
+      "bytes": 5219,
+      "human": "5.10 KiB"
+    },
+    "test/advanced_training_path_visual_harness.gd": {
+      "count": 1,
+      "bytes": 5194,
+      "human": "5.07 KiB"
+    },
+    "tests/global_text_scale_setting_test.gd": {
+      "count": 1,
+      "bytes": 5155,
+      "human": "5.03 KiB"
+    },
+    "test/title_onboarding_visual_harness.gd": {
+      "count": 1,
+      "bytes": 5049,
+      "human": "4.93 KiB"
+    },
+    "sim/campaign_v3_renaming.gd": {
+      "count": 1,
+      "bytes": 5020,
+      "human": "4.90 KiB"
+    },
+    "tests/title_music_preference_test.gd": {
+      "count": 1,
+      "bytes": 4968,
+      "human": "4.85 KiB"
+    },
+    "tests/battle_health_and_depth_test.gd": {
+      "count": 1,
+      "bytes": 4912,
+      "human": "4.80 KiB"
+    },
+    "docs/CINEMATIC_STREAMING.md": {
+      "count": 1,
+      "bytes": 4848,
+      "human": "4.73 KiB"
+    },
+    "data/enemies": {
+      "count": 9,
+      "bytes": 4819,
+      "human": "4.71 KiB"
+    },
+    "test/advanced_operator_visual_harness.gd": {
+      "count": 1,
+      "bytes": 4743,
+      "human": "4.63 KiB"
+    },
+    "test/placement_feedback_visual_harness.gd": {
+      "count": 1,
+      "bytes": 4729,
+      "human": "4.62 KiB"
+    },
+    "tests/title_music_scope_test.gd": {
+      "count": 1,
+      "bytes": 4689,
+      "human": "4.58 KiB"
+    },
+    "docs/ADVANCED_OPERATOR_SPRITE_V2_RELEASE.md": {
+      "count": 1,
+      "bytes": 4628,
+      "human": "4.52 KiB"
+    },
+    "sim/campaign_v3_commands.gd": {
+      "count": 1,
+      "bytes": 4617,
+      "human": "4.51 KiB"
+    },
+    "docs/ApprovedUnifiedUIImplementationCompletion.md": {
+      "count": 1,
+      "bytes": 4614,
+      "human": "4.51 KiB"
+    },
+    "tests/controller_accessibility_test.gd": {
+      "count": 1,
+      "bytes": 4590,
+      "human": "4.48 KiB"
+    },
+    "docs/LOADING_SCREEN.md": {
+      "count": 1,
+      "bytes": 4501,
+      "human": "4.40 KiB"
+    },
+    "test/enemy_roster_visual_harness.gd": {
+      "count": 1,
+      "bytes": 4479,
+      "human": "4.37 KiB"
+    },
+    "test/gacha_history_visual_harness.gd": {
+      "count": 1,
+      "bytes": 4357,
+      "human": "4.25 KiB"
+    },
+    "docs/ACT_II_IMPLEMENTATION_PLAN.md": {
+      "count": 1,
+      "bytes": 4315,
+      "human": "4.21 KiB"
+    },
+    "tests/loading_art_alignment_test.gd": {
+      "count": 1,
+      "bytes": 4303,
+      "human": "4.20 KiB"
+    },
+    "docs/ADVANCED_TRAINING_LAYOUT_IMPLEMENTATION_PLAN.md": {
+      "count": 1,
+      "bytes": 4301,
+      "human": "4.20 KiB"
+    },
+    "test/slow_field_visual_harness.gd": {
+      "count": 1,
+      "bytes": 4298,
+      "human": "4.20 KiB"
+    },
+    "docs/ANIMA_WAR_WEB_RELEASE.md": {
+      "count": 1,
+      "bytes": 4247,
+      "human": "4.15 KiB"
+    },
+    "tests/elevated_platform_accessibility_test.gd": {
+      "count": 1,
+      "bytes": 4233,
+      "human": "4.13 KiB"
+    },
+    "test/enemy_variant_visual_harness.gd": {
+      "count": 1,
+      "bytes": 4210,
+      "human": "4.11 KiB"
+    },
+    "sim/campaign_promotion_history.gd": {
+      "count": 1,
+      "bytes": 4209,
+      "human": "4.11 KiB"
+    },
+    "sim/canonical_json.gd": {
+      "count": 1,
+      "bytes": 4208,
+      "human": "4.11 KiB"
+    },
+    "tools/update_nonpremium_portrait_manifest.py": {
+      "count": 1,
+      "bytes": 4180,
+      "human": "4.08 KiB"
+    },
+    "test/gacha_cinematic_visual_harness.gd": {
+      "count": 1,
+      "bytes": 4128,
+      "human": "4.03 KiB"
+    },
+    "sim/combat_content_binding.gd": {
+      "count": 1,
+      "bytes": 4119,
+      "human": "4.02 KiB"
+    },
+    "tests/title_language_toggle_test.gd": {
+      "count": 1,
+      "bytes": 4115,
+      "human": "4.02 KiB"
+    },
+    "tests/operator_retreat_cooldown_test.gd": {
+      "count": 1,
+      "bytes": 4110,
+      "human": "4.01 KiB"
+    },
+    "tests/terminal_result_flow_test.gd": {
+      "count": 1,
+      "bytes": 4090,
+      "human": "3.99 KiB"
+    },
+    "docs/HIGH_THREAT_WAVE_WARNINGS.md": {
+      "count": 1,
+      "bytes": 4081,
+      "human": "3.99 KiB"
+    },
+    "sim/roster_state.gd": {
+      "count": 1,
+      "bytes": 4078,
+      "human": "3.98 KiB"
+    },
+    "sim/campaign_v3_hash.gd": {
+      "count": 1,
+      "bytes": 4069,
+      "human": "3.97 KiB"
+    },
+    "tests/faction_roster_filter_test.gd": {
+      "count": 1,
+      "bytes": 4058,
+      "human": "3.96 KiB"
+    },
+    "tests/premium_portrait_catalog_test.gd": {
+      "count": 1,
+      "bytes": 4044,
+      "human": "3.95 KiB"
+    },
+    "project.godot": {
+      "count": 1,
+      "bytes": 3999,
+      "human": "3.91 KiB"
+    },
+    "tests/button_focus_style_test.gd": {
+      "count": 1,
+      "bytes": 3906,
+      "human": "3.81 KiB"
+    },
+    "autoloads/test_run_guard.gd": {
+      "count": 1,
+      "bytes": 3893,
+      "human": "3.80 KiB"
+    },
+    "test/placement_feedback_smoke.gd": {
+      "count": 1,
+      "bytes": 3729,
+      "human": "3.64 KiB"
+    },
+    "tests/premium_gacha_history_projection_test.gd": {
+      "count": 1,
+      "bytes": 3718,
+      "human": "3.63 KiB"
+    },
+    "test/battle_dialogue_visual_harness.gd": {
+      "count": 1,
+      "bytes": 3692,
+      "human": "3.61 KiB"
+    },
+    "AGENTS.md": {
+      "count": 1,
+      "bytes": 3672,
+      "human": "3.59 KiB"
+    },
+    "tests/test_user_data_isolation_test.sh": {
+      "count": 1,
+      "bytes": 3656,
+      "human": "3.57 KiB"
+    },
+    "tests/early_enemy_variant_art_test.gd": {
+      "count": 1,
+      "bytes": 3654,
+      "human": "3.57 KiB"
+    },
+    "sim/legacy_campaign_adapter.gd": {
+      "count": 1,
+      "bytes": 3637,
+      "human": "3.55 KiB"
+    },
+    "sim/campaign_v3_honor.gd": {
+      "count": 1,
+      "bytes": 3635,
+      "human": "3.55 KiB"
+    },
+    "tests/first_mission_tutorial_replay_test.gd": {
+      "count": 1,
+      "bytes": 3613,
+      "human": "3.53 KiB"
+    },
+    "sim/campaign_runtime_context.gd": {
+      "count": 1,
+      "bytes": 3545,
+      "human": "3.46 KiB"
+    },
+    "tools/stage_mission_cinematic_streams.sh": {
+      "count": 1,
+      "bytes": 3511,
+      "human": "3.43 KiB"
+    },
+    "tests/global_font_scale_test.gd": {
+      "count": 1,
+      "bytes": 3503,
+      "human": "3.42 KiB"
+    },
+    "test/battle_annotation_visual_harness.gd": {
+      "count": 1,
+      "bytes": 3451,
+      "human": "3.37 KiB"
+    },
+    "tests/title_start_recovery_test.gd": {
+      "count": 1,
+      "bytes": 3418,
+      "human": "3.34 KiB"
+    },
+    "tests/gacha_cinematic_resources_test.gd": {
+      "count": 1,
+      "bytes": 3408,
+      "human": "3.33 KiB"
+    },
+    "test/agent4_isometric_renderer_smoke.gd": {
+      "count": 1,
+      "bytes": 3403,
+      "human": "3.32 KiB"
+    },
+    "tests/dialog_typography_scale_test.gd": {
+      "count": 1,
+      "bytes": 3349,
+      "human": "3.27 KiB"
+    },
+    "sim/campaign_promotion_receipt_codec.gd": {
+      "count": 1,
+      "bytes": 3330,
+      "human": "3.25 KiB"
+    },
+    "test/support": {
+      "count": 2,
+      "bytes": 3297,
+      "human": "3.22 KiB"
+    },
+    "data/skills": {
+      "count": 11,
+      "bytes": 3289,
+      "human": "3.21 KiB"
+    },
+    "tests/recruit_animation_alignment_test.gd": {
+      "count": 1,
+      "bytes": 3278,
+      "human": "3.20 KiB"
+    },
+    "sim/spell_book.gd": {
+      "count": 1,
+      "bytes": 3099,
+      "human": "3.03 KiB"
+    },
+    "test/title_responsive_visual_harness.gd": {
+      "count": 1,
+      "bytes": 3055,
+      "human": "2.98 KiB"
+    },
+    "tests/operator_specialization_gender_deployment_test.gd": {
+      "count": 1,
+      "bytes": 3051,
+      "human": "2.98 KiB"
+    },
+    "sim/unit_state.gd": {
+      "count": 1,
+      "bytes": 3029,
+      "human": "2.96 KiB"
+    },
+    "sim/target_decision_projection.gd": {
+      "count": 1,
+      "bytes": 3009,
+      "human": "2.94 KiB"
+    },
+    "sim/hero_identity.gd": {
+      "count": 1,
+      "bytes": 2945,
+      "human": "2.88 KiB"
+    },
+    "tests/battle_endpoint_landmark_test.gd": {
+      "count": 1,
+      "bytes": 2890,
+      "human": "2.82 KiB"
+    },
+    "tests/web_audio_unlock_test.gd": {
+      "count": 1,
+      "bytes": 2881,
+      "human": "2.81 KiB"
+    },
+    "sim/battle_snapshot.gd": {
+      "count": 1,
+      "bytes": 2866,
+      "human": "2.80 KiB"
+    },
+    "tests/chinese_primary_flow_ui_test.gd": {
+      "count": 1,
+      "bytes": 2768,
+      "human": "2.70 KiB"
+    },
+    "tests/slow_field_sfx_test.gd": {
+      "count": 1,
+      "bytes": 2757,
+      "human": "2.69 KiB"
+    },
+    "tests/custom_naming_roster_test.gd": {
+      "count": 1,
+      "bytes": 2753,
+      "human": "2.69 KiB"
+    },
+    "tools/run_godot_isolated.sh": {
+      "count": 1,
+      "bytes": 2691,
+      "human": "2.63 KiB"
+    },
+    "tools/update_premium_portrait_manifest.py": {
+      "count": 1,
+      "bytes": 2672,
+      "human": "2.61 KiB"
+    },
+    "scripts/player_data_reset.gd": {
+      "count": 1,
+      "bytes": 2509,
+      "human": "2.45 KiB"
+    },
+    "data/juice_config.gd": {
+      "count": 1,
+      "bytes": 2492,
+      "human": "2.43 KiB"
+    },
+    "export_presets.cfg": {
+      "count": 1,
+      "bytes": 2441,
+      "human": "2.38 KiB"
+    },
+    "tools/capture_narrative_canon_visuals.sh": {
+      "count": 1,
+      "bytes": 2370,
+      "human": "2.31 KiB"
+    },
+    "assets/enemy_static_manifest.tres": {
+      "count": 1,
+      "bytes": 2359,
+      "human": "2.30 KiB"
+    },
+    "tools/build_web_content_pack.gd": {
+      "count": 1,
+      "bytes": 2290,
+      "human": "2.24 KiB"
+    },
+    "tests/spike_plate_transparency_test.gd": {
+      "count": 1,
+      "bytes": 2269,
+      "human": "2.22 KiB"
+    },
+    "tools/stage_web_content_packs.sh": {
+      "count": 1,
+      "bytes": 2257,
+      "human": "2.20 KiB"
+    },
+    "sim/hero_state.gd": {
+      "count": 1,
+      "bytes": 2233,
+      "human": "2.18 KiB"
+    },
+    "test/archive_caster_visual_harness.gd": {
+      "count": 1,
+      "bytes": 2217,
+      "human": "2.17 KiB"
+    },
+    "test/reliquary_duelist_visual_harness.gd": {
+      "count": 1,
+      "bytes": 2216,
+      "human": "2.16 KiB"
+    },
+    "test/lunaris_vessel_visual_harness.gd": {
+      "count": 1,
+      "bytes": 2214,
+      "human": "2.16 KiB"
+    },
+    "docs/TOWER_PLACEMENT_FEEDBACK.md": {
+      "count": 1,
+      "bytes": 2209,
+      "human": "2.16 KiB"
+    },
+    "tools/capture_mission_cinematic_visuals.sh": {
+      "count": 1,
+      "bytes": 2178,
+      "human": "2.13 KiB"
+    },
+    "test/staging_sparkles_visual_harness.gd": {
+      "count": 1,
+      "bytes": 2130,
+      "human": "2.08 KiB"
+    },
+    "data/target_policies": {
+      "count": 6,
+      "bytes": 2095,
+      "human": "2.05 KiB"
+    },
+    "tools/capture_title_onboarding_regressions.sh": {
+      "count": 1,
+      "bytes": 2092,
+      "human": "2.04 KiB"
+    },
+    "sim/battle_observation_telemetry.gd": {
+      "count": 1,
+      "bytes": 2076,
+      "human": "2.03 KiB"
+    },
+    "docs/ANIMA_WAR_NATIVE_RELEASE.md": {
+      "count": 1,
+      "bytes": 2036,
+      "human": "1.99 KiB"
+    },
+    "test/map_navigation_overlay_smoke.gd": {
+      "count": 1,
+      "bytes": 1988,
+      "human": "1.94 KiB"
+    },
+    "tools/refresh_chinese_font.py": {
+      "count": 1,
+      "bytes": 1973,
+      "human": "1.93 KiB"
+    },
+    "docs/PREMIUM_GACHA_VISUAL_QA.md": {
+      "count": 1,
+      "bytes": 1964,
+      "human": "1.92 KiB"
+    },
+    "sim/campaign_v3_promotion_rules.gd": {
+      "count": 1,
+      "bytes": 1913,
+      "human": "1.87 KiB"
+    },
+    "tools/capture_battle_dialogue_visuals.sh": {
+      "count": 1,
+      "bytes": 1894,
+      "human": "1.85 KiB"
+    },
+    "sim/campaign_promotion_proof_codec.gd": {
+      "count": 1,
+      "bytes": 1883,
+      "human": "1.84 KiB"
+    },
+    "sim/campaign_file_ops.gd": {
+      "count": 1,
+      "bytes": 1874,
+      "human": "1.83 KiB"
+    },
+    "sim/campaign_resolution.gd": {
+      "count": 1,
+      "bytes": 1856,
+      "human": "1.81 KiB"
+    },
+    "sim/damage_rules.gd": {
+      "count": 1,
+      "bytes": 1850,
+      "human": "1.81 KiB"
+    },
+    "sim/battle_outcome.gd": {
+      "count": 1,
+      "bytes": 1841,
+      "human": "1.80 KiB"
+    },
+    "tools/capture_title_responsive_regressions.sh": {
+      "count": 1,
+      "bytes": 1815,
+      "human": "1.77 KiB"
+    },
+    "sim/healing_rules.gd": {
+      "count": 1,
+      "bytes": 1736,
+      "human": "1.70 KiB"
+    },
+    "sim/pathing.gd": {
+      "count": 1,
+      "bytes": 1709,
+      "human": "1.67 KiB"
+    },
+    "test/loading_art_visual_harness.gd": {
+      "count": 1,
+      "bytes": 1709,
+      "human": "1.67 KiB"
+    },
+    "sim/campaign_promotion_snapshot_codec.gd": {
+      "count": 1,
+      "bytes": 1633,
+      "human": "1.59 KiB"
+    },
+    "data/juice_config.tres": {
+      "count": 1,
+      "bytes": 1625,
+      "human": "1.59 KiB"
+    },
+    "tests/test_user_data_isolation_test.gd": {
+      "count": 1,
+      "bytes": 1593,
+      "human": "1.56 KiB"
+    },
+    "sim/campaign_training_projection.gd": {
+      "count": 1,
+      "bytes": 1577,
+      "human": "1.54 KiB"
+    },
+    "tools/stage_cinematic_streams.sh": {
+      "count": 1,
+      "bytes": 1576,
+      "human": "1.54 KiB"
+    },
+    "tests/mission_cinematic_staging_test.sh": {
+      "count": 1,
+      "bytes": 1557,
+      "human": "1.52 KiB"
+    },
+    "tools/enemy_variants": {
+      "count": 1,
+      "bytes": 1447,
+      "human": "1.41 KiB"
+    },
+    "tools/capture_staging_sparkles.sh": {
+      "count": 1,
+      "bytes": 1432,
+      "human": "1.40 KiB"
+    },
+    "data/operator_def.gd": {
+      "count": 1,
+      "bytes": 1393,
+      "human": "1.36 KiB"
+    },
+    "data/spell_def.gd": {
+      "count": 1,
+      "bytes": 1382,
+      "human": "1.35 KiB"
+    },
+    "sim/campaign_battle_ticket.gd": {
+      "count": 1,
+      "bytes": 1347,
+      "human": "1.32 KiB"
+    },
+    "test/training_readability_visual_harness.gd": {
+      "count": 1,
+      "bytes": 1347,
+      "human": "1.32 KiB"
+    },
+    "sim/enemy_state.gd": {
+      "count": 1,
+      "bytes": 1302,
+      "human": "1.27 KiB"
+    },
+    "data/campaign_def.gd": {
+      "count": 1,
+      "bytes": 1280,
+      "human": "1.25 KiB"
+    },
+    "sim/campaign_context_validator.gd": {
+      "count": 1,
+      "bytes": 1215,
+      "human": "1.19 KiB"
+    },
+    "sim/campaign_v3_economy.gd": {
+      "count": 1,
+      "bytes": 1211,
+      "human": "1.18 KiB"
+    },
+    "data/spells": {
+      "count": 3,
+      "bytes": 1151,
+      "human": "1.12 KiB"
+    },
+    "sim/battle_outcome_builder.gd": {
+      "count": 1,
+      "bytes": 1108,
+      "human": "1.08 KiB"
+    },
+    "icon.svg.import": {
+      "count": 1,
+      "bytes": 1013,
+      "human": "1013.00 B"
+    },
+    "sim/hero_names.gd": {
+      "count": 1,
+      "bytes": 1011,
+      "human": "1011.00 B"
+    },
+    "sim/campaign_pending_attempt.gd": {
+      "count": 1,
+      "bytes": 977,
+      "human": "977.00 B"
+    },
+    "data/enemy_def.gd": {
+      "count": 1,
+      "bytes": 943,
+      "human": "943.00 B"
+    },
+    "sim/campaign_resolution_fields.gd": {
+      "count": 1,
+      "bytes": 933,
+      "human": "933.00 B"
+    },
+    "data/trap_def.gd": {
+      "count": 1,
+      "bytes": 888,
+      "human": "888.00 B"
+    },
+    "data/target_policy_def.gd": {
+      "count": 1,
+      "bytes": 871,
+      "human": "871.00 B"
+    },
+    "sim/trap_state.gd": {
+      "count": 1,
+      "bytes": 860,
+      "human": "860.00 B"
+    },
+    "assets/act1_shared_manifest.tres": {
+      "count": 1,
+      "bytes": 853,
+      "human": "853.00 B"
+    },
+    "sim/wave_timeline.gd": {
+      "count": 1,
+      "bytes": 827,
+      "human": "827.00 B"
+    },
+    "data/skill_def.gd": {
+      "count": 1,
+      "bytes": 798,
+      "human": "798.00 B"
+    },
+    "data/traps": {
+      "count": 2,
+      "bytes": 656,
+      "human": "656.00 B"
+    },
+    "data/progression": {
+      "count": 1,
+      "bytes": 575,
+      "human": "575.00 B"
+    },
+    "THIRD_PARTY_NOTICES.md": {
+      "count": 1,
+      "bytes": 543,
+      "human": "543.00 B"
+    },
+    "tools/run_godot_test.sh": {
+      "count": 1,
+      "bytes": 539,
+      "human": "539.00 B"
+    },
+    "sim/enemy_damage.gd": {
+      "count": 1,
+      "bytes": 516,
+      "human": "516.00 B"
+    },
+    "scenes/staging.tscn": {
+      "count": 1,
+      "bytes": 486,
+      "human": "486.00 B"
+    },
+    "scenes/title.tscn": {
+      "count": 1,
+      "bytes": 478,
+      "human": "478.00 B"
+    },
+    "sim/slow_field_state.gd": {
+      "count": 1,
+      "bytes": 471,
+      "human": "471.00 B"
+    },
+    "scenes/vahalla.tscn": {
+      "count": 1,
+      "bytes": 413,
+      "human": "413.00 B"
+    },
+    "data/game_config.gd": {
+      "count": 1,
+      "bytes": 387,
+      "human": "387.00 B"
+    },
+    "data/names": {
+      "count": 2,
+      "bytes": 384,
+      "human": "384.00 B"
+    },
+    "data/config": {
+      "count": 1,
+      "bytes": 367,
+      "human": "367.00 B"
+    },
+    "data/promotion_rules_def.gd": {
+      "count": 1,
+      "bytes": 356,
+      "human": "356.00 B"
+    },
+    "scenes/loading.tscn": {
+      "count": 1,
+      "bytes": 315,
+      "human": "315.00 B"
+    },
+    "scenes/narrative_archive.tscn": {
+      "count": 1,
+      "bytes": 301,
+      "human": "301.00 B"
+    },
+    "icon.svg": {
+      "count": 1,
+      "bytes": 296,
+      "human": "296.00 B"
+    },
+    "scenes/squad_select.tscn": {
+      "count": 1,
+      "bytes": 291,
+      "human": "291.00 B"
+    },
+    "scenes/stage_select.tscn": {
+      "count": 1,
+      "bytes": 291,
+      "human": "291.00 B"
+    },
+    "scenes/gacha.tscn": {
+      "count": 1,
+      "bytes": 289,
+      "human": "289.00 B"
+    },
+    "scenes/training.tscn": {
+      "count": 1,
+      "bytes": 288,
+      "human": "288.00 B"
+    },
+    "scenes/results.tscn": {
+      "count": 1,
+      "bytes": 282,
+      "human": "282.00 B"
+    },
+    "sim/star_calc.gd": {
+      "count": 1,
+      "bytes": 245,
+      "human": "245.00 B"
+    },
+    "test/act1_s2_s4_playtest_visual_harness.tscn": {
+      "count": 1,
+      "bytes": 227,
+      "human": "227.00 B"
+    },
+    "test/mission_cinematic_visual_harness.tscn": {
+      "count": 1,
+      "bytes": 223,
+      "human": "223.00 B"
+    },
+    "test/reliquary_duelist_visual_harness.tscn": {
+      "count": 1,
+      "bytes": 223,
+      "human": "223.00 B"
+    },
+    "test/agent4_isometric_visual_harness.tscn": {
+      "count": 1,
+      "bytes": 221,
+      "human": "221.00 B"
+    },
+    "test/staging_sparkles_visual_harness.tscn": {
+      "count": 1,
+      "bytes": 221,
+      "human": "221.00 B"
+    },
+    "test/title_onboarding_visual_harness.tscn": {
+      "count": 1,
+      "bytes": 221,
+      "human": "221.00 B"
+    },
+    "test/archive_caster_visual_harness.tscn": {
+      "count": 1,
+      "bytes": 217,
+      "human": "217.00 B"
+    },
+    "test/enemy_variant_visual_harness.tscn": {
+      "count": 1,
+      "bytes": 217,
+      "human": "217.00 B"
+    },
+    "test/lunaris_vessel_visual_harness.tscn": {
+      "count": 1,
+      "bytes": 217,
+      "human": "217.00 B"
+    },
+    "test/advanced_training_path_visual_harness.tscn": {
+      "count": 1,
+      "bytes": 216,
+      "human": "216.00 B"
+    },
+    "test/training_readability_visual_harness.tscn": {
+      "count": 1,
+      "bytes": 213,
+      "human": "213.00 B"
+    },
+    "test/placement_feedback_visual_harness.tscn": {
+      "count": 1,
+      "bytes": 209,
+      "human": "209.00 B"
+    },
+    "test/battle_annotation_visual_harness.tscn": {
+      "count": 1,
+      "bytes": 207,
+      "human": "207.00 B"
+    },
+    "test/title_responsive_visual_harness.tscn": {
+      "count": 1,
+      "bytes": 205,
+      "human": "205.00 B"
+    },
+    "test/battle_dialogue_visual_harness.tscn": {
+      "count": 1,
+      "bytes": 203,
+      "human": "203.00 B"
+    },
+    "test/narrative_canon_visual_harness.tscn": {
+      "count": 1,
+      "bytes": 203,
+      "human": "203.00 B"
+    },
+    "test/roster_density_visual_harness.tscn": {
+      "count": 1,
+      "bytes": 201,
+      "human": "201.00 B"
+    },
+    "test/enemy_roster_visual_harness.tscn": {
+      "count": 1,
+      "bytes": 199,
+      "human": "199.00 B"
+    },
+    "test/slow_field_visual_harness.tscn": {
+      "count": 1,
+      "bytes": 195,
+      "human": "195.00 B"
+    },
+    "test/agent4_isometric_visual_harness.gd": {
+      "count": 1,
+      "bytes": 192,
+      "human": "192.00 B"
+    },
+    "scenes/battle.tscn": {
+      "count": 1,
+      "bytes": 173,
+      "human": "173.00 B"
+    },
+    "docs/.gdignore": {
+      "count": 1,
+      "bytes": 90,
+      "human": "90.00 B"
+    },
+    ".gitignore": {
+      "count": 1,
+      "bytes": 79,
+      "human": "79.00 B"
+    },
+    "tools/requirements-portraits.txt": {
+      "count": 1,
+      "bytes": 28,
+      "human": "28.00 B"
+    },
+    "assets/asset_manifest.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "autoloads/content_pack_loader.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "autoloads/game.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "autoloads/i18n.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "autoloads/mission_cinematic_prefetch.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "autoloads/music.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "autoloads/sfx.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "autoloads/test_run_guard.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "autoloads/text_scale.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "autoloads/ui_feedback.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "data/campaign_def.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "data/class_def.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "data/enemy_def.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "data/game_config.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "data/juice_config.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "data/promotion_rules_def.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "data/spell_def.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "data/stage_def.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "data/target_policy_def.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/battle_model.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/battle_observation.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/battle_observation_telemetry.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/battle_outcome.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/battle_outcome_builder.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/battle_outcome_v3.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/battle_snapshot.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/battle_ticket.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/battle_ticket_runtime.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/campaign_codec.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/campaign_context_validator.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/campaign_file_ops.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/campaign_hash.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/campaign_migration.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/campaign_pending_attempt.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/campaign_promotion_history.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/campaign_promotion_proof_codec.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/campaign_resolution_fields.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/campaign_runtime_context.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/campaign_save_upgrade.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/campaign_state.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/campaign_state_v3.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/campaign_training_projection.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/campaign_v3_attempts.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/campaign_v3_command_codec.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/campaign_v3_command_history.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/campaign_v3_commands.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/campaign_v3_economy.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/campaign_v3_gacha.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/campaign_v3_hash.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/campaign_v3_history.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/campaign_v3_promotion.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/campaign_v3_promotion_rules.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/campaign_v3_recruitment.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/campaign_v3_renaming.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/campaign_v3_state_codec.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/damage_rules.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/enemy_damage.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/enemy_state.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/healing_rules.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/hero_identity.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/hero_names.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/hero_state.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/pathing.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/replay_codec.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/roster_state.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/slow_field_state.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/spell_book.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/star_calc.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/target_decision_projection.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/targeting.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/trap_state.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "sim/wave_timeline.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/act1_s2_s4_playtest_visual_harness.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/advanced_operator_live_quality_harness.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/advanced_operator_visual_harness.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/advanced_training_path_visual_harness.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/agent4_isometric_renderer_smoke.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/archive_caster_visual_harness.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/basic_hire_visual_harness.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/battle_annotation_visual_harness.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/battle_dialogue_visual_harness.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/enemy_roster_visual_harness.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/enemy_variant_visual_harness.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/gacha_cinematic_visual_harness.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/gacha_history_visual_harness.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/loading_art_visual_harness.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/lunaris_vessel_visual_harness.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/map_navigator_orientation_smoke.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/mission_cinematic_visual_harness.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/placement_feedback_smoke.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/placement_feedback_visual_harness.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/premium_portrait_visual_harness.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/roster_density_visual_harness.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/slow_field_visual_harness.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/stage_orientation_smoke.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/stage_redesign_smoke.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/staging_sparkles_visual_harness.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/title_onboarding_visual_harness.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/title_responsive_visual_harness.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "test/training_readability_visual_harness.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/act2_balance_playtest_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/act2_campaign_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/act2_music_transition_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/advanced_operator_compression_quality_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/advanced_operator_schema_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/archive_audio_log_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/archive_caster_animation_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/audio_master_volume_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/basic_recruit_hiring_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/battle_dialogue_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/battle_endpoint_landmark_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/button_focus_style_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/campaign_ui_layout_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/chinese_confirmation_layout_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/chinese_training_ui_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/cinematic_streaming_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/controller_accessibility_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/custom_naming_roster_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/dialog_typography_scale_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/early_enemy_variant_art_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/early_enemy_variety_balance_telemetry_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/early_enemy_variety_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/elevated_platform_accessibility_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/enemy_static_sprite_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/faction_roster_filter_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/first_mission_tutorial_replay_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/global_button_press_feedback_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/global_font_scale_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/hire_recruit_interaction_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/localization_ui_parity_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/lunaris_ui_foundation_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/lunaris_vessel_animation_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/mission_cinematic_runtime_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/mission_cinematic_stage_select_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/mission_launch_retry_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/mission_ui_layout_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/music_redesign_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/narrative_canon_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/operator_specialization_gender_deployment_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/player_data_clear_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/premium_gacha_history_projection_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/premium_gacha_ui_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/premium_hero_system_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/recruit_animation_alignment_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/reliquary_duelist_animation_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/resign_xp_policy_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/restoration_lattice_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/results_ui_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/slow_field_balance_telemetry_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/slow_field_sfx_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/slow_field_spell_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/slow_field_tutorial_ui_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/spike_plate_transparency_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/squad_operator_interaction_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/staging_command_layout_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/strategic_onboarding_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/terminal_persistence_performance_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/terminal_result_flow_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/test_user_data_isolation_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/title_language_toggle_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/title_music_scope_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/title_onboarding_navigation_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/title_settings_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/title_ui_scale_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/training_immediate_promotion_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/training_readability_layout_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/vahalla_ui_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/web_audio_unlock_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tests/web_content_pack_test.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "tools/build_web_content_pack.gd.uid": {
+      "count": 1,
+      "bytes": 20,
+      "human": "20.00 B"
+    },
+    "autoloads/cinematic_prefetch.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "data/operator_def.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "data/skill_def.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "data/trap_def.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "scripts/player_data_reset.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "sim/battle_hash.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "sim/campaign_battle_ticket.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "sim/campaign_hero_codec.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "sim/campaign_invariants.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "sim/campaign_legacy_hash.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "sim/campaign_mutation.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "sim/campaign_promotion.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "sim/campaign_promotion_receipt_codec.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "sim/campaign_promotion_snapshot_codec.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "sim/campaign_runtime_authority.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "sim/campaign_strategic_commands.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "sim/campaign_v3_codec.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "sim/campaign_v3_honor.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "sim/canonical_json.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "sim/combat_content_binding.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "sim/legacy_campaign_adapter.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "sim/unit_state.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "test/agent4_isometric_visual_harness.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "test/map_navigation_overlay_smoke.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "test/narrative_canon_visual_harness.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "test/reliquary_duelist_visual_harness.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "tests/act1_s2_s4_balance_playtest_test.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "tests/advanced_operator_animation_test.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "tests/battle_health_and_depth_test.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "tests/battle_ui_layout_test.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "tests/campaign_save_fast_path_test.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "tests/chinese_primary_flow_ui_test.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "tests/gacha_cinematic_resources_test.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "tests/global_text_scale_setting_test.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "tests/high_threat_wave_warning_test.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "tests/loading_art_alignment_test.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "tests/nonpremium_portrait_catalog_test.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "tests/operator_rename_confirmation_ui_test.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "tests/operator_retreat_cooldown_test.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "tests/premium_gacha_pity_economy_test.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "tests/premium_portrait_catalog_test.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "tests/premium_portrait_entrance_test.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "tests/staging_settings_test.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "tests/title_interaction_feedback_test.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "tests/title_music_preference_test.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "tests/title_start_recovery_test.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "tests/ui_audio_direction_test.gd.uid": {
+      "count": 1,
+      "bytes": 19,
+      "human": "19.00 B"
+    },
+    "sim/campaign_progression.gd.uid": {
+      "count": 1,
+      "bytes": 18,
+      "human": "18.00 B"
+    },
+    "sim/campaign_resolution.gd.uid": {
+      "count": 1,
+      "bytes": 18,
+      "human": "18.00 B"
+    },
+    "sim/campaign_save_store.gd.uid": {
+      "count": 1,
+      "bytes": 18,
+      "human": "18.00 B"
+    }
+  },
+  "largest_files": [
+    {
+      "path": "assets/cinematics/gacha/video/archive-caster-landscape.ogv",
+      "bytes": 39223400,
+      "human": "37.41 MiB"
+    },
+    {
+      "path": "assets/title/lunaris-title-loop.ogv",
+      "bytes": 36091039,
+      "human": "34.42 MiB"
+    },
+    {
+      "path": "docs/animations/lunaris-reliquary/lunaris-title-loop.mp4",
+      "bytes": 30964028,
+      "human": "29.53 MiB"
+    },
+    {
+      "path": "assets/cinematics/gacha/video/reliquary-duelist-landscape.ogv",
+      "bytes": 29259884,
+      "human": "27.90 MiB"
+    },
+    {
+      "path": "assets/cinematics/gacha/video/reliquary-duelist-portrait.ogv",
+      "bytes": 27129072,
+      "human": "25.87 MiB"
+    },
+    {
+      "path": "assets/cinematics/gacha/video/lunaris-vessel-portrait.ogv",
+      "bytes": 23555321,
+      "human": "22.46 MiB"
+    },
+    {
+      "path": "docs/animations/lunaris-reliquary/lunaris-title-source.mp4",
+      "bytes": 20205150,
+      "human": "19.27 MiB"
+    },
+    {
+      "path": "docs/animations/lunaris-reliquary/lunaris-title-loop-hires-source.mp4",
+      "bytes": 20163453,
+      "human": "19.23 MiB"
+    },
+    {
+      "path": "assets/cinematics/gacha/video/archive-caster-portrait.ogv",
+      "bytes": 19959147,
+      "human": "19.03 MiB"
+    },
+    {
+      "path": "assets/cinematics/missions/video/s2.ogv",
+      "bytes": 19290094,
+      "human": "18.40 MiB"
+    },
+    {
+      "path": "docs/animations/lunaris-reliquary/lunaris-title-loop.gif",
+      "bytes": 16800767,
+      "human": "16.02 MiB"
+    },
+    {
+      "path": "assets/cinematics/gacha/video/lunaris-vessel-landscape.ogv",
+      "bytes": 16638104,
+      "human": "15.87 MiB"
+    },
+    {
+      "path": "assets/fonts/ProtosSansSC.otf",
+      "bytes": 16437364,
+      "human": "15.68 MiB"
+    },
+    {
+      "path": "assets/cinematics/missions/video/s1.ogv",
+      "bytes": 13462958,
+      "human": "12.84 MiB"
+    },
+    {
+      "path": "docs/audio/lunaris-title-theme/astra-memoriam-loop-master.flac",
+      "bytes": 9219770,
+      "human": "8.79 MiB"
+    },
+    {
+      "path": "docs/narrative/concept-art/act2/restoration-lattice-battlefield.jpg",
+      "bytes": 9204880,
+      "human": "8.78 MiB"
+    },
+    {
+      "path": "docs/narrative/concept-art/anima-war/02-human-anima-farm.png",
+      "bytes": 7606579,
+      "human": "7.25 MiB"
+    },
+    {
+      "path": "docs/narrative/concept-art/act2/act2-eight-operation-montage.jpg",
+      "bytes": 7356248,
+      "human": "7.02 MiB"
+    },
+    {
+      "path": "docs/narrative/concept-art/act2/act2-first-garden-expedition.jpg",
+      "bytes": 7248379,
+      "human": "6.91 MiB"
+    },
+    {
+      "path": "docs/narrative/concept-art/anima-war/03-anima-robot-empire-castes.png",
+      "bytes": 7157330,
+      "human": "6.83 MiB"
+    },
+    {
+      "path": "assets/world/endpoints/photon_portal_idle.webp",
+      "bytes": 7151520,
+      "human": "6.82 MiB"
+    },
+    {
+      "path": "docs/narrative/concept-art/anima-war/04-act-ii-anima-forge-capital.png",
+      "bytes": 6588225,
+      "human": "6.28 MiB"
+    },
+    {
+      "path": "docs/narrative/concept-art/act2/mortal-covenant-conclave.jpg",
+      "bytes": 6464571,
+      "human": "6.17 MiB"
+    },
+    {
+      "path": "docs/animations/lunaris-reliquary/lunaris-title-keyframe.png",
+      "bytes": 6310532,
+      "human": "6.02 MiB"
+    },
+    {
+      "path": "docs/factions/banners/solcrest_accord_banner.png",
+      "bytes": 6292558,
+      "human": "6.00 MiB"
+    },
+    {
+      "path": "docs/mission-cinematics/anchors/source/s1-first-stand.png",
+      "bytes": 6202094,
+      "human": "5.91 MiB"
+    },
+    {
+      "path": "docs/narrative/concept-art/anima-war/01-corrupted-protos-avatar.png",
+      "bytes": 6186658,
+      "human": "5.90 MiB"
+    },
+    {
+      "path": "docs/mission-cinematics/anchors/source/s7-full-kit.png",
+      "bytes": 6167769,
+      "human": "5.88 MiB"
+    },
+    {
+      "path": "docs/mission-cinematics/anchors/source/s9-the-green-cage.png",
+      "bytes": 6113791,
+      "human": "5.83 MiB"
+    },
+    {
+      "path": "docs/mission-cinematics/anchors/source/s16-empire-foundry.png",
+      "bytes": 6097727,
+      "human": "5.82 MiB"
+    },
+    {
+      "path": "docs/mission-cinematics/anchors/source/s8-the-gatecrasher.png",
+      "bytes": 6081631,
+      "human": "5.80 MiB"
+    },
+    {
+      "path": "docs/mission-cinematics/anchors/source/s14-the-price-of-dawn.png",
+      "bytes": 6019463,
+      "human": "5.74 MiB"
+    },
+    {
+      "path": "docs/mission-cinematics/anchors/source/s11-the-long-convoy.png",
+      "bytes": 6018333,
+      "human": "5.74 MiB"
+    },
+    {
+      "path": "docs/mission-cinematics/anchors/source/s4-air-raid.png",
+      "bytes": 5975687,
+      "human": "5.70 MiB"
+    },
+    {
+      "path": "assets/cinematics/missions/video/s11.ogv",
+      "bytes": 5973658,
+      "human": "5.70 MiB"
+    },
+    {
+      "path": "docs/mission-cinematics/anchors/source/s6-turncoat.png",
+      "bytes": 5955802,
+      "human": "5.68 MiB"
+    },
+    {
+      "path": "assets/loading/lunaris_reliquary_loading.png",
+      "bytes": 5933110,
+      "human": "5.66 MiB"
+    },
+    {
+      "path": "docs/mission-cinematics/anchors/source/s10-rain-debt.png",
+      "bytes": 5891138,
+      "human": "5.62 MiB"
+    },
+    {
+      "path": "docs/mission-cinematics/anchors/source/s3-the-choke.png",
+      "bytes": 5882063,
+      "human": "5.61 MiB"
+    },
+    {
+      "path": "docs/enemy-redesign/source/concepts/heavy.png",
+      "bytes": 5759465,
+      "human": "5.49 MiB"
+    },
+    {
+      "path": "docs/mission-cinematics/anchors/source/s2-tempo.png",
+      "bytes": 5752923,
+      "human": "5.49 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/specialization_banner_guard_male.png",
+      "bytes": 5748526,
+      "human": "5.48 MiB"
+    },
+    {
+      "path": "docs/factions/banners/crimson_aegis_banner.png",
+      "bytes": 5691672,
+      "human": "5.43 MiB"
+    },
+    {
+      "path": "docs/factions/banners/lunaris_reliquary_banner.png",
+      "bytes": 5625667,
+      "human": "5.37 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/specialization_immovable_female.png",
+      "bytes": 5609392,
+      "human": "5.35 MiB"
+    },
+    {
+      "path": "docs/portraits/premium/sources/lunaris_vessel.png",
+      "bytes": 5603713,
+      "human": "5.34 MiB"
+    },
+    {
+      "path": "docs/mission-cinematics/anchors/source/s5-high-ground.png",
+      "bytes": 5572230,
+      "human": "5.31 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/specialization_immovable_male.png",
+      "bytes": 5539934,
+      "human": "5.28 MiB"
+    },
+    {
+      "path": "docs/enemy-redesign/source/concepts/heavy_original.png",
+      "bytes": 5514049,
+      "human": "5.26 MiB"
+    },
+    {
+      "path": "docs/mission-cinematics/anchors/source/s15-soulstorm.png",
+      "bytes": 5452589,
+      "human": "5.20 MiB"
+    },
+    {
+      "path": "docs/portraits/premium/sources/archive_caster.png",
+      "bytes": 5381115,
+      "human": "5.13 MiB"
+    },
+    {
+      "path": "docs/mission-cinematics/anchors/source/s12-unlit.png",
+      "bytes": 5359071,
+      "human": "5.11 MiB"
+    },
+    {
+      "path": "docs/enemy-redesign/source/concepts/drone.png",
+      "bytes": 5317785,
+      "human": "5.07 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/recruit_crimson_male.png",
+      "bytes": 5249530,
+      "human": "5.01 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/specialization_defender_male.png",
+      "bytes": 5244879,
+      "human": "5.00 MiB"
+    },
+    {
+      "path": "assets/cinematics/missions/video/s9.ogv",
+      "bytes": 5243779,
+      "human": "5.00 MiB"
+    },
+    {
+      "path": "docs/enemy-redesign/source/concepts/breacher.png",
+      "bytes": 5234261,
+      "human": "4.99 MiB"
+    },
+    {
+      "path": "docs/enemy-redesign/source/concepts/mini_boss.png",
+      "bytes": 5217519,
+      "human": "4.98 MiB"
+    },
+    {
+      "path": "docs/factions/banners/vesper_circuit_banner.png",
+      "bytes": 5207824,
+      "human": "4.97 MiB"
+    },
+    {
+      "path": "docs/enemy-redesign/source/concepts/shieldbearer.png",
+      "bytes": 5207292,
+      "human": "4.97 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/specialization_shock_trooper_male.png",
+      "bytes": 5197223,
+      "human": "4.96 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/specialization_witch_doctor_male.png",
+      "bytes": 5170906,
+      "human": "4.93 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/specialization_sword_saint_male.png",
+      "bytes": 5146017,
+      "human": "4.91 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/specialization_defender_female.png",
+      "bytes": 5113851,
+      "human": "4.88 MiB"
+    },
+    {
+      "path": "docs/enemy-redesign/source/concepts/breacher_original.png",
+      "bytes": 5110689,
+      "human": "4.87 MiB"
+    },
+    {
+      "path": "docs/enemy-redesign/source/concepts/mini_boss_original.png",
+      "bytes": 5093447,
+      "human": "4.86 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/recruit_solcrest_male.png",
+      "bytes": 5075120,
+      "human": "4.84 MiB"
+    },
+    {
+      "path": "docs/enemy-redesign/source/concepts/shieldbearer_original.png",
+      "bytes": 5027445,
+      "human": "4.79 MiB"
+    },
+    {
+      "path": "docs/portraits/premium/sources/reliquary_duelist.png",
+      "bytes": 4919410,
+      "human": "4.69 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/specialization_banner_guard_female.png",
+      "bytes": 4900618,
+      "human": "4.67 MiB"
+    },
+    {
+      "path": "docs/lunaris-reliquary/lunaris_vessel_design_sheet.png",
+      "bytes": 4836920,
+      "human": "4.61 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/recruit_crimson_female.png",
+      "bytes": 4832142,
+      "human": "4.61 MiB"
+    },
+    {
+      "path": "docs/enemy-redesign/source/concepts/spellcaster.png",
+      "bytes": 4824680,
+      "human": "4.60 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/specialization_sword_saint_female.png",
+      "bytes": 4816558,
+      "human": "4.59 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/recruit_solcrest_female.png",
+      "bytes": 4760575,
+      "human": "4.54 MiB"
+    },
+    {
+      "path": "docs/mission-cinematics/anchors/source/s13-thirty-three.png",
+      "bytes": 4693866,
+      "human": "4.48 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/specialization_shock_trooper_female.png",
+      "bytes": 4664453,
+      "human": "4.45 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/specialization_sorcerer_female.png",
+      "bytes": 4662285,
+      "human": "4.45 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/specialization_witch_doctor_female.png",
+      "bytes": 4650222,
+      "human": "4.43 MiB"
+    },
+    {
+      "path": "docs/lunaris-reliquary/lunaris_vessel_chibi_sheet.png",
+      "bytes": 4576454,
+      "human": "4.36 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/specialization_sorcerer_male.png",
+      "bytes": 4573091,
+      "human": "4.36 MiB"
+    },
+    {
+      "path": "assets/cinematics/missions/video/s10.ogv",
+      "bytes": 4566613,
+      "human": "4.36 MiB"
+    },
+    {
+      "path": "docs/enemy-redesign/source/concepts/spellcaster_original.png",
+      "bytes": 4552123,
+      "human": "4.34 MiB"
+    },
+    {
+      "path": "docs/lunaris-reliquary/archive_caster_chibi_sheet.png",
+      "bytes": 4540086,
+      "human": "4.33 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/specialization_gunner_female.png",
+      "bytes": 4534495,
+      "human": "4.32 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/specialization_mage_apprentice_female.png",
+      "bytes": 4522756,
+      "human": "4.31 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/specialization_gunner_male.png",
+      "bytes": 4506825,
+      "human": "4.30 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/specialization_sniper_male.png",
+      "bytes": 4505553,
+      "human": "4.30 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/specialization_swordmaster_male.png",
+      "bytes": 4505395,
+      "human": "4.30 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/specialization_sniper_female.png",
+      "bytes": 4495960,
+      "human": "4.29 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/recruit_vesper_female.png",
+      "bytes": 4494638,
+      "human": "4.29 MiB"
+    },
+    {
+      "path": "docs/lunaris-reliquary/archive_caster_design_sheet.png",
+      "bytes": 4480268,
+      "human": "4.27 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/specialization_swordmaster_female.png",
+      "bytes": 4412054,
+      "human": "4.21 MiB"
+    },
+    {
+      "path": "docs/enemy-redesign/source/concepts/interceptor.png",
+      "bytes": 4394012,
+      "human": "4.19 MiB"
+    },
+    {
+      "path": "docs/Faction - Crimson Aegis.webp",
+      "bytes": 4370956,
+      "human": "4.17 MiB"
+    },
+    {
+      "path": "docs/enemy-redesign/source/concepts/interceptor_original.png",
+      "bytes": 4356013,
+      "human": "4.15 MiB"
+    },
+    {
+      "path": "docs/Faction - Solcrest Accord.webp",
+      "bytes": 4285648,
+      "human": "4.09 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/recruit_vesper_male.png",
+      "bytes": 4265714,
+      "human": "4.07 MiB"
+    },
+    {
+      "path": "docs/portraits/nonpremium/sources/specialization_mage_apprentice_male.png",
+      "bytes": 4245625,
+      "human": "4.05 MiB"
+    },
+    {
+      "path": "docs/lunaris-reliquary/reliquary_duelist_design_sheet.png",
+      "bytes": 4242500,
+      "human": "4.05 MiB"
+    }
+  ]
+}
