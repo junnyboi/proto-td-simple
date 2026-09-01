@@ -17,12 +17,6 @@ Use the smallest gate that matches the change:
 
 Never run the full suite by default. Do not repeat already-passing tests after compatible merges unless their code changed. Do not capture both landscape and portrait unless responsive behavior changed. Do not probe every unchanged managed film or pack on every deployment; verify only new/changed objects plus one final runtime load. If a regenerated artifact is byte-identical to the deployed object, reuse it and update release metadata without re-uploading.
 
-## Web export and deployment handoff
-
-A release export must contain non-empty HTML, JavaScript, WASM, and PCK artifacts. Preserve the six Resonance streams, sixteen mission streams, and eleven optional operator packs, but do not revalidate unchanged payloads exhaustively. One HTTP or managed-preview smoke proving the final core loads, accepts representative input, and has no runtime errors is sufficient for routine redeploys.
-
-Manus agents may update the existing `proto-td-web` project and checkpoint it. Codex agents must not mutate Manus WebDev; they should export and hand off artifacts instead. Preserve the zero-chrome fullscreen iframe and forward-only host architecture.
-
 ## Isolate test user data
 
 Every Godot test or visual harness must use a unique disposable `user://` directory. Use `tools/run_godot_test.sh tests/<name>.gd` for SceneTree tests and `tools/run_godot_isolated.sh <godot arguments...>` for boot or visual checks. Never run repository tests directly against the playable `Protos` application-data directory.
