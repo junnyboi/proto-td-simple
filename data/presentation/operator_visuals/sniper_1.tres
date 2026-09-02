@@ -9,14 +9,10 @@ visual_id = &"operator_sniper_1"
 idle_by_direction = {
 &"ne": &"op_anim_sniper_1_idle_ne",
 &"nw": &"op_anim_sniper_1_idle_nw",
-&"se": &"op_anim_sniper_1_idle_se",
-&"sw": &"op_anim_sniper_1_idle_sw"
 }
 attack_by_direction = {
 &"ne": &"op_anim_sniper_1_attack_ne",
 &"nw": &"op_anim_sniper_1_attack_nw",
-&"se": &"op_anim_sniper_1_attack_se",
-&"sw": &"op_anim_sniper_1_attack_sw"
 }
 idle_frame_count = 24
 attack_frame_count = 13

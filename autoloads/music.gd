@@ -332,6 +332,9 @@ func _transition_to(
 	fade_seconds: float,
 	tempo_scale: float = 1.0,
 ) -> bool:
+	fade_seconds *= float(TweakControls.value(
+		&"audio.transition_duration_multiplier", 1.0,
+	))
 	var cue := _cue_for(cue_id)
 	if cue == null or not cue.is_valid():
 		return false
@@ -351,7 +354,10 @@ func _transition_to(
 	_fade_tween = null
 	new_player.stop()
 	new_player.stream = stream
-	new_player.pitch_scale = maxf(tempo_scale, 0.01)
+	new_player.pitch_scale = maxf(
+		tempo_scale * float(TweakControls.value(&"audio.music_pitch_multiplier", 1.0)),
+		0.01,
+	)
 	new_player.volume_db = cue.volume_db if fade_seconds <= 0.0 else -60.0
 	new_player.play()
 	_active_index = new_index
@@ -402,7 +408,7 @@ func _cue_for(cue_id: StringName) -> AudioCue:
 		var cue := AUDIO_CUE_SCRIPT.new() as AudioCue
 		cue.id = cue_id
 		cue.stream_path = stream_path
-		cue.loop = bool(legacy_entry.get("loop", not String(cue_id).begins_with("gacha_")))
+		cue.loop = bool(legacy_entry.get("loop", true))
 		return cue
 	return null
 

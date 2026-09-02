@@ -128,14 +128,14 @@ func _validate_generated_entry(
 		errors.append("provenance.gender: expected female or male")
 	if action not in ["idle", "attack"]:
 		errors.append("provenance.action: expected idle or attack")
-	if direction not in ["ne", "nw", "se", "sw"]:
-		errors.append("provenance.direction: expected isometric direction")
+	if direction not in ["ne", "nw"]:
+		errors.append("provenance.direction: expected NE or NW")
 	if source_kind not in ["generated", "mirrored"]:
 		errors.append("provenance.source_kind: expected generated or mirrored")
-	elif source_kind == "generated" and (direction not in ["ne", "se"] or not mirrored_from.is_empty()):
-		errors.append("provenance: generated atlas must be east-facing with empty mirrored_from")
+	elif source_kind == "generated" and (direction != "ne" or not mirrored_from.is_empty()):
+		errors.append("provenance: generated atlas must be NE with empty mirrored_from")
 	elif source_kind == "mirrored":
-		var expected_source := "ne" if direction == "nw" else ("se" if direction == "sw" else "")
+		var expected_source := "ne" if direction == "nw" else ""
 		if expected_source.is_empty() or mirrored_from != expected_source:
 			errors.append("provenance: mirrored atlas source direction mismatch")
 	if atlas_sha256.length() != 64 or not atlas_sha256.is_valid_hex_number(false):

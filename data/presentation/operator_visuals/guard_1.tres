@@ -9,14 +9,10 @@ visual_id = &"operator_guard_1"
 idle_by_direction = {
 &"ne": &"op_anim_guard_1_idle_ne",
 &"nw": &"op_anim_guard_1_idle_nw",
-&"se": &"op_anim_guard_1_idle_se",
-&"sw": &"op_anim_guard_1_idle_sw"
 }
 attack_by_direction = {
 &"ne": &"op_anim_guard_1_attack_ne",
 &"nw": &"op_anim_guard_1_attack_nw",
-&"se": &"op_anim_guard_1_attack_se",
-&"sw": &"op_anim_guard_1_attack_sw"
 }
 idle_frame_count = 24
 attack_frame_count = 13
@@ -26,5 +22,5 @@ display_height_px = 60
 normalized_subject_height_px = 142
 placeholder = true
 placeholder_source_by_logical_id = {
-&"op_anim_guard_1_attack_ne": &"se"
+&"op_anim_guard_1_attack_ne": &"ne"
 }

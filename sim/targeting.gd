@@ -9,6 +9,8 @@ const FACING_RIGHT := 0
 const FACING_DOWN := 1
 const FACING_LEFT := 2
 const FACING_UP := 3
+const FACING_NORTHWEST := FACING_LEFT
+const FACING_NORTHEAST := FACING_UP
 
 const NO_TARGET := -1
 const RELATION_NONE := ""
@@ -78,6 +80,34 @@ static func range_cells(origin: Vector2i, offsets: Array[Vector2i], facing: int)
 	for offset: Vector2i in offsets:
 		cells[origin + rotate_offset(offset, facing)] = true
 	return cells
+
+
+## Operators acquire targets across the union of every rotation of their
+## authored range. The original offsets remain the single data-owned shape;
+## facing is now a presentation response rather than an acquisition gate.
+static func omni_range_cells(origin: Vector2i, offsets: Array[Vector2i]) -> Dictionary:
+	var cells: Dictionary = {}
+	for facing: int in range(4):
+		for offset: Vector2i in offsets:
+			cells[origin + rotate_offset(offset, facing)] = true
+	return cells
+
+
+## Only the two north-facing operator views are admitted. Projecting grid
+## positions to isometric screen space reduces the choice to the enemy's
+## horizontal side: right is NE, left is NW. Exact center ties keep the last
+## north-facing direction to avoid visual jitter.
+static func north_facing_toward(
+	origin: Vector2i,
+	target: Vector2i,
+	fallback: int = FACING_NORTHWEST,
+) -> int:
+	var screen_x_delta := (target.x - origin.x) - (target.y - origin.y)
+	if screen_x_delta > 0:
+		return FACING_NORTHEAST
+	if screen_x_delta < 0:
+		return FACING_NORTHWEST
+	return fallback if fallback in [FACING_NORTHWEST, FACING_NORTHEAST] else FACING_NORTHWEST
 
 
 ## Compile a Resource into a primitive-only immutable-by-convention snapshot.

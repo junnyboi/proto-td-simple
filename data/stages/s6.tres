@@ -78,14 +78,7 @@ waves = Array[Dictionary]([{
 wave_starts = PackedInt32Array(0, 650)
 leak_limit = 3
 squad_size = 6
-recovery_roster = Array[StringName]([&"vanguard_1", &"guard_1", &"guard_2", &"defender_1", &"caster_1", &"defender_2"])
-rewards = Array[Dictionary]([{
-"id": &"vanguard_2",
-"kind": &"operator"
-}, {
-"id": &"slow_field",
-"kind": &"spell"
-}])
+recovery_roster = Array[StringName]([&"caster_1", &"guard_1", &"sniper_1"])
+rewards = Array[Dictionary]([])
 campaign_index = 6
-requires = Array[StringName]([&"charm"])
-intro_hint = "Wait for the escort to gather, then use Charm to force the heavy leader to attack its own column."
+requires = Array[StringName]([])

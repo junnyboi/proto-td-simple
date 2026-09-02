@@ -8,7 +8,6 @@ class_id = &"swordmaster"
 stage = 1
 operator_def_id = &"guard_1"
 promotion_from_class_id = &"recruit"
-promotion_to_class_ids = Array[StringName]([&"sword_saint"])
 promotion_xp_required = 400
 name_key = &"data.class.swordmaster.name"
 role_key = &"data.class.swordmaster.role"

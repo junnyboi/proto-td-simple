@@ -17,10 +17,9 @@ const LEGACY_ZERO_SHA256 := \
 static func build(catalogs: Dictionary, stages: Array) -> Dictionary:
 	var operators := _actor_rows(catalogs.get("operators", []), "operators")
 	var traps := _damage_source_rows(catalogs.get("traps", []), "traps")
-	var spells := _damage_source_rows(catalogs.get("spells", []), "spells")
 	var enemy_ids := _enemy_ids(stages)
 	var enemies := _actor_rows(enemy_ids, "enemies")
-	for result: Dictionary in [operators, enemies, traps, spells]:
+	for result: Dictionary in [operators, enemies, traps]:
 		if not result["accepted"]:
 			return result
 	var manifest := {
@@ -29,7 +28,6 @@ static func build(catalogs: Dictionary, stages: Array) -> Dictionary:
 		"operators": operators["value"],
 		"enemies": enemies["value"],
 		"traps": traps["value"],
-		"spells": spells["value"],
 	}
 	return {
 		"accepted": true,

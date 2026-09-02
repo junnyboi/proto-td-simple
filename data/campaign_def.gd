@@ -7,7 +7,7 @@ extends Resource
 const P16_ENVIRONMENT_SHA256 := \
 	"3f90e0a63147c5ca092dad8e83feffffe2204bd57dbe601d768b4a6d6f0d9eff"
 const P16_V3_ENVIRONMENT_SHA256 := \
-	"94368da5ab8df24620f9987229a3448385226755d36dc9950faebd66ccab8e1e"
+	"2ed4cbb53592ae9fe98434667f091a00f2d97134187138e364280e9896209b90"
 
 @export var schema_version: int = 2
 @export var name_version: int = 1
@@ -24,6 +24,3 @@ const P16_V3_ENVIRONMENT_SHA256 := \
 @export var portrait_asset_ids: Array[StringName] = []
 ## Repeatable Mission Control basic-personnel acquisition cost.
 @export var basic_recruit_cost: int = 0
-## Premium hero pool additions. Legacy resources keep the zero/empty defaults.
-@export var premium_pull_cost: int = 0
-@export var premium_hero_rows: Array[Dictionary] = []

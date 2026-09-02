@@ -121,8 +121,6 @@ static func duplicate_result(record_row: Dictionary) -> Dictionary:
 			result["outcome"] = record_row["payload"]["outcome"].duplicate(true)
 		"confirm_promotions":
 			result["promotion"] = record_row["receipt"]["promotion"].duplicate(true)
-		"pull_premium_hero":
-			result["premium_pull"] = record_row["receipt"]["premium_pull"].duplicate(true)
 		"recruit_person":
 			result["recruitment"] = record_row["receipt"]["recruitment"].duplicate(true)
 		"rename_hero":

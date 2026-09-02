@@ -18,15 +18,7 @@ static func resolution_rewards(
 	if result != "clear":
 		return []
 	if stars_before == 0:
-		var rewards := _stage_rewards(stage_id, context)
-		if (
-			int(before["next_resolution_index"])
-			< int(before["premium_marks_started_at_resolution"])
-		):
-			rewards = rewards.filter(func(reward: Dictionary) -> bool:
-				return reward["kind"] != "currency"
-			)
-		return rewards
+		return _stage_rewards(stage_id, context)
 	if (
 		int(before["next_resolution_index"])
 		>= int(before["replay_marks_started_at_resolution"])

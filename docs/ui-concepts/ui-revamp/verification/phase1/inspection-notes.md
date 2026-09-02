@@ -1,5 +1,0 @@
-# Phase 1 Visual Inspection
-
-The `1280×720` Stage Select capture confirms that the shared Aetheria consumers now inherit the Lunaris command-deck frame, engraved operation controls, Cinzel-led display hierarchy, ivory body text, moon-cyan focus, and restrained gold structure. All eight stage actions and Back remain visible. The cyan focus rectangle and gold active-stage frame are distinct without depending on color alone.
-
-The `720×1280` capture remains functionally contained and scrollable, but it exposes the intentionally unfinished migration seam: Stage Select still uses the legacy centered preferred-size shell rather than opting into the new `full_safe_area` mode. The ornate plate occupies only the central portion of the portrait viewport and hides later missions behind scrolling. Phase 2 must convert Stage Select to the full-safe-area expedition composition, keep a fixed header/action region, and let only the route body scroll. No clipping, missing resource, script error, or renderer failure appears in either capture.

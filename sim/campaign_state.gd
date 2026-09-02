@@ -8,10 +8,8 @@ extends "res://sim/campaign_training_projection.gd"
 
 const CampaignPromotionScript := preload("res://sim/campaign_promotion.gd")
 const CombatContentBindingScript := preload("res://sim/combat_content_binding.gd")
-const PROMOTION_RULES_PATH := "res://data/progression/mage_advanced_v1.tres"
-
 const P16_STARTERS: Array[StringName] = [
-	&"caster_1", &"defender_1", &"defender_2", &"guard_1", &"vanguard_1",
+	&"caster_1", &"guard_1", &"sniper_1",
 ]
 const P16_OFFER := {
 	"offer_id": "p16_caster_contract",
@@ -158,7 +156,6 @@ func compatibility_projection() -> Dictionary:
 	return {
 		"unlocked_operators": roster().owned_operator_def_ids(),
 		"unlocked_traps": _string_names(_data["unlocked_traps"]),
-		"unlocked_spells": _string_names(_data["unlocked_spells"]),
 		"stage_stars": _stage_stars_by_id(),
 	}
 
@@ -227,11 +224,7 @@ static func _build_environment(
 	var combat_binding := CombatContentBindingScript.build(canonical_catalogs, stages)
 	if not combat_binding["accepted"]:
 		return combat_binding
-	var promotion_rules := CampaignProgressionType.normalize_promotion_rules(
-		load(PROMOTION_RULES_PATH), canonical_catalogs["operators"],
-	)
-	if not promotion_rules["accepted"]:
-		return promotion_rules
+	var promotion_rules := {"accepted": true, "error_code": &"", "value": {}}
 	var environment_hash := CanonicalJson.sha256_hex(
 		_environment_manifest(
 			canonical_catalogs, stages, promotion_rules["value"],
@@ -245,8 +238,7 @@ static func _build_environment(
 		return _reject(&"starter_contract_mismatch")
 	var context := CampaignCodec.build_context(
 		canonical_catalogs["operators"], canonical_catalogs["traps"],
-		canonical_catalogs["spells"], stages,
-		definition["value"]["paid_offers"], starting["traps"], starting["spells"],
+		stages, definition["value"]["paid_offers"], starting["traps"],
 		promotion_rules["value"], combat_binding["sha256"],
 	)
 	return {
@@ -308,7 +300,6 @@ static func _fresh_data(
 			"combat_rules_sha256": combat_rules_sha256,
 			"stage_stars": [],
 			"unlocked_traps": _strings(starting["traps"]),
-			"unlocked_spells": _strings(starting["spells"]),
 			"offers": offers,
 			"heroes": rows,
 			"promotion_receipts": [],
@@ -497,11 +488,11 @@ static func _normalize_campaign_definition(campaign_def: CampaignDef) -> Diction
 
 
 static func _normalize_catalogs(catalogs: Dictionary) -> Dictionary:
-	if catalogs.keys().size() != 3:
+	if catalogs.keys().size() != 2:
 		return _reject(&"invalid_catalog")
 	var normalized := {}
 	var all_ids := {}
-	for key: String in ["operators", "traps", "spells"]:
+	for key: String in ["operators", "traps"]:
 		if not catalogs.has(key) or typeof(catalogs[key]) != TYPE_ARRAY:
 			return _reject(&"invalid_catalog")
 		var ids: Array[StringName] = []
@@ -581,7 +572,7 @@ static func _derive_starting_unlocks(catalogs: Dictionary, stages: Array) -> Dic
 	for stage: StageDef in stages:
 		for reward: Dictionary in stage.rewards:
 			rewarded[String(reward["id"])] = true
-	var result := {"operators": [], "traps": [], "spells": []}
+	var result := {"operators": [], "traps": []}
 	for kind: String in result:
 		var starting: Array[StringName] = []
 		for item_id: Variant in catalogs[kind]:
@@ -646,7 +637,7 @@ static func _validate_stage_rewards(
 		var catalog_key := kind + "s"
 		var reward_key := kind + ":" + item_id
 		if (
-			kind not in ["operator", "trap", "spell"]
+			kind not in ["operator", "trap"]
 			or not _is_ascii_id(item_id) or seen.has(reward_key)
 			or not catalogs[catalog_key].has(StringName(item_id))
 		):
@@ -713,7 +704,6 @@ static func _environment_manifest(
 	return {
 		"operators": _strings(catalogs["operators"]),
 		"traps": _strings(catalogs["traps"]),
-		"spells": _strings(catalogs["spells"]),
 		"stages": stage_rows,
 		"promotion_rules": promotion_rules.duplicate(true),
 		"combat_rules": combat_rules.duplicate(true),

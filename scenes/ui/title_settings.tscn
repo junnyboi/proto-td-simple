@@ -58,10 +58,10 @@ theme_type_variation = &"AuiReadingPanel"
 [node name="FramePadding" type="MarginContainer" parent="SafeFrame/CommandFrame"]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/margin_left = 22
-theme_override_constants/margin_top = 22
-theme_override_constants/margin_right = 22
-theme_override_constants/margin_bottom = 22
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
 
 [node name="StateLayout" type="VBoxContainer" parent="SafeFrame/CommandFrame/FramePadding"]
 layout_mode = 2
@@ -70,19 +70,19 @@ mouse_filter = 2
 theme_override_constants/separation = 12
 
 [node name="Header" type="HBoxContainer" parent="SafeFrame/CommandFrame/FramePadding/StateLayout"]
-custom_minimum_size = Vector2(0, 54)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/separation = 14
+theme_override_constants/separation = 10
 
 [node name="BackButtonPadding" type="MarginContainer" parent="SafeFrame/CommandFrame/FramePadding/StateLayout/Header"]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/margin_left = 24
-theme_override_constants/margin_right = 24
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_right = 0
 
 [node name="SettingsBackButton" type="Button" parent="SafeFrame/CommandFrame/FramePadding/StateLayout/Header/BackButtonPadding"]
-custom_minimum_size = Vector2(128, 62.1)
+custom_minimum_size = Vector2(160, 64)
 layout_mode = 2
 focus_mode = 2
 mouse_default_cursor_shape = 2
@@ -126,8 +126,8 @@ follow_focus = true
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
 
 [node name="SettingsColumns" type="GridContainer" parent="SafeFrame/CommandFrame/FramePadding/StateLayout/SettingsScroll/BodyMargin"]
 layout_mode = 2
@@ -155,11 +155,11 @@ theme_override_constants/margin_bottom = 18
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 14
 
 [node name="LocaleSelector" parent="SafeFrame/CommandFrame/FramePadding/StateLayout/SettingsScroll/BodyMargin/SettingsColumns/LanguageAudioSection/SectionMargin/LeftSection" instance=ExtResource("3_locale")]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 0
 
 [node name="AudioHeading" type="Label" parent="SafeFrame/CommandFrame/FramePadding/StateLayout/SettingsScroll/BodyMargin/SettingsColumns/LanguageAudioSection/SectionMargin/LeftSection"]
 layout_mode = 2
@@ -167,7 +167,7 @@ text = "AUDIO"
 
 [node name="MasterVolumeRow" type="VBoxContainer" parent="SafeFrame/CommandFrame/FramePadding/StateLayout/SettingsScroll/BodyMargin/SettingsColumns/LanguageAudioSection/SectionMargin/LeftSection"]
 layout_mode = 2
-theme_override_constants/separation = 5
+theme_override_constants/separation = 6
 
 [node name="MasterVolumeLabel" type="Label" parent="SafeFrame/CommandFrame/FramePadding/StateLayout/SettingsScroll/BodyMargin/SettingsColumns/LanguageAudioSection/SectionMargin/LeftSection/MasterVolumeRow"]
 layout_mode = 2
@@ -179,7 +179,7 @@ layout_mode = 2
 theme_override_constants/separation = 12
 
 [node name="MasterVolumeSlider" type="HSlider" parent="SafeFrame/CommandFrame/FramePadding/StateLayout/SettingsScroll/BodyMargin/SettingsColumns/LanguageAudioSection/SectionMargin/LeftSection/MasterVolumeRow/MasterControls"]
-custom_minimum_size = Vector2(0, 48)
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 2
@@ -191,7 +191,7 @@ tick_count = 11
 ticks_on_borders = true
 
 [node name="MasterMuteButton" type="Button" parent="SafeFrame/CommandFrame/FramePadding/StateLayout/SettingsScroll/BodyMargin/SettingsColumns/LanguageAudioSection/SectionMargin/LeftSection/MasterVolumeRow/MasterControls"]
-custom_minimum_size = Vector2(228, 48)
+custom_minimum_size = Vector2(144, 64)
 layout_mode = 2
 focus_mode = 2
 mouse_default_cursor_shape = 2
@@ -204,7 +204,7 @@ text_overrun_behavior = 0
 
 [node name="MusicVolumeRow" type="VBoxContainer" parent="SafeFrame/CommandFrame/FramePadding/StateLayout/SettingsScroll/BodyMargin/SettingsColumns/LanguageAudioSection/SectionMargin/LeftSection"]
 layout_mode = 2
-theme_override_constants/separation = 5
+theme_override_constants/separation = 6
 
 [node name="MusicVolumeLabel" type="Label" parent="SafeFrame/CommandFrame/FramePadding/StateLayout/SettingsScroll/BodyMargin/SettingsColumns/LanguageAudioSection/SectionMargin/LeftSection/MusicVolumeRow"]
 layout_mode = 2
@@ -212,7 +212,7 @@ text = "MUSIC VOLUME"
 autowrap_mode = 2
 
 [node name="MusicVolumeSlider" type="HSlider" parent="SafeFrame/CommandFrame/FramePadding/StateLayout/SettingsScroll/BodyMargin/SettingsColumns/LanguageAudioSection/SectionMargin/LeftSection/MusicVolumeRow"]
-custom_minimum_size = Vector2(0, 48)
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 focus_mode = 2
 mouse_default_cursor_shape = 2
@@ -222,7 +222,7 @@ value = 100.0
 
 [node name="SfxVolumeRow" type="VBoxContainer" parent="SafeFrame/CommandFrame/FramePadding/StateLayout/SettingsScroll/BodyMargin/SettingsColumns/LanguageAudioSection/SectionMargin/LeftSection"]
 layout_mode = 2
-theme_override_constants/separation = 5
+theme_override_constants/separation = 6
 
 [node name="SfxVolumeLabel" type="Label" parent="SafeFrame/CommandFrame/FramePadding/StateLayout/SettingsScroll/BodyMargin/SettingsColumns/LanguageAudioSection/SectionMargin/LeftSection/SfxVolumeRow"]
 layout_mode = 2
@@ -230,7 +230,7 @@ text = "SFX VOLUME"
 autowrap_mode = 2
 
 [node name="SfxVolumeSlider" type="HSlider" parent="SafeFrame/CommandFrame/FramePadding/StateLayout/SettingsScroll/BodyMargin/SettingsColumns/LanguageAudioSection/SectionMargin/LeftSection/SfxVolumeRow"]
-custom_minimum_size = Vector2(0, 48)
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 focus_mode = 2
 mouse_default_cursor_shape = 2
@@ -242,11 +242,11 @@ value = 100.0
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
-theme_override_constants/margin_left = 48
-theme_override_constants/margin_right = 48
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_right = 0
 
 [node name="MusicButton" type="Button" parent="SafeFrame/CommandFrame/FramePadding/StateLayout/SettingsScroll/BodyMargin/SettingsColumns/LanguageAudioSection/SectionMargin/LeftSection/MusicButtonContainer"]
-custom_minimum_size = Vector2(0, 62.1)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 2
@@ -293,7 +293,7 @@ autowrap_mode = 2
 vertical_alignment = 1
 
 [node name="FrameLimitOption" type="OptionButton" parent="SafeFrame/CommandFrame/FramePadding/StateLayout/SettingsScroll/BodyMargin/SettingsColumns/GraphicsAccessibilitySection/SectionMargin/RightSection/FrameLimitRow"]
-custom_minimum_size = Vector2(180, 57.5)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 2
@@ -303,17 +303,17 @@ mouse_default_cursor_shape = 2
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
-theme_override_constants/margin_left = 48
-theme_override_constants/margin_right = 48
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_right = 0
 
 [node name="MotionButton" type="Button" parent="SafeFrame/CommandFrame/FramePadding/StateLayout/SettingsScroll/BodyMargin/SettingsColumns/GraphicsAccessibilitySection/SectionMargin/RightSection/MotionButtonContainer"]
-custom_minimum_size = Vector2(0, 62.1)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 2
 mouse_default_cursor_shape = 2
 theme_type_variation = &"AuiSecondaryButton"
-text = "ANIMATED BACKGROUND // ON"
+text = "REDUCED MOTION // OFF"
 clip_text = false
 autowrap_mode = 2
 text_overrun_behavior = 0
@@ -323,7 +323,7 @@ layout_mode = 2
 text = "NETWORK"
 
 [node name="BackgroundDownloadsButton" type="Button" parent="SafeFrame/CommandFrame/FramePadding/StateLayout/SettingsScroll/BodyMargin/SettingsColumns/GraphicsAccessibilitySection/SectionMargin/RightSection"]
-custom_minimum_size = Vector2(0, 62.1)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 focus_mode = 2
 mouse_default_cursor_shape = 2
@@ -346,7 +346,7 @@ text = "ACCESSIBILITY"
 
 [node name="TextScaleRow" type="VBoxContainer" parent="SafeFrame/CommandFrame/FramePadding/StateLayout/SettingsScroll/BodyMargin/SettingsColumns/GraphicsAccessibilitySection/SectionMargin/RightSection"]
 layout_mode = 2
-theme_override_constants/separation = 5
+theme_override_constants/separation = 6
 
 [node name="TextScaleLabel" type="Label" parent="SafeFrame/CommandFrame/FramePadding/StateLayout/SettingsScroll/BodyMargin/SettingsColumns/GraphicsAccessibilitySection/SectionMargin/RightSection/TextScaleRow"]
 layout_mode = 2
@@ -354,7 +354,7 @@ text = ""
 autowrap_mode = 2
 
 [node name="TextScaleSlider" type="HSlider" parent="SafeFrame/CommandFrame/FramePadding/StateLayout/SettingsScroll/BodyMargin/SettingsColumns/GraphicsAccessibilitySection/SectionMargin/RightSection/TextScaleRow"]
-custom_minimum_size = Vector2(0, 48)
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 focus_mode = 2
 mouse_default_cursor_shape = 2
@@ -374,7 +374,7 @@ text = ""
 autowrap_mode = 2
 
 [node name="ClearPlayerDataButton" type="Button" parent="SafeFrame/CommandFrame/FramePadding/StateLayout/SettingsScroll/BodyMargin/SettingsColumns/GraphicsAccessibilitySection/SectionMargin/RightSection"]
-custom_minimum_size = Vector2(0, 82)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 focus_mode = 2
 mouse_default_cursor_shape = 2
@@ -408,7 +408,7 @@ mouse_filter = 2
 columns = 1
 
 [node name="SettingsApplyButton" type="Button" parent="SafeFrame/CommandFrame/FramePadding/StateLayout/ActionDock"]
-custom_minimum_size = Vector2(0, 62.1)
+custom_minimum_size = Vector2(420, 64)
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 2

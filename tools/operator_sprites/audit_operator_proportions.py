@@ -22,7 +22,7 @@ CELL = 640
 COLUMNS = 8
 ALPHA_THRESHOLD = 16
 BAND_HALF_WIDTH = 72
-DIRECTIONS = ("ne", "se")
+DIRECTIONS = ("ne",)
 SAMPLE_INDICES = (0, 6, 12, 18, 23)
 
 
@@ -62,8 +62,8 @@ def load_config(repository: Path) -> dict[str, Any]:
     if payload.get("schema_version") != 1:
         raise ValueError(f"{path}: expected schema version 1")
     identities = payload.get("identities")
-    if not isinstance(identities, dict) or len(identities) != 22:
-        raise ValueError(f"{path}: expected exact 22-identity matrix")
+    if not isinstance(identities, dict) or len(identities) != 6:
+        raise ValueError(f"{path}: expected exact 6-identity matrix")
     return payload
 
 

@@ -9,67 +9,24 @@ const OperatorPortraitCatalogType := preload(
 	"res://data/presentation/operator_portrait_catalog.gd"
 )
 const DEFINITIONS: Dictionary = {
-	&"archive_caster": preload("res://data/presentation/operator_visuals/archive_caster.tres"),
-	&"banner_guard_female": preload("res://data/presentation/operator_visuals/banner_guard_female.tres"),
-	&"banner_guard_male": preload("res://data/presentation/operator_visuals/banner_guard_male.tres"),
 	&"caster_1": preload("res://data/presentation/operator_visuals/caster_1.tres"),
-	&"caster_2": preload("res://data/presentation/operator_visuals/caster_2.tres"),
-	&"defender_female": preload("res://data/presentation/operator_visuals/defender_female.tres"),
-	&"defender_male": preload("res://data/presentation/operator_visuals/defender_male.tres"),
-	&"defender_1": preload("res://data/presentation/operator_visuals/defender_1.tres"),
-	&"defender_2": preload("res://data/presentation/operator_visuals/defender_2.tres"),
 	&"gunner_female": preload("res://data/presentation/operator_visuals/gunner_female.tres"),
 	&"gunner_male": preload("res://data/presentation/operator_visuals/gunner_male.tres"),
 	&"guard_1": preload("res://data/presentation/operator_visuals/guard_1.tres"),
-	&"guard_2": preload("res://data/presentation/operator_visuals/guard_2.tres"),
-	&"immovable_female": preload("res://data/presentation/operator_visuals/immovable_female.tres"),
-	&"immovable_male": preload("res://data/presentation/operator_visuals/immovable_male.tres"),
-	&"lunaris_vessel": preload("res://data/presentation/operator_visuals/lunaris_vessel.tres"),
 	&"mage_apprentice_female": preload("res://data/presentation/operator_visuals/mage_apprentice_female.tres"),
 	&"mage_apprentice_male": preload("res://data/presentation/operator_visuals/mage_apprentice_male.tres"),
-	&"reliquary_duelist": preload("res://data/presentation/operator_visuals/reliquary_duelist.tres"),
 	&"recruit_female": preload("res://data/presentation/operator_visuals/recruit_female.tres"),
 	&"recruit_male": preload("res://data/presentation/operator_visuals/recruit_male.tres"),
-	&"shock_trooper_female": preload("res://data/presentation/operator_visuals/shock_trooper_female.tres"),
-	&"shock_trooper_male": preload("res://data/presentation/operator_visuals/shock_trooper_male.tres"),
-	&"sniper_female": preload("res://data/presentation/operator_visuals/sniper_female.tres"),
-	&"sniper_male": preload("res://data/presentation/operator_visuals/sniper_male.tres"),
 	&"sniper_1": preload("res://data/presentation/operator_visuals/sniper_1.tres"),
-	&"sniper_2": preload("res://data/presentation/operator_visuals/sniper_2.tres"),
-	&"sorcerer_female": preload("res://data/presentation/operator_visuals/sorcerer_female.tres"),
-	&"sorcerer_male": preload("res://data/presentation/operator_visuals/sorcerer_male.tres"),
-	&"sword_saint_female": preload("res://data/presentation/operator_visuals/sword_saint_female.tres"),
-	&"sword_saint_male": preload("res://data/presentation/operator_visuals/sword_saint_male.tres"),
 	&"swordmaster_female": preload("res://data/presentation/operator_visuals/swordmaster_female.tres"),
 	&"swordmaster_male": preload("res://data/presentation/operator_visuals/swordmaster_male.tres"),
-	&"vanguard_1": preload("res://data/presentation/operator_visuals/vanguard_1.tres"),
-	&"vanguard_2": preload("res://data/presentation/operator_visuals/vanguard_2.tres"),
-	&"witch_doctor_female": preload("res://data/presentation/operator_visuals/witch_doctor_female.tres"),
-	&"witch_doctor_male": preload("res://data/presentation/operator_visuals/witch_doctor_male.tres"),
 }
 const ADVANCED_CLASS_IDS: Dictionary = {
-	&"banner_guard": true,
-	&"defender": true,
 	&"gunner": true,
-	&"immovable": true,
 	&"mage_apprentice": true,
-	&"shock_trooper": true,
-	&"sniper": true,
-	&"sorcerer": true,
-	&"sword_saint": true,
 	&"swordmaster": true,
-	&"witch_doctor": true,
 }
-const VISUAL_ALIASES: Dictionary = {
-	&"witch_doctor_1": &"caster_1",
-}
-const PREMIUM_VISUAL_BY_PORTRAIT: Dictionary = {
-	&"portrait_archive_caster": &"archive_caster",
-	&"portrait_lunaris_vessel": &"lunaris_vessel",
-	&"portrait_reliquary_duelist": &"reliquary_duelist",
-}
-
-
+const VISUAL_ALIASES: Dictionary = {}
 static func template_for_unit(
 	op_id: StringName,
 	portrait_asset_id: StringName,
@@ -77,9 +34,6 @@ static func template_for_unit(
 	unit_id: int,
 	class_id: StringName = &"",
 ) -> StringName:
-	var premium_template: Variant = PREMIUM_VISUAL_BY_PORTRAIT.get(portrait_asset_id)
-	if typeof(premium_template) == TYPE_STRING_NAME:
-		return premium_template
 	var advanced_class: Variant = class_id if ADVANCED_CLASS_IDS.has(class_id) else null
 	if typeof(advanced_class) == TYPE_STRING_NAME:
 		var identity_gender := OperatorPortraitCatalogType.explicit_identity_variant(
@@ -114,6 +68,23 @@ static func get_animation(template_id: StringName) -> OperatorAnimationDefType:
 	var resolved_id := StringName(VISUAL_ALIASES.get(template_id, template_id))
 	var value: Variant = DEFINITIONS.get(resolved_id)
 	return value as OperatorAnimationDefType if value is OperatorAnimationDefType else null
+
+
+static func first_idle_art_id_for_unit(
+	op_id: StringName,
+	portrait_asset_id: StringName,
+	hero_id: StringName,
+	unit_id: int,
+	class_id: StringName = &"",
+	direction: StringName = &"nw",
+) -> StringName:
+	var template_id := template_for_unit(
+		op_id, portrait_asset_id, hero_id, unit_id, class_id,
+	)
+	var animation := get_animation(template_id)
+	if animation == null:
+		return &""
+	return StringName(animation.idle_by_direction.get(direction, &""))
 
 
 static func template_ids() -> Array[StringName]:

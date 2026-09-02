@@ -276,16 +276,6 @@ static func _decode_action(row: Variant, version: int = VERSION) -> Dictionary:
 			if not cell["accepted"] or not _nonempty_string(args["trap_id"]):
 				return _reject(&"invalid_action_args")
 			action.append_array([StringName(args["trap_id"]), cell["value"]])
-		"cast":
-			if (
-				not _exact_keys(args, ["spell_id", "target"])
-				or not _nonempty_string(args["spell_id"])
-			):
-				return _reject(&"invalid_action_args")
-			var target := _decode_target(args["target"])
-			if not target["accepted"]:
-				return target
-			action.append_array([StringName(args["spell_id"]), target["value"]])
 		"resign":
 			if not args.is_empty():
 				return _reject(&"invalid_action_args")
@@ -337,22 +327,6 @@ static func _encode_action(row: Variant, version: int = VERSION) -> Dictionary:
 				return _reject(&"invalid_timeline_row")
 			args["trap_id"] = String(row[2])
 			args["cell"] = [row[3].x, row[3].y]
-		"cast":
-			if row.size() != 4:
-				return _reject(&"invalid_timeline_row")
-			args["spell_id"] = String(row[2])
-			var target := {}
-			if typeof(row[3]) == TYPE_VECTOR2I:
-				if not _in_i32(row[3].x) or not _in_i32(row[3].y):
-					return _reject(&"invalid_timeline_row")
-				target["kind"] = "cell"
-				target["cell"] = [row[3].x, row[3].y]
-			elif _in_nonnegative_i32(row[3]):
-				target["kind"] = "enemy"
-				target["enemy_id"] = int(row[3])
-			else:
-				return _reject(&"invalid_timeline_row")
-			args["target"] = target
 		"resign":
 			if row.size() != 2:
 				return _reject(&"invalid_timeline_row")
@@ -373,27 +347,9 @@ static func _decode_cell(value: Variant) -> Dictionary:
 	return _accept(Vector2i(int(value[0]), int(value[1])))
 
 
-static func _decode_target(value: Variant) -> Dictionary:
-	if typeof(value) != TYPE_DICTIONARY or not value.has("kind"):
-		return _reject(&"invalid_target")
-	match String(value["kind"]):
-		"cell":
-			if not _exact_keys(value, ["kind", "cell"]):
-				return _reject(&"invalid_target")
-			return _decode_cell(value["cell"])
-		"enemy":
-			if not _exact_keys(value, ["kind", "enemy_id"]):
-				return _reject(&"invalid_target")
-			if not _in_nonnegative_i32(value["enemy_id"]):
-				return _reject(&"invalid_target")
-			return _accept(int(value["enemy_id"]))
-	return _reject(&"invalid_target")
-
-
 static func build_context(
 	operators: Dictionary,
 	traps: Dictionary,
-	spells: Dictionary,
 	stages: Dictionary,
 	config: GameConfig,
 	trusted_ticket_hashes: Array = [],
@@ -407,7 +363,6 @@ static func build_context(
 	return {
 		"operators": operators,
 		"traps": traps,
-		"spells": spells,
 		"stages": stages,
 		"config": config,
 		"trusted_ticket_hashes": trusted,
@@ -484,19 +439,13 @@ static func _validate_action_context(
 		"place_trap":
 			if not context["traps"].has(row[2]) or not stage.trap_cell_in_domain(row[3]):
 				return _reject(&"invalid_trap_context")
-		"cast":
-			if not context["spells"].has(row[2]):
-				return _reject(&"invalid_spell_context")
-			var spell_def: SpellDef = context["spells"][row[2]]
-			if not stage.spell_target_in_domain(spell_def, row[3]):
-				return _reject(&"invalid_spell_context")
 	return _accept(true)
 
 
 static func _valid_context(context: Dictionary) -> bool:
 	if not _exact_keys(
 		context,
-		["operators", "traps", "spells", "stages", "config", "trusted_ticket_hashes"],
+		["operators", "traps", "stages", "config", "trusted_ticket_hashes"],
 	):
 		return false
 	if typeof(context["trusted_ticket_hashes"]) != TYPE_ARRAY:

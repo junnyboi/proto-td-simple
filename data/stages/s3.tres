@@ -50,14 +50,10 @@ waves = Array[Dictionary]([{
 wave_starts = PackedInt32Array(0, 390)
 leak_limit = 3
 squad_size = 4
-recovery_roster = Array[StringName]([&"vanguard_1", &"guard_1", &"defender_1", &"caster_1"])
+recovery_roster = Array[StringName]([&"caster_1", &"guard_1", &"sniper_1"])
 rewards = Array[Dictionary]([{
-"id": &"sniper_1",
-"kind": &"operator"
-}, {
 "id": &"tar_pit",
 "kind": &"trap"
 }])
 campaign_index = 3
 requires = Array[StringName]([&"spike_plate"])
-intro_hint = "Both routes meet at one choke. Breachers consume two block capacity, so reinforce the shared exit."

@@ -56,7 +56,7 @@ class WebImportBudgetTests(unittest.TestCase):
             for path in root.glob("**/*.webp.import")
             if len(path.relative_to(root).parts) == 3
         )
-        self.assertEqual(176, len(imports))
+        self.assertEqual(88, len(imports))
         for path in imports:
             metadata = path.read_text(encoding="utf-8")
             self.assertIn("compress/mode=1", metadata, str(path))
@@ -65,7 +65,7 @@ class WebImportBudgetTests(unittest.TestCase):
             self.assertIn("process/size_limit=0", metadata, str(path))
 
         completed = run([sys.executable, str(IMPORT_CONFIGURATOR_PATH)])
-        self.assertIn("configured=176 changed=0", completed.stdout)
+        self.assertIn("configured=88 changed=0", completed.stdout)
 
     def test_all_advanced_identities_project_to_one_body_height(self) -> None:
         payload = proportion_auditor.audit(REPOSITORY)
@@ -79,53 +79,20 @@ class WebImportBudgetTests(unittest.TestCase):
                 msg=row["template_id"],
             )
 
-    def test_audited_direction_overrides_are_exact_and_scoped(self) -> None:
-        expected = {
-            ("gunner", "female", "idle"): "opposite",
-            ("gunner", "male", "attack"): "opposite",
-            ("mage_apprentice", "female", "attack"): "vertical",
-            ("shock_trooper", "female", "attack"): "opposite",
-            ("shock_trooper", "male", "idle"): "opposite",
-            ("swordmaster", "female", "idle"): "vertical",
-            ("sniper", "male", "attack"): "horizontal",
-            ("banner_guard", "female", "attack"): "horizontal",
-            ("sword_saint", "female", "idle"): "vertical",
-            ("sword_saint", "male", "attack"): "opposite",
-        }
-        for scope, transform_name in expected.items():
-            class_id, gender, action = scope
-            for direction in registrar.DIRECTION_ORDER:
-                self.assertEqual(
-                    registrar.DIRECTION_TRANSFORMS[transform_name][direction],
-                    registrar.source_direction_for(class_id, gender, action, direction),
-                    f"{scope}:{direction}",
-                )
-
-        for scope in (
-            ("defender", "female", "idle"),
-            ("immovable", "male", "attack"),
-            ("sorcerer", "female", "attack"),
-            ("witch_doctor", "male", "idle"),
-            ("swordmaster", "male", "attack"),
-            ("sniper", "female", "idle"),
-            ("banner_guard", "male", "attack"),
-        ):
-            class_id, gender, action = scope
-            for direction in registrar.DIRECTION_ORDER:
-                self.assertEqual(
-                    direction,
-                    registrar.source_direction_for(class_id, gender, action, direction),
-                    f"clean control changed: {scope}:{direction}",
-                )
-
-        remapped_rows = sum(
-            registrar.source_direction_for(class_id, gender, action, direction) != direction
-            for class_id in registrar.CLASS_ORDER
-            for gender in registrar.GENDER_ORDER
-            for action in registrar.ACTION_ORDER
-            for direction in registrar.DIRECTION_ORDER
-        )
-        self.assertEqual(88, remapped_rows)
+    def test_runtime_direction_contract_is_north_only(self) -> None:
+        self.assertEqual(("ne", "nw"), registrar.DIRECTION_ORDER)
+        self.assertEqual(("ne",), registrar.GENERATED_DIRECTION_ORDER)
+        self.assertEqual({"nw": "ne"}, registrar.MIRROR_SOURCE)
+        for class_id in registrar.CLASS_ORDER:
+            for gender in registrar.GENDER_ORDER:
+                for action in registrar.ACTION_ORDER:
+                    for direction in registrar.DIRECTION_ORDER:
+                        self.assertEqual(
+                            direction,
+                            registrar.source_direction_for(
+                                class_id, gender, action, direction,
+                            ),
+                        )
 
 
 def sha256(path: Path) -> str:
@@ -243,10 +210,10 @@ class SamplingAndChromaTests(unittest.TestCase):
                             atlas.write_bytes(
                                 f"{class_id}:{gender}:{action}:{direction}".encode("utf-8")
                             )
-            self.assertEqual(176, registrar.update_manifest(repository))
+            self.assertEqual(88, registrar.update_manifest(repository))
             first = manifest.read_bytes()
             self.assertIn(b"schema_version = 3", first)
-            self.assertEqual(176, registrar.update_manifest(repository))
+            self.assertEqual(88, registrar.update_manifest(repository))
             self.assertEqual(first, manifest.read_bytes())
 
 
@@ -269,7 +236,7 @@ class EndToEndProcessorTests(unittest.TestCase):
         ]
         cls.idle_command = common + ["--action", "idle", "--direction", "ne"]
         cls.attack_command = common + [
-            "--action", "attack", "--direction", "se",
+            "--action", "attack", "--direction", "ne",
             "--window-start", "0.5", "--window-end", "3.5",
         ]
         cls.idle_result = json.loads(run(cls.idle_command).stdout)

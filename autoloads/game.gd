@@ -4,25 +4,21 @@ extends Node
 
 const TITLE_SCENE_PATH := "res://scenes/title.tscn"
 const BATTLE_SCENE_PATH := "res://scenes/battle.tscn"
-const STAGING_SCENE_PATH := "res://scenes/staging.tscn"
-const TRAINING_SCENE_PATH := "res://scenes/training.tscn"
-const GACHA_SCENE_PATH := "res://scenes/gacha.tscn"
-const VAHALLA_SCENE_PATH := "res://scenes/vahalla.tscn"
 const STAGE_SELECT_SCENE_PATH := "res://scenes/stage_select.tscn"
-const SQUAD_SELECT_SCENE_PATH := "res://scenes/squad_select.tscn"
 const RESULTS_SCENE_PATH := "res://scenes/results.tscn"
-const NARRATIVE_ARCHIVE_SCENE_PATH := "res://scenes/narrative_archive.tscn"
 const DEFAULT_VIEW_PREFERENCES_PATH := "user://view_preferences.cfg"
-const LEGACY_CAMPAIGN_ADAPTER_SCRIPT := preload("res://sim/legacy_campaign_adapter.gd")
 const CAMPAIGN_RUNTIME_CONTEXT_SCRIPT := preload("res://sim/campaign_runtime_context.gd")
 const CAMPAIGN_RUNTIME_AUTHORITY_SCRIPT := preload("res://sim/campaign_runtime_authority.gd")
 const CANONICAL_JSON_SCRIPT := preload("res://sim/canonical_json.gd")
-const TRAINING_SUPPORT_SCRIPT := preload("res://scripts/ui/components/training_support.gd")
 const PLAYER_DATA_RESET_SCRIPT := preload("res://scripts/player_data_reset.gd")
+
+const BATTLE_OPERATOR_IDS: Array[StringName] = [
+	&"recruit", &"sniper_1", &"guard_1", &"caster_1",
+]
 
 var run_seed: int = 42
 var default_stage_id: StringName = &"s1"
-var default_squad: Array[StringName] = [&"vanguard_1", &"defender_1"]
+var default_squad: Array[StringName] = BATTLE_OPERATOR_IDS.duplicate()
 var pending_stage: StageDef = null
 var current_battle: BattleModel = null
 var content: Node = null
@@ -35,21 +31,14 @@ var selected_stage_id: StringName = &""
 var selected_squad: Array[StringName] = []
 var last_result: Dictionary = {}
 var last_campaign_error: StringName = &""
-var training_return_path: StringName = &"staging"
-var training_acknowledgement: Array[Dictionary] = []
 var _campaign_context: Dictionary = {}
 var _pending_battle_ticket: Dictionary = {}
 var _pending_campaign_mutation: Variant = null
-var _pending_promotion_mutation: Variant = null
-var _pending_recruitment_mutation: Variant = null
-var _pending_honor_mutation: Variant = null
-var _pending_honor_hero_id := ""
 var _pending_launch_mutation: Variant = null
 var _pending_launch_open_battle := true
 var _campaign_battle_active := false
 var _prepared_battle_result: Dictionary = {}
 var _command_tutorial_requested := false
-var _field_team_tutorial_requested := false
 var _post_mission_tutorial_requested := false
 var _view_preferences_path := DEFAULT_VIEW_PREFERENCES_PATH
 
@@ -81,19 +70,12 @@ func start_campaign(open_campaign_ui: bool = true, fresh: bool = false) -> bool:
 	selected_squad = []
 	last_result = {}
 	last_campaign_error = &""
-	training_return_path = &"staging"
-	training_acknowledgement.clear()
 	_pending_battle_ticket = {}
 	_pending_campaign_mutation = null
-	_pending_promotion_mutation = null
-	_pending_recruitment_mutation = null
-	_pending_honor_mutation = null
-	_pending_honor_hero_id = ""
 	_pending_launch_mutation = null
 	_pending_launch_open_battle = true
 	_campaign_battle_active = false
 	_prepared_battle_result = {}
-	_field_team_tutorial_requested = false
 	_post_mission_tutorial_requested = false
 	_restore_pending_attempt()
 	_prefetch_campaign_operator_packs()
@@ -101,7 +83,7 @@ func start_campaign(open_campaign_ui: bool = true, fresh: bool = false) -> bool:
 		if _campaign_battle_active:
 			_queue_battle(selected_stage_id)
 		else:
-			open_staging()
+			open_stage_select()
 	return true
 
 
@@ -135,12 +117,7 @@ func start_stage(
 		selected_squad = squad.duplicate()
 		start_battle(stage_id, open_battle)
 		return {"accepted": true, "error_code": &"", "ticket": {}}
-	if (
-		_pending_campaign_mutation != null
-		or _pending_promotion_mutation != null
-		or _pending_recruitment_mutation != null
-		or _pending_honor_mutation != null
-	):
+	if _pending_campaign_mutation != null:
 		return {"accepted": false, "error_code": &"strategic_mutation_pending"}
 	var committed: Dictionary
 	if _pending_launch_mutation != null:
@@ -189,9 +166,9 @@ func cancel_mission_launch_retry() -> bool:
 	return discarded
 
 
-## The squad the next battle boots with: an explicit start_stage selection
-## wins (campaign runs AND standalone per-stage bots — §2.2.6 lets bots run
-## never set one and keep the default squad.
+## Direct battles retain explicit input for replay compatibility. Campaign
+## battles use a signed witness ticket while tactical choices use the fixed
+## operator roster published by battle_launch().
 func _battle_squad() -> Array[StringName]:
 	if not selected_squad.is_empty():
 		return selected_squad.duplicate()
@@ -210,11 +187,9 @@ func battle_launch() -> Dictionary:
 			if _campaign_battle_active
 			else []
 		),
+		"fixed_operator_ids": BATTLE_OPERATOR_IDS.duplicate(),
 		"trap_ids": loadout_trap_ids() if _campaign_battle_active else _scan_ids(
 			"res://data/traps"
-		),
-		"spell_ids": loadout_spell_ids() if _campaign_battle_active else _scan_ids(
-			"res://data/spells"
 		),
 	}
 
@@ -256,9 +231,7 @@ func has_cleared_first_mission() -> bool:
 ## Loadout sets for the UI: unlocked sets during a campaign, full catalogs
 ## for direct battles.
 func loadout_operator_ids() -> Array[StringName]:
-	if campaign_active and campaign != null:
-		return campaign.runtime_projection()["unlocked_operators"]
-	return _scan_ids("res://data/operators")
+	return BATTLE_OPERATOR_IDS.duplicate()
 
 
 func loadout_trap_ids() -> Array[StringName]:
@@ -267,15 +240,8 @@ func loadout_trap_ids() -> Array[StringName]:
 	return _scan_ids("res://data/traps")
 
 
-func loadout_spell_ids() -> Array[StringName]:
-	if campaign_active and campaign != null:
-		return campaign.runtime_projection()["unlocked_spells"]
-	return _scan_ids("res://data/spells")
-
-
 ## Commit the model-owned canonical BattleOutcome. The view supplies only the
-## result edge; rewards, XP, deaths, stars, and Memorial facts come from the
-## resolved strategic receipt.
+## result edge; rewards and stars come from the resolved strategic receipt.
 func record_result(result: int, stars: int) -> bool:
 	return prepare_result(result, stars) and commit_prepared_result()
 
@@ -302,16 +268,6 @@ func prepare_result(result: int, stars: int) -> bool:
 			"kills": current_battle.killed,
 		}
 		return true
-	if (
-		_pending_campaign_mutation == null
-		and (
-			_pending_promotion_mutation != null
-			or _pending_recruitment_mutation != null
-			or _pending_honor_mutation != null
-		)
-	):
-		last_campaign_error = &"strategic_mutation_pending"
-		return false
 	var outcome: Dictionary = current_battle.terminal_outcome()
 	if outcome.is_empty():
 		return false
@@ -358,6 +314,7 @@ func commit_prepared_result() -> bool:
 			"kills": prepared["kills"],
 			"rewards_granted": [],
 		}
+		_record_leaderboard_result()
 		return true
 	var committed: Dictionary = (
 		CAMPAIGN_RUNTIME_AUTHORITY_SCRIPT.retry(
@@ -389,17 +346,24 @@ func commit_prepared_result() -> bool:
 		"rewards_granted": resolution["rewards_granted"].duplicate(true),
 		"marks_before": int(resolution["marks_before"]),
 		"marks_after": int(resolution["marks_after"]),
-		"class_entitlements_granted": (
-			resolution["class_entitlements_granted"].duplicate()
-		),
-		"xp_awards": resolution["xp_awards"].duplicate(true),
 		"dead_hero_ids": resolution["dead_hero_ids"].duplicate(),
-		"premium_life_losses": resolution["premium_life_losses"].duplicate(true),
 	}
+	_record_leaderboard_result()
 	_arm_post_mission_tutorial(canonical_result, resolution)
 	_pending_battle_ticket = {}
 	_campaign_battle_active = false
 	return true
+
+
+func _record_leaderboard_result() -> void:
+	var leaderboard := get_node_or_null("/root/Leaderboard")
+	if leaderboard == null or not leaderboard.has_method("record_mission"):
+		return
+	var record: Dictionary = leaderboard.call("record_mission", last_result)
+	if record.is_empty():
+		return
+	last_result["leaderboard_score"] = int(record.get("score", 0))
+	last_result["leaderboard_submission_id"] = String(record.get("submission_id", ""))
 
 
 func commit_campaign_command(command: Dictionary) -> Dictionary:
@@ -412,93 +376,6 @@ func commit_campaign_command(command: Dictionary) -> Dictionary:
 	)
 	if committed["accepted"]:
 		campaign = committed["state"]
-	return committed
-
-
-func pull_premium_hero() -> Dictionary:
-	if not campaign_active or campaign == null or campaign_store == null:
-		return {"accepted": false, "error_code": &"campaign_inactive"}
-	if strategic_mutation_pending():
-		return {"accepted": false, "error_code": &"strategic_mutation_pending"}
-	var projection: Dictionary = campaign.runtime_projection()
-	var command_id := "runtime:gacha:%s:%d" % [
-		campaign.campaign_uid(), int(projection["next_premium_pull_index"]),
-	]
-	var command: Dictionary = campaign.pull_premium_hero(command_id, campaign.save_revision())
-	var committed: Dictionary = CAMPAIGN_RUNTIME_AUTHORITY_SCRIPT.commit(command, campaign_store)
-	if committed["accepted"]:
-		campaign = committed["state"]
-	return committed
-
-
-## Mission Control acquires one persistent basic Recruit through the same
-## authenticated command/save/restore authority as every strategic action.
-## Retryable store failure retains the exact mutation rather than charging twice.
-func hire_basic_recruit() -> Dictionary:
-	if not campaign_active or campaign == null or campaign_store == null:
-		return {"accepted": false, "error_code": &"campaign_inactive"}
-	if (
-		_pending_campaign_mutation != null
-		or _pending_promotion_mutation != null
-		or _pending_launch_mutation != null
-		or _pending_honor_mutation != null
-	):
-		return {"accepted": false, "error_code": &"strategic_mutation_pending"}
-	var committed: Dictionary
-	if _pending_recruitment_mutation != null:
-		committed = CAMPAIGN_RUNTIME_AUTHORITY_SCRIPT.retry(
-			_pending_recruitment_mutation, campaign_store,
-		)
-	else:
-		var revision: int = campaign.save_revision()
-		var command_id := "runtime:basic-hire:%s:%d" % [campaign.campaign_uid(), revision]
-		var command: Dictionary = campaign.recruit_person(
-			command_id,
-			revision,
-			&"basic_hire",
-			&"mission_control",
-		)
-		committed = CAMPAIGN_RUNTIME_AUTHORITY_SCRIPT.commit(command, campaign_store)
-	if not committed["accepted"]:
-		_pending_recruitment_mutation = (
-			committed.get("mutation") if committed.get("retryable", false) else null
-		)
-		return committed
-	_pending_recruitment_mutation = null
-	campaign = committed["state"]
-	return committed
-
-
-## Honor is a durable, replay-validated one-time action. A retryable store
-## failure retains the exact mutation so the five-Mark stipend cannot double-pay.
-func honor_fallen_hero(hero_id: String) -> Dictionary:
-	if not campaign_active or campaign == null or campaign_store == null:
-		return {"accepted": false, "error_code": &"campaign_inactive"}
-	if _pending_honor_mutation != null and _pending_honor_hero_id != hero_id:
-		return {"accepted": false, "error_code": &"strategic_mutation_pending"}
-	if _pending_honor_mutation == null and strategic_mutation_pending():
-		return {"accepted": false, "error_code": &"strategic_mutation_pending"}
-	var committed: Dictionary
-	if _pending_honor_mutation != null:
-		committed = CAMPAIGN_RUNTIME_AUTHORITY_SCRIPT.retry(
-			_pending_honor_mutation, campaign_store,
-		)
-	else:
-		var revision: int = campaign.save_revision()
-		var command_id := "runtime:honor:%s:%d:%s" % [
-			campaign.campaign_uid(), revision, hero_id,
-		]
-		var command: Dictionary = campaign.honor_fallen(command_id, revision, hero_id)
-		committed = CAMPAIGN_RUNTIME_AUTHORITY_SCRIPT.commit(command, campaign_store)
-	if not committed["accepted"]:
-		_pending_honor_mutation = (
-			committed.get("mutation") if committed.get("retryable", false) else null
-		)
-		_pending_honor_hero_id = hero_id if _pending_honor_mutation != null else ""
-		return committed
-	_pending_honor_mutation = null
-	_pending_honor_hero_id = ""
-	campaign = committed["state"]
 	return committed
 
 
@@ -525,117 +402,6 @@ func rename_hero(hero_id: String, callsign: String, title: Variant = null) -> Di
 	return committed
 
 
-func training_call(action: StringName, payload: Variant = null) -> Variant:
-	var result: Variant = null
-	match action:
-		&"eligible_count":
-			result = TRAINING_SUPPORT_SCRIPT.eligible_count(campaign) if campaign_active else 0
-		&"commit":
-			result = _commit_promotions(payload as Array)
-		&"retry":
-			result = _retry_promotions()
-		&"retry_pending":
-			result = _pending_promotion_mutation != null
-		&"peek_acknowledgement":
-			result = training_acknowledgement.duplicate(true)
-		&"consume_acknowledgement":
-			training_acknowledgement.clear()
-			result = true
-		&"open":
-			_open_training(StringName(payload))
-			result = true
-		&"leave":
-			_leave_training()
-			result = true
-	return result
-
-
-## Build and durably commit canonical promotion choices. Training submits the
-## selected operator immediately as a singleton; the model retains batch-shaped
-## command compatibility and remains the sole legality authority.
-func _commit_promotions(choices: Array) -> Dictionary:
-	if not campaign_active or campaign == null or campaign_store == null:
-		return {"accepted": false, "error_code": &"campaign_inactive"}
-	if _pending_promotion_mutation != null:
-		return {"accepted": false, "error_code": &"promotion_retry_pending"}
-	if (
-		_pending_campaign_mutation != null
-		or _pending_recruitment_mutation != null
-		or _pending_honor_mutation != null
-		or _pending_launch_mutation != null
-	):
-		return {"accepted": false, "error_code": &"strategic_mutation_pending"}
-	var canonical: Array[Dictionary] = []
-	for raw: Variant in choices:
-		if typeof(raw) != TYPE_DICTIONARY:
-			return {"accepted": false, "error_code": &"invalid_promotion_choice"}
-		var row := raw as Dictionary
-		canonical.append(
-			{
-				"hero_id": String(row.get("hero_id", "")),
-				"to_class_id": String(row.get("to_class_id", "")),
-			}
-		)
-	canonical.sort_custom(
-		func(a: Dictionary, b: Dictionary) -> bool:
-			return String(a["hero_id"]) < String(b["hero_id"])
-	)
-	var revision: int = campaign.save_revision()
-	var digest := CANONICAL_JSON_SCRIPT.sha256_hex(canonical).substr(0, 16)
-	var command_id := "runtime:promote:%s:%d:%s" % [
-		campaign.campaign_uid(), revision, digest,
-	]
-	var command: Dictionary = campaign.confirm_promotions(
-		command_id, revision, canonical,
-	)
-	var committed: Dictionary = CAMPAIGN_RUNTIME_AUTHORITY_SCRIPT.commit(
-		command, campaign_store,
-	)
-	if not committed["accepted"]:
-		if committed.get("retryable", false):
-			_pending_promotion_mutation = committed.get("mutation")
-		return committed
-	_publish_promotion_commit(committed)
-	return committed
-
-
-func _retry_promotions() -> Dictionary:
-	if _pending_promotion_mutation == null:
-		return {"accepted": false, "error_code": &"no_promotion_retry"}
-	if (
-		_pending_campaign_mutation != null
-		or _pending_recruitment_mutation != null
-		or _pending_honor_mutation != null
-		or _pending_launch_mutation != null
-	):
-		return {"accepted": false, "error_code": &"strategic_mutation_pending"}
-	var committed: Dictionary = CAMPAIGN_RUNTIME_AUTHORITY_SCRIPT.retry(
-		_pending_promotion_mutation, campaign_store,
-	)
-	if not committed["accepted"]:
-		if not committed.get("retryable", false):
-			_pending_promotion_mutation = null
-		return committed
-	_pending_promotion_mutation = null
-	_publish_promotion_commit(committed)
-	return committed
-
-
-func _publish_promotion_commit(committed: Dictionary) -> void:
-	campaign = committed["state"]
-	var promoted_classes: Array[String] = []
-	for row: Dictionary in committed["result"]["promotion"]["choices"]:
-		promoted_classes.append(String(row.get("to_class_id", "")))
-	var content_packs := get_node_or_null("/root/ContentPacks")
-	if content_packs != null:
-		content_packs.call_deferred("prefetch_class_ids", promoted_classes, true)
-	if not bool(committed["result"].get("fresh", true)):
-		return
-	training_acknowledgement.clear()
-	for row: Dictionary in committed["result"]["promotion"]["choices"]:
-		training_acknowledgement.append(row.duplicate(true))
-
-
 func _prefetch_campaign_operator_packs() -> void:
 	if not campaign_active or campaign == null:
 		return
@@ -651,15 +417,12 @@ func _prefetch_campaign_operator_packs() -> void:
 func strategic_mutation_pending() -> bool:
 	return (
 		_pending_campaign_mutation != null
-		or _pending_promotion_mutation != null
-		or _pending_recruitment_mutation != null
-		or _pending_honor_mutation != null
 		or _pending_launch_mutation != null
 	)
 
 
-## Title presentation arms this one-shot request. Command Center consumes it so
-## non-title routes and test fixtures do not unexpectedly mount onboarding.
+## The boot flow arms this one-shot request. Command Center consumes it so
+## other routes and test fixtures do not unexpectedly mount onboarding.
 func request_command_tutorial() -> void:
 	_command_tutorial_requested = true
 
@@ -667,16 +430,6 @@ func request_command_tutorial() -> void:
 func consume_command_tutorial_request() -> bool:
 	var requested := _command_tutorial_requested
 	_command_tutorial_requested = false
-	return requested
-
-
-func request_field_team_tutorial() -> void:
-	_field_team_tutorial_requested = true
-
-
-func consume_field_team_tutorial_request() -> bool:
-	var requested := _field_team_tutorial_requested
-	_field_team_tutorial_requested = false
 	return requested
 
 
@@ -711,17 +464,21 @@ func view_preferences_path() -> String:
 
 
 ## Stops persistent writers, removes the complete user:// tree, clears live
-## campaign authority, and returns to a newly instantiated start screen.
+## campaign authority, and returns to the start screen.
 func clear_player_data() -> Dictionary:
 	for service_path: NodePath in [
 		NodePath("/root/ContentPacks"),
-		NodePath("/root/CinematicPrefetch"),
-		NodePath("/root/MissionCinematicPrefetch"),
+		NodePath("/root/Leaderboard"),
 	]:
 		var service := get_node_or_null(service_path)
 		if service != null and service.has_method("prepare_for_player_data_clear"):
 			service.call("prepare_for_player_data_clear")
 	var cleared: Dictionary = PLAYER_DATA_RESET_SCRIPT.clear_all()
+	var leaderboard := get_node_or_null("/root/Leaderboard")
+	if leaderboard != null and leaderboard.has_method("finish_player_data_clear"):
+		leaderboard.call(
+			"finish_player_data_clear", bool(cleared.get(&"accepted", false)),
+		)
 	if not bool(cleared.get(&"accepted", false)):
 		push_error(
 			"Game.clear_player_data: %s (%s)" % [
@@ -735,8 +492,7 @@ func clear_player_data() -> Dictionary:
 	return cleared
 
 
-## next Start always creates a fresh campaign with no stale selection.
-func open_title() -> void:
+func _reset_campaign_runtime() -> void:
 	pending_stage = null
 	current_battle = null
 	campaign = null
@@ -745,66 +501,38 @@ func open_title() -> void:
 	selected_stage_id = &""
 	selected_squad = []
 	last_result = {}
-	training_return_path = &"staging"
-	training_acknowledgement.clear()
 	_campaign_context = {}
 	_pending_battle_ticket = {}
 	_pending_campaign_mutation = null
-	_pending_promotion_mutation = null
-	_pending_recruitment_mutation = null
-	_pending_honor_mutation = null
-	_pending_honor_hero_id = ""
 	_pending_launch_mutation = null
 	_pending_launch_open_battle = true
 	_campaign_battle_active = false
 	_prepared_battle_result = {}
 	_command_tutorial_requested = false
-	_field_team_tutorial_requested = false
 	_post_mission_tutorial_requested = false
+
+
+func open_title() -> void:
+	_reset_campaign_runtime()
 	_swap_content.call_deferred(TITLE_SCENE_PATH)
 
 
-## Campaign-home projection. Returning here swaps presentation only; the current
-## immutable CampaignStateV3 and durable store remain authoritative.
-func open_staging() -> void:
-	_swap_content.call_deferred(STAGING_SCENE_PATH)
-
-
-func _open_training(return_path: StringName = &"staging") -> void:
-	training_return_path = (
-		return_path if return_path in [&"results", &"staging", &"mission"] else &"staging"
-	)
-	_swap_content.call_deferred(TRAINING_SCENE_PATH)
-
-
-func _leave_training() -> void:
-	if training_return_path == &"results":
-		open_results()
-	elif training_return_path == &"mission":
-		open_squad_select()
-	else:
-		open_staging()
-
-
-func open_gacha() -> void:
-	_swap_content.call_deferred(GACHA_SCENE_PATH)
-
-
-func open_vahalla() -> void:
-	_swap_content.call_deferred(VAHALLA_SCENE_PATH)
-
-
-func open_narrative_archive() -> void:
-	_swap_content.call_deferred(NARRATIVE_ARCHIVE_SCENE_PATH)
+## Routes directly to Campaign, resuming durable authority when needed.
+func open_campaign_home() -> bool:
+	if campaign_active and campaign != null and campaign_store != null:
+		open_stage_select()
+		return true
+	return start_campaign()
 
 
 func open_stage_select() -> void:
 	_swap_content.call_deferred(STAGE_SELECT_SCENE_PATH)
 
 
-## Select one authenticated campaign stage and open the existing Field Team
-## workspace. This is presentation routing only; no attempt is committed here.
-func open_field_team_for_stage(stage_id: StringName) -> bool:
+## Commit a campaign attempt and enter the mission immediately. The ticket keeps
+## one stable campaign-personnel witness for save/replay integrity; tactical
+## deployment uses the fixed repeatable four-operator roster.
+func start_campaign_stage(stage_id: StringName, open_battle: bool = true) -> bool:
 	if not campaign_active or campaign == null or stage_id.is_empty():
 		return false
 	if stage_id not in campaign_stage_ids() or not is_stage_unlocked(stage_id):
@@ -812,14 +540,27 @@ func open_field_team_for_stage(stage_id: StringName) -> bool:
 	var stage_path := "res://data/stages/%s.tres" % stage_id
 	if not ResourceLoader.exists(stage_path):
 		return false
-	selected_stage_id = stage_id
-	request_field_team_tutorial()
-	open_squad_select()
+	var witness_ids := _campaign_attempt_witness_ids()
+	if witness_ids.is_empty():
+		last_campaign_error = &"campaign_roster_empty"
+		return false
+	var launched := start_stage(stage_id, witness_ids, open_battle)
+	if not bool(launched.get("accepted", false)):
+		last_campaign_error = StringName(launched.get("error_code", &"mission_launch_failed"))
+		return false
+	last_campaign_error = &""
 	return true
 
 
-func open_squad_select() -> void:
-	_swap_content.call_deferred(SQUAD_SELECT_SCENE_PATH)
+func _campaign_attempt_witness_ids() -> Array[StringName]:
+	var rows: Array = campaign.data_copy().get("heroes", []) if campaign != null else []
+	rows.sort_custom(
+		func(a: Dictionary, b: Dictionary) -> bool:
+			return int(a.get("recruitment_index", -1)) < int(b.get("recruitment_index", -1))
+	)
+	if rows.is_empty():
+		return []
+	return [StringName((rows[0] as Dictionary).get("hero_id", ""))]
 
 
 func open_results() -> void:
@@ -830,7 +571,6 @@ func _catalogs() -> Dictionary:
 	return {
 		"operators": _scan_ids("res://data/operators"),
 		"traps": _scan_ids("res://data/traps"),
-		"spells": _scan_ids("res://data/spells"),
 	}
 
 
@@ -960,9 +700,6 @@ func _route_music_before_scene(music: Node, scene_path: String) -> void:
 	if scene_path == BATTLE_SCENE_PATH:
 		_stop_music_node(music)
 		return
-	if _is_staging_music_scene(scene_path) and music.has_method("current_id"):
-		if music.call("current_id") == &"title_lunaris":
-			_stop_music_node(music)
 
 
 func _route_music_after_scene(music: Node, scene_path: String) -> void:
@@ -982,11 +719,4 @@ func _route_music_after_scene(music: Node, scene_path: String) -> void:
 
 
 func _is_staging_music_scene(scene_path: String) -> bool:
-	return scene_path in [
-		STAGING_SCENE_PATH,
-		TRAINING_SCENE_PATH,
-		GACHA_SCENE_PATH,
-		VAHALLA_SCENE_PATH,
-		STAGE_SELECT_SCENE_PATH,
-		SQUAD_SELECT_SCENE_PATH,
-	]
+	return scene_path == STAGE_SELECT_SCENE_PATH

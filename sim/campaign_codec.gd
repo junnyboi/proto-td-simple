@@ -11,7 +11,6 @@ const PromotionReceiptCodecScript := preload("res://sim/campaign_promotion_recei
 const PromotionProofCodecScript := preload("res://sim/campaign_promotion_proof_codec.gd")
 const PromotionSnapshotCodecScript := preload("res://sim/campaign_promotion_snapshot_codec.gd")
 const SaveUpgradeScript := preload("res://sim/campaign_save_upgrade.gd")
-const PromotionRulesResource := preload("res://data/progression/mage_advanced_v1.tres")
 const V3_CODEC_PATH := "res://sim/campaign_v3_codec.gd"
 const SAVE_SCHEMA := "prototype_td_campaign"
 const LEGACY_SAVE_VERSION := 1
@@ -19,7 +18,7 @@ const SAVE_VERSION := 2
 const RECRUIT_SAVE_VERSION := 3
 const TERMINAL_VALUES := ["clear", "leak_defeat", "base_defeat", "resign"]
 const RESULT_VALUES := ["clear", "defeat"]
-const REWARD_VALUES := ["operator", "trap", "spell"]
+const REWARD_VALUES := ["operator", "trap"]
 const U32_MAX := 4_294_967_295
 const U63_MAX := 9_223_372_036_854_775_807
 const MARKS_MAX := 1_000_000_000
@@ -28,14 +27,14 @@ const DATA_KEYS := [
 	"campaign_uid", "campaign_seed", "campaign_generation", "save_revision",
 	"next_recruitment_index", "next_attempt_id", "next_resolution_index", "marks",
 	"combat_rules_sha256",
-	"stage_stars", "unlocked_traps", "unlocked_spells", "offers", "heroes",
+	"stage_stars", "unlocked_traps", "offers", "heroes",
 	"promotion_receipts", "promotion_proofs", "resolution_anchor", "last_resolution",
 ]
 const CORE_KEYS := [
 	"campaign_uid", "campaign_seed", "campaign_generation", "save_revision",
 	"next_recruitment_index", "next_attempt_id", "next_resolution_index", "marks",
 	"combat_rules_sha256",
-	"stage_stars", "unlocked_traps", "unlocked_spells", "offers", "heroes",
+	"stage_stars", "unlocked_traps", "offers", "heroes",
 	"promotion_receipts", "promotion_proofs",
 ]
 const RESOLUTION_KEYS := [
@@ -111,8 +110,7 @@ static func normalize_core_snapshot(value: Variant, context: Dictionary) -> Dict
 	if not stage_rows["accepted"]:
 		return stage_rows
 	var traps := _normalize_string_array(value["unlocked_traps"])
-	var spells := _normalize_string_array(value["unlocked_spells"])
-	if not traps["accepted"] or not spells["accepted"]:
+	if not traps["accepted"]:
 		return _reject(&"invalid_unlocks")
 	var offers := _normalize_offers(value["offers"])
 	if not offers["accepted"]:
@@ -144,7 +142,6 @@ static func normalize_core_snapshot(value: Variant, context: Dictionary) -> Dict
 	ordered["combat_rules_sha256"] = String(value["combat_rules_sha256"])
 	ordered["stage_stars"] = stage_rows["value"]
 	ordered["unlocked_traps"] = traps["value"]
-	ordered["unlocked_spells"] = spells["value"]
 	ordered["offers"] = offers["value"]
 	ordered["heroes"] = heroes["value"]
 	ordered["promotion_receipts"] = promotion_receipts["value"]
@@ -633,11 +630,9 @@ static func _normalize_rewards(value: Variant) -> Dictionary:
 static func build_context(
 	operator_ids: Array,
 	trap_ids: Array,
-	spell_ids: Array,
 	stages: Array,
 	authored_offers: Array,
 	starting_traps: Array = [],
-	starting_spells: Array = [],
 	promotion_rules: Dictionary = {},
 	combat_rules_sha256: String = CombatContentBindingScript.LEGACY_ZERO_SHA256,
 ) -> Dictionary:
@@ -663,22 +658,14 @@ static func build_context(
 			"cost": int(row["cost"]),
 		}
 	var normalized_promotion_rules := promotion_rules.duplicate(true)
-	if normalized_promotion_rules.is_empty():
-		var normalized := CampaignProgression.normalize_promotion_rules(
-			PromotionRulesResource, operator_ids,
-		)
-		if normalized["accepted"]:
-			normalized_promotion_rules = normalized["value"]
 	return {
 		"operator_ids": _string_set(operator_ids),
 		"trap_ids": _string_set(trap_ids),
-		"spell_ids": _string_set(spell_ids),
 		"stage_order": stage_order,
 		"stage_rewards": stage_rewards,
 		"stage_recovery_rosters": stage_recovery_rosters,
 		"offers": offers,
 		"starting_traps": _sorted_strings(starting_traps),
-		"starting_spells": _sorted_strings(starting_spells),
 		"promotion_rules": normalized_promotion_rules,
 		"combat_rules_sha256": combat_rules_sha256,
 	}
@@ -776,19 +763,13 @@ static func _validate_progression(data: Dictionary, context: Dictionary) -> Dict
 		if stage_rows[index]["stage_id"] != stage_order[index]:
 			return _reject(&"invalid_stage_prefix")
 	var expected_traps: Array = context["starting_traps"].duplicate()
-	var expected_spells: Array = context["starting_spells"].duplicate()
 	for stage_row: Dictionary in stage_rows:
 		for reward: Dictionary in context["stage_rewards"][stage_row["stage_id"]]:
 			if reward["kind"] == &"trap":
 				expected_traps.append(String(reward["id"]))
-			elif reward["kind"] == &"spell":
-				expected_spells.append(String(reward["id"]))
 	expected_traps = _sorted_strings(expected_traps)
-	expected_spells = _sorted_strings(expected_spells)
 	if data["unlocked_traps"] != expected_traps:
 		return _reject(&"trap_unlock_mismatch")
-	if data["unlocked_spells"] != expected_spells:
-		return _reject(&"spell_unlock_mismatch")
 	return _accept(data)
 
 static func _validate_offer_context(data: Dictionary, context: Dictionary) -> Dictionary:

@@ -8,17 +8,12 @@ extends RefCounted
 const CampaignV3CodecScript := preload("res://sim/campaign_v3_codec.gd")
 const CampaignCodecScript := preload("res://sim/campaign_codec.gd")
 const HeroCodecScript := preload("res://sim/campaign_hero_codec.gd")
-const PromotionScript := preload("res://sim/campaign_v3_promotion.gd")
 const AttemptsScript := preload("res://sim/campaign_v3_attempts.gd")
-const RecruitmentScript := preload("res://sim/campaign_v3_recruitment.gd")
 const RenamingScript := preload("res://sim/campaign_v3_renaming.gd")
-const GachaScript := preload("res://sim/campaign_v3_gacha.gd")
-const HonorScript := preload("res://sim/campaign_v3_honor.gd")
 const CanonicalJsonScript := preload("res://sim/canonical_json.gd")
 const CommandCodecScript := preload("res://sim/campaign_v3_command_codec.gd")
 const CommandHistoryScript := preload("res://sim/campaign_v3_command_history.gd")
 const HashScript := preload("res://sim/campaign_v3_hash.gd")
-const PREMIUM_PULL_HISTORY_LIMIT := 10
 
 var _data: Dictionary = {}
 var _context: Dictionary = {}
@@ -84,18 +79,16 @@ func runtime_projection() -> Dictionary:
 	for row: Dictionary in _data["stage_stars"]:
 		stars[StringName(row["stage_id"])] = int(row["stars"])
 	var heroes: Array[Dictionary] = []
-	var fallen_heroes: Array[Dictionary] = []
 	for hero: Dictionary in _data["heroes"]:
 		var projected := hero.duplicate(true)
+		projected["life_status"] = "ready"
+		projected["death"] = null
 		var display := HeroCodecScript.display_callsign(hero)
 		projected["callsign"] = String(display.get("value", hero["hero_id"]))
 		projected["custom_title"] = RenamingScript.title_for(
 			_data, String(hero["hero_id"]),
 		)
-		if hero["life_status"] == "ready":
-			heroes.append(projected)
-		else:
-			fallen_heroes.append(projected)
+		heroes.append(projected)
 	heroes.sort_custom(
 		func(a: Dictionary, b: Dictionary) -> bool:
 			return (
@@ -106,22 +99,6 @@ func runtime_projection() -> Dictionary:
 				)
 			)
 	)
-	fallen_heroes.sort_custom(
-		func(a: Dictionary, b: Dictionary) -> bool:
-			return (
-				int(a["recruitment_index"]) < int(b["recruitment_index"])
-				or (
-					int(a["recruitment_index"]) == int(b["recruitment_index"])
-					and String(a["hero_id"]) < String(b["hero_id"])
-				)
-			)
-	)
-	var premium_heroes: Array[Dictionary] = []
-	for hero: Dictionary in _data["heroes"]:
-		if hero["hero_kind"] == "premium":
-			premium_heroes.append(hero.duplicate(true))
-	var premium_history := _premium_pull_history()
-	var honored_fallen_hero_ids := HonorScript.honored_hero_ids(_data)
 	var operators: Array[StringName] = []
 	for hero: Dictionary in heroes:
 		var operator_id := StringName(hero["operator_def_id"])
@@ -133,54 +110,23 @@ func runtime_projection() -> Dictionary:
 	var traps: Array[StringName] = []
 	for trap_id: String in _data["unlocked_traps"]:
 		traps.append(StringName(trap_id))
-	var spells: Array[StringName] = []
-	for spell_id: String in _data["unlocked_spells"]:
-		spells.append(StringName(spell_id))
 	return {
 		"campaign_uid": String(_data["campaign_uid"]),
 		"save_revision": int(_data["save_revision"]),
 		"next_attempt_id": int(_data["next_attempt_id"]),
 		"attempt_pending": int(_data["next_attempt_id"]) != int(_data["next_resolution_index"]),
-		"next_premium_pull_index": int(_data["next_premium_pull_index"]),
-		"premium_pity_started_at_pull": int(_data["premium_pity_started_at_pull"]),
-		"premium_pity_streak": int(_data["premium_pity_streak"]),
-		"premium_guarantee_in": 10 - int(_data["premium_pity_streak"]),
 		"marks": int(_data["marks"]),
 		"basic_recruit_cost": int(_context["campaign"]["basic_recruit_cost"]),
-		"premium_pull_cost": int(_context["campaign"]["premium_pull_cost"]),
-		"premium_pool": (_context["campaign"]["premium_hero_rows"] as Array).duplicate(true),
-		"premium_heroes": premium_heroes,
-		"premium_pull_history": premium_history["rows"],
-		"premium_pull_history_total": premium_history["total"],
 		"stage_ids": stage_ids,
 		"ready_heroes": heroes,
-		"fallen_heroes": fallen_heroes,
-		"honored_fallen_hero_ids": honored_fallen_hero_ids,
-		"memorial": (_data["memorial"] as Array).duplicate(true),
+		"fallen_heroes": [],
+		"honored_fallen_hero_ids": [],
+		"memorial": [],
 		"unlocked_operators": operators,
 		"unlocked_traps": traps,
-		"unlocked_spells": spells,
 		"stage_stars": stars,
 		"offers": (_data["offers"] as Array).duplicate(true),
 	}
-
-
-func _premium_pull_history() -> Dictionary:
-	var rows: Array[Dictionary] = []
-	var total := 0
-	var records: Array = _data["command_receipts"]
-	for index: int in range(records.size() - 1, -1, -1):
-		var record: Dictionary = records[index]
-		if String(record.get("verb", "")) != "pull_premium_hero":
-			continue
-		var receipt: Dictionary = record.get("receipt", {})
-		var pull: Dictionary = receipt.get("premium_pull", {})
-		if pull.is_empty():
-			continue
-		total += 1
-		if rows.size() < PREMIUM_PULL_HISTORY_LIMIT:
-			rows.append(pull.duplicate(true))
-	return {"rows": rows, "total": total}
 
 
 func data_copy() -> Dictionary:
@@ -201,10 +147,6 @@ func strategic_hash() -> Dictionary:
 
 func core_hash() -> Dictionary:
 	return _copy_encoded(_core_hash_cache)
-
-
-func promotion_options(hero_id: Variant) -> Dictionary:
-	return PromotionScript.options(_data, _context, hero_id)
 
 
 func begin_attempt(
@@ -245,40 +187,6 @@ func resolve_attempt(
 	)
 
 
-func confirm_promotions(
-	command_id: Variant,
-	expected_save_revision: Variant,
-	choices: Variant,
-) -> Dictionary:
-	return (
-			PromotionScript
-			. confirm(
-			self,
-			command_id,
-			expected_save_revision,
-			choices,
-		)
-		)
-
-
-func recruit_person(
-	command_id: Variant,
-	expected_save_revision: Variant,
-	source: Variant,
-	source_id: Variant,
-) -> Dictionary:
-	return RecruitmentScript.execute(
-		self, command_id, expected_save_revision, source, source_id,
-	)
-
-
-func pull_premium_hero(
-	command_id: Variant,
-	expected_save_revision: Variant,
-) -> Dictionary:
-	return GachaScript.execute(self, command_id, expected_save_revision)
-
-
 func rename_hero(
 	command_id: Variant,
 	expected_save_revision: Variant,
@@ -289,14 +197,6 @@ func rename_hero(
 	return RenamingScript.execute(
 		self, command_id, expected_save_revision, hero_id, callsign, title,
 	)
-
-
-func honor_fallen(
-	command_id: Variant,
-	expected_save_revision: Variant,
-	hero_id: Variant,
-) -> Dictionary:
-	return HonorScript.execute(self, command_id, expected_save_revision, hero_id)
 
 
 func restore_factory() -> Callable:

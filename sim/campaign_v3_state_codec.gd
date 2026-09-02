@@ -8,9 +8,8 @@ const U32_MAX := 4_294_967_295
 const U63_MAX := 9_223_372_036_854_775_807
 const MARKS_MAX := 1_000_000_000
 const MAX_ROSTER := 1024
-const PREMIUM_LIVES_MAX := 999
 const SOURCE_VALUES := [
-	"starter", "basic_hire", "contract", "reward", "recovery", "replacement", "gacha",
+	"starter", "basic_hire", "contract", "reward", "recovery", "replacement",
 ]
 const LIFE_VALUES := ["ready", "dead"]
 const TERMINAL_VALUES := ["clear", "leak_defeat", "base_defeat", "resign"]
@@ -87,9 +86,7 @@ static func normalize_core(
 		return _reject(&"invalid_core_snapshot")
 	for key: String in [
 		"campaign_seed", "campaign_generation", "save_revision", "next_recruitment_index",
-		"next_attempt_id", "next_resolution_index", "next_premium_pull_index",
-		"premium_pity_started_at_pull", "premium_pity_streak",
-		"premium_marks_started_at_resolution", "replay_marks_started_at_resolution", "marks",
+		"next_attempt_id", "next_resolution_index", "replay_marks_started_at_resolution", "marks",
 	]:
 		if typeof(value[key]) != TYPE_INT:
 			return _reject(&"invalid_integer")
@@ -107,38 +104,19 @@ static func normalize_core(
 			return _reject(&"invalid_counter")
 	if not _in_range(value["next_recruitment_index"], 0, U63_MAX):
 		return _reject(&"invalid_counter")
-	if not _in_range(value["next_premium_pull_index"], 0, U63_MAX):
-		return _reject(&"invalid_counter")
-	if not _in_range(value["premium_pity_started_at_pull"], 0, U63_MAX):
-		return _reject(&"invalid_counter")
-	if int(value["premium_pity_started_at_pull"]) > int(value["next_premium_pull_index"]):
-		return _reject(&"invalid_pity_activation")
-	if not _in_range(value["premium_pity_streak"], 0, 9):
-		return _reject(&"invalid_pity_streak")
-	if int(value["premium_pity_streak"]) > (
-		int(value["next_premium_pull_index"]) - int(value["premium_pity_started_at_pull"])
-	):
-		return _reject(&"invalid_pity_streak")
-	if not _in_range(value["premium_marks_started_at_resolution"], 1, U63_MAX):
-		return _reject(&"invalid_counter")
-	if int(value["premium_marks_started_at_resolution"]) > int(value["next_resolution_index"]):
-		return _reject(&"invalid_marks_activation")
 	if not _in_range(value["replay_marks_started_at_resolution"], 1, U63_MAX):
 		return _reject(&"invalid_counter")
 	if not _in_range(value["marks"], 0, MARKS_MAX):
 		return _reject(&"invalid_counter")
 	var stage_stars := _normalize_stage_stars(value["stage_stars"], context)
 	var traps := _normalize_string_set(value["unlocked_traps"], context["trap_ids"])
-	var spells := _normalize_string_set(value["unlocked_spells"], context["spell_ids"])
 	if not stage_stars["accepted"]:
 		return stage_stars
-	if not traps["accepted"] or not spells["accepted"]:
+	if not traps["accepted"]:
 		return _reject(&"invalid_unlocks")
 	var entitlements := _normalize_entitlements(value["class_entitlements"], context)
 	if not entitlements["accepted"]:
 		return entitlements
-	if entitlements["value"] != _entitlements_for_stars(stage_stars["value"], context):
-		return _reject(&"class_entitlement_mismatch")
 	var offers := _normalize_offers(value["offers"], context)
 	var heroes := _normalize_heroes(value["heroes"], context, hero_keys)
 	var receipts := _normalize_receipts(value["promotion_receipts"], context)
@@ -179,15 +157,10 @@ static func normalize_core(
 		"next_recruitment_index": int(value["next_recruitment_index"]),
 		"next_attempt_id": int(value["next_attempt_id"]),
 		"next_resolution_index": int(value["next_resolution_index"]),
-		"next_premium_pull_index": int(value["next_premium_pull_index"]),
-		"premium_pity_started_at_pull": int(value["premium_pity_started_at_pull"]),
-		"premium_pity_streak": int(value["premium_pity_streak"]),
-		"premium_marks_started_at_resolution": int(value["premium_marks_started_at_resolution"]),
 		"replay_marks_started_at_resolution": int(value["replay_marks_started_at_resolution"]),
 		"marks": int(value["marks"]),
 		"stage_stars": stage_stars["value"],
 		"unlocked_traps": traps["value"],
-		"unlocked_spells": spells["value"],
 		"class_entitlements": entitlements["value"],
 		"offers": offers["value"],
 		"heroes": heroes["value"],
@@ -288,13 +261,9 @@ static func _normalize_heroes(value: Variant, context: Dictionary, hero_keys: Ar
 		return _reject(&"empty_roster")
 	if (value as Array).size() > MAX_ROSTER:
 		return _reject(&"roster_too_large")
-	var premium_catalog := {}
-	for row: Dictionary in context["campaign"]["premium_hero_rows"]:
-		premium_catalog[String(row["premium_id"])] = row
 	var out: Array[Dictionary] = []
 	var hero_ids := {}
 	var portrait_instances := {}
-	var owned_premium_ids := {}
 	for index: int in (value as Array).size():
 		var raw: Variant = value[index]
 		if typeof(raw) != TYPE_DICTIONARY or raw.keys() != hero_keys:
@@ -335,45 +304,14 @@ static func _normalize_heroes(value: Variant, context: Dictionary, hero_keys: Ar
 			return _reject(&"invalid_portrait_asset")
 		if hero_ids.has(raw["hero_id"]) or portrait_instances.has(portrait_instance):
 			return _reject(&"duplicate_hero")
-		var hero_kind := String(raw["hero_kind"])
-		if hero_kind == "recruit":
-			if (
-				raw["acquisition_operator_def_id"] != "recruit"
-				or raw["premium_id"] != null
-				or raw["premium_lives"] != 0
-				or raw["premium_pull_count"] != 0
-				or raw["recruit_source"] == "gacha"
-			):
-				return _reject(&"invalid_recruit_hero")
-		elif hero_kind == "premium":
-			var premium_id := String(raw["premium_id"])
-			var catalog: Dictionary = premium_catalog.get(premium_id, {})
-			if (
-				catalog.is_empty()
-				or owned_premium_ids.has(premium_id)
-				or raw["recruit_source"] != "gacha"
-				or raw["source_id"] != premium_id
-				or raw["acquisition_operator_def_id"] != catalog["operator_def_id"]
-				or raw["operator_def_id"] != catalog["operator_def_id"]
-				or raw["current_class_id"] != catalog["class_id"]
-				or raw["portrait_asset_id"] != catalog["portrait_asset_id"]
-				or raw["custom_callsign"] != catalog["callsign"]
-				or raw["xp"] != 0
-				or not _in_range(raw["premium_pull_count"], 1, PREMIUM_LIVES_MAX)
-				or not _in_range(raw["premium_lives"], 0, int(raw["premium_pull_count"]))
-				or (raw["premium_lives"] > 0) != (raw["life_status"] == "ready")
-			):
-				return _reject(&"invalid_premium_hero")
-			owned_premium_ids[premium_id] = true
-		else:
-			return _reject(&"invalid_hero_kind")
+		if raw["acquisition_operator_def_id"] != "recruit":
+			return _reject(&"invalid_recruit_hero")
 		hero_ids[raw["hero_id"]] = true
 		portrait_instances[portrait_instance] = true
 		if index < 5:
 			var starter: Dictionary = context["campaign"]["starter_rows"][index]
 			if (
-				hero_kind != "recruit"
-				or raw["recruit_source"] != "starter"
+				raw["recruit_source"] != "starter"
 				or raw["source_id"] != ""
 				or raw["recruited_after_resolution_index"] != 0
 				or raw["portrait_asset_id"] != starter["portrait_asset_id"]
@@ -504,9 +442,7 @@ static func _validate_links(
 	var class_cursor := {}
 	for hero: Dictionary in heroes:
 		by_id[hero["hero_id"]] = hero
-		class_cursor[hero["hero_id"]] = (
-			hero["current_class_id"] if hero["hero_kind"] == "premium" else "recruit"
-		)
+		class_cursor[hero["hero_id"]] = "recruit"
 	for receipt: Dictionary in receipts:
 		for choice: Dictionary in receipt["choices"]:
 			if not by_id.has(choice["hero_id"]):
@@ -611,18 +547,6 @@ static func _validate_unresolved_ticket_issuance(
 	if ticket["strategic_hash"] != expected_hash["hex"]:
 		return _reject(&"ticket_issuance_mismatch")
 	return _accept(null)
-
-
-static func _entitlements_for_stars(stage_rows: Array, context: Dictionary) -> Array[String]:
-	var cleared := {}
-	for row: Dictionary in stage_rows:
-		cleared[String(row["stage_id"])] = true
-	var result: Array[String] = []
-	for row: Dictionary in context["campaign"]["stage_class_entitlements"]:
-		if cleared.has(String(row["stage_id"])):
-			result.append(String(row["class_id"]))
-	result.sort()
-	return result
 
 
 static func _legal_edge(from_id: String, to_id: String, context: Dictionary) -> bool:

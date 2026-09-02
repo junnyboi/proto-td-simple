@@ -7,24 +7,12 @@ const MUTED_UI_IDS := [
 	&"menu_open",
 	&"menu_close",
 ]
-const GACHA_REVEAL_IDS := [
-	&"gacha_identity_reveal",
-	&"gacha_star_bloom",
-]
 const BATTLE_SEMANTIC_ALIASES := {
 	&"kill": &"operator_select",
 	&"wave": &"placement_ready",
-	&"bastion_slam": &"ability_ready",
 	&"conflagration": &"ability_ready",
 	&"deadeye": &"ability_ready",
 	&"flurry": &"ability_ready",
-	&"hold_the_line": &"ability_ready",
-	&"mend": &"ability_ready",
-	&"overpower": &"ability_ready",
-	&"rally": &"ability_ready",
-	&"rapid_volley": &"ability_ready",
-	&"tempest": &"ability_ready",
-	&"war_banner": &"ability_ready",
 }
 
 var _failures: Array[String] = []
@@ -63,30 +51,6 @@ func _run() -> void:
 			sfx.call("last_resolved_id") == previous_resolved_id,
 			"silent navigation cues do not replace the last audible semantic cue",
 		)
-		for id: StringName in GACHA_REVEAL_IDS:
-			_check(sfx.call("resolved_id_for", id) == id, "%s resolves directly" % id)
-			_check(bool(sfx.call("play", String(id))), "%s plays" % id)
-			_check(sfx.call("last_resolved_id") == id, "%s owns the last voice" % id)
-			var stream := load(String(sfx.call("last_stream_path"))) as AudioStream
-			_check(stream != null, "%s stream loads" % id)
-			if stream != null:
-				_check(stream.get_length() >= 1.0, "%s retains its authored body" % id)
-				_check(stream.get_length() <= 3.05, "%s stays within the SFX budget" % id)
-			stream = null
-			await process_frame
-		for spell_id: StringName in [&"bolt", &"charm"]:
-			_check(
-				sfx.call("resolved_id_for", spell_id) == &"ability_ready",
-				"%s spell SFX resolves" % spell_id,
-			)
-		_check(
-			sfx.call("resolved_id_for", &"slow_field") == &"slow_field_cast",
-			"Slow Field semantic cast ID resolves to the dedicated blizzard cue",
-		)
-		_check(
-			sfx.call("resolved_id_for", &"slow_field_expire") == &"slow_field_expire",
-			"Slow Field expiration cue resolves directly",
-		)
 		for semantic_id: StringName in BATTLE_SEMANTIC_ALIASES:
 			var resolved_id: StringName = BATTLE_SEMANTIC_ALIASES[semantic_id]
 			_check(
@@ -98,13 +62,6 @@ func _run() -> void:
 				"%s semantic SFX does not start a voice" % semantic_id,
 			)
 			await process_frame
-		for cue_id: StringName in [&"slow_field_cast", &"slow_field_expire"]:
-			var stream := load("res://assets/sfx/combat/%s.wav" % cue_id) as AudioStream
-			_check(stream != null, "%s stream loads" % cue_id)
-			if stream != null:
-				_check(stream.get_length() >= 2.8, "%s keeps its blizzard body" % cue_id)
-				_check(stream.get_length() <= 3.05, "%s stays within the SFX budget" % cue_id)
-			stream = null
 		var button := Button.new()
 		button.name = "HoverAudioTestButton"
 		button.text = "Hover"

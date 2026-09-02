@@ -1,10 +1,9 @@
 extends Control
 
-## Cinematic boot bridge. The engine boot splash and this first scene share the
-## same art so startup is visually continuous while the title scene is prepared.
+## Boot bridge. The engine boot splash, loading scene, and start screen share
+## the same static art so startup stays visually continuous.
 
-const LOADING_ART := preload("res://assets/loading/lunaris_reliquary_loading.png")
-const TITLE_SCENE := preload("res://scenes/title.tscn")
+const LOADING_ART := preload("res://assets/loading/command_backdrop.png")
 const GameTypographyType := preload("res://scripts/ui/game_typography.gd")
 const UiCopyType := preload("res://scripts/ui/components/ui_copy.gd")
 const TopAlignedCoverType := preload("res://scripts/ui/components/top_aligned_cover.gd")
@@ -44,8 +43,6 @@ func _ready() -> void:
 	_apply_responsive_layout()
 	Game.content = self
 	set_process(true)
-	# Resolve the destination up front so the transition never exposes an empty root.
-	TITLE_SCENE.resource_path
 
 
 func _process(delta: float) -> void:
@@ -63,7 +60,7 @@ func _process(delta: float) -> void:
 
 func _build_screen() -> void:
 	var art := TopAlignedCoverType.new()
-	art.name = "LunarisArtwork"
+	art.name = "CommandArtwork"
 	art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	art.texture = LOADING_ART
 	add_child(art)
@@ -117,7 +114,7 @@ func _build_screen() -> void:
 	_stack = VBoxContainer.new()
 	_footer.add_child(_stack)
 
-	_wordmark = _label("PROTOS", GameTypographyType.SCREEN_TITLE, IVORY)
+	_wordmark = _label("Game template - TD", GameTypographyType.SCREEN_TITLE, IVORY)
 	_wordmark.name = "Wordmark"
 	_wordmark.add_theme_color_override(&"font_outline_color", Color(0.01, 0.02, 0.03, 0.7))
 	_stack.add_child(_wordmark)

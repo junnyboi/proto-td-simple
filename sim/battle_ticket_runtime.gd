@@ -7,17 +7,9 @@ extends RefCounted
 
 const SKILL_PAYLOAD_KEYS := ["duration_ticks", "effect", "params", "sp_cost"]
 const OP_CLASS_BY_OPERATOR := {
-	"vanguard_1": OperatorDef.OpClass.VANGUARD,
-	"vanguard_2": OperatorDef.OpClass.VANGUARD,
 	"guard_1": OperatorDef.OpClass.GUARD,
-	"guard_2": OperatorDef.OpClass.GUARD,
-	"defender_1": OperatorDef.OpClass.DEFENDER,
-	"defender_2": OperatorDef.OpClass.DEFENDER,
 	"sniper_1": OperatorDef.OpClass.SNIPER,
-	"sniper_2": OperatorDef.OpClass.SNIPER,
 	"caster_1": OperatorDef.OpClass.CASTER,
-	"caster_2": OperatorDef.OpClass.CASTER,
-	"witch_doctor_1": OperatorDef.OpClass.HEALER,
 	"recruit": OperatorDef.OpClass.RECRUIT,
 }
 const BattleTicketScript := preload("res://sim/battle_ticket.gd")

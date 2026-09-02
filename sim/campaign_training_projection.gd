@@ -21,7 +21,7 @@ func training_roster() -> Array[Dictionary]:
 			"operator_def_id": String(hero.operator_def_id()),
 			"life_status": String(hero.life_status()),
 			"xp": hero.xp(),
-			"xp_required": int(_context["promotion_rules"]["xp_required"]),
+			"xp_required": int(_context["promotion_rules"].get("xp_required", 0)),
 			"can_promote": bool(options["accepted"]),
 			"eligibility_error": options["error_code"],
 			"choices": (

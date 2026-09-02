@@ -89,7 +89,7 @@ func desired_state(
 	if hp_ratio < CRITICAL_HEALTH_RATIO:
 		return STATE_CRITICAL
 	var alive := model.alive_enemy_count()
-	var wave_index := model.spell_book.wave_index_of(model.tick)
+	var wave_index := model.stage.wave_index_at(model.tick)
 	if recent_danger or hp_ratio <= 0.45 or alive >= 8:
 		return STATE_HIGH
 	if alive >= 4 or wave_index >= 1:

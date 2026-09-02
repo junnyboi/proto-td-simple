@@ -10,11 +10,9 @@ const AETHERIA_PANEL := preload("res://scripts/ui/components/aetheria_panel.gd")
 
 const ROUTE_TEXTURE := preload("res://assets/tutorial/tutorial_route_marker.png")
 const DEPLOY_TEXTURE := preload("res://assets/tutorial/tutorial_deploy_gesture.png")
-const FACING_TEXTURE := preload("res://assets/tutorial/tutorial_facing_compass.png")
 const BLOCK_TEXTURE := preload("res://assets/tutorial/tutorial_block_shield.png")
 
 const RECOMMENDED_CELL := Vector2i(3, 2)
-const RECOMMENDED_FACING := UnitState.Facing.LEFT
 const CARD_Z := 92
 const GUIDE_Z := 88
 const LANDSCAPE_CARD_WIDTH := 960.0
@@ -38,7 +36,7 @@ const LIVE_SECONDS := 6.0
 const ROUTE_COLOR := Color(0.36, 0.78, 0.83, 0.26)
 const TARGET_COLOR := Color(0.89, 0.70, 0.25, 0.44)
 
-enum Step { ROUTE, DEPLOY, FACING, BLOCK, LIVE, DONE }
+enum Step { ROUTE, DEPLOY, BLOCK, LIVE, DONE }
 
 var model: BattleModel = null
 var battle_view: Node2D = null
@@ -84,7 +82,6 @@ func setup(
 	_build_card()
 	deploy_bar.placement_started.connect(_on_placement_started)
 	deploy_bar.placement_rejected.connect(_on_placement_rejected)
-	deploy_bar.facing_requested.connect(_on_facing_requested)
 	deploy_bar.deployment_committed.connect(_on_deployment_committed)
 	I18n.locale_changed.connect(_on_locale_changed)
 	_set_step(Step.ROUTE)
@@ -98,8 +95,6 @@ func current_step_name() -> StringName:
 			return &"route"
 		Step.DEPLOY:
 			return &"deploy"
-		Step.FACING:
-			return &"facing"
 		Step.BLOCK:
 			return &"block"
 		Step.LIVE:
@@ -153,13 +148,6 @@ func relayout() -> void:
 func _process(_delta: float) -> void:
 	if _finished or battle_view == null or deploy_bar == null:
 		return
-	if _step == Step.FACING and not deploy_bar.is_facing_pending() and model.units.is_empty():
-		_set_step(Step.DEPLOY)
-		_feedback = _copy(
-			&"ui.tutorial.deploy.cancelled",
-			"Placement cancelled. Drag a Recruit onto a green path tile when ready.",
-		)
-		_refresh_copy()
 	var pulse := 0.72 + sin(float(Time.get_ticks_msec()) / 180.0) * 0.22
 	_focus_ring.modulate.a = pulse if _focus_ring.visible else 1.0
 	_target_marker.modulate.a = pulse if _target_marker.visible else 1.0
@@ -311,15 +299,11 @@ func _apply_action_padding(button: Button) -> void:
 func _set_step(next: Step) -> void:
 	_step = next
 	_feedback = ""
-	deploy_bar.set_facing_emphasis(-1)
 	match _step:
 		Step.ROUTE:
 			deploy_bar.set_operator_interaction_enabled(false)
 		Step.DEPLOY:
 			deploy_bar.set_operator_interaction_enabled(true)
-		Step.FACING:
-			deploy_bar.set_operator_interaction_enabled(true)
-			deploy_bar.set_facing_emphasis(int(RECOMMENDED_FACING))
 		Step.BLOCK:
 			deploy_bar.set_operator_interaction_enabled(false)
 		Step.LIVE, Step.DONE:
@@ -336,7 +320,7 @@ func _refresh_copy() -> void:
 	_primary_button.visible = false
 	match _step:
 		Step.ROUTE:
-			_step_label.text = _copy(&"ui.tutorial.route.step", "1 / 4  ROUTE")
+			_step_label.text = _copy(&"ui.tutorial.route.step", "1 / 3  ROUTE")
 			_title.text = _copy(&"ui.tutorial.route.title", "Read the route")
 			_body.text = _copy(
 				&"ui.tutorial.route.body",
@@ -347,7 +331,7 @@ func _refresh_copy() -> void:
 			_primary_button.visible = true
 			_skip_button.text = _copy(&"ui.tutorial.skip", "Skip tutorial")
 		Step.DEPLOY:
-			_step_label.text = _copy(&"ui.tutorial.deploy.step", "2 / 4  DEPLOY")
+			_step_label.text = _copy(&"ui.tutorial.deploy.step", "2 / 3  DEPLOY")
 			_title.text = _copy(&"ui.tutorial.deploy.title", "Deploy a Recruit")
 			_body.text = _copy(
 				&"ui.tutorial.deploy.body",
@@ -355,17 +339,8 @@ func _refresh_copy() -> void:
 			)
 			_icon.texture = DEPLOY_TEXTURE
 			_skip_button.text = _copy(&"ui.tutorial.skip", "Skip tutorial")
-		Step.FACING:
-			_step_label.text = _copy(&"ui.tutorial.facing.step", "3 / 4  FACING")
-			_title.text = _copy(&"ui.tutorial.facing.title", "Choose facing")
-			_body.text = _copy(
-				&"ui.tutorial.facing.body",
-				"Facing rotates attack coverage. Aim toward the incoming route; any arrow deploys the unit.",
-			)
-			_icon.texture = FACING_TEXTURE
-			_skip_button.text = _copy(&"ui.tutorial.skip", "Skip tutorial")
 		Step.BLOCK:
-			_step_label.text = _copy(&"ui.tutorial.block.step", "4 / 4  BLOCK")
+			_step_label.text = _copy(&"ui.tutorial.block.step", "3 / 3  BLOCK")
 			_title.text = _copy(&"ui.tutorial.block.title", "Hold the line")
 			_body.text = _copy(
 				&"ui.tutorial.block.body",
@@ -396,7 +371,7 @@ func _update_guides() -> void:
 	for marker: Polygon2D in _route_markers:
 		marker.visible = show_route
 	_target_marker.visible = _step == Step.DEPLOY
-	_focus_ring.visible = _step == Step.DEPLOY or _step == Step.FACING
+	_focus_ring.visible = _step == Step.DEPLOY
 	_relayout_guides()
 
 
@@ -419,14 +394,11 @@ func _relayout_guides() -> void:
 func _update_focus_ring() -> void:
 	if _focus_ring == null or deploy_bar == null:
 		return
-	if _step != Step.DEPLOY and _step != Step.FACING:
+	if _step != Step.DEPLOY:
 		_focus_ring.visible = false
 		return
 	var rect := Rect2()
-	if _step == Step.DEPLOY:
-		rect = deploy_bar.slot_screen_rect(_deployment_id)
-	elif _step == Step.FACING:
-		rect = deploy_bar.facing_button_screen_rect(int(RECOMMENDED_FACING))
+	rect = deploy_bar.slot_screen_rect(_deployment_id)
 	if rect.size.x <= 0.0 or rect.size.y <= 0.0:
 		_focus_ring.visible = false
 		return
@@ -459,7 +431,7 @@ func _on_placement_started(_deployment: StringName) -> void:
 
 
 func _on_placement_rejected(_deployment: StringName, _cell: Vector2i) -> void:
-	if _step != Step.DEPLOY and _step != Step.FACING:
+	if _step != Step.DEPLOY:
 		return
 	_set_step(Step.DEPLOY)
 	_feedback = _copy(
@@ -469,19 +441,12 @@ func _on_placement_rejected(_deployment: StringName, _cell: Vector2i) -> void:
 	_refresh_copy()
 
 
-func _on_facing_requested(_deployment: StringName, cell: Vector2i) -> void:
-	if _step != Step.DEPLOY:
-		return
-	_target_cell = cell
-	_set_step(Step.FACING)
-
-
 func _on_deployment_committed(
 	_deployment: StringName,
 	cell: Vector2i,
 	_facing: int,
 ) -> void:
-	if _step != Step.DEPLOY and _step != Step.FACING:
+	if _step != Step.DEPLOY:
 		return
 	_target_cell = cell
 	_set_step(Step.BLOCK)
@@ -508,7 +473,6 @@ func _finish(skipped: bool) -> void:
 	_step = Step.DONE
 	_live_serial += 1
 	deploy_bar.set_operator_interaction_enabled(true)
-	deploy_bar.set_facing_emphasis(-1)
 	for marker: Polygon2D in _route_markers:
 		marker.visible = false
 	_target_marker.visible = false

@@ -2,10 +2,7 @@ extends SceneTree
 
 const ELEVATED_OPERATOR_PATHS := [
 	"res://data/operators/caster_1.tres",
-	"res://data/operators/caster_2.tres",
 	"res://data/operators/sniper_1.tres",
-	"res://data/operators/sniper_2.tres",
-	"res://data/operators/witch_doctor_1.tres",
 ]
 const PICK_OFFSETS := [
 	Vector2.ZERO,
@@ -24,7 +21,7 @@ func _init() -> void:
 
 func _run() -> void:
 	var config := load("res://data/config/game.tres") as GameConfig
-	var ground_definition := load("res://data/operators/vanguard_1.tres") as OperatorDef
+	var ground_definition := load("res://data/operators/guard_1.tres") as OperatorDef
 	_check(config != null, "game config failed to load")
 	_check(ground_definition != null, "ground operator failed to load")
 	var elevated_defs: Array[OperatorDef] = []

@@ -13,7 +13,6 @@ speed_tiles_per_s = 0.9
 aerial = true
 block_weight = 0
 leak_damage = 1
-charm_immune = true
 atk_range_cells = 2
 target_policy = ExtResource("3_target_policy")
 sprite_id = &"interceptor"

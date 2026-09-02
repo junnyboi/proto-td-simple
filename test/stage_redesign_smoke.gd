@@ -153,57 +153,25 @@ func _validate_design_contracts(stages: Dictionary, failures: PackedStringArray)
 	if s5 != null:
 		var spellcaster_ticks := _enemy_ticks(s5, &"spellcaster")
 		if spellcaster_ticks.is_empty() or spellcaster_ticks.max() - spellcaster_ticks.min() < 900:
-			failures.append("S5 spellcaster windows must respect Bolt cooldown")
+			failures.append("S5 Channeler waves must remain distributed across the encounter")
 	if s6 != null:
 		var heavy_ticks := _enemy_ticks(s6, &"heavy")
 		if heavy_ticks.size() != 2:
-			failures.append("S6 must have one heavy leader per Charm window")
+			failures.append("S6 must have two heavy-led escort columns")
 		for heavy_tick: int in heavy_ticks:
 			if not _has_same_path_escort(s6, heavy_tick, 120):
 				failures.append("S6 heavy lacks a same-path escort column at %d" % heavy_tick)
-		if not _has_reward(s6, &"spell", &"slow_field"):
-			failures.append("S6 must unlock Slow Field after the Charm lesson")
 	if s7 != null:
 		if s7.paths.size() != 3 or _enemy_ids(s7).size() < 5:
 			failures.append("S7 must exercise three fronts and at least five enemy types")
 		if _shared_path_cells(s7).is_empty():
 			failures.append("S7 must converge into a contested corridor")
-		if not s7.requires.has(&"slow_field") or not s7.intro_hint.contains("Slow Field"):
-			failures.append("S7 must teach the newly unlocked Slow Field at convergence")
 	if s8 != null:
 		if s8.paths.size() != 3 or _enemy_ticks(s8, &"mini_boss").size() != 1:
 			failures.append("S8 must contain three approaches and one Gatecrasher")
 		var boss_tick := int(_enemy_ticks(s8, &"mini_boss")[0])
 		if not _has_same_path_escort(s8, boss_tick, 180):
-			failures.append("S8 boss must have a same-path eligible escort")
-		if not s8.requires.has(&"slow_field"):
-			failures.append("S8 must retain Slow Field for final mastery")
-	_validate_slow_field_resource(failures)
-
-
-func _validate_slow_field_resource(failures: PackedStringArray) -> void:
-	var spell := load("res://data/spells/slow_field.tres") as SpellDef
-	if spell == null:
-		failures.append("Slow Field resource is missing")
-		return
-	if (
-		spell.id != &"slow_field"
-		or spell.availability != SpellDef.Availability.COOLDOWN
-		or spell.target_kind != SpellDef.TargetKind.CELL
-		or spell.effect != SpellDef.Effect.SLOW_FIELD
-		or spell.cooldown_ticks != 600
-		or spell.duration_ticks != 240
-		or spell.radius != 1
-		or spell.slow_permille != 500
-	):
-		failures.append("Slow Field authored balance contract drifted")
-
-
-func _has_reward(stage: StageDef, kind: StringName, item_id: StringName) -> bool:
-	for reward: Dictionary in stage.rewards:
-		if StringName(reward.get("kind", &"")) == kind and StringName(reward.get("id", &"")) == item_id:
-			return true
-	return false
+			failures.append("S8 boss must have a same-path escort")
 
 
 func _tile_count(stage: StageDef, tile: StageDef.Tile) -> int:

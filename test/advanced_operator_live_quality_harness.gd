@@ -6,17 +6,9 @@ const OperatorAnimatorScript := preload("res://scripts/view/operator_animator.gd
 const UnitStateScript := preload("res://sim/unit_state.gd")
 
 const CLASS_TO_OPERATOR := {
-	"banner_guard": &"vanguard_2",
-	"defender": &"defender_1",
 	"gunner": &"sniper_1",
-	"immovable": &"defender_2",
 	"mage_apprentice": &"caster_1",
-	"shock_trooper": &"vanguard_1",
-	"sniper": &"sniper_2",
-	"sorcerer": &"caster_2",
-	"sword_saint": &"guard_2",
 	"swordmaster": &"guard_1",
-	"witch_doctor": &"witch_doctor_1",
 }
 const FACINGS: Array[int] = [
 	UnitStateScript.Facing.RIGHT,
@@ -222,13 +214,6 @@ func _representative_cells(count: int) -> Array[Vector2i]:
 
 
 func _suppress_overlays() -> void:
-	var dialogue: Variant = _battle.get("_battle_dialogue")
-	if dialogue != null and is_instance_valid(dialogue):
-		dialogue.call("dismiss")
-		if dialogue is CanvasItem:
-			(dialogue as CanvasItem).visible = false
-		elif dialogue is CanvasLayer:
-			(dialogue as CanvasLayer).visible = false
 	var grid_root: Variant = _battle.get("_grid_root")
 	for child: Node in _battle.get_children():
 		if child == grid_root:

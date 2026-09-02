@@ -25,12 +25,6 @@ static func of(m: BattleModel) -> Dictionary:
 		"skills_fired": m.skills_fired,
 		"traps_placed": m._next_trap_id,
 		"trap_triggers": m.traps_triggered,
-		"charmed": m.charmed,
-		"charmed_alive": m.alive_charmed_count(),
-		"charmed_dead": m.charmed_dead,
-		"charmed_exited": m.charmed_exited,
-		"spells_cast": m.spell_book.total_casts(),
-		"slow_fields_active": m.slow_fields.size(),
 		"damage_rules_version": DamageRulesScript.VERSION,
 		"mitigation": _mitigation(m),
 	}
@@ -82,15 +76,8 @@ static func _mitigation(m: BattleModel) -> Dictionary:
 	var traps: Array[Dictionary] = []
 	for t: TrapState in m.traps:
 		traps.append({"id": t.id, "damage_kind": t.damage_kind})
-	var spells: Array[Dictionary] = []
-	for spell_id: StringName in m.spell_book.ids:
-		spells.append({
-			"id": String(spell_id),
-			"damage_kind": m.spell_book.damage_kind(spell_id),
-		})
 	return {
 		"units": units,
 		"enemies": enemies,
 		"traps": traps,
-		"spells": spells,
 	}

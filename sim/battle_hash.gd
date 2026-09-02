@@ -47,8 +47,6 @@ static func of(m: BattleModel) -> int:
 		_append_int(bytes, e.blocked_by)
 		_append_int(bytes, e.stunned_until_tick)
 		_append_int(bytes, 1 if e.alive else 0)
-		_append_int(bytes, e.faction)
-		_append_int(bytes, e.engaged_with)
 	_append_int(bytes, m.traps_triggered)
 	_append_int(bytes, m._next_trap_id)
 	for t: TrapState in m.traps:
@@ -57,29 +55,6 @@ static func of(m: BattleModel) -> int:
 		_append_int(bytes, t.cell.x)
 		_append_int(bytes, t.cell.y)
 		_append_int(bytes, t.charges_left)
-	_append_int(bytes, m.charmed)
-	_append_int(bytes, m.charmed_dead)
-	_append_int(bytes, m.charmed_exited)
-	for spell_id: StringName in m.spell_book.ids:
-		_append_int(bytes, spell_id.hash())
-		_append_int(bytes, m.spell_book.ready_at(spell_id))
-		_append_int(bytes, m.spell_book.used_in_wave(spell_id))
-		_append_int(bytes, m.spell_book.casts(spell_id))
-	# SLOW_FIELD sparse append-only extension. Battles that never cast a field
-	# retain their exact legacy digest; the monotonic id preserves cast history
-	# after every active field has expired.
-	if m._next_slow_field_id != 0 or not m.slow_fields.is_empty():
-		_append_int(bytes, 6)
-		_append_int(bytes, m._next_slow_field_id)
-		_append_int(bytes, m.slow_fields.size())
-		for field: SlowFieldState in m.slow_fields:
-			_append_int(bytes, field.id)
-			_append_int(bytes, field.spell_id.hash())
-			_append_int(bytes, field.center.x)
-			_append_int(bytes, field.center.y)
-			_append_int(bytes, field.radius)
-			_append_int(bytes, field.slow_permille)
-			_append_int(bytes, field.expires_tick)
 	_append_int(bytes, m.squad.size())
 	for op_id: StringName in m.squad:
 		_append_int(bytes, op_id.hash())
@@ -112,12 +87,6 @@ static func of(m: BattleModel) -> int:
 			_append_int(bytes, 3)
 			_append_int(bytes, t.id)
 			_append_int(bytes, t.damage_kind)
-	for spell_id: StringName in m.spell_book.ids:
-		var damage_kind := m.spell_book.damage_kind(spell_id)
-		if damage_kind != 0:
-			_append_int(bytes, 4)
-			_append_int(bytes, spell_id.hash())
-			_append_int(bytes, damage_kind)
 	# A normalized ticket hash binds every frozen combat, targeting, skill,
 	# visual, class, hero, and battle identity field. Mutable per-identity
 	# outcome counters are then appended in canonical ticket order.

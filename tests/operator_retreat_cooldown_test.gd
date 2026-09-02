@@ -9,7 +9,6 @@ func _init() -> void:
 
 func _run() -> void:
 	_validate_class_cooldown(&"guard_1", 10)
-	_validate_class_cooldown(&"vanguard_1", 3)
 	if _failures.is_empty():
 		print("OPERATOR_RETREAT_COOLDOWN_TEST_OK")
 		quit(0)

@@ -28,106 +28,22 @@ const CampaignInvariantsScript := preload("res://sim/campaign_invariants.gd")
 const LEGACY_DATA_KEYS := [
 	"campaign_uid", "campaign_seed", "campaign_generation", "save_revision",
 	"next_recruitment_index", "next_attempt_id", "next_resolution_index", "marks",
-	"stage_stars", "unlocked_traps", "unlocked_spells", "class_entitlements",
-	"offers", "heroes", "promotion_receipts", "promotion_proofs",
-	"tickets", "memorial", "resolution_anchor", "last_resolution", "command_receipts",
+	"stage_stars", "unlocked_traps", "class_entitlements",
+	"offers", "heroes", "promotion_receipts", "promotion_proofs", "tickets", "memorial",
+	"resolution_anchor", "last_resolution", "command_receipts",
 ]
 const LEGACY_PRECOMMAND_DATA_KEYS := [
 	"campaign_uid", "campaign_seed", "campaign_generation", "save_revision",
 	"next_recruitment_index", "next_attempt_id", "next_resolution_index", "marks",
-	"stage_stars", "unlocked_traps", "unlocked_spells", "class_entitlements",
-	"offers", "heroes", "promotion_receipts", "promotion_proofs",
-	"tickets", "memorial", "resolution_anchor", "last_resolution",
+	"stage_stars", "unlocked_traps", "class_entitlements",
+	"offers", "heroes", "promotion_receipts", "promotion_proofs", "tickets", "memorial",
+	"resolution_anchor", "last_resolution",
 ]
 const LEGACY_CORE_KEYS := [
 	"campaign_uid", "campaign_seed", "campaign_generation", "save_revision",
 	"next_recruitment_index", "next_attempt_id", "next_resolution_index", "marks",
-	"stage_stars", "unlocked_traps", "unlocked_spells", "class_entitlements",
-	"offers", "heroes", "promotion_receipts", "promotion_proofs",
-	"tickets", "memorial",
-]
-const LEGACY_HERO_KEYS := [
-	"hero_id", "acquisition_operator_def_id", "operator_def_id", "current_class_id",
-	"first_class_id", "advanced_class_id", "progression_rules_version", "xp",
-	"identity_portrait_id", "portrait_instance_id", "portrait_asset_id",
-	"recruitment_index", "recruited_after_resolution_index", "recruit_source",
-	"source_id", "name_version", "custom_callsign", "life_status", "death",
-]
-const PREPITY_DATA_KEYS := [
-	"campaign_uid", "campaign_seed", "campaign_generation", "save_revision",
-	"next_recruitment_index", "next_attempt_id", "next_resolution_index",
-	"next_premium_pull_index", "marks", "stage_stars", "unlocked_traps",
-	"unlocked_spells", "class_entitlements", "offers", "heroes",
-	"promotion_receipts", "promotion_proofs", "tickets", "memorial",
-	"resolution_anchor", "last_resolution", "command_receipts",
-]
-const PREPITY_PRECOMMAND_DATA_KEYS := [
-	"campaign_uid", "campaign_seed", "campaign_generation", "save_revision",
-	"next_recruitment_index", "next_attempt_id", "next_resolution_index",
-	"next_premium_pull_index", "marks", "stage_stars", "unlocked_traps",
-	"unlocked_spells", "class_entitlements", "offers", "heroes",
-	"promotion_receipts", "promotion_proofs", "tickets", "memorial",
-	"resolution_anchor", "last_resolution",
-]
-const PREPITY_CORE_KEYS := [
-	"campaign_uid", "campaign_seed", "campaign_generation", "save_revision",
-	"next_recruitment_index", "next_attempt_id", "next_resolution_index",
-	"next_premium_pull_index", "marks", "stage_stars", "unlocked_traps",
-	"unlocked_spells", "class_entitlements", "offers", "heroes",
-	"promotion_receipts", "promotion_proofs", "tickets", "memorial",
-]
-const PREREPLAY_MARKS_DATA_KEYS := [
-	"campaign_uid", "campaign_seed", "campaign_generation", "save_revision",
-	"next_recruitment_index", "next_attempt_id", "next_resolution_index",
-	"next_premium_pull_index", "premium_pity_started_at_pull", "premium_pity_streak",
-	"premium_marks_started_at_resolution", "marks", "stage_stars", "unlocked_traps",
-	"unlocked_spells", "class_entitlements", "offers", "heroes", "promotion_receipts",
-	"promotion_proofs", "tickets", "memorial", "resolution_anchor", "last_resolution",
-	"command_receipts",
-]
-const PREREPLAY_MARKS_PRECOMMAND_DATA_KEYS := [
-	"campaign_uid", "campaign_seed", "campaign_generation", "save_revision",
-	"next_recruitment_index", "next_attempt_id", "next_resolution_index",
-	"next_premium_pull_index", "premium_pity_started_at_pull", "premium_pity_streak",
-	"premium_marks_started_at_resolution", "marks", "stage_stars", "unlocked_traps",
-	"unlocked_spells", "class_entitlements", "offers", "heroes", "promotion_receipts",
-	"promotion_proofs", "tickets", "memorial", "resolution_anchor", "last_resolution",
-]
-const PREREPLAY_MARKS_CORE_KEYS := [
-	"campaign_uid", "campaign_seed", "campaign_generation", "save_revision",
-	"next_recruitment_index", "next_attempt_id", "next_resolution_index",
-	"next_premium_pull_index", "premium_pity_started_at_pull", "premium_pity_streak",
-	"premium_marks_started_at_resolution", "marks", "stage_stars", "unlocked_traps",
-	"unlocked_spells", "class_entitlements", "offers", "heroes", "promotion_receipts",
-	"promotion_proofs", "tickets", "memorial",
-]
-const DATA_KEYS := [
-	"campaign_uid", "campaign_seed", "campaign_generation", "save_revision",
-	"next_recruitment_index", "next_attempt_id", "next_resolution_index",
-	"next_premium_pull_index", "premium_pity_started_at_pull", "premium_pity_streak",
-	"premium_marks_started_at_resolution", "replay_marks_started_at_resolution", "marks",
-	"stage_stars", "unlocked_traps",
-	"unlocked_spells", "class_entitlements", "offers", "heroes", "promotion_receipts",
-	"promotion_proofs", "tickets", "memorial", "resolution_anchor", "last_resolution",
-	"command_receipts",
-]
-const PRECOMMAND_DATA_KEYS := [
-	"campaign_uid", "campaign_seed", "campaign_generation", "save_revision",
-	"next_recruitment_index", "next_attempt_id", "next_resolution_index",
-	"next_premium_pull_index", "premium_pity_started_at_pull", "premium_pity_streak",
-	"premium_marks_started_at_resolution", "replay_marks_started_at_resolution", "marks",
-	"stage_stars", "unlocked_traps",
-	"unlocked_spells", "class_entitlements", "offers", "heroes", "promotion_receipts",
-	"promotion_proofs", "tickets", "memorial", "resolution_anchor", "last_resolution",
-]
-const CORE_KEYS := [
-	"campaign_uid", "campaign_seed", "campaign_generation", "save_revision",
-	"next_recruitment_index", "next_attempt_id", "next_resolution_index",
-	"next_premium_pull_index", "premium_pity_started_at_pull", "premium_pity_streak",
-	"premium_marks_started_at_resolution", "replay_marks_started_at_resolution", "marks",
-	"stage_stars", "unlocked_traps",
-	"unlocked_spells", "class_entitlements", "offers", "heroes", "promotion_receipts",
-	"promotion_proofs", "tickets", "memorial",
+	"stage_stars", "unlocked_traps", "class_entitlements",
+	"offers", "heroes", "promotion_receipts", "promotion_proofs", "tickets", "memorial",
 ]
 const HERO_KEYS := [
 	"hero_id", "acquisition_operator_def_id", "operator_def_id", "current_class_id",
@@ -135,11 +51,33 @@ const HERO_KEYS := [
 	"identity_portrait_id", "portrait_instance_id", "portrait_asset_id",
 	"recruitment_index", "recruited_after_resolution_index", "recruit_source",
 	"source_id", "name_version", "custom_callsign", "life_status", "death",
-	"hero_kind", "premium_id", "premium_lives", "premium_pull_count",
+]
+const LEGACY_HERO_KEYS := HERO_KEYS
+const DATA_KEYS := [
+	"campaign_uid", "campaign_seed", "campaign_generation", "save_revision",
+	"next_recruitment_index", "next_attempt_id", "next_resolution_index",
+	"replay_marks_started_at_resolution", "marks", "stage_stars", "unlocked_traps",
+	"class_entitlements", "offers", "heroes", "promotion_receipts",
+	"promotion_proofs", "tickets", "memorial", "resolution_anchor", "last_resolution",
+	"command_receipts",
+]
+const PRECOMMAND_DATA_KEYS := [
+	"campaign_uid", "campaign_seed", "campaign_generation", "save_revision",
+	"next_recruitment_index", "next_attempt_id", "next_resolution_index",
+	"replay_marks_started_at_resolution", "marks", "stage_stars", "unlocked_traps",
+	"class_entitlements", "offers", "heroes", "promotion_receipts",
+	"promotion_proofs", "tickets", "memorial", "resolution_anchor", "last_resolution",
+]
+const CORE_KEYS := [
+	"campaign_uid", "campaign_seed", "campaign_generation", "save_revision",
+	"next_recruitment_index", "next_attempt_id", "next_resolution_index",
+	"replay_marks_started_at_resolution", "marks", "stage_stars", "unlocked_traps",
+	"class_entitlements", "offers", "heroes", "promotion_receipts",
+	"promotion_proofs", "tickets", "memorial",
 ]
 const CONTEXT_KEYS := [
 	"legacy_context", "operator_ids", "operator_ticket_by_id", "class_rows", "class_by_id", "campaign",
-	"stage_order", "stage_squad_sizes", "trap_ids", "spell_ids", "environment_sha256",
+	"stage_order", "stage_squad_sizes", "trap_ids", "environment_sha256",
 ]
 
 
@@ -147,7 +85,6 @@ static func derive_environment_sha256(
 	operator_defs: Array,
 	class_defs: Array,
 	trap_ids: Array,
-	spell_ids: Array,
 	stages: Array,
 	campaign_def: CampaignDefType,
 	text_entries: Dictionary,
@@ -161,7 +98,6 @@ static func derive_environment_sha256(
 	var combat := CombatContentBindingScript.build({
 		"operators": operator_ids,
 		"traps": trap_ids,
-		"spells": spell_ids,
 	}, _campaign_stages(stages))
 	if not combat["accepted"]:
 		return combat
@@ -188,10 +124,9 @@ static func derive_environment_sha256(
 		"campaign": campaign["value"],
 		"stage_order": stage_order["value"],
 		"traps": _sorted_unique_strings(trap_ids),
-		"spells": _sorted_unique_strings(spell_ids),
 		"combat_rules": combat["manifest"],
 	}
-	if (manifest["traps"] as Array).is_empty() or (manifest["spells"] as Array).is_empty():
+	if (manifest["traps"] as Array).is_empty():
 		return _reject(&"invalid_catalog")
 	return _accept(CanonicalJsonScript.sha256_hex(manifest))
 
@@ -200,14 +135,13 @@ static func build_context(
 	operator_defs: Array,
 	class_defs: Array,
 	trap_ids: Array,
-	spell_ids: Array,
 	stages: Array,
 	campaign_def: CampaignDefType,
 	text_entries: Dictionary,
 	legacy_context: Dictionary,
 ) -> Dictionary:
 	var derived := derive_environment_sha256(
-		operator_defs, class_defs, trap_ids, spell_ids, stages, campaign_def, text_entries,
+		operator_defs, class_defs, trap_ids, stages, campaign_def, text_entries,
 	)
 	if not derived["accepted"]:
 		return {}
@@ -226,7 +160,6 @@ static func build_context(
 	var combat := CombatContentBindingScript.build({
 		"operators": operator_ids,
 		"traps": trap_ids,
-		"spells": spell_ids,
 	}, _campaign_stages(stages))
 	if not combat["accepted"]:
 		return {}
@@ -237,7 +170,6 @@ static func build_context(
 	var legacy_combat := CombatContentBindingScript.build({
 		"operators": legacy_operator_ids,
 		"traps": trap_ids,
-		"spells": spell_ids,
 	}, legacy_stages)
 	if (
 		not legacy_combat["accepted"]
@@ -268,7 +200,6 @@ static func build_context(
 		"stage_order": stages_result["value"],
 		"stage_squad_sizes": stage_squad_sizes,
 		"trap_ids": _string_set(trap_ids),
-		"spell_ids": _string_set(spell_ids),
 		"environment_sha256": environment,
 	}
 
@@ -312,15 +243,10 @@ static func create_fresh(seed_value: int, generation: int, context: Dictionary) 
 		"next_recruitment_index": heroes.size(),
 		"next_attempt_id": 1,
 		"next_resolution_index": 1,
-		"next_premium_pull_index": 0,
-		"premium_pity_started_at_pull": 0,
-		"premium_pity_streak": 0,
-		"premium_marks_started_at_resolution": 1,
 		"replay_marks_started_at_resolution": 1,
 		"marks": int(campaign["initial_marks"]),
 		"stage_stars": [],
 		"unlocked_traps": [],
-		"unlocked_spells": [],
 		"class_entitlements": [],
 		"offers": offers,
 		"heroes": heroes,
@@ -343,11 +269,7 @@ static func normalize_data(value: Variant, context: Dictionary) -> Dictionary:
 	var source := value as Dictionary
 	var data: Dictionary = source
 	if source.keys() == LEGACY_DATA_KEYS:
-		data = _upgrade_premium_data(source)
-	elif source.keys() == PREPITY_DATA_KEYS:
-		data = _upgrade_pity_data(source)
-	elif source.keys() == PREREPLAY_MARKS_DATA_KEYS:
-		data = _upgrade_replay_marks_data(source)
+		data = _upgrade_legacy_data(source)
 	if not _exact_keys(data, DATA_KEYS):
 		return _reject(&"invalid_data_schema")
 	if typeof(data["heroes"]) != TYPE_ARRAY or (data["heroes"] as Array).is_empty():
@@ -428,9 +350,7 @@ static func decode_parsed(parsed: Variant, source: String, context: Dictionary) 
 		return _reject(&"invalid_checksum")
 	var source_data: Variant = parsed["data"]
 	if typeof(source_data) == TYPE_DICTIONARY and (source_data as Dictionary).keys() in [
-		PRECOMMAND_DATA_KEYS, PREREPLAY_MARKS_DATA_KEYS,
-		PREREPLAY_MARKS_PRECOMMAND_DATA_KEYS, PREPITY_DATA_KEYS,
-		PREPITY_PRECOMMAND_DATA_KEYS, LEGACY_PRECOMMAND_DATA_KEYS, LEGACY_DATA_KEYS,
+		PRECOMMAND_DATA_KEYS, LEGACY_PRECOMMAND_DATA_KEYS, LEGACY_DATA_KEYS,
 	]:
 		if checksum != CanonicalJsonScript.sha256_hex(source_data):
 			return _reject(&"checksum_mismatch")
@@ -438,17 +358,12 @@ static func decode_parsed(parsed: Variant, source: String, context: Dictionary) 
 			return _reject(&"noncanonical_save")
 		var upgrade_source: Dictionary = (source_data as Dictionary).duplicate(true)
 		if upgrade_source.keys() in [
-			PRECOMMAND_DATA_KEYS, PREREPLAY_MARKS_PRECOMMAND_DATA_KEYS,
-			PREPITY_PRECOMMAND_DATA_KEYS, LEGACY_PRECOMMAND_DATA_KEYS,
+			PRECOMMAND_DATA_KEYS, LEGACY_PRECOMMAND_DATA_KEYS,
 		]:
 			upgrade_source["command_receipts"] = []
 		var upgraded: Dictionary = upgrade_source
 		if upgrade_source.keys() == LEGACY_DATA_KEYS:
-			upgraded = _upgrade_premium_data(upgrade_source)
-		elif upgrade_source.keys() == PREPITY_DATA_KEYS:
-			upgraded = _upgrade_pity_data(upgrade_source)
-		elif upgrade_source.keys() == PREREPLAY_MARKS_DATA_KEYS:
-			upgraded = _upgrade_replay_marks_data(upgrade_source)
+			upgraded = _upgrade_legacy_data(upgrade_source)
 		var upgraded_save := encode_save(upgraded, context)
 		if not upgraded_save["accepted"]:
 			return upgraded_save
@@ -563,264 +478,46 @@ static func _fresh_hero(hero_id: String, index: int, starter: Dictionary) -> Dic
 		"custom_callsign": null,
 		"life_status": "ready",
 		"death": null,
-		"hero_kind": "recruit",
-		"premium_id": null,
-		"premium_lives": 0,
-		"premium_pull_count": 0,
 	}
 
 
-static func _upgrade_premium_data(value: Dictionary) -> Dictionary:
+static func _upgrade_legacy_data(value: Dictionary) -> Dictionary:
 	var result := {}
 	for key: String in DATA_KEYS:
-		match key:
-			"next_premium_pull_index":
-				result[key] = 0
-			"premium_pity_started_at_pull", "premium_pity_streak":
-				result[key] = 0
-			"premium_marks_started_at_resolution":
-				result[key] = int(value["next_resolution_index"])
-			"replay_marks_started_at_resolution":
-				result[key] = int(value["next_resolution_index"])
-			"heroes":
-				result[key] = _upgrade_premium_heroes(value[key])
-			"resolution_anchor":
-				result[key] = _upgrade_premium_anchor(value[key])
-			"last_resolution":
-				result[key] = _upgrade_premium_resolution(value[key])
-			"command_receipts":
-				result[key] = _upgrade_premium_command_records(value[key])
-			_:
-				result[key] = value[key].duplicate(true) \
-					if value[key] is Array or value[key] is Dictionary else value[key]
-	return result
-
-
-static func _upgrade_pity_data(value: Dictionary) -> Dictionary:
-	var activation_pull := int(value["next_premium_pull_index"])
-	var activation_resolution := int(value["next_resolution_index"])
-	var result := {}
-	for key: String in DATA_KEYS:
-		match key:
-			"premium_pity_started_at_pull":
-				result[key] = activation_pull
-			"premium_pity_streak":
-				result[key] = 0
-			"premium_marks_started_at_resolution":
-				result[key] = activation_resolution
-			"replay_marks_started_at_resolution":
-				result[key] = activation_resolution
-			"resolution_anchor":
-				result[key] = _upgrade_pity_anchor(
-					value[key], activation_pull, activation_resolution,
-				)
-			"last_resolution":
-				result[key] = _upgrade_pity_resolution(value[key], activation_pull)
-			"command_receipts":
-				result[key] = _upgrade_pity_command_records(value[key])
-			_:
-				result[key] = value[key].duplicate(true) \
-					if value[key] is Array or value[key] is Dictionary else value[key]
-	return result
-
-
-static func _upgrade_replay_marks_data(value: Dictionary) -> Dictionary:
-	var activation_resolution := int(value["next_resolution_index"])
-	var result := {}
-	for key: String in DATA_KEYS:
-		match key:
-			"replay_marks_started_at_resolution":
-				result[key] = activation_resolution
-			"resolution_anchor":
-				result[key] = _upgrade_replay_marks_anchor(
-					value[key], activation_resolution,
-				)
-			_:
-				result[key] = value[key].duplicate(true) \
-					if value[key] is Array or value[key] is Dictionary else value[key]
-	return result
-
-
-static func _upgrade_premium_core(value: Dictionary) -> Dictionary:
-	var result := {}
-	for key: String in CORE_KEYS:
-		match key:
-			"next_premium_pull_index":
-				result[key] = 0
-			"premium_pity_started_at_pull", "premium_pity_streak":
-				result[key] = 0
-			"premium_marks_started_at_resolution":
-				result[key] = int(value["next_resolution_index"])
-			"replay_marks_started_at_resolution":
-				result[key] = int(value["next_resolution_index"])
-			"heroes":
-				result[key] = _upgrade_premium_heroes(value[key])
-			_:
-				result[key] = value[key].duplicate(true) \
-					if value[key] is Array or value[key] is Dictionary else value[key]
-	return result
-
-
-static func _upgrade_pity_core(
-	value: Dictionary,
-	activation_pull: int,
-	activation_resolution: int,
-) -> Dictionary:
-	var result := {}
-	for key: String in CORE_KEYS:
-		match key:
-			"premium_pity_started_at_pull":
-				result[key] = activation_pull
-			"premium_pity_streak":
-				result[key] = 0
-			"premium_marks_started_at_resolution":
-				result[key] = activation_resolution
-			"replay_marks_started_at_resolution":
-				result[key] = activation_resolution
-			_:
-				result[key] = value[key].duplicate(true) \
-					if value[key] is Array or value[key] is Dictionary else value[key]
-	return result
-
-
-static func _upgrade_replay_marks_core(
-	value: Dictionary,
-	activation_resolution: int,
-) -> Dictionary:
-	var result := {}
-	for key: String in CORE_KEYS:
 		if key == "replay_marks_started_at_resolution":
-			result[key] = activation_resolution
+			result[key] = int(value["next_resolution_index"])
+		elif key == "resolution_anchor":
+			result[key] = _upgrade_legacy_anchor(value[key])
+		elif key == "last_resolution":
+			result[key] = _upgrade_legacy_resolution(value[key])
 		else:
 			result[key] = value[key].duplicate(true) \
 				if value[key] is Array or value[key] is Dictionary else value[key]
 	return result
 
 
-static func _upgrade_premium_heroes(values: Array) -> Array[Dictionary]:
-	var result: Array[Dictionary] = []
-	for source: Dictionary in values:
-		var row := {}
-		for key: String in HERO_KEYS:
-			match key:
-				"hero_kind": row[key] = "recruit"
-				"premium_id": row[key] = null
-				"premium_lives", "premium_pull_count": row[key] = 0
-				_: row[key] = source[key].duplicate(true) \
-					if source[key] is Array or source[key] is Dictionary else source[key]
-		result.append(row)
-	return result
-
-
-static func _upgrade_premium_anchor(value: Variant) -> Variant:
-	if value == null:
-		return null
-	var result: Dictionary = value.duplicate(true)
-	result["before_core"] = _upgrade_premium_core(value["before_core"])
-	result["after_core"] = _upgrade_premium_core(value["after_core"])
-	return result
-
-
-static func _upgrade_pity_anchor(
-	value: Variant,
-	activation_pull: int,
-	activation_resolution: int,
-) -> Variant:
-	if value == null:
-		return null
-	var result: Dictionary = value.duplicate(true)
-	result["before_core"] = _upgrade_pity_core(
-		value["before_core"], activation_pull, activation_resolution,
-	)
-	result["after_core"] = _upgrade_pity_core(
-		value["after_core"], activation_pull, activation_resolution,
-	)
-	return result
-
-
-static func _upgrade_replay_marks_anchor(
-	value: Variant,
-	activation_resolution: int,
-) -> Variant:
-	if value == null:
-		return null
-	var result: Dictionary = value.duplicate(true)
-	result["before_core"] = _upgrade_replay_marks_core(
-		value["before_core"], activation_resolution,
-	)
-	result["after_core"] = _upgrade_replay_marks_core(
-		value["after_core"], activation_resolution,
-	)
-	return result
-
-
-static func _upgrade_premium_resolution(value: Variant) -> Variant:
-	if value == null:
-		return null
+static func _upgrade_legacy_core(value: Dictionary) -> Dictionary:
 	var result := {}
-	for key: String in [
-		"schema_version", "resolution_index", "campaign_uid", "attempt_id", "stage_id",
-		"ticket_hash", "outcome_hash", "result", "terminal_reason", "terminal_tick",
-		"stars_before", "stars_after", "rewards_granted", "class_entitlements_granted",
-		"created_hero_ids", "dead_hero_ids", "premium_life_losses", "xp_awards",
-		"memorial_ids", "marks_before", "marks_after", "strategic_body_hash_before",
-		"strategic_body_hash_after",
-	]:
-		result[key] = [] if key == "premium_life_losses" else value[key]
+	for key: String in CORE_KEYS:
+		if key == "replay_marks_started_at_resolution":
+			result[key] = int(value["next_resolution_index"])
+		else:
+			result[key] = value[key].duplicate(true) \
+				if value[key] is Array or value[key] is Dictionary else value[key]
 	return result
 
 
-static func _upgrade_pity_resolution(value: Variant, activation_pull: int) -> Variant:
+static func _upgrade_legacy_anchor(value: Variant) -> Variant:
 	if value == null:
 		return null
-	return value.duplicate(true)
-
-
-static func _upgrade_premium_command_records(values: Array) -> Array[Dictionary]:
-	var result: Array[Dictionary] = []
-	for source: Dictionary in values:
-		var row: Dictionary = source.duplicate(true)
-		if row["verb"] == "recruit_person":
-			row["receipt"]["recruitment"]["hero"] = _upgrade_premium_heroes(
-				[row["receipt"]["recruitment"]["hero"]]
-			)[0]
-		elif row["verb"] == "resolve_attempt":
-			row["receipt"]["resolution"] = _upgrade_premium_resolution(
-				row["receipt"]["resolution"]
-			)
-		result.append(row)
+	var result: Dictionary = value.duplicate(true)
+	result["before_core"] = _upgrade_legacy_core(value["before_core"])
+	result["after_core"] = _upgrade_legacy_core(value["after_core"])
 	return result
 
 
-static func _upgrade_pity_command_records(values: Array) -> Array[Dictionary]:
-	var result: Array[Dictionary] = []
-	for source: Dictionary in values:
-		var row: Dictionary = source.duplicate(true)
-		if row["verb"] == "pull_premium_hero":
-			var source_pull: Dictionary = row["receipt"]["premium_pull"]
-			var rarity := 5 if source_pull["premium_id"] == "lunaris_vessel" else 4
-			row["receipt"]["premium_pull"] = {
-				"premium_id": source_pull["premium_id"],
-				"hero_id": source_pull["hero_id"],
-				"pull_index": source_pull["pull_index"],
-				"new_hero": source_pull["new_hero"],
-				"revived": source_pull["revived"],
-				"lives_before": source_pull["lives_before"],
-				"lives_after": source_pull["lives_after"],
-				"pull_count_after": source_pull["pull_count_after"],
-				"marks_before": source_pull["marks_before"],
-				"marks_after": source_pull["marks_after"],
-				"rarity": rarity,
-				"five_star": rarity == 5,
-				"pity_eligible": false,
-				"pity_before": 0,
-				"pity_after": 0,
-				"pity_forced": false,
-				"guarantee_in_after": 10,
-				"save_revision": source_pull["save_revision"],
-			}
-		result.append(row)
-	return result
+static func _upgrade_legacy_resolution(value: Variant) -> Variant:
+	return null if value == null else value.duplicate(true)
 
 
 static func _migrate_data(value: Dictionary, context: Dictionary) -> Dictionary:
@@ -829,16 +526,10 @@ static func _migrate_data(value: Dictionary, context: Dictionary) -> Dictionary:
 		match key:
 			"command_receipts":
 				result[key] = []
-			"next_premium_pull_index":
-				result[key] = 0
-			"premium_pity_started_at_pull", "premium_pity_streak":
-				result[key] = 0
-			"premium_marks_started_at_resolution":
-				result[key] = int(value["next_resolution_index"])
 			"replay_marks_started_at_resolution":
 				result[key] = int(value["next_resolution_index"])
 			"last_resolution":
-				result[key] = _upgrade_premium_resolution(value[key])
+				result[key] = _upgrade_legacy_resolution(value[key])
 			"class_entitlements":
 				result[key] = _entitlements_for_stars(value["stage_stars"], context)
 			"tickets", "memorial":
@@ -859,12 +550,6 @@ static func _migrate_core(value: Dictionary, context: Dictionary) -> Dictionary:
 	var result := {}
 	for key: String in CORE_KEYS:
 		match key:
-			"next_premium_pull_index":
-				result[key] = 0
-			"premium_pity_started_at_pull", "premium_pity_streak":
-				result[key] = 0
-			"premium_marks_started_at_resolution":
-				result[key] = int(value["next_resolution_index"])
 			"replay_marks_started_at_resolution":
 				result[key] = int(value["next_resolution_index"])
 			"class_entitlements":
@@ -913,12 +598,6 @@ static func _migrate_heroes(values: Array) -> Array[Dictionary]:
 					row[key] = "portrait:%s" % source["hero_id"]
 				"portrait_asset_id":
 					row[key] = source["identity_portrait_id"]
-				"hero_kind":
-					row[key] = "recruit"
-				"premium_id":
-					row[key] = null
-				"premium_lives", "premium_pull_count":
-					row[key] = 0
 				_:
 					row[key] = source[key].duplicate(true) \
 						if source[key] is Array or source[key] is Dictionary else source[key]
@@ -1004,10 +683,6 @@ static func _reverse_heroes(values: Array) -> Dictionary:
 			source["current_class_id"] != expected_current
 			or source["portrait_instance_id"] != "portrait:%s" % source["hero_id"]
 			or source["portrait_asset_id"] != source["identity_portrait_id"]
-			or source["hero_kind"] != "recruit"
-			or source["premium_id"] != null
-			or source["premium_lives"] != 0
-			or source["premium_pull_count"] != 0
 		):
 			return _reject(&"invalid_legacy_projection")
 		var row := {}
@@ -1041,19 +716,17 @@ static func _normalize_campaign(
 		or definition.name_version != HeroNamesScript.VERSION
 		or definition.initial_marks != CampaignInvariantsScript.INITIAL_MARKS
 		or definition.starter_rows.size() != 5
-		or definition.portrait_asset_ids.size() != 11
+		or definition.portrait_asset_ids.size() != 8
 		or definition.paid_offers.size() != 1
 		or definition.v3_stage_rewards.is_empty()
 		or definition.v3_stage_rewards.size() > 99
 		or definition.basic_recruit_cost != 5
-		or definition.premium_pull_cost != 40
-		or definition.premium_hero_rows.size() != 3
 	):
 		return _reject(&"invalid_campaign_definition")
 	if check_environment and definition.environment_sha256.is_empty():
 		return _reject(&"invalid_campaign_definition")
 	var portrait_ids := _sorted_unique_strings(definition.portrait_asset_ids)
-	if portrait_ids.size() != 11:
+	if portrait_ids.size() != 8:
 		return _reject(&"invalid_campaign_definition")
 	var recruit_portrait_ids: Array[String] = []
 	for portrait_id: String in portrait_ids:
@@ -1125,7 +798,7 @@ static func _normalize_campaign(
 					return _reject(&"invalid_v3_stage_rewards")
 				marks_reward_count += 1
 				rewards.append({"amount": 40, "id": "marks", "kind": "currency"})
-			elif kind in ["trap", "spell"]:
+			elif kind == "trap":
 				if not _exact_keys(reward, ["id", "kind"]):
 					return _reject(&"invalid_v3_stage_rewards")
 				rewards.append({"id": String(reward["id"]), "kind": kind})
@@ -1134,66 +807,6 @@ static func _normalize_campaign(
 		if marks_reward_count != 1:
 			return _reject(&"invalid_v3_stage_rewards")
 		stage_rewards.append({"rewards": rewards, "stage_id": String(row["stage_id"])})
-	var class_by_id := {}
-	for class_row: Dictionary in class_rows:
-		class_by_id[String(class_row["class_id"])] = class_row
-	var premium_rows: Array[Dictionary] = []
-	var premium_ids := {}
-	var premium_portraits := {}
-	var previous_premium_id := ""
-	for raw: Variant in definition.premium_hero_rows:
-		if typeof(raw) != TYPE_DICTIONARY:
-			return _reject(&"invalid_premium_pool")
-		var row := raw as Dictionary
-		if not _exact_keys(row, [
-			"callsign", "class_id", "operator_def_id", "portrait_asset_id",
-			"premium_id", "rarity", "weight",
-		]):
-			return _reject(&"invalid_premium_pool")
-		var premium_id := String(row["premium_id"])
-		var class_id := String(row["class_id"])
-		var operator_id := String(row["operator_def_id"])
-		var portrait_id := String(row["portrait_asset_id"])
-		var callsign := String(row["callsign"]).strip_edges()
-		if (
-			not _ascii_id(premium_id)
-			or not previous_premium_id.is_empty() and premium_id <= previous_premium_id
-			or premium_ids.has(premium_id)
-			or premium_portraits.has(portrait_id)
-			or callsign.is_empty()
-			or callsign.length() > 48
-			or not class_by_id.has(class_id)
-			or String(class_by_id[class_id]["operator_def_id"]) != operator_id
-			or not portrait_ids.has(portrait_id)
-			or typeof(row["rarity"]) != TYPE_INT
-			or int(row["rarity"]) not in [4, 5]
-			or typeof(row["weight"]) != TYPE_INT
-			or int(row["weight"]) < 1
-			or int(row["weight"]) > 1000
-		):
-			return _reject(&"invalid_premium_pool")
-		previous_premium_id = premium_id
-		premium_ids[premium_id] = true
-		premium_portraits[portrait_id] = true
-		premium_rows.append({
-			"callsign": callsign,
-			"class_id": class_id,
-			"operator_def_id": operator_id,
-			"portrait_asset_id": portrait_id,
-			"premium_id": premium_id,
-			"rarity": int(row["rarity"]),
-			"weight": int(row["weight"]),
-		})
-	var five_star_count := 0
-	var total_weight := 0
-	var five_star_weight := 0
-	for row: Dictionary in premium_rows:
-		total_weight += int(row["weight"])
-		if int(row["rarity"]) == 5:
-			five_star_count += 1
-			five_star_weight += int(row["weight"])
-	if five_star_count != 1 or total_weight != 40 or five_star_weight != 2:
-		return _reject(&"invalid_premium_pool")
 	return _accept({
 		"schema_version": SAVE_VERSION,
 		"name_version": definition.name_version,
@@ -1206,8 +819,6 @@ static func _normalize_campaign(
 		"recruit_portrait_asset_ids": recruit_portrait_ids,
 		"paid_offers": offers,
 		"basic_recruit_cost": int(definition.basic_recruit_cost),
-		"premium_pull_cost": int(definition.premium_pull_cost),
-		"premium_hero_rows": premium_rows,
 	})
 
 
@@ -1426,7 +1037,7 @@ static func _valid_context(context: Dictionary) -> bool:
 		return false
 	if typeof(context["campaign"]) != TYPE_DICTIONARY:
 		return false
-	if typeof(context["class_rows"]) != TYPE_ARRAY or (context["class_rows"] as Array).size() != 12:
+	if typeof(context["class_rows"]) != TYPE_ARRAY or (context["class_rows"] as Array).size() != 4:
 		return false
 	return typeof(context["legacy_context"]) == TYPE_DICTIONARY
 

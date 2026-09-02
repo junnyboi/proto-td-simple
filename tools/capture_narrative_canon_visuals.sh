@@ -15,8 +15,7 @@ capture() {
   local width=$2
   local height=$3
   local label=$4
-  local entry=${5:-1}
-  local stage=${6:-s9}
+  local stage=${5:-s9}
   local output="$OUT/$label.png"
   local log="$OUT/$label.log"
 
@@ -27,7 +26,7 @@ capture() {
       --rendering-method gl_compatibility --resolution "${width}x${height}" \
       res://test/narrative_canon_visual_harness.tscn -- \
       "--mode=$mode" "--out=$output" "--locale=$LOCALE" \
-      "--entry=$entry" "--stage=$stage" "--text-scale=$TEXT_SCALE" >"$log" 2>&1
+      "--stage=$stage" "--text-scale=$TEXT_SCALE" >"$log" 2>&1
 
   grep -q "NARRATIVE_VISUAL_CAPTURE_OK mode=$mode path=$output" "$log"
   identify -format '%wx%h' "$output" | grep -qx "${width}x${height}"
@@ -40,19 +39,13 @@ capture title 1280 720 landscape-title
 capture results 1280 720 landscape-results
 capture title 720 1280 portrait-title
 capture results 720 1280 portrait-results
-for mode in staging premium training valhalla; do
+for mode in staging; do
   capture "$mode" 1280 720 "landscape-$mode"
   capture "$mode" 720 1280 "portrait-$mode"
 done
 for stage in s9 s12 s16; do
-  capture campaign 1280 720 "$stage-landscape-campaign" 1 "$stage"
-  capture campaign 720 1280 "$stage-portrait-campaign" 1 "$stage"
-done
-for entry in 1 2 3 4; do
-  capture archive 1280 720 "landscape-archive-$entry" "$entry"
-  capture archive_audio 1280 720 "landscape-archive-audio-$entry" "$entry"
-  capture archive 720 1280 "portrait-archive-$entry" "$entry"
-  capture archive_audio 720 1280 "portrait-archive-audio-$entry" "$entry"
+  capture campaign 1280 720 "$stage-landscape-campaign" "$stage"
+  capture campaign 720 1280 "$stage-portrait-campaign" "$stage"
 done
 
 sha256sum "$OUT"/*.png >"$OUT/SHA256SUMS"

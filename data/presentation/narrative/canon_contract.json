@@ -3,32 +3,24 @@
   "bible": {
     "path": "docs/NARRATIVE_CANON.md",
     "version": "2.0",
-    "sha256": "75a03cc3d975311b869192e2ccc2b0f79168770cd72e13de1c00fe3a13f34daa"
+    "sha256": "13e6a5fc85fba311662f6b852f6b2520c30e5a1d0cf1f2b844c54ddb267ed0ba"
   },
   "campaign_compatibility": {
     "save_schema": "prototype_td_campaign",
     "save_version": 3,
     "fixture_seed": 3301,
     "fixture_generation": 1,
-    "environment_sha256": "94368da5ab8df24620f9987229a3448385226755d36dc9950faebd66ccab8e1e",
-    "fresh_save_text_sha256": "61a2ec4b5c4abc7f246aaab4919f13960f06a195e8ceddd233c7a401c199f027",
-    "fresh_strategic_hash": "21e7893dea3572a5",
-    "fresh_core_hash": "f357ba9e3ed11ca7"
-  },
-  "archive_unlock_gates": {
-    "stewardship": 0,
-    "choir": 3,
-    "equation": 6,
-    "garden": 7
+    "environment_sha256": "2ed4cbb53592ae9fe98434667f091a00f2d97134187138e364280e9896209b90",
+    "fresh_save_text_sha256": "b5c228af3122d5ca9d1a648753bf8d3e320024f5c708ab5a77b99a5923c53479",
+    "fresh_strategic_hash": "b55cf196b9fa0198",
+    "fresh_core_hash": "03af4bdc685d0032"
   },
   "active_prose_sources": [
     "README.md",
     "docs/FACTIONS.md",
     "docs/LEVEL_DESIGNS.md",
-    "docs/PREMIUM_HERO_SYSTEM.md",
     "docs/ART_DIRECTION.md",
     "docs/ACT_II_IMPLEMENTATION_PLAN.md",
-    "docs/audio/ANIMA_ARCHIVE_VOICEOVER.md",
     "docs/audio/ANIMA_WAR_LISTENING_REVIEW.md",
     "docs/audio/LUNARIS_GAMEPLAY_SCORE.md",
     "docs/audio/ACT_II_SCORE.md"
@@ -54,7 +46,6 @@
     "digital life",
     "robot empire",
     "Anima Engine",
-    "Soul Anchor",
     "Moon Gate",
     "Hearthcross",
     "Lunaris Reliquary",
@@ -68,10 +59,7 @@
     "corrupted",
     "human farms",
     "harvesting",
-    "digital life",
     "robot empire",
-    "Anima Engine",
-    "Soul Anchor",
     "Moon Gate",
     "Hearthcross",
     "Lunaris Reliquary",
@@ -92,14 +80,11 @@
   "chinese_glossary": {
     "first_explanation": "anima（人的真正灵魂）",
     "company": "Manus连队",
-    "anima_engine": "anima引擎",
     "human_farm": "人类养殖场",
     "soul": "灵魂",
     "extracted_soul_energy_only": "灵魂能量",
-    "soul_anchor": "灵魂锚",
     "moon_gate": "月门",
-    "repair_platform": "修复平台",
-    "slow_field": "减速力场"
+    "repair_platform": "修复平台"
   },
   "forbidden_chinese_terms": [
     "第33连",
@@ -130,22 +115,8 @@
     "every (victim|mind).{0,60}(copy|preserv)",
     "(copy|duplicate|second|spare|another) soul"
   ],
-  "forbidden_charm_descriptions": [
-    "tame",
-    "pet",
-    "willing turncoat",
-    "willing defection",
-    "friendship",
-    "consent"
-  ],
-  "required_charm_description": "command link",
   "stable_internal_exceptions": [
     "data.company.33.name",
-    "stewardship",
-    "choir",
-    "equation",
-    "garden",
-    "vahalla",
     "restoration_"
   ]
 }

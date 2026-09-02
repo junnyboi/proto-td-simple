@@ -54,11 +54,10 @@ waves = Array[Dictionary]([{
 wave_starts = PackedInt32Array(0, 390)
 leak_limit = 3
 squad_size = 4
-recovery_roster = Array[StringName]([&"vanguard_1", &"guard_1", &"defender_1", &"caster_1"])
+recovery_roster = Array[StringName]([&"caster_1", &"guard_1", &"sniper_1"])
 rewards = Array[Dictionary]([{
 "id": &"spike_plate",
 "kind": &"trap"
 }])
 campaign_index = 2
 requires = Array[StringName]([])
-intro_hint = "Stop the runners first, then use Caster Arts against the armored Shieldbearer opening wave two."

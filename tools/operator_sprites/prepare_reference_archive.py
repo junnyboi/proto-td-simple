@@ -11,17 +11,9 @@ from pathlib import Path
 from PIL import Image
 
 CLASSES = (
-    "defender",
     "gunner",
     "mage_apprentice",
-    "shock_trooper",
     "swordmaster",
-    "immovable",
-    "sniper",
-    "sorcerer",
-    "witch_doctor",
-    "banner_guard",
-    "sword_saint",
 )
 GENDERS = ("male", "female")
 

@@ -3,27 +3,11 @@
   "target_runtime_body_height_px": 64,
   "measurement": "median central 144px alpha silhouette across ten neutral idle samples",
   "identities": {
-    "banner_guard_female": {"normalized_body_height_px": 598, "disposition": "regenerate"},
-    "banner_guard_male": {"normalized_body_height_px": 586, "disposition": "preserve"},
-    "defender_female": {"normalized_body_height_px": 576, "disposition": "regenerate"},
-    "defender_male": {"normalized_body_height_px": 585, "disposition": "regenerate"},
     "gunner_female": {"normalized_body_height_px": 555, "disposition": "regenerate"},
     "gunner_male": {"normalized_body_height_px": 596, "disposition": "regenerate"},
-    "immovable_female": {"normalized_body_height_px": 578, "disposition": "preserve"},
-    "immovable_male": {"normalized_body_height_px": 574, "disposition": "preserve"},
     "mage_apprentice_female": {"normalized_body_height_px": 598, "disposition": "regenerate"},
     "mage_apprentice_male": {"normalized_body_height_px": 588, "disposition": "regenerate"},
-    "shock_trooper_female": {"normalized_body_height_px": 534, "disposition": "preserve"},
-    "shock_trooper_male": {"normalized_body_height_px": 528, "disposition": "regenerate"},
-    "sniper_female": {"normalized_body_height_px": 569, "disposition": "preserve"},
-    "sniper_male": {"normalized_body_height_px": 532, "disposition": "preserve"},
-    "sorcerer_female": {"normalized_body_height_px": 600, "disposition": "regenerate"},
-    "sorcerer_male": {"normalized_body_height_px": 600, "disposition": "regenerate"},
-    "sword_saint_female": {"normalized_body_height_px": 600, "disposition": "preserve"},
-    "sword_saint_male": {"normalized_body_height_px": 600, "disposition": "preserve"},
     "swordmaster_female": {"normalized_body_height_px": 600, "disposition": "regenerate"},
-    "swordmaster_male": {"normalized_body_height_px": 598, "disposition": "preserve"},
-    "witch_doctor_female": {"normalized_body_height_px": 594, "disposition": "regenerate"},
-    "witch_doctor_male": {"normalized_body_height_px": 598, "disposition": "regenerate"}
+    "swordmaster_male": {"normalized_body_height_px": 598, "disposition": "preserve"}
   }
 }

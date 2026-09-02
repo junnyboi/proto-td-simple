@@ -13,6 +13,5 @@ speed_tiles_per_s = 1.0
 aerial = false
 block_weight = 1
 leak_damage = 1
-charm_immune = false
 target_policy = ExtResource("3_target_policy")
 sprite_id = &"grunt"

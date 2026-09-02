@@ -133,8 +133,8 @@ func _test_atlas_boundaries() -> void:
 
 func _test_generated_cache_policy() -> void:
 	Art._reset_manifests_for_test()
-	var first := Art.texture(&"op_anim_defender_female_idle_ne", 0)
-	var second := Art.texture(&"op_anim_defender_female_idle_ne", 1)
+	var first := Art.texture(&"op_anim_gunner_female_idle_ne", 0)
+	var second := Art.texture(&"op_anim_gunner_female_idle_ne", 1)
 	_check(first != null and second != null, "generated cache test failed to load atlas frames")
 	_check(
 		Art._cached_texture_count_for_test() == 0,
@@ -177,8 +177,6 @@ func _directions(action: String) -> Dictionary:
 	return {
 		&"ne": StringName("fixture_%s_ne" % action),
 		&"nw": StringName("fixture_%s_nw" % action),
-		&"se": StringName("fixture_%s_se" % action),
-		&"sw": StringName("fixture_%s_sw" % action),
 	}
 
 

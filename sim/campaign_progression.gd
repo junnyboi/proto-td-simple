@@ -17,38 +17,14 @@ const HERO_FIELD_ORDER := [
 ]
 
 const PROFILES := {
-	"vanguard_1": {
-		"first_class_id": "shock_trooper", "advanced_class_id": null,
-	},
-	"vanguard_2": {
-		"first_class_id": "shock_trooper", "advanced_class_id": "banner_guard",
-	},
 	"guard_1": {
 		"first_class_id": "swordmaster", "advanced_class_id": null,
-	},
-	"guard_2": {
-		"first_class_id": "swordmaster", "advanced_class_id": "sword_saint",
-	},
-	"defender_1": {
-		"first_class_id": "defender", "advanced_class_id": null,
-	},
-	"defender_2": {
-		"first_class_id": "defender", "advanced_class_id": "immovable",
 	},
 	"sniper_1": {
 		"first_class_id": "gunner", "advanced_class_id": null,
 	},
-	"sniper_2": {
-		"first_class_id": "gunner", "advanced_class_id": "sniper",
-	},
 	"caster_1": {
 		"first_class_id": "mage_apprentice", "advanced_class_id": null,
-	},
-	"caster_2": {
-		"first_class_id": "mage_apprentice", "advanced_class_id": "sorcerer",
-	},
-	"witch_doctor_1": {
-		"first_class_id": "mage_apprentice", "advanced_class_id": "witch_doctor",
 	},
 }
 
@@ -101,13 +77,9 @@ static func projection_is_valid(row: Dictionary) -> bool:
 	var acquisition_profile: Dictionary = PROFILES[acquisition]
 	if row.get("first_class_id") != acquisition_profile["first_class_id"]:
 		return false
-	var advanced: Variant = row.get("advanced_class_id")
-	if acquisition == "caster_1" and advanced in ["witch_doctor", "sorcerer"]:
-		var expected := "witch_doctor_1" if advanced == "witch_doctor" else "caster_2"
-		return current == expected
 	return (
 		current == acquisition
-		and advanced == acquisition_profile["advanced_class_id"]
+		and row.get("advanced_class_id") == acquisition_profile["advanced_class_id"]
 	)
 
 
@@ -172,6 +144,8 @@ static func normalize_promotion_rules(value: Variant, operator_ids: Array) -> Di
 
 
 static func promotion_options(hero: Dictionary, rules: Dictionary) -> Dictionary:
+	if rules.is_empty():
+		return _reject(&"no_path")
 	var eligibility := promotion_eligibility(hero, rules)
 	if not eligibility["accepted"]:
 		return eligibility
@@ -186,6 +160,8 @@ static func promotion_options(hero: Dictionary, rules: Dictionary) -> Dictionary
 
 
 static func promotion_eligibility(hero: Dictionary, rules: Dictionary) -> Dictionary:
+	if rules.is_empty():
+		return _reject(&"no_path")
 	if hero["life_status"] != "ready" or hero["death"] != null:
 		return _reject(&"hero_not_ready")
 	if hero["first_class_id"] != rules["source_class_id"]:
@@ -198,6 +174,8 @@ static func promotion_eligibility(hero: Dictionary, rules: Dictionary) -> Dictio
 
 
 static func promotion_choice(rules: Dictionary, advanced_class_id: String) -> Dictionary:
+	if rules.is_empty():
+		return {}
 	for choice: Dictionary in rules["choices"]:
 		if choice["advanced_class_id"] == advanced_class_id:
 			return choice.duplicate(true)
@@ -247,17 +225,6 @@ static func derive_xp_awards(
 	for hero_id: String in hero_ids:
 		rows.append({"hero_id": hero_id, "delta": xp_delta})
 	return rows
-
-
-static func nonpremium_xp_awards(awards: Array, before_heroes: Array) -> Array[Dictionary]:
-	var heroes_by_id := _heroes_by_id(before_heroes)
-	var filtered: Array[Dictionary] = []
-	for award: Dictionary in awards:
-		var hero: Dictionary = heroes_by_id.get(String(award.get("hero_id", "")), {})
-		if hero.is_empty() or String(hero.get("hero_kind", "")) == "premium":
-			continue
-		filtered.append(award.duplicate(true))
-	return filtered
 
 
 static func can_apply_xp(rows: Array, awards: Array) -> bool:

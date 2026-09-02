@@ -14,7 +14,7 @@ func _init() -> void:
 	_check_typography_constants()
 	_check_aetheria_theme()
 	_check_lunaris_roles()
-	_check_title_multiplier()
+	_check_settings_multiplier()
 	_finish()
 
 
@@ -74,10 +74,10 @@ func _check_lunaris_roles() -> void:
 	button.free()
 
 
-func _check_title_multiplier() -> void:
-	for path: String in ["res://scripts/ui/title.gd", "res://scripts/ui/title_settings.gd"]:
-		var source := FileAccess.get_file_as_string(path)
-		_check(source.contains("const TITLE_FONT_SCALE := 3.0"), "%s title multiplier is not 3.0" % path)
+func _check_settings_multiplier() -> void:
+	var path := "res://scripts/ui/title_settings.gd"
+	var source := FileAccess.get_file_as_string(path)
+	_check(source.contains("const TITLE_FONT_SCALE := 3.0"), "%s settings multiplier is not 3.0" % path)
 
 
 func _check(condition: bool, message: String) -> void:

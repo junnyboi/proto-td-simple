@@ -13,7 +13,7 @@ paid_offers = Array[Dictionary]([{
 "offer_id": "p16_caster_contract",
 "operator_def_id": "recruit"
 }])
-environment_sha256 = "94368da5ab8df24620f9987229a3448385226755d36dc9950faebd66ccab8e1e"
+environment_sha256 = "2ed4cbb53592ae9fe98434667f091a00f2d97134187138e364280e9896209b90"
 starter_rows = Array[Dictionary]([{
 "class_id": "recruit",
 "operator_def_id": "recruit",
@@ -35,26 +35,8 @@ starter_rows = Array[Dictionary]([{
 "operator_def_id": "recruit",
 "portrait_asset_id": "portrait_recruit_04"
 }])
-starting_class_ids = Array[StringName]([&"defender", &"gunner", &"mage_apprentice", &"shock_trooper", &"swordmaster"])
-stage_class_entitlements = Array[Dictionary]([{
-"class_id": "sword_saint",
-"stage_id": "s1"
-}, {
-"class_id": "immovable",
-"stage_id": "s3"
-}, {
-"class_id": "sniper",
-"stage_id": "s4"
-}, {
-"class_id": "sorcerer",
-"stage_id": "s5"
-}, {
-"class_id": "banner_guard",
-"stage_id": "s6"
-}, {
-"class_id": "witch_doctor",
-"stage_id": "s7"
-}])
+starting_class_ids = Array[StringName]([&"gunner", &"mage_apprentice", &"swordmaster"])
+stage_class_entitlements = Array[Dictionary]([])
 v3_stage_rewards = Array[Dictionary]([{
 "rewards": [{"amount": 40, "id": "marks", "kind": "currency"}],
 "stage_id": "s1"
@@ -65,13 +47,13 @@ v3_stage_rewards = Array[Dictionary]([{
 "rewards": [{"id": "tar_pit", "kind": "trap"}, {"amount": 40, "id": "marks", "kind": "currency"}],
 "stage_id": "s3"
 }, {
-"rewards": [{"id": "bolt", "kind": "spell"}, {"amount": 40, "id": "marks", "kind": "currency"}],
+"rewards": [{"amount": 40, "id": "marks", "kind": "currency"}],
 "stage_id": "s4"
 }, {
-"rewards": [{"id": "charm", "kind": "spell"}, {"amount": 40, "id": "marks", "kind": "currency"}],
+"rewards": [{"amount": 40, "id": "marks", "kind": "currency"}],
 "stage_id": "s5"
 }, {
-"rewards": [{"id": "slow_field", "kind": "spell"}, {"amount": 40, "id": "marks", "kind": "currency"}],
+"rewards": [{"amount": 40, "id": "marks", "kind": "currency"}],
 "stage_id": "s6"
 }, {
 "rewards": [{"amount": 40, "id": "marks", "kind": "currency"}],
@@ -104,31 +86,5 @@ v3_stage_rewards = Array[Dictionary]([{
 "rewards": [{"amount": 40, "id": "marks", "kind": "currency"}],
 "stage_id": "s16"
 }])
-portrait_asset_ids = Array[StringName]([&"portrait_archive_caster", &"portrait_lunaris_vessel", &"portrait_recruit_00", &"portrait_recruit_01", &"portrait_recruit_02", &"portrait_recruit_03", &"portrait_recruit_04", &"portrait_recruit_05", &"portrait_recruit_06", &"portrait_recruit_07", &"portrait_reliquary_duelist"])
+portrait_asset_ids = Array[StringName]([&"portrait_recruit_00", &"portrait_recruit_01", &"portrait_recruit_02", &"portrait_recruit_03", &"portrait_recruit_04", &"portrait_recruit_05", &"portrait_recruit_06", &"portrait_recruit_07"])
 basic_recruit_cost = 5
-premium_pull_cost = 40
-premium_hero_rows = Array[Dictionary]([{
-"callsign": "Archive Caster",
-"class_id": "mage_apprentice",
-"operator_def_id": "caster_1",
-"portrait_asset_id": "portrait_archive_caster",
-"premium_id": "archive_caster",
-"rarity": 4,
-"weight": 19
-}, {
-"callsign": "Lunaris Vessel",
-"class_id": "sorcerer",
-"operator_def_id": "caster_2",
-"portrait_asset_id": "portrait_lunaris_vessel",
-"premium_id": "lunaris_vessel",
-"rarity": 5,
-"weight": 2
-}, {
-"callsign": "Reliquary Duelist",
-"class_id": "sword_saint",
-"operator_def_id": "guard_2",
-"portrait_asset_id": "portrait_reliquary_duelist",
-"premium_id": "reliquary_duelist",
-"rarity": 4,
-"weight": 19
-}])

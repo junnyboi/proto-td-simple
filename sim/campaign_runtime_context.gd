@@ -20,7 +20,6 @@ static func build() -> Dictionary:
 	var operators := _resources("res://data/operators")
 	var classes := _resources("res://data/classes")
 	var traps := _ids("res://data/traps")
-	var spells := _ids("res://data/spells")
 	var stages := _campaign_stages()
 	var legacy_stages := stages.filter(func(stage: StageDefType) -> bool:
 		return stage.campaign_index <= LEGACY_STAGE_COUNT)
@@ -30,7 +29,6 @@ static func build() -> Dictionary:
 	var legacy_combat := CombatContentBindingScript.build({
 		"operators": legacy_operator_ids,
 		"traps": traps,
-		"spells": spells,
 	}, legacy_stages)
 	if not legacy_combat["accepted"]:
 		return {}
@@ -39,10 +37,8 @@ static func build() -> Dictionary:
 		. build_context(
 			legacy_operator_ids,
 			traps,
-			spells,
 			legacy_stages,
 			(LEGACY_CAMPAIGN as CampaignDefType).paid_offers,
-			[],
 			[],
 			{},
 			String(legacy_combat["sha256"]),
@@ -54,7 +50,6 @@ static func build() -> Dictionary:
 			operators,
 			classes,
 			traps,
-			spells,
 			stages,
 			RECRUIT_CAMPAIGN as CampaignDefType,
 			text_entries,

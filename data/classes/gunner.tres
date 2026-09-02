@@ -8,7 +8,6 @@ class_id = &"gunner"
 stage = 1
 operator_def_id = &"sniper_1"
 promotion_from_class_id = &"recruit"
-promotion_to_class_ids = Array[StringName]([&"sniper"])
 promotion_xp_required = 400
 name_key = &"data.class.gunner.name"
 role_key = &"data.class.gunner.role"

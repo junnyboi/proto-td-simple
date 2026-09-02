@@ -14,16 +14,12 @@ const IDLE_FRAMES := 24
 
 static func direction_for_facing(facing: int) -> StringName:
 	match facing:
-		UnitStateType.Facing.RIGHT:
-			return &"se"
-		UnitStateType.Facing.DOWN:
-			return &"sw"
-		UnitStateType.Facing.LEFT:
-			return &"nw"
-		UnitStateType.Facing.UP:
+		UnitStateType.Facing.RIGHT, UnitStateType.Facing.UP:
 			return &"ne"
+		UnitStateType.Facing.DOWN, UnitStateType.Facing.LEFT:
+			return &"nw"
 		_:
-			return &"se"
+			return &"nw"
 
 
 static func attack_age(model_tick: int, last_attack_tick: int) -> int:

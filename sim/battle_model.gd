@@ -48,15 +48,11 @@ var dp_lost_to_cap: int = 0
 var dp_skill_granted: int = 0
 var retreated: int = 0
 var redeploy_ready_tick_by_id: Dictionary = {}
+var fixed_operator_roster: Array[StringName] = []
 var skills_fired: int = 0
 var units: Array[UnitState] = []
 var traps: Array[TrapState] = []
 var traps_triggered: int = 0
-var charmed: int = 0
-var charmed_dead: int = 0
-var charmed_exited: int = 0
-var spell_book: SpellBook = null
-var slow_fields: Array[SlowFieldState] = []
 
 var _defs: Dictionary = {}
 var _op_defs: Dictionary = {}
@@ -66,7 +62,6 @@ var _path_lengths: Array[int] = []
 var _next_enemy_id: int = 0
 var _next_unit_id: int = 0
 var _next_trap_id: int = 0
-var _next_slow_field_id: int = 0
 var _ticket: Dictionary = {}
 var _ticket_rows: Dictionary = {}
 var _battle_records: Array[Dictionary] = []
@@ -74,35 +69,59 @@ var _outcome: Dictionary = {}
 
 
 static func create(
-		stage_def: StageDef,
-		battle_input: Variant,
-		seed_value: int,
+	stage_def: StageDef,
+	battle_input: Variant,
+	seed_value: int,
 	game_config: GameConfig,
 	enemy_defs: Dictionary,
 	operator_defs: Dictionary = {},
 	trap_defs: Dictionary = {},
-	spell_defs: Dictionary = {},
 	trusted_ticket_hashes: Array = [],
-	) -> BattleModel:
+	fixed_operator_ids: Array = [],
+) -> BattleModel:
 	var model := BattleModel.new()
 	model.stage = stage_def
+	model._op_defs = operator_defs
 	if not BattleTicketRuntimeScript.configure(
 		model, battle_input, stage_def, seed_value, trusted_ticket_hashes,
 	):
+		return null
+	if not model._configure_fixed_operator_roster(fixed_operator_ids):
 		return null
 	model.config = game_config
 	model.base_hp = game_config.base_hp_start
 	model.dp = game_config.dp_start
 	model._defs = enemy_defs
-	model._op_defs = operator_defs
 	model._trap_defs = trap_defs
-	model.spell_book = SpellBook.create(spell_defs, stage_def.wave_starts)
 	model.timeline = WaveTimeline.from_waves(stage_def.waves)
 	for i: int in stage_def.paths.size():
 		var cells := stage_def.path_cells(i)
 		model._paths.append(cells)
 		model._path_lengths.append(Pathing.length_units(cells))
 	return model
+
+
+func _configure_fixed_operator_roster(operator_ids: Array) -> bool:
+	if operator_ids.is_empty():
+		return true
+	var seen := {}
+	for raw_id: Variant in operator_ids:
+		if typeof(raw_id) not in [TYPE_STRING, TYPE_STRING_NAME]:
+			return false
+		var operator_id := StringName(raw_id)
+		if seen.has(operator_id) or not _op_defs.has(operator_id):
+			return false
+		seen[operator_id] = true
+		fixed_operator_roster.append(operator_id)
+	if fixed_operator_roster.is_empty():
+		return false
+	battle_squad = fixed_operator_roster.duplicate()
+	squad = fixed_operator_roster.duplicate()
+	return true
+
+
+func _uses_fixed_operator_roster() -> bool:
+	return not fixed_operator_roster.is_empty()
 
 
 func _is_ticketed() -> bool:
@@ -163,8 +182,6 @@ func apply_action(action: Array) -> bool:
 				ok = HealingRulesScript.apply(self, int(action[1]), int(action[2]))
 		&"place_trap":
 			ok = n == 3 and _apply_place_trap(action[1], action[2])
-		&"cast":
-			ok = n == 3 and _apply_cast(action[1], action[2])
 		&"resign":
 			ok = n == 1 and _apply_resign()
 		_:
@@ -178,9 +195,16 @@ func apply_action(action: Array) -> bool:
 func is_deployable(op_id: StringName) -> bool:
 	if result != Result.RUNNING:
 		return false
+	if _uses_fixed_operator_roster():
+		if not fixed_operator_roster.has(op_id) or not _op_defs.has(op_id):
+			return false
+		if deployed_count() >= stage.squad_size:
+			return false
+		var fixed_definition: OperatorDef = _op_defs[op_id]
+		return dp >= fixed_definition.dp_cost
 	if is_redeploy_cooling_down(op_id):
 		return false
-	if _is_ticketed():
+	if _is_ticketed() and not _uses_fixed_operator_roster():
 		return BattleTicketRuntimeScript.is_deployable(self, op_id)
 	if not squad.has(op_id) or not _op_defs.has(op_id):
 		return false
@@ -223,6 +247,9 @@ func retreat_cooldown_ticks_for_class(op_class: OperatorDef.OpClass) -> int:
 func can_deploy_at(op_id: StringName, cell: Vector2i) -> bool:
 	if not is_deployable(op_id):
 		return false
+	if _uses_fixed_operator_roster():
+		var fixed_definition: OperatorDef = _op_defs[op_id]
+		return stage.operator_cell_in_domain(fixed_definition, cell) and alive_unit_at(cell) == null
 	if _is_ticketed():
 		return (
 			BattleTicketRuntimeScript.cell_in_domain(_ticket_rows[op_id], stage, cell)
@@ -256,8 +283,10 @@ func deployed_count() -> int:
 	return n
 
 
-func _apply_deploy(op_id: StringName, cell: Vector2i, facing: int) -> bool:
-	if facing < UnitState.Facing.RIGHT or facing > UnitState.Facing.UP:
+func _apply_deploy(op_id: StringName, cell: Vector2i, requested_facing: int) -> bool:
+	# Retain the four-value action field so historical replays still decode,
+	# but normalize every new unit to the canonical NW presentation state.
+	if requested_facing < UnitState.Facing.RIGHT or requested_facing > UnitState.Facing.UP:
 		return false
 	if not can_deploy_at(op_id, cell):
 		return false
@@ -265,8 +294,11 @@ func _apply_deploy(op_id: StringName, cell: Vector2i, facing: int) -> bool:
 	u.id = _next_unit_id
 	_next_unit_id += 1
 	u.cell = cell
-	u.facing = facing as UnitState.Facing
-	if _is_ticketed():
+	u.facing = UnitState.DEFAULT_FACING
+	if _uses_fixed_operator_roster():
+		var fixed_definition: OperatorDef = _op_defs[op_id]
+		BattleTicketRuntimeScript.copy_legacy_unit(fixed_definition, u)
+	elif _is_ticketed():
 		BattleTicketRuntimeScript.copy_unit(_ticket_rows[op_id], u)
 		var record := BattleTicketRuntimeScript.record_for(_battle_records, op_id)
 		record["deployments"] += 1
@@ -299,7 +331,7 @@ func _apply_trigger_skill(unit_id: int) -> bool:
 		SkillDef.Effect.STUN_IN_RANGE:
 			var cells := Targeting.splash_cells(u.cell, int(u.skill_params["dim"]))
 			for e: EnemyState in enemies:
-				if not e.alive or e.aerial or e.faction != EnemyState.Faction.ENEMY:
+				if not e.alive or e.aerial:
 					continue
 				if cells.has(Pathing.cell_of(path_for(e.path_idx), e.progress_units)):
 					e.stunned_until_tick = tick + int(u.skill_params["stun_ticks"])
@@ -325,11 +357,12 @@ func _apply_retreat(unit_id: int) -> bool:
 	var deployment_id := u.battle_id if not u.battle_id.is_empty() else u.op_id
 	u.alive = false
 	_release_all_blocked(u)
-	if _is_ticketed():
+	if _is_ticketed() and not _uses_fixed_operator_roster():
 		var record := BattleTicketRuntimeScript.record_for(_battle_records, u.battle_id)
 		record["retreats"] += 1
 	retreated += 1
-	redeploy_ready_tick_by_id[deployment_id] = tick + retreat_cooldown_ticks_for_class(u.op_class)
+	if not _uses_fixed_operator_roster():
+		redeploy_ready_tick_by_id[deployment_id] = tick + retreat_cooldown_ticks_for_class(u.op_class)
 	var refund := floori(u.dp_cost * config.retreat_refund_percent / 100.0)
 	dp_refunded += refund
 	_grant_dp(refund)
@@ -384,111 +417,15 @@ func _apply_place_trap(trap_id: StringName, cell: Vector2i) -> bool:
 	dp_spent += def.dp_cost
 	return true
 
-
-## Spell readiness for the spell bar (single source of truth, like
-## is_deployable). Target validity lives in cast_target_valid.
-func is_castable(spell_id: StringName) -> bool:
-	if result != Result.RUNNING:
-		return false
-	return spell_book.can_cast(spell_id, tick)
-
-
-## Full target validation (the targeting cursor's query IS the verb's
-## validation — never a copy). CELL spells take any in-grid Vector2i; ENEMY
-## spells take an alive ENEMY-faction entity id; CHARM additionally requires
-## non-aerial and not charm_immune (§2.4.1 — blocked or dueling targets ARE
-## eligible).
-func cast_target_valid(spell_id: StringName, target: Variant) -> bool:
-	if not spell_book.has_spell(spell_id):
-		return false
-	var def: SpellDef = spell_book.def_of(spell_id)
-	if not stage.spell_target_in_domain(def, target):
-		return false
-	if def.target_kind == SpellDef.TargetKind.CELL:
-		if def.effect == SpellDef.Effect.SLOW_FIELD:
-			return def.radius >= 0 and def.duration_ticks > 0 and (
-				def.slow_permille > 0 and def.slow_permille < 1000
-			)
-		return true
-	return _enemy_target_valid(def, target)
-
-
-func _enemy_target_valid(def: SpellDef, target: Variant) -> bool:
-	if typeof(target) != TYPE_INT:
-		return false
-	var enemy_id: int = target
-	if enemy_id < 0 or enemy_id >= enemies.size():
-		return false
-	var e := enemies[enemy_id]
-	if not e.alive or e.faction != EnemyState.Faction.ENEMY:
-		return false
-	if def.effect == SpellDef.Effect.CHARM:
-		return not e.aerial and not e.charm_immune
-	return true
-
-
-func _apply_cast(spell_id: StringName, target: Variant) -> bool:
-	if not is_castable(spell_id):
-		return false
-	if not cast_target_valid(spell_id, target):
-		return false
-	var def: SpellDef = spell_book.def_of(spell_id)
-	match def.effect:
-		SpellDef.Effect.BURST_DAMAGE:
-			_resolve_burst(target, def)
-		SpellDef.Effect.SLOW_FIELD:
-			_resolve_slow_field(target, def)
-		SpellDef.Effect.CHARM:
-			_resolve_charm(enemies[int(target)])
-		_:
-			return false
-	spell_book.mark_cast(spell_id, tick)
-	return true
-
-
-## Burst hits every alive ENEMY (aerial included — a burst is area denial;
-## charmed allies are never hit) whose current cell is within the Chebyshev
-## radius, through the one death path. Collect first, then damage: array
-## order = id order, deterministic.
-func _resolve_burst(center: Vector2i, def: SpellDef) -> void:
-	var victims: Array[EnemyState] = []
-	for e: EnemyState in enemies:
-		if not e.alive or e.faction != EnemyState.Faction.ENEMY:
-			continue
-		var c := Pathing.cell_of(path_for(e.path_idx), e.progress_units)
-		if maxi(absi(c.x - center.x), absi(c.y - center.y)) <= def.radius:
-			victims.append(e)
-	for v: EnemyState in victims:
-		_damage_enemy(v, def.damage, spell_book.damage_kind(def.id))
-
-
-## Persistent cell area (M7): cast at tick T affects ground movement in step T
-## through T + duration - 1 and expires before movement at T + duration.
-## Overlapping fields and Tar Pit use strongest-only slow, never additive slow.
-func _resolve_slow_field(center: Vector2i, def: SpellDef) -> void:
-	var field := SlowFieldState.new()
-	field.id = _next_slow_field_id
-	_next_slow_field_id += 1
-	field.spell_id = def.id
-	field.center = center
-	field.radius = def.radius
-	field.slow_permille = def.slow_permille
-	field.expires_tick = tick + def.duration_ticks
-	slow_fields.append(field)
-
-
 ## One authoritative EnemyState damage seam. Positive damage stamps the
 ## presentation event and extends an integer-tick movement stagger before the
-## existing faction-correct death path resolves. Attack cadence is unchanged.
+## existing death path resolves. Attack cadence is unchanged.
 func _damage_enemy(e: EnemyState, raw_damage: int, damage_kind: int) -> void:
 	var damage := DamageRulesScript.resolve(
 		raw_damage, damage_kind, e.defense, e.resistance_permille,
 	)
 	if EnemyDamageScript.apply(e, damage, tick, config.damage_stagger_ticks):
-		if e.faction == EnemyState.Faction.CHARMED:
-			_kill_charmed(e)
-		else:
-			_kill_enemy(e)
+		_kill_enemy(e)
 
 
 func _damage_unit(u: UnitState, raw_damage: int, damage_kind: int) -> void:
@@ -500,24 +437,6 @@ func _damage_unit(u: UnitState, raw_damage: int, damage_kind: int) -> void:
 	u.hp -= damage
 	if u.hp <= 0:
 		_kill_unit(u)
-
-
-## Charm conversion (§2.4 steps 1-4): faction flip at current HP, stats
-## kept. A blocked target is released (freed capacity re-blocks on the next
-## assignment pass); a target dueling another ally dissolves that duel —
-## both walk. Reversal/duel behavior lives in the per-tick passes.
-func _resolve_charm(e: EnemyState) -> void:
-	e.faction = EnemyState.Faction.CHARMED
-	if e.blocked_by >= 0:
-		var blocker := unit_by_id(e.blocked_by)
-		if blocker != null:
-			blocker.blocked_ids.erase(e.id)
-		e.blocked_by = -1
-	if e.engaged_with >= 0:
-		enemies[e.engaged_with].engaged_with = -1
-		e.engaged_with = -1
-	charmed += 1
-
 
 ## observable at the current tick and the next step() no-ops via the
 ## terminal early-return. Writes only already-hashed fields (result), so
@@ -541,15 +460,7 @@ func alive_count() -> int:
 func alive_enemy_count() -> int:
 	var n := 0
 	for e: EnemyState in enemies:
-		if e.alive and e.faction == EnemyState.Faction.ENEMY:
-			n += 1
-	return n
-
-
-func alive_charmed_count() -> int:
-	var n := 0
-	for e: EnemyState in enemies:
-		if e.alive and e.faction == EnemyState.Faction.CHARMED:
+		if e.alive:
 			n += 1
 	return n
 
@@ -581,14 +492,12 @@ func terminal_outcome() -> Dictionary:
 
 ## this sub-step), (2) advance unblocked enemies + block assignment + leaks,
 ## (3) authored restoration lattices repair eligible hostile ground enemies,
-## unless covered by Slow Field, (4) combat — units strike first, then charmed
-## allies, then enemies;
+## (4) combat — units strike first, then enemies;
 ## deaths resolve immediately,
 ## (5) spawn, (6) terminal check. Later phases append sub-steps, never reorder.
 ## Expiry runs before combat so a timed effect is active for exactly
 ## duration_ticks ticks (exclusive end at expires_tick); enemies a lapsed
 ## BLOCK_PLUS can no longer hold resume walking in this same tick's sub-step 2.
-## Spell readiness needs no sub-step (M1: arithmetic over tick).
 func _step_one() -> void:
 	if result != Result.RUNNING:
 		return
@@ -597,13 +506,11 @@ func _step_one() -> void:
 	var entrants := _advance_enemies()
 	_resolve_trap_triggers(entrants)
 	_apply_restoration_lattices()
-	_assign_duels()
 	_tick_combat()
 	for entry: Dictionary in timeline.due(tick):
 		_spawn(entry)
 	_check_terminal()
 	tick += 1
-	_expire_slow_fields()
 	if _is_ticketed() and result != Result.RUNNING:
 		_outcome = BattleOutcomeBuilderScript.seal(self)
 
@@ -616,21 +523,12 @@ func _step_one() -> void:
 ## start-of-tick cell is sampled once, before advancing: it decides this
 ## tick's aura slow AND anchors the entry transition for ON_ENTER recording.
 ## Returns the entrant list ({trap, enemy}) for _resolve_trap_triggers.
-## CHARMED entities reverse along their own path at full speed — no block,
-## no leak, no trap, no slow, no stun (M5/M6); engaged entities of either
-## faction are frozen; despawn at progress <= 0 is charmed_exited.
 func _advance_enemies() -> Array[Dictionary]:
 	var entrants: Array[Dictionary] = []
 	for e: EnemyState in enemies:
-		if not e.alive or e.engaged_with >= 0:
+		if not e.alive:
 			continue
 		if tick < e.damage_stagger_until_tick:
-			continue
-		if e.faction == EnemyState.Faction.CHARMED:
-			e.progress_units -= e.step_units
-			if e.progress_units <= 0:
-				e.alive = false
-				charmed_exited += 1
 			continue
 		if e.blocked_by >= 0 or tick < e.stunned_until_tick:
 			continue
@@ -672,16 +570,7 @@ func _slow_permille_at(cell: Vector2i) -> int:
 	for t: TrapState in traps:
 		if t.cell == cell and t.trigger == TrapDef.Trigger.CELL_AURA:
 			strongest = maxi(strongest, t.slow_permille)
-	for field: SlowFieldState in slow_fields:
-		if field.covers(cell):
-			strongest = maxi(strongest, field.slow_permille)
 	return strongest
-
-
-func _expire_slow_fields() -> void:
-	for index: int in range(slow_fields.size() - 1, -1, -1):
-		if slow_fields[index].expires_tick <= tick:
-			slow_fields.remove_at(index)
 
 
 func _apply_restoration_lattices() -> void:
@@ -695,30 +584,19 @@ func _apply_restoration_lattices() -> void:
 		return
 	var lattice_cells := {}
 	for point: Vector2 in stage.restoration_cells:
-		var cell := Vector2i(point)
-		if not _slow_field_covers(cell):
-			lattice_cells[cell] = true
+		lattice_cells[Vector2i(point)] = true
 	if lattice_cells.is_empty():
 		return
 	for enemy: EnemyState in enemies:
 		if (
 			not enemy.alive
 			or enemy.aerial
-			or enemy.faction != EnemyState.Faction.ENEMY
 			or enemy.hp >= enemy.hp_max
 		):
 			continue
 		var cell := Pathing.cell_of(path_for(enemy.path_idx), enemy.progress_units)
 		if lattice_cells.has(cell):
 			enemy.hp = mini(enemy.hp_max, enemy.hp + stage.restoration_heal_amount)
-
-
-func _slow_field_covers(cell: Vector2i) -> bool:
-	for field: SlowFieldState in slow_fields:
-		if field.covers(cell):
-			return true
-	return false
-
 
 ## ON_ENTER resolution (M2): after the advance pass, before combat — a
 ## trap-killed enemy never attacks its entry tick. Entrants resolve in
@@ -751,80 +629,55 @@ static func _entrant_order(a: Dictionary, b: Dictionary) -> bool:
 		return ea.progress_units > eb.progress_units
 	return ea.id < eb.id
 
-
-## Duel assignment (§2.4.7, M4): each unengaged charmed ally in ascending id
-## order engages the lowest-id unengaged, UNBLOCKED alive ENEMY sharing its
-## grid cell (one holder at a time — blocked enemies already have one; the
-## duel intercepts walking enemies only). Engaged entities skip the advance
-## pass, so an engaged enemy can never be block-assigned mid-duel.
-func _assign_duels() -> void:
-	for ally: EnemyState in enemies:
-		if not ally.alive or ally.faction != EnemyState.Faction.CHARMED:
-			continue
-		if ally.engaged_with >= 0:
-			continue
-		var ally_cell := Pathing.cell_of(path_for(ally.path_idx), ally.progress_units)
-		for e: EnemyState in enemies:
-			if not e.alive or e.faction != EnemyState.Faction.ENEMY:
-				continue
-			if e.engaged_with >= 0 or e.blocked_by >= 0 or e.aerial:
-				continue
-			if Pathing.cell_of(path_for(e.path_idx), e.progress_units) == ally_cell:
-				ally.engaged_with = e.id
-				e.engaged_with = ally.id
-				break
-
-
 ## counter is 0 and a target exists (counter then resets to interval - 1 so
 ## shots land exactly atk_interval_ticks apart); otherwise the counter ticks
 ## down and holds at 0. Units strike before enemies, so an enemy killed on its
 ## ready-tick never lands that hit. Every automatic selection consumes the
 ## actor's explicit compiled TargetPolicyDef; Caster splash remains data-owned
-## by splash_dim. Charmed duels remain direct engagement relationships.
+## by splash_dim.
 func _tick_combat() -> void:
 	for u: UnitState in units:
 		if not u.alive:
 			continue
+		var decision := TargetDecisionProjectionScript.unit_target_decision(self, u.id)
+		var target_id := int(decision["selected_id"])
+		if target_id >= 0:
+			_face_unit_toward_enemy(u, enemies[target_id])
 		if u.atk_counter > 0:
 			u.atk_counter -= 1
 			continue
 		if u.atk <= 0:
 			continue
-		var decision := TargetDecisionProjectionScript.unit_target_decision(self, u.id)
-		var target_id := int(decision["selected_id"])
 		if target_id >= 0:
 			_fire_unit(u, enemies[target_id])
-	for a: EnemyState in enemies:
-		if not a.alive or a.faction != EnemyState.Faction.CHARMED:
-			continue
-		if a.atk_counter > 0:
-			a.atk_counter -= 1
-			continue
-		if a.engaged_with < 0:
-			continue
-		var foe := enemies[a.engaged_with]
-		if a.atk > 0 and foe.alive:
-			_damage_enemy(foe, a.atk, a.attack_damage_kind)
-			a.atk_counter = a.atk_interval_ticks - 1
 	for e: EnemyState in enemies:
-		if not e.alive or e.faction != EnemyState.Faction.ENEMY:
+		if not e.alive:
 			continue
 		if tick < e.stunned_until_tick:
 			continue
 		if e.atk_counter > 0:
 			e.atk_counter -= 1
 			continue
-		if e.engaged_with >= 0:
-			var ally := enemies[e.engaged_with]
-			if e.atk > 0 and ally.alive:
-				_damage_enemy(ally, e.atk, e.attack_damage_kind)
-				e.atk_counter = e.atk_interval_ticks - 1
-			continue
 		var decision := TargetDecisionProjectionScript.enemy_target_decision(self, e.id)
 		var victim := unit_by_id(int(decision["selected_id"]))
 		if e.atk > 0 and victim != null and victim.alive:
 			_damage_unit(victim, e.atk, e.attack_damage_kind)
 			e.atk_counter = e.atk_interval_ticks - 1
+
+
+func _face_unit_toward_enemy(u: UnitState, enemy: EnemyState) -> void:
+	var path := path_for(enemy.path_idx)
+	var target_cell := Pathing.cell_of(path, enemy.progress_units)
+	# A blocked enemy shares the operator's cell. Use the preceding path cell
+	# so the operator continues to face the side the enemy approached from.
+	if target_cell == u.cell and not path.is_empty():
+		@warning_ignore("integer_division")
+		var segment := clampi(
+			enemy.progress_units, 0, Pathing.length_units(path) - 1,
+		) / Pathing.PROGRESS_SCALE
+		if segment > 0:
+			target_cell = path[segment - 1]
+	u.facing = Targeting.north_facing_toward(u.cell, target_cell, int(u.facing)) as UnitState.Facing
 
 
 ## Automatic unit attacks consume the public decision query. Caster splash is
@@ -838,7 +691,7 @@ func _fire_unit(u: UnitState, primary: EnemyState) -> void:
 		var cells := Targeting.splash_cells(primary_cell, u.splash_dim())
 		var damage := u.effective_atk()
 		for e: EnemyState in enemies:
-			if not e.alive or e.aerial or e.faction != EnemyState.Faction.ENEMY:
+			if not e.alive or e.aerial:
 				continue
 			if cells.has(Pathing.cell_of(path_for(e.path_idx), e.progress_units)):
 				_damage_enemy(e, damage, u.attack_damage_kind)
@@ -869,27 +722,13 @@ func _kill_enemy(e: EnemyState) -> void:
 		if blocker != null:
 			blocker.blocked_ids.erase(e.id)
 		e.blocked_by = -1
-	if e.engaged_with >= 0:
-		enemies[e.engaged_with].engaged_with = -1
-		e.engaged_with = -1
-
-
-## Duel loss (§2.4.10): the ally's death frees its partner the same tick;
-## the enemy resumes toward the base on the next advance pass.
-func _kill_charmed(ally: EnemyState) -> void:
-	ally.alive = false
-	ally.died_at_tick = tick
-	charmed_dead += 1
-	if ally.engaged_with >= 0:
-		enemies[ally.engaged_with].engaged_with = -1
-		ally.engaged_with = -1
 
 
 ## D13/D16: death releases every held enemy (each resumes from its frozen
 ## progress on the next tick's advance); no DP refund on death.
 func _kill_unit(u: UnitState) -> void:
 	u.alive = false
-	if _is_ticketed():
+	if _is_ticketed() and not _uses_fixed_operator_roster():
 		var record := BattleTicketRuntimeScript.record_for(_battle_records, u.battle_id)
 		if not bool(record["fell"]):
 			record["fell"] = true
@@ -981,13 +820,10 @@ func _spawn(entry: Dictionary) -> void:
 	e.aerial = def.aerial
 	e.atk_range_cells = def.atk_range_cells
 	e.target_policy = Targeting.compile(def.target_policy, TargetPolicyDefScript.OwnerKind.ENEMY)
-	e.charm_immune = def.charm_immune
 	enemies.append(e)
 	spawned += 1
 
 
-## CLEAR reads alive_enemy_count (M5): a charmed ally still walking back
-## never delays the victory (§2.4.11) — it freezes with the terminal state.
 func _check_terminal() -> void:
 	if leaked > stage.leak_limit or base_hp <= 0:
 		result = Result.DEFEAT

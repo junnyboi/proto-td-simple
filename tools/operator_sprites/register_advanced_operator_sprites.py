@@ -11,36 +11,14 @@ import shutil
 from pathlib import Path
 from typing import Any
 
-from PIL import Image
-
 CLASS_ORDER = (
-    "defender", "gunner", "mage_apprentice", "shock_trooper", "swordmaster",
-    "immovable", "sniper", "sorcerer", "witch_doctor", "banner_guard", "sword_saint",
+    "gunner", "mage_apprentice", "swordmaster",
 )
 GENDER_ORDER = ("female", "male")
 ACTION_ORDER = ("idle", "attack")
-DIRECTION_ORDER = ("ne", "nw", "se", "sw")
-GENERATED_DIRECTION_ORDER = ("ne", "se")
-MIRROR_SOURCE = {"nw": "ne", "sw": "se"}
-DIRECTION_TRANSFORMS = {
-    "identity": {"ne": "ne", "nw": "nw", "se": "se", "sw": "sw"},
-    "horizontal": {"ne": "nw", "nw": "ne", "se": "sw", "sw": "se"},
-    "vertical": {"ne": "se", "nw": "sw", "se": "ne", "sw": "nw"},
-    "opposite": {"ne": "sw", "nw": "se", "se": "nw", "sw": "ne"},
-}
-# Visual review found a mixture of class-wide, gender-scoped, and action-scoped
-# source-label errors. These presentation-only transforms map an intended logical
-# facing to the atlas whose pixels actually face that direction.
-DIRECTION_OVERRIDE_SCOPES = (
-    ("gunner", GENDER_ORDER, ACTION_ORDER, "opposite"),
-    ("mage_apprentice", GENDER_ORDER, ACTION_ORDER, "vertical"),
-    ("shock_trooper", GENDER_ORDER, ACTION_ORDER, "opposite"),
-    ("swordmaster", ("female",), ACTION_ORDER, "vertical"),
-    ("sniper", ("male",), ACTION_ORDER, "horizontal"),
-    ("banner_guard", ("female",), ACTION_ORDER, "horizontal"),
-    ("sword_saint", GENDER_ORDER, ("idle",), "vertical"),
-    ("sword_saint", GENDER_ORDER, ("attack",), "opposite"),
-)
+DIRECTION_ORDER = ("ne", "nw")
+GENERATED_DIRECTION_ORDER = ("ne",)
+MIRROR_SOURCE = {"nw": "ne"}
 FRAME_COUNTS = {"idle": 24, "attack": 13}
 ROWS = {"idle": 3, "attack": 2}
 SOURCE_MANIFEST_ID = "advanced_operator_sprites_v2"
@@ -76,12 +54,7 @@ def source_direction_for(
     action: str,
     logical_direction: str,
 ) -> str:
-    transform_name = "identity"
-    for scope_class, scope_genders, scope_actions, scope_transform in DIRECTION_OVERRIDE_SCOPES:
-        if class_id == scope_class and gender in scope_genders and action in scope_actions:
-            transform_name = scope_transform
-            break
-    return DIRECTION_TRANSFORMS[transform_name][logical_direction]
+    return logical_direction
 
 
 def validation_path(source_root: Path, class_id: str, gender: str, action: str, direction: str) -> Path:
@@ -181,6 +154,45 @@ placeholder = false
     return created
 
 
+def prune_south_resource_maps(repository: Path) -> list[Path]:
+    target = repository / "data/presentation/operator_visuals"
+    changed: list[Path] = []
+    for path in sorted(target.glob("*.tres")):
+        lines = path.read_text(encoding="utf-8").splitlines(keepends=True)
+        retained = [
+            line for line in lines
+            if not line.lstrip().startswith(('&"se":', '&"sw":'))
+        ]
+        normalized = "".join(retained).replace(': &"se"', ': &"ne"').replace(
+            ': &"sw"', ': &"nw"',
+        )
+        if normalized != "".join(lines):
+            path.write_text(normalized, encoding="utf-8")
+            changed.append(path)
+    return changed
+
+
+def prune_south_manifest_entries(text: str) -> str:
+    lines = text.splitlines(keepends=True)
+    retained: list[str] = []
+    depth = 0
+    skipping = False
+    for line in lines:
+        if not skipping and line.startswith('&"op_anim_'):
+            identifier = line.split('"', 2)[1]
+            skipping = identifier.endswith(("_se", "_sw"))
+            if skipping:
+                depth = line.count("{") - line.count("}")
+                continue
+        if skipping:
+            depth += line.count("{") - line.count("}")
+            if depth == 0:
+                skipping = False
+            continue
+        retained.append(line)
+    return "".join(retained)
+
+
 def gd_manifest_entry(
     repository: Path,
     class_id: str,
@@ -249,6 +261,7 @@ def update_manifest(repository: Path) -> int:
             start = text.index(",\n" + begin_marker)
             end = text.index(end_marker, start) + len(end_marker)
             text = text[:start] + text[end:]
+    text = prune_south_manifest_entries(text)
     entries = [
         gd_manifest_entry(repository, class_id, gender, action, direction)
         for class_id in CLASS_ORDER
@@ -270,6 +283,8 @@ def update_manifest(repository: Path) -> int:
 
 
 def image_geometry(path: Path) -> list[int]:
+    from PIL import Image
+
     with Image.open(path) as image:
         return [image.width, image.height]
 
@@ -280,12 +295,18 @@ def build_source_manifest(repository: Path, source_root: Path) -> dict[str, Any]
     if existing_path.is_file():
         existing = json.loads(existing_path.read_text(encoding="utf-8"))
     references = existing.get("references", [])
-    if not isinstance(references, list) or len(references) != 22:
-        raise ValueError("source manifest must retain exactly 22 approved GPT Image 2 references")
+    expected_references = len(CLASS_ORDER) * len(GENDER_ORDER)
+    if not isinstance(references, list) or len(references) != expected_references:
+        raise ValueError(
+            f"source manifest must retain exactly {expected_references} approved GPT Image 2 references"
+        )
 
     keyframes = existing.get("keyframes", [])
-    if not isinstance(keyframes, list) or len(keyframes) != 44:
-        raise ValueError("source manifest must retain exactly 44 approved V2 keyframes")
+    expected_keyframes = expected_references * len(GENERATED_DIRECTION_ORDER)
+    if not isinstance(keyframes, list) or len(keyframes) != expected_keyframes:
+        raise ValueError(
+            f"source manifest must retain exactly {expected_keyframes} approved V2 keyframes"
+        )
     keyframe_by_id = {str(row.get("id", "")): row for row in keyframes}
     for class_id in CLASS_ORDER:
         for gender in GENDER_ORDER:
@@ -304,8 +325,11 @@ def build_source_manifest(repository: Path, source_root: Path) -> dict[str, Any]
                 row["approved"] = True
 
     carriers = existing.get("carriers", [])
-    if not isinstance(carriers, list) or len(carriers) != 88:
-        raise ValueError("source manifest must retain exactly 88 approved V2 carriers")
+    expected_carriers = expected_keyframes * len(ACTION_ORDER)
+    if not isinstance(carriers, list) or len(carriers) != expected_carriers:
+        raise ValueError(
+            f"source manifest must retain exactly {expected_carriers} approved V2 carriers"
+        )
     carrier_by_id = {str(row.get("id", "")): row for row in carriers}
     runtime_sequences: list[dict[str, Any]] = []
     for class_id in CLASS_ORDER:
@@ -392,9 +416,9 @@ def write_archive_docs(repository: Path, source_root: Path) -> None:
     readme = source_root / "README.md"
     readme.write_text(
         "# Advanced Operator Sprite Source Archive V2\n\n"
-        "Immutable GPT Image 2 reference boards and directional keyframes, 88 silent "
-        "four-second image-conditioned video carriers, validation records, and the exact 176-sequence "
-        "runtime projection for the eleven recruit-derived specializations. Runtime atlases "
+        "Immutable GPT Image 2 reference boards and directional keyframes, 12 silent "
+        "four-second image-conditioned video carriers, validation records, and the exact 24-sequence "
+        "runtime projection for the three retained recruit specializations. Runtime atlases "
         "use 640×640 cells with a 560–640px subject edge; in-game footprint is controlled "
         "only by Godot presentation scale. The manifest records the exact Veo 3.1, Veo 3.1 "
         "Fast, or Gemini Omni model used per carrier. `source_manifest.json` is canonical and "
@@ -429,18 +453,26 @@ def main() -> int:
     repository = args.repository.resolve()
     if args.resources_only:
         resources = write_resources(repository)
-        print(json.dumps({"resources": len(resources)}, sort_keys=True))
+        pruned = prune_south_resource_maps(repository)
+        manifest_rows = update_manifest(repository)
+        print(json.dumps({
+            "resources": len(resources),
+            "pruned_resources": len(pruned),
+            "manifest_rows": manifest_rows,
+        }, sort_keys=True))
         return 0
     if args.source_root is None:
         parser.error("--source-root is required unless --resources-only is used")
     source_root = args.source_root.resolve()
     ensure_complete(repository, source_root)
     resources = write_resources(repository)
+    pruned_resources = prune_south_resource_maps(repository)
     manifest_rows = update_manifest(repository)
     source_manifest = build_source_manifest(repository, source_root)
     write_archive_docs(repository, source_root)
     print(json.dumps({
         "resources": len(resources),
+        "pruned_resources": len(pruned_resources),
         "manifest_rows": manifest_rows,
         "references": source_manifest["reference_count"],
         "keyframes": source_manifest["keyframe_count"],

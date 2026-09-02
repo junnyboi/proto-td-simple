@@ -17,16 +17,13 @@ const RECEIPT_KEYS := [
 	"schema_version", "resolution_index", "campaign_uid", "attempt_id", "stage_id",
 	"ticket_hash", "outcome_hash", "result", "terminal_reason", "terminal_tick",
 	"stars_before", "stars_after", "rewards_granted", "class_entitlements_granted",
-	"created_hero_ids", "dead_hero_ids", "premium_life_losses", "xp_awards",
+	"created_hero_ids", "dead_hero_ids", "xp_awards",
 	"memorial_ids", "marks_before",
 	"marks_after", "strategic_body_hash_before", "strategic_body_hash_after",
 ]
 const CONTENT_REWARD_KEYS := ["id", "kind"]
 const CURRENCY_REWARD_KEYS := ["amount", "id", "kind"]
 const XP_KEYS := ["hero_id", "delta"]
-const PREMIUM_LOSS_KEYS := [
-	"hero_id", "premium_id", "lives_before", "lives_after", "locked_out",
-]
 const STATE_CODEC_PATH := "res://sim/campaign_v3_state_codec.gd"
 const HashScript := preload("res://sim/campaign_v3_hash.gd")
 const PromotionRulesScript := preload("res://sim/campaign_v3_promotion_rules.gd")
@@ -147,11 +144,10 @@ static func _normalize_receipt(value: Variant) -> Dictionary:
 	)
 	var created := _normalize_strings(value["created_hero_ids"], true, false)
 	var dead := _normalize_strings(value["dead_hero_ids"], true, false)
-	var premium_losses := _normalize_premium_losses(value["premium_life_losses"])
 	var awards := _normalize_xp_awards(value["xp_awards"])
 	var memorial_ids := _normalize_strings(value["memorial_ids"], false, true)
 	for result: Dictionary in [
-		rewards, entitlements, created, dead, premium_losses, awards, memorial_ids,
+		rewards, entitlements, created, dead, awards, memorial_ids,
 	]:
 		if not result["accepted"]:
 			return result
@@ -172,7 +168,6 @@ static func _normalize_receipt(value: Variant) -> Dictionary:
 		"class_entitlements_granted": entitlements["value"],
 		"created_hero_ids": created["value"],
 		"dead_hero_ids": dead["value"],
-		"premium_life_losses": premium_losses["value"],
 		"xp_awards": awards["value"],
 		"memorial_ids": memorial_ids["value"],
 		"marks_before": int(value["marks_before"]),
@@ -242,9 +237,7 @@ static func _validate_transition(
 ) -> Dictionary:
 	for key: String in [
 		"campaign_uid", "campaign_seed", "campaign_generation", "next_recruitment_index",
-		"next_attempt_id", "next_premium_pull_index", "premium_pity_started_at_pull",
-		"premium_pity_streak", "premium_marks_started_at_resolution",
-		"replay_marks_started_at_resolution", "offers",
+		"next_attempt_id", "replay_marks_started_at_resolution", "offers",
 		"promotion_receipts", "promotion_proofs", "tickets",
 	]:
 		if before[key] != after[key]:
@@ -339,16 +332,13 @@ static func _validate_ticket_snapshot(
 
 static func _validate_preresolution_core(core: Dictionary) -> Dictionary:
 	for key: String in [
-		"stage_stars", "unlocked_traps", "unlocked_spells", "class_entitlements",
+		"stage_stars", "unlocked_traps", "class_entitlements",
 		"promotion_receipts", "memorial",
 	]:
 		if not (core[key] as Array).is_empty():
 			return _reject(&"pre_resolution_progress_mismatch")
 	for hero: Dictionary in core["heroes"]:
-		if hero["hero_kind"] == "premium":
-			if hero["xp"] != 0 or hero["life_status"] != "ready" or hero["death"] != null:
-				return _reject(&"pre_resolution_progress_mismatch")
-		elif (
+		if (
 			hero["xp"] != 0
 			or hero["current_class_id"] != "recruit"
 			or hero["life_status"] != "ready"
@@ -374,7 +364,7 @@ static func _validate_current_from_anchor(
 		return _accept(null) if command_history["accepted"] else command_history
 	for key: String in [
 		"campaign_uid", "campaign_seed", "campaign_generation", "next_resolution_index",
-		"stage_stars", "unlocked_traps", "unlocked_spells", "class_entitlements",
+		"stage_stars", "unlocked_traps", "class_entitlements",
 		"promotion_proofs", "memorial",
 	]:
 		if current[key] != after[key]:
@@ -515,52 +505,15 @@ static func _validate_heroes(
 ) -> Dictionary:
 	var dead: Array[String] = []
 	var awards: Array[Dictionary] = []
-	var premium_losses: Array[Dictionary] = []
 	for index: int in before_heroes.size():
 		var before: Dictionary = before_heroes[index]
 		var after: Dictionary = after_heroes[index]
 		for key: String in before:
-			if key in ["xp", "life_status", "death", "premium_lives"]:
+			if key in ["xp", "life_status", "death"]:
 				continue
 			if before[key] != after[key]:
 				return _reject(&"resolution_hero_transition_mismatch")
 		var delta := int(after["xp"]) - int(before["xp"])
-		if before["hero_kind"] == "premium":
-			if delta != 0:
-				return _reject(&"resolution_xp_mismatch")
-			var lives_before := int(before["premium_lives"])
-			var lives_after := int(after["premium_lives"])
-			if lives_after == lives_before - 1:
-				var locked_out := lives_after == 0
-				premium_losses.append({
-					"hero_id": String(after["hero_id"]),
-					"premium_id": String(after["premium_id"]),
-					"lives_before": lives_before,
-					"lives_after": lives_after,
-					"locked_out": locked_out,
-				})
-				if locked_out:
-					dead.append(String(after["hero_id"]))
-					if (
-						before["life_status"] != "ready"
-						or after["life_status"] != "dead"
-						or not _death_matches(after["death"], receipt)
-					):
-						return _reject(&"death_receipt_mismatch")
-				elif (
-					before["life_status"] != "ready"
-					or after["life_status"] != "ready"
-					or before["death"] != null
-					or after["death"] != null
-				):
-					return _reject(&"resolution_life_transition_mismatch")
-			elif (
-				lives_after != lives_before
-				or before["life_status"] != after["life_status"]
-				or before["death"] != after["death"]
-			):
-				return _reject(&"resolution_life_transition_mismatch")
-			continue
 		if delta < 0:
 			return _reject(&"resolution_xp_mismatch")
 		if delta > 0:
@@ -574,15 +527,10 @@ static func _validate_heroes(
 	awards.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
 		return String(a["hero_id"]) < String(b["hero_id"]))
 	dead.sort()
-	premium_losses.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
-		return String(a["hero_id"]) < String(b["hero_id"])
-	)
 	if awards != receipt["xp_awards"]:
 		return _reject(&"resolution_xp_mismatch")
 	if dead != receipt["dead_hero_ids"]:
 		return _reject(&"receipt_dead_set_mismatch")
-	if premium_losses != receipt["premium_life_losses"]:
-		return _reject(&"receipt_premium_life_set_mismatch")
 	return _accept(null)
 
 
@@ -616,15 +564,11 @@ static func _validate_unlocks(
 	rewards: Array,
 ) -> Dictionary:
 	var traps: Array = before["unlocked_traps"].duplicate()
-	var spells: Array = before["unlocked_spells"].duplicate()
 	for reward: Dictionary in rewards:
 		if reward["kind"] == "trap":
 			traps.append(reward["id"])
-		elif reward["kind"] == "spell":
-			spells.append(reward["id"])
 	traps.sort()
-	spells.sort()
-	if traps != after["unlocked_traps"] or spells != after["unlocked_spells"]:
+	if traps != after["unlocked_traps"]:
 		return _reject(&"resolution_unlock_mismatch")
 	return _accept(null)
 
@@ -648,7 +592,7 @@ static func _normalize_rewards(value: Variant) -> Dictionary:
 				]
 			):
 				return _reject(&"invalid_resolution_rows")
-		elif raw.keys() != CONTENT_REWARD_KEYS or kind not in ["trap", "spell"]:
+		elif raw.keys() != CONTENT_REWARD_KEYS or kind != "trap":
 			return _reject(&"invalid_resolution_rows")
 		if not _ascii(String(raw["id"])):
 			return _reject(&"invalid_resolution_rows")
@@ -691,37 +635,6 @@ static func _normalize_strings(
 	sorted.sort()
 	if out != sorted:
 		return _reject(&"noncanonical_resolution_rows")
-	return _accept(out)
-
-
-static func _normalize_premium_losses(value: Variant) -> Dictionary:
-	if typeof(value) != TYPE_ARRAY:
-		return _reject(&"invalid_resolution_rows")
-	var out: Array[Dictionary] = []
-	var previous := ""
-	for raw: Variant in value:
-		if typeof(raw) != TYPE_DICTIONARY or raw.keys() != PREMIUM_LOSS_KEYS:
-			return _reject(&"invalid_resolution_rows")
-		var hero_id := String(raw["hero_id"])
-		if (
-			not _is_hex(hero_id, 16)
-			or hero_id <= previous
-			or not _ascii(String(raw["premium_id"]))
-			or not _in_range(raw["lives_before"], 1, 999)
-			or not _in_range(raw["lives_after"], 0, 998)
-			or int(raw["lives_after"]) != int(raw["lives_before"]) - 1
-			or typeof(raw["locked_out"]) != TYPE_BOOL
-			or bool(raw["locked_out"]) != (int(raw["lives_after"]) == 0)
-		):
-			return _reject(&"invalid_resolution_rows")
-		previous = hero_id
-		out.append({
-			"hero_id": hero_id,
-			"premium_id": String(raw["premium_id"]),
-			"lives_before": int(raw["lives_before"]),
-			"lives_after": int(raw["lives_after"]),
-			"locked_out": bool(raw["locked_out"]),
-		})
 	return _accept(out)
 
 

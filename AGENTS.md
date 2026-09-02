@@ -1,11 +1,5 @@
 # Repository Agent Instructions
 
-## Fast synchronization and constructive reconciliation
-
-At task start, protect uncommitted work, then run one `git fetch --prune` and `git pull --ff-only` on the active branch. Never rewrite shared history. Preserve compatible concurrent features and resolve conflicts constructively.
-
-Do not create repeated “final lock” loops. Perform at most one additional fetch near finalization when the task ran long or concurrent activity is known. If upstream advances again after validation, inspect only that delta: reuse existing evidence and artifacts when it is documentation-only or exports byte-identically; rerun only the affected check when behavior changed. Do not restart the complete release pipeline for unrelated commits.
-
 ## Risk-based verification
 
 Use the smallest gate that matches the change:
@@ -19,7 +13,7 @@ Never run the full suite by default. Do not repeat already-passing tests after c
 
 ## Isolate test user data
 
-Every Godot test or visual harness must use a unique disposable `user://` directory. Use `tools/run_godot_test.sh tests/<name>.gd` for SceneTree tests and `tools/run_godot_isolated.sh <godot arguments...>` for boot or visual checks. Never run repository tests directly against the playable `Protos` application-data directory.
+Every Godot test or visual harness must use a unique disposable `user://` directory. Use `tools/run_godot_test.sh tests/<name>.gd` for SceneTree tests and `tools/run_godot_isolated.sh <godot arguments...>` for boot or visual checks. Never run repository tests directly against the playable `Game template - TD` application-data directory.
 
 Tests that exercise campaign slots must preserve and restore every slot artifact during cleanup. If shared player data may have been touched, stop and rerun only in isolation.
 

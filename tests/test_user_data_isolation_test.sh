@@ -15,13 +15,13 @@ trap cleanup EXIT INT TERM
 
 case "$(uname -s)" in
   Darwin)
-    production_dir="$HOME/Library/Application Support/Godot/app_userdata/Protos"
+    production_dir="$HOME/Library/Application Support/Godot/app_userdata/Game template - TD"
     ;;
   Linux)
-    production_dir="${XDG_DATA_HOME:-$HOME/.local/share}/godot/app_userdata/Protos"
+    production_dir="${XDG_DATA_HOME:-$HOME/.local/share}/godot/app_userdata/Game template - TD"
     ;;
   MINGW*|MSYS*|CYGWIN*)
-    production_dir="${APPDATA:?APPDATA is required}/Godot/app_userdata/Protos"
+    production_dir="${APPDATA:?APPDATA is required}/Godot/app_userdata/Game template - TD"
     ;;
   *)
     echo "unsupported platform for production-save fingerprint: $(uname -s)" >&2

@@ -7,8 +7,8 @@ extends Resource
 ##   X legacy raised-platform alias (enum name BLOCKED is serialization-only)
 ## paths: flat Vector2 lists (converted to cells via path_cells());
 ## squad_size activate in later phases.
-## wave_starts: wave-window boundary ticks for ONCE_PER_WAVE spells
-## non-empty must be strictly ascending and start at 0 (stage_lint).
+## wave_starts: wave-window boundary ticks; non-empty must be strictly
+## ascending and start at 0 (stage_lint).
 enum Tile { VOID, GROUND, ELEVATED, SPAWN, BASE, BLOCKED }
 
 const TILE_CHARS := {
@@ -29,14 +29,13 @@ const TILE_CHARS := {
 @export var leak_limit: int = 0
 @export var squad_size: int = 0
 @export var recovery_roster: Array[StringName] = []
-# first clear ({kind: operator|trap|spell, id}); campaign_index -1 = not a
+# first clear ({kind: operator|trap, id}); campaign_index -1 = not a
 # campaign stage (campaign order = ascending index, never scan order);
 # requires = unlockable ids this stage's lesson depends on (lint-enforced
 # teach-before-use)
 @export var rewards: Array[Dictionary] = []
 @export var campaign_index: int = -1
 @export var requires: Array[StringName] = []
-@export var intro_hint: String = ""
 # Presentation-only soundtrack routing. These ids never enter battle hashes,
 # snapshots, saves, tickets, or deterministic simulation decisions.
 @export var music_profile_id: StringName = &""
@@ -46,8 +45,7 @@ const TILE_CHARS := {
 @export var high_threat_wave_indices: PackedInt32Array = []
 @export var high_threat_warning_id: StringName = &""
 ## Act II restoration infrastructure. Cells are authored on hostile ground
-## routes; due cycles repair hostile ground Custodians unless a Slow Field
-## currently covers that cell.
+## routes; due cycles repair hostile ground Custodians.
 @export var restoration_cells: PackedVector2Array = []
 @export_range(0, 1000, 1) var restoration_heal_amount: int = 0
 @export_range(0, 3600, 1) var restoration_interval_ticks: int = 0
@@ -196,11 +194,11 @@ func is_high_threat_wave(wave_index: int) -> bool:
 	return high_threat_wave_indices.has(wave_index)
 
 
-func spell_target_in_domain(spell_def: SpellDef, target: Variant) -> bool:
-	if spell_def.target_kind == SpellDef.TargetKind.CELL:
-		if typeof(target) != TYPE_VECTOR2I:
-			return false
-		var cell: Vector2i = target
-		var size := grid_size()
-		return cell.x >= 0 and cell.y >= 0 and cell.x < size.x and cell.y < size.y
-	return typeof(target) == TYPE_INT and int(target) >= 0
+func wave_index_at(at_tick: int) -> int:
+	if wave_starts.is_empty():
+		return 0
+	var index := -1
+	for boundary: int in wave_starts:
+		if boundary <= at_tick:
+			index += 1
+	return index

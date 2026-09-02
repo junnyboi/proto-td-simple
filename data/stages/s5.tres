@@ -94,14 +94,7 @@ waves = Array[Dictionary]([{
 wave_starts = PackedInt32Array(0, 450, 1250)
 leak_limit = 3
 squad_size = 5
-recovery_roster = Array[StringName]([&"vanguard_1", &"guard_1", &"defender_1", &"caster_1", &"sniper_1"])
-rewards = Array[Dictionary]([{
-"id": &"caster_2",
-"kind": &"operator"
-}, {
-"id": &"charm",
-"kind": &"spell"
-}])
+recovery_roster = Array[StringName]([&"caster_1", &"guard_1", &"sniper_1"])
+rewards = Array[Dictionary]([])
 campaign_index = 5
-requires = Array[StringName]([&"bolt"])
-intro_hint = "Hold the exposed high ground and save Bolt for each tight Channeler group."
+requires = Array[StringName]([])

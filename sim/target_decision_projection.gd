@@ -46,19 +46,13 @@ static func _unit_candidates(model: BattleModel, unit: UnitState) -> Array:
 	var domain := int(unit.target_policy.get("candidate_domain", -1))
 	var covered_cells: Dictionary = {}
 	if domain == TargetPolicyDefScript.CandidateDomain.ENEMY_IN_OPERATOR_RANGE:
-		covered_cells = Targeting.range_cells(
-			unit.cell, unit.range_offsets, int(unit.facing)
-		)
+		covered_cells = Targeting.omni_range_cells(unit.cell, unit.range_offsets)
 	for enemy: EnemyState in model.enemies:
 		var cell := Pathing.cell_of(model.path_for(enemy.path_idx), enemy.progress_units)
 		candidates.append({
 			"id": enemy.id,
 			"alive": enemy.alive,
-			"faction": (
-				Targeting.FACTION_ENEMY
-				if enemy.faction == EnemyState.Faction.ENEMY
-				else "charmed"
-			),
+			"faction": Targeting.FACTION_ENEMY,
 			"relation": (
 				Targeting.RELATION_BLOCKED
 				if unit.blocked_ids.has(enemy.id)

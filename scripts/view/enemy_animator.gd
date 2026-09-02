@@ -21,8 +21,6 @@ const SHADOW_COLOR := Color(0.0, 0.0, 0.0, 0.35)
 const SHADOW_FACE_SCALE := 0.3125
 const AERIAL_SHADOW_DROP := 10.0
 const FALLBACK_COLOR := Color("ef7d57")
-const CHARMED_COLOR := Color("41a6f6")
-const CHARMED_STATIC_TINT := Color("7fd7ff")
 const STATIC_PREFIX := "enemy_static_"
 const STATIC_ENEMIES: Array[StringName] = [
 	&"runner",
@@ -209,9 +207,7 @@ static func damage_flash_frames_for(def_id: StringName, fallback_frames: int) ->
 	return maxi(1, roundi(float(profile.get(&"flash_seconds", 0.10)) * 60.0))
 
 
-static func direction_from_tangent(tangent: Vector2i, reverse := false) -> StringName:
-	if reverse:
-		tangent = -tangent
+static func direction_from_tangent(tangent: Vector2i) -> StringName:
 	if tangent == Vector2i.ZERO:
 		return &"se"
 	var screen := IsoProjection.project(Vector2(tangent))
@@ -220,18 +216,14 @@ static func direction_from_tangent(tangent: Vector2i, reverse := false) -> Strin
 	return &"se" if screen.x >= 0.0 else &"sw"
 
 
-static func direction_for_path(
-	path: Array[Vector2i], progress_units: int, reverse := false
-) -> StringName:
+static func direction_for_path(path: Array[Vector2i], progress_units: int) -> StringName:
 	if path.size() < 2:
 		return &"se"
 	var clamped_progress := clampi(progress_units, 0, Pathing.length_units(path) - 1)
 	@warning_ignore("integer_division")
 	var segment := clamped_progress / Pathing.PROGRESS_SCALE
-	if reverse and clamped_progress > 0 and clamped_progress % Pathing.PROGRESS_SCALE == 0:
-		segment -= 1
 	segment = mini(segment, path.size() - 2)
-	return direction_from_tangent(path[segment + 1] - path[segment], reverse)
+	return direction_from_tangent(path[segment + 1] - path[segment])
 
 
 static func walk_frame(
@@ -269,13 +261,8 @@ static func timed_attack_frame(
 	return clampi(floori(float(elapsed_ticks) * fps / ticks_per_second), 0, frame_count - 1)
 
 
-static func animation_id(state: StringName, direction: StringName, charmed := false) -> StringName:
-	var suffix := "_charmed" if charmed else ""
-	return StringName("grunt_anim_%s_%s%s" % [state, direction, suffix])
-
-
-static func faction_palette_changed(old_id: StringName, new_id: StringName) -> bool:
-	return String(old_id).ends_with("_charmed") != String(new_id).ends_with("_charmed")
+static func animation_id(state: StringName, direction: StringName) -> StringName:
+	return StringName("grunt_anim_%s_%s" % [state, direction])
 
 
 static func blend_alpha(frames_left: int, total_frames := BLEND_FRAMES) -> Vector2:
@@ -388,19 +375,16 @@ static func _shared_damage_flash_shader() -> Shader:
 static func animation_id_for(enemy: EnemyState, battle: BattleModel) -> StringName:
 	if uses_static_sprite(enemy.def_id):
 		return static_sprite_id(enemy.def_id)
-	var charmed := enemy.faction == EnemyState.Faction.CHARMED
 	var direction := direction_for_path(
-		battle.path_for(enemy.path_idx), enemy.progress_units, charmed
+		battle.path_for(enemy.path_idx), enemy.progress_units
 	)
 	var state := &"attack" if is_attacking(enemy) else &"walk"
-	return animation_id(state, direction, charmed)
+	return animation_id(state, direction)
 
 
 static func legacy_sprite_id(enemy: EnemyState, definitions: Dictionary) -> StringName:
 	var definition: EnemyDef = definitions.get(enemy.def_id)
 	var sprite_id := definition.sprite_id if definition != null else enemy.def_id
-	if enemy.faction == EnemyState.Faction.CHARMED:
-		return StringName("%s_charmed" % sprite_id)
 	return sprite_id
 
 
@@ -489,7 +473,7 @@ static func add_shadow(body: ColorRect, aerial: bool) -> void:
 static func is_attacking(enemy: EnemyState) -> bool:
 	if enemy.atk_counter <= 0:
 		return false
-	return enemy.engaged_with >= 0 or enemy.blocked_by >= 0 or enemy.atk_range_cells > 0
+	return enemy.blocked_by >= 0 or enemy.atk_range_cells > 0
 
 
 static func attack_progress(enemy: EnemyState) -> float:
@@ -586,8 +570,6 @@ static func refresh(
 			_activate_grunt_body(body, deferred_texture, enemy.aerial)
 			sprite = body.get_node_or_null("Sprite") as TextureRect
 		if sprite == null:
-			if enemy.faction == EnemyState.Faction.CHARMED:
-				body.color = CHARMED_COLOR
 			return
 	if not uses_grunt(enemy.def_id):
 		var legacy_id := legacy_sprite_id(enemy, definitions)
@@ -605,16 +587,12 @@ static func refresh(
 		return
 	var old_key: StringName = keys.get(enemy.id, &"")
 	if old_key != sprite_id:
-		var immediate := old_key != &"" and faction_palette_changed(old_key, sprite_id)
 		var blend := body.get_node_or_null("BlendSprite") as TextureRect
-		if old_key != &"" and not immediate and blend != null and sprite.texture != null:
+		if old_key != &"" and blend != null and sprite.texture != null:
 			blend.texture = sprite.texture
 			blend.visible = true
 			blend_frames[enemy.id] = BLEND_FRAMES
 			apply_blend(body, BLEND_FRAMES)
-		elif immediate:
-			blend_frames.erase(enemy.id)
-			apply_blend(body, 0)
 		keys[enemy.id] = sprite_id
 	if sprite.texture != texture:
 		sprite.texture = texture
@@ -630,8 +608,6 @@ static func _refresh_static(
 	if sprite == null:
 		var texture := Art.texture(static_sprite_id(enemy.def_id), 0)
 		if texture == null:
-			if enemy.faction == EnemyState.Faction.CHARMED:
-				body.color = CHARMED_COLOR
 			return
 		body.color = Color.TRANSPARENT
 		sprite = _texture_rect("Sprite", texture, body.size, true)
@@ -643,7 +619,6 @@ static func _refresh_static(
 	var direction := direction_for_path(
 		battle.path_for(enemy.path_idx),
 		enemy.progress_units,
-		enemy.faction == EnemyState.Faction.CHARMED,
 	)
 	var reduced_motion := bool(ProjectSettings.get_setting("accessibility/reduced_motion", false))
 	var motion := static_motion_state(
@@ -662,14 +637,7 @@ static func _refresh_static(
 	sprite.position = motion[&"offset"]
 	sprite.rotation = float(motion[&"rotation"])
 	sprite.scale = scale
-	var tint := CHARMED_STATIC_TINT if enemy.faction == EnemyState.Faction.CHARMED else Color.WHITE
-	var telegraph := float(motion[&"telegraph"])
-	sprite.modulate = Color(
-		tint.r + telegraph * 0.08,
-		tint.g + telegraph * 0.05,
-		tint.b + telegraph * 0.10,
-		tint.a,
-	)
+	sprite.modulate = Color.WHITE
 
 
 static func _activate_grunt_body(body: ColorRect, texture: Texture2D, aerial: bool) -> void:

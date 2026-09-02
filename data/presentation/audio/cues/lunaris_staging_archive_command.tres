@@ -10,4 +10,4 @@ bpm = 70.0
 beats_per_bar = 4
 loop = true
 volume_db = 0.0
-approved_surfaces = Array[StringName]([&"staging", &"mission", &"squad", &"training", &"gacha", &"vahalla"])
+approved_surfaces = Array[StringName]([&"mission"])

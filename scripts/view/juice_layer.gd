@@ -12,7 +12,6 @@ const Style := preload("res://scripts/ui/components/lunaris_ops_style.gd")
 const VFX_DEPLOY_DUST := &"vfx_deploy_dust"
 const VFX_KILL_SPARK := &"vfx_kill_spark"
 const VFX_LEAK_VIGNETTE := &"vfx_leak_vignette"
-const VFX_CHARM_SWIRL := &"vfx_charm_swirl"
 const VFX_WAVE_BANNER := &"vfx_wave_banner"
 const VFX_RESULT_STAMP := &"vfx_result_stamp"
 const HIGH_THREAT_WARNING_ASSETS := {
@@ -603,25 +602,8 @@ func shimmer_on() -> bool:
 	var half := period / 2
 	return (Engine.get_process_frames() / half) % 2 == 0
 
-
-## item 7: manifest-backed grid-local conversion swirl
-func swirl(local_center: Vector2) -> void:
-	var sprite := _make_map_texture(VFX_CHARM_SWIRL, Vector2(48, 48), "MapTransientSwirl")
-	_transients.append({
-		"node": sprite,
-		"left": cfg.charm_swirl_frames,
-		"total": cfg.charm_swirl_frames,
-		"map_anchor": local_center,
-		"offset_screen": Vector2(-24, -24),
-		"travel_screen": Vector2.ZERO,
-		"spin": 0.16,
-		"kind": "dust",
-	})
-	_position_map_transient(_transients.back())
-
-
-## shake through the config whitelist ONLY (parent plan: boss hits, leaks,
-## charm beat). Deterministic decay, no RNG: alternating-sign X offset.
+## Shake through the config whitelist only. Deterministic decay, no RNG:
+## alternating-sign X offset.
 func shake(event: String, amplitude_px: float, frames: int) -> void:
 	if not cfg.shake_events.has(event) or amplitude_px <= 0.0 or frames <= 0:
 		return

@@ -92,7 +92,7 @@ func _validate_metadata(
 ) -> void:
 	var fields := [
 		"id", "title", "waves", "wave_starts", "leak_limit", "squad_size",
-		"recovery_roster", "rewards", "campaign_index", "requires", "intro_hint",
+		"recovery_roster", "rewards", "campaign_index", "requires",
 		"restoration_heal_amount", "restoration_interval_ticks",
 	]
 	for field: String in fields:

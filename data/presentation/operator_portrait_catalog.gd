@@ -1,7 +1,7 @@
 class_name OperatorPortraitCatalog
 extends RefCounted
 
-## Presentation-only identity and promoted-class routing for non-premium portraits.
+## Presentation-only identity and promoted-class routing for recruit portraits.
 ##
 ## Campaign identity, command payloads, receipts, save bytes, and promotion
 ## authority stay unchanged. The already-persisted Recruit identity portrait
@@ -23,17 +23,9 @@ const IDENTITY_VARIANT_BY_PORTRAIT := {
 }
 
 const SPECIALIZATION_CLASS_IDS: Array[StringName] = [
-	&"banner_guard",
-	&"defender",
 	&"gunner",
-	&"immovable",
 	&"mage_apprentice",
-	&"shock_trooper",
-	&"sniper",
-	&"sorcerer",
-	&"sword_saint",
 	&"swordmaster",
-	&"witch_doctor",
 ]
 
 
@@ -74,9 +66,8 @@ static func specialization_asset_id(
 static func presentation_asset_id(
 		class_id: StringName,
 		identity_portrait_asset_id: StringName,
-		is_premium: bool = false,
 	) -> StringName:
-	if identity_portrait_asset_id == &"" or is_premium:
+	if identity_portrait_asset_id == &"":
 		return identity_portrait_asset_id
 	var specialization_id := specialization_asset_id(class_id, identity_portrait_asset_id)
 	return identity_portrait_asset_id if specialization_id == &"" else specialization_id
@@ -104,8 +95,8 @@ static func validate_contract() -> PackedStringArray:
 		var expected := FEMALE if index % 2 == 0 else MALE
 		if IDENTITY_VARIANT_BY_PORTRAIT[asset_id] != expected:
 			errors.append("identity variants: %s expected %s" % [asset_id, expected])
-	if SPECIALIZATION_CLASS_IDS.size() != 11:
-		errors.append("specializations: expected exactly eleven classes")
+	if SPECIALIZATION_CLASS_IDS.size() != 3:
+		errors.append("specializations: expected exactly three classes")
 	var unique := {}
 	for asset_id: StringName in specialization_asset_ids():
 		if unique.has(asset_id):

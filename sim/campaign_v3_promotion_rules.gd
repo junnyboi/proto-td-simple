@@ -10,8 +10,6 @@ static func validate_choice(
 	var hero := _hero_by_id(data["heroes"], choice["hero_id"])
 	if hero.is_empty():
 		return _reject(&"unknown_hero")
-	if hero["hero_kind"] == "premium":
-		return _reject(&"premium_hero_untrainable")
 	if hero["life_status"] != "ready":
 		return _reject(&"dead_hero")
 	if hero["current_class_id"] == choice["to_class_id"]:

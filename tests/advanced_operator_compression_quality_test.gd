@@ -1,12 +1,11 @@
 extends SceneTree
 
 const CLASSES := [
-	"banner_guard", "defender", "gunner", "immovable", "mage_apprentice",
-	"shock_trooper", "sniper", "sorcerer", "sword_saint", "swordmaster", "witch_doctor",
+	"gunner", "mage_apprentice", "swordmaster",
 ]
 const GENDERS := ["female", "male"]
 const ACTIONS := ["idle", "attack"]
-const DIRECTIONS := ["ne", "nw", "se", "sw"]
+const DIRECTIONS := ["ne", "nw"]
 const SOURCE_CELL_PX := 640
 const COLUMNS := 8
 const METRIC_CELL_PX := 320
@@ -18,17 +17,9 @@ const MAX_ALPHA_MAE := 0.002
 const MIN_EDGE_RATIO := 0.90
 const MAX_EDGE_RATIO := 1.10
 const QUICK_CASES := [
-	"banner_guard/male/idle_ne",
-	"defender/male/attack_nw",
-	"gunner/female/attack_se",
-	"immovable/female/attack_nw",
+	"gunner/female/attack_ne",
 	"mage_apprentice/male/idle_ne",
-	"shock_trooper/female/idle_nw",
-	"sniper/female/idle_se",
-	"sorcerer/male/idle_se",
-	"sword_saint/male/idle_nw",
-	"swordmaster/female/idle_se",
-	"witch_doctor/male/attack_sw",
+	"swordmaster/female/idle_ne",
 ]
 
 var _failures: Array[String] = []
@@ -69,7 +60,7 @@ func _run() -> void:
 	var worst_edge: Dictionary = by_edge[0]
 	var report := {
 		"schema_version": 1,
-		"coverage": "full-176" if full else "representative-11",
+		"coverage": "full-24" if full else "representative-3",
 		"assets": _rows.size(),
 		"method": "conservative 320px decoded source/imported-Texture2D proxy, composited over dark and light terrain proxies; not literal BattleView rendering",
 		"source_cell_px": SOURCE_CELL_PX,

@@ -5,16 +5,15 @@ const UI_COPY := preload("res://scripts/ui/components/ui_copy.gd")
 
 signal placement_started(deployment_id: StringName)
 signal placement_rejected(deployment_id: StringName, cell: Vector2i)
-signal facing_requested(deployment_id: StringName, cell: Vector2i)
 signal deployment_committed(deployment_id: StringName, cell: Vector2i, facing: int)
 
 ## Raw-input adapter for the deploy/retreat/place_trap/mend verbs (architecture
 ## rule 3: a thin adapter over apply_action, validated once per verb by
 ## deploy_flow.gd / trap_flow.gd).
-## highlights -> release on a cell -> facing chooser (4 arrows) -> click one
-## -> deploy verb fires. Trap slots share the drag but place on release
-## directly (traps have no facing) under AMBER highlights, distinct from the
-## ui_cancel/right-click cancels. Clicking an alive unit selects it and opens
+## highlights -> release on a cell -> deploy verb fires with the canonical NW
+## facing. Trap slots share the drag and place on release under AMBER
+## highlights, distinct from the ui_cancel/right-click cancels. Clicking an
+## alive unit selects it and opens
 ## an explicit action panel whose Skill and Recall buttons remain visible in
 ## every SP state. Enabled state of every slot reads model.is_deployable /
 ## model.is_trap_placeable (single source of truth); highlight queries read
@@ -23,17 +22,21 @@ signal deployment_committed(deployment_id: StringName, cell: Vector2i, facing: i
 
 const HealingRulesScript := preload("res://sim/healing_rules.gd")
 const SELECTION_RING_SCRIPT := preload("res://scripts/view/selection_ring.gd")
+const OPERATOR_VISUAL_CATALOG_SCRIPT := preload(
+	"res://data/presentation/operator_visual_catalog.gd"
+)
 const GameTypographyType := preload("res://scripts/ui/game_typography.gd")
 const Style := preload("res://scripts/ui/components/lunaris_ops_style.gd")
-const StagingSkinType := preload("res://scripts/ui/components/staging_skin.gd")
 
 const FONT_SIZE := GameTypographyType.DETAIL
 const BAR_HEIGHT := 124.0
 const SAFE_MARGIN := 16.0
 const DECK_PADDING := 24.0
+const DECK_VERTICAL_PADDING := DECK_PADDING + 8.0
 const SLOT_GAP := 12.0
-const SLOT_TARGET_WIDTH := 220.0
+const SLOT_TARGET_WIDTH := 288.0
 const SLOT_TARGET_HEIGHT := 76.0
+const OPERATOR_SLOT_CONTENT_PADDING := 6.0
 const LANDSCAPE_DECK_MAX_WIDTH := 1360.0
 const SHORT_LANDSCAPE_DECK_MAX_WIDTH := 1240.0
 const FIRST_SLOT_CONTENT_INSET := 12.0
@@ -41,15 +44,7 @@ const VALID_COLOR := Color(0.2, 0.9, 0.4, 0.4)
 const INVALID_COLOR := Color(0.9, 0.2, 0.2, 0.5)
 const TRAP_VALID_COLOR := Color(0.95, 0.71, 0.2, 0.45)
 const HEAL_VALID_COLOR := Color(0.65, 0.94, 0.44, 0.5)
-const FACING_BUTTON_SIZE := Vector2(64.0, 64.0)
-const FACING_BUTTON_GAP := 12.0
-const FACING_SAFE_MARGIN := 12.0
-const FACING_SAFE_TOP := 104.0
-const FACING_BUTTON_Z := 15
-const FACING_ICON_INSET := 6.0
-const FACING_BOUNCE_AMPLITUDE := 4.5
-const FACING_PULSE_AMPLITUDE := 0.04
-const FACING_ANIMATION_PERIOD := 0.9
+const DEFAULT_OPERATOR_FACING := UnitState.Facing.LEFT
 const OPERATOR_ACTION_PANEL_WIDTH := 600.0
 const OPERATOR_ACTION_PANEL_NARROW_BREAKPOINT := 640.0
 const OPERATOR_ACTION_PANEL_MARGIN := 16.0
@@ -59,60 +54,6 @@ const OPERATOR_ACTION_SKILL_WIDTH := 360.0
 const OPERATOR_ACTION_RECALL_WIDTH := 180.0
 const OPERATOR_ACTION_BUTTON_HEIGHT := 64.0
 const OPERATOR_ACTION_Z := 30
-
-const FACING_BUTTONS := {
-	UnitState.Facing.RIGHT: {"name": "FacingRight", "slot": Vector2i(1, 1)},
-	UnitState.Facing.DOWN: {"name": "FacingDown", "slot": Vector2i(0, 1)},
-	UnitState.Facing.LEFT: {"name": "FacingLeft", "slot": Vector2i(0, 0)},
-	UnitState.Facing.UP: {"name": "FacingUp", "slot": Vector2i(1, 0)},
-}
-
-const FACING_DIRECTIONS := {
-	UnitState.Facing.RIGHT: Vector2(0.70710678, 0.70710678),
-	UnitState.Facing.DOWN: Vector2(-0.70710678, 0.70710678),
-	UnitState.Facing.LEFT: Vector2(-0.70710678, -0.70710678),
-	UnitState.Facing.UP: Vector2(0.70710678, -0.70710678),
-}
-
-const FACING_LOCALIZATION_KEYS := {
-	UnitState.Facing.RIGHT: &"ui.battle.facing_southeast",
-	UnitState.Facing.DOWN: &"ui.battle.facing_southwest",
-	UnitState.Facing.LEFT: &"ui.battle.facing_northwest",
-	UnitState.Facing.UP: &"ui.battle.facing_northeast",
-}
-
-const FACING_FALLBACKS := {
-	UnitState.Facing.RIGHT: "Southeast",
-	UnitState.Facing.DOWN: "Southwest",
-	UnitState.Facing.LEFT: "Northwest",
-	UnitState.Facing.UP: "Northeast",
-}
-
-const FACING_PHASES := {
-	UnitState.Facing.RIGHT: 0.0,
-	UnitState.Facing.DOWN: PI * 0.5,
-	UnitState.Facing.LEFT: PI,
-	UnitState.Facing.UP: PI * 1.5,
-}
-
-const FACING_ARROW_TEXTURES := {
-	UnitState.Facing.RIGHT: {
-		"gold": preload("res://assets/ui/facing_arrows/facing_arrow_se_gold.png"),
-		"blue": preload("res://assets/ui/facing_arrows/facing_arrow_se_blue.png"),
-	},
-	UnitState.Facing.DOWN: {
-		"gold": preload("res://assets/ui/facing_arrows/facing_arrow_sw_gold.png"),
-		"blue": preload("res://assets/ui/facing_arrows/facing_arrow_sw_blue.png"),
-	},
-	UnitState.Facing.LEFT: {
-		"gold": preload("res://assets/ui/facing_arrows/facing_arrow_nw_gold.png"),
-		"blue": preload("res://assets/ui/facing_arrows/facing_arrow_nw_blue.png"),
-	},
-	UnitState.Facing.UP: {
-		"gold": preload("res://assets/ui/facing_arrows/facing_arrow_ne_gold.png"),
-		"blue": preload("res://assets/ui/facing_arrows/facing_arrow_ne_blue.png"),
-	},
-}
 
 var model: BattleModel = null
 var view: Node2D = null
@@ -128,14 +69,9 @@ var _slot_scroll: ScrollContainer = null
 var _slot_box: GridContainer = null
 var _placement_op: StringName = &""
 var _placement_trap: StringName = &""
-var _pending_cell := Vector2i(-1, -1)
 var _pointer := Vector2.ZERO
 var _highlight_root: Control = null
 var _cursor_rect: Polygon2D = null
-var _facing_buttons: Dictionary = {}
-var _facing_icons: Dictionary = {}
-var _facing_icon_origins: Dictionary = {}
-var _facing_emphasis: int = -1
 var _operator_action_panel: PanelContainer = null
 var _operator_action_name: Label = null
 var _operator_action_state: Label = null
@@ -205,14 +141,13 @@ func transient_intent_active() -> bool:
 	return (
 		_placement_op != &""
 		or _placement_trap != &""
-		or _pending_cell.x >= 0
 		or _heal_source_unit_id >= 0
 		or _selected_unit_id >= 0
 	)
 
 
 func cancel_transient_intent() -> void:
-	if _placement_op != &"" or _placement_trap != &"" or _pending_cell.x >= 0:
+	if _placement_op != &"" or _placement_trap != &"":
 		_cancel_placement()
 	_cancel_heal_targeting()
 	_select_unit(-1)
@@ -230,21 +165,6 @@ func slot_screen_rect(deployment_id: StringName) -> Rect2:
 
 func command_deck_rect() -> Rect2:
 	return _slot_deck.get_global_rect() if _slot_deck != null else Rect2()
-
-
-func is_facing_pending() -> bool:
-	return _pending_cell.x >= 0
-
-
-func facing_button_screen_rect(facing: int) -> Rect2:
-	var button := _facing_buttons.get(facing) as Button
-	return button.get_global_rect() if button != null and button.visible else Rect2()
-
-
-func set_facing_emphasis(facing: int = -1) -> void:
-	_facing_emphasis = facing
-	for raw_facing: UnitState.Facing in _facing_buttons:
-		_refresh_facing_icon(raw_facing)
 
 
 ## Dynamic canvas fit: CALLED BY battle_view._relayout() after the grid
@@ -267,8 +187,6 @@ func relayout() -> void:
 		for child: Node in _highlight_root.get_children():
 			child.queue_free()
 		_show_valid_highlights()
-	if _pending_cell.x >= 0:
-		_layout_facing_buttons(_pending_cell)
 	if _heal_source_unit_id >= 0:
 		_show_heal_highlights()
 	_update_selection_ring()
@@ -278,7 +196,6 @@ func relayout() -> void:
 func _process(_delta: float) -> void:
 	if model == null:
 		return
-	_animate_facing_icons()
 	# changes so granted operators get slots
 	if _slots.size() != _deployment_ids().size():
 		_rebuild_slots()
@@ -331,7 +248,7 @@ func _input(event: InputEvent) -> void:
 		_update_placement_hover()
 	elif event is InputEventMouseButton:
 		var mb := event as InputEventMouseButton
-		if mb.button_index == MOUSE_BUTTON_LEFT and not mb.pressed and _pending_cell.x < 0:
+		if mb.button_index == MOUSE_BUTTON_LEFT and not mb.pressed:
 			_pointer = mb.position
 			_end_placement_drag()
 		elif mb.button_index == MOUSE_BUTTON_RIGHT and not mb.pressed:
@@ -375,9 +292,9 @@ func _build_slots(op_defs: Dictionary) -> void:
 	deck.mouse_filter = Control.MOUSE_FILTER_PASS
 	var deck_style := Style.panel_style(&"hud").duplicate() as StyleBox
 	deck_style.content_margin_left = DECK_PADDING
-	deck_style.content_margin_top = DECK_PADDING
+	deck_style.content_margin_top = DECK_VERTICAL_PADDING
 	deck_style.content_margin_right = DECK_PADDING
-	deck_style.content_margin_bottom = DECK_PADDING
+	deck_style.content_margin_bottom = DECK_VERTICAL_PADDING
 	deck.add_theme_stylebox_override(&"panel", deck_style)
 	add_child(deck)
 	_slot_deck = deck
@@ -411,18 +328,19 @@ func _build_slots(op_defs: Dictionary) -> void:
 		var slot := Button.new()
 		slot.name = "Slot_%s" % deployment_id
 		var dp_cost := def.dp_cost
-		var sprite_id := def.sprite_id
 		var identity_suffix := ""
 		if not row.is_empty():
 			dp_cost = int(row["combat_spec"]["dp_cost"])
-			sprite_id = StringName(row["visual_spec"]["sprite_id"])
 			identity_suffix = " %d" % (int(row["slot_index"]) + 1)
 		slot.text = _operator_card_text(def, identity_suffix, dp_cost)
 		slot.custom_minimum_size = Vector2(SLOT_TARGET_WIDTH, SLOT_TARGET_HEIGHT)
-		slot.icon = Art.texture(sprite_id, 0)
+		slot.icon = _operator_slot_icon(deployment_id, def, row)
 		slot.expand_icon = true
 		slot.add_theme_constant_override(&"icon_max_width", 52)
-		Style.apply_compact_rounded_button(slot, &"secondary", 12.0, 12)
+		Style.apply_compact_rounded_button(
+			slot, &"secondary", OPERATOR_SLOT_CONTENT_PADDING, 12,
+		)
+		slot.add_theme_color_override(&"icon_disabled_color", Color(1.0, 1.0, 1.0, 0.76))
 		slot.add_theme_font_size_override(&"font_size", FONT_SIZE)
 		if _slots.is_empty():
 			_add_first_slot_content_inset(slot)
@@ -462,6 +380,50 @@ func _build_slots(op_defs: Dictionary) -> void:
 	_layout_slot_box()
 
 
+static func _operator_slot_icon(
+	deployment_id: StringName,
+	definition: OperatorDef,
+	row: Dictionary,
+) -> Texture2D:
+	var art_id := operator_slot_art_id(deployment_id, definition, row)
+	var texture := Art.texture(art_id, 0) if not art_id.is_empty() else null
+	if texture != null:
+		return texture
+	var fallback_id := definition.sprite_id
+	if not row.is_empty():
+		fallback_id = StringName(row["visual_spec"]["sprite_id"])
+	return Art.texture(fallback_id, 0)
+
+
+## Deployment cards use the same identity-aware idle family as battlefield
+## operators. The fixed roster has no persistent identity, so its card previews
+## the first unit it can deploy (unit id 0).
+static func operator_slot_art_id(
+	deployment_id: StringName,
+	definition: OperatorDef,
+	row: Dictionary,
+) -> StringName:
+	var operator_id := definition.id if row.is_empty() else StringName(row["operator_def_id"])
+	if operator_id.is_empty():
+		operator_id = deployment_id
+	var portrait_asset_id := &""
+	var hero_id := &""
+	var class_id := &""
+	var unit_id := 0
+	if not row.is_empty():
+		portrait_asset_id = StringName(row["visual_spec"]["portrait_asset_id"])
+		hero_id = StringName(row["hero_id"])
+		class_id = StringName(row["class_id"])
+		unit_id = int(row["slot_index"])
+	return OPERATOR_VISUAL_CATALOG_SCRIPT.first_idle_art_id_for_unit(
+		operator_id,
+		portrait_asset_id,
+		hero_id,
+		unit_id,
+		class_id,
+	)
+
+
 func _deployment_ids() -> Array[StringName]:
 	if not model.battle_squad.is_empty():
 		return model.battle_squad.duplicate()
@@ -487,7 +449,9 @@ func _layout_slot_box() -> void:
 	for child: Node in _slot_box.get_children():
 		(child as Control).custom_minimum_size.x = SLOT_TARGET_WIDTH
 	_slot_box.reset_size()
-	var content_height := _slot_box.get_combined_minimum_size().y + DECK_PADDING * 2.0
+	var content_height := (
+		_slot_box.get_combined_minimum_size().y + DECK_VERTICAL_PADDING * 2.0
+	)
 	# The global 1.5× type scale increases each two-line slot's rendered
 	# minimum height. Standard landscape must expose both rows without relying
 	# on clipping; short landscape retains local scrolling by design.
@@ -523,32 +487,6 @@ func _build_overlays() -> void:
 	_heal_cursor = _make_overlay_rect(HEAL_VALID_COLOR)
 	_heal_cursor.name = "HealTargetCursor"
 	add_child(_heal_cursor)
-	for facing: UnitState.Facing in FACING_BUTTONS:
-		var spec: Dictionary = FACING_BUTTONS[facing]
-		var btn := Button.new()
-		btn.name = spec["name"]
-		btn.text = ""
-		btn.custom_minimum_size = FACING_BUTTON_SIZE
-		btn.z_index = FACING_BUTTON_Z
-		_apply_facing_button_styles(btn)
-		_apply_facing_accessibility(btn, facing)
-		btn.visible = false
-		btn.pressed.connect(_confirm_deploy.bind(facing))
-		btn.mouse_entered.connect(_refresh_facing_icon.bind(facing))
-		btn.mouse_exited.connect(_refresh_facing_icon.bind(facing))
-		btn.focus_entered.connect(_refresh_facing_icon.bind(facing))
-		btn.focus_exited.connect(_refresh_facing_icon.bind(facing))
-		add_child(btn)
-		_facing_buttons[facing] = btn
-		var icon := TextureRect.new()
-		icon.name = "ArrowIcon"
-		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		btn.add_child(icon)
-		_facing_icons[facing] = icon
-		_layout_facing_icon(facing, FACING_BUTTON_SIZE)
-		_refresh_facing_icon(facing)
 	_build_operator_action_panel()
 	_selection_ring = SELECTION_RING_SCRIPT.new()
 	_selection_ring.name = "SelectionRing"
@@ -659,10 +597,6 @@ func _on_locale_changed(_locale_id: StringName) -> void:
 		slot.tooltip_text = slot.text.replace("\n", " — ")
 	_operator_action_signature = ""
 	_refresh_operator_actions(true)
-	for facing: UnitState.Facing in _facing_buttons:
-		_apply_facing_accessibility(_facing_buttons[facing] as Button, facing)
-
-
 func _operator_card_text(definition: OperatorDef, identity_suffix: String, cost: int) -> String:
 	return UI_COPY.format_text(
 		&"ui.battle.deploy_operator_card",
@@ -721,30 +655,6 @@ func _trap_card_text(definition: TrapDef) -> String:
 	)
 
 
-func _apply_facing_accessibility(button: Button, facing: UnitState.Facing) -> void:
-	if button == null:
-		return
-	var direction := UI_COPY.text(
-		StringName(FACING_LOCALIZATION_KEYS[facing]),
-		String(FACING_FALLBACKS[facing]),
-	)
-	button.accessibility_name = direction
-	button.accessibility_description = UI_COPY.format_text(
-		&"ui.battle.facing_description",
-		"Deploy facing {direction}",
-		{&"direction": direction},
-	)
-
-
-func _apply_facing_button_styles(button: Button) -> void:
-	var transparent := StyleBoxEmpty.new()
-	for state: StringName in [&"normal", &"hover", &"pressed", &"disabled"]:
-		button.add_theme_stylebox_override(state, transparent)
-	button.add_theme_stylebox_override(
-		&"focus", StagingSkinType.golden_focus_tint_style(10),
-	)
-
-
 ## Footprints are origin-centered face diamonds (P12.2) sized by the live
 ## grid scale (dynamic canvas fit); position them at cell_center directly.
 func _make_overlay_rect(color: Color) -> Polygon2D:
@@ -761,7 +671,6 @@ func _start_placement(op_id: StringName) -> void:
 	_cancel_heal_targeting()
 	_select_unit(-1)
 	_placement_op = op_id
-	_pending_cell = Vector2i(-1, -1)
 	Sfx.play("operator_select")
 	_show_valid_highlights()
 	view.call("deploy_drag_started")
@@ -774,7 +683,6 @@ func _start_trap_placement(trap_id: StringName) -> void:
 	_cancel_heal_targeting()
 	_select_unit(-1)
 	_placement_trap = trap_id
-	_pending_cell = Vector2i(-1, -1)
 	_show_valid_highlights()
 	view.call("deploy_drag_started")
 
@@ -804,8 +712,6 @@ func _valid_color() -> Color:
 
 
 func _update_placement_hover() -> void:
-	if _pending_cell.x >= 0:
-		return
 	var cell: Vector2i = view.call("cell_at", _pointer)
 	_cursor_rect.color = _valid_color() if _placement_valid_at(cell) else INVALID_COLOR
 	_cursor_rect.position = view.call("cell_center", cell)
@@ -821,113 +727,18 @@ func _end_placement_drag() -> void:
 		_cancel_placement()
 		return
 	if _placement_trap != &"":
-		# traps have no facing: the release IS the placement
+		# Traps place directly on release.
 		if not model.apply_action([&"place_trap", _placement_trap, cell]):
 			Sfx.play("action_reject")
 		_cancel_placement()
 		return
-	_pending_cell = cell
-	_cursor_rect.visible = false
-	Sfx.play("placement_ready")
-	facing_requested.emit(_placement_op, cell)
-	# the slowdown HOLDS through the facing chooser (L7 verdict 2026-08-11:
-	# full-speed enemies charging while the player aims felt punishing);
-	# _confirm_deploy / _cancel_placement restore normal speed
-	_layout_facing_buttons(cell)
-	for facing: UnitState.Facing in _facing_buttons:
-		var btn: Button = _facing_buttons[facing]
-		btn.visible = true
-
-
-## Model cardinal facings project to screen diagonals. Keep all four controls
-## in one fixed-size screen-space cluster instead of scattering them across
-## full neighboring cells (which scales with camera zoom and collides with
-## overlays). Edge cells translate the cluster as one rigid unit.
-func _layout_facing_buttons(cell: Vector2i) -> void:
-	var button_size := FACING_BUTTON_SIZE
-	for facing: UnitState.Facing in _facing_buttons:
-		var minimum: Vector2 = (_facing_buttons[facing] as Button).get_combined_minimum_size()
-		button_size.x = maxf(button_size.x, minimum.x)
-		button_size.y = maxf(button_size.y, minimum.y)
-	var cluster_size := button_size * 2.0 + Vector2.ONE * FACING_BUTTON_GAP
-	var desired_origin: Vector2 = view.call("cell_center", cell) - cluster_size * 0.5
-	var safe_min := Vector2(FACING_SAFE_MARGIN, FACING_SAFE_TOP)
-	var deck_height := BAR_HEIGHT
-	if _slot_deck != null:
-		deck_height = maxf(deck_height, _slot_deck.get_combined_minimum_size().y)
-	var safe_max := Vector2(
-		maxf(safe_min.x, size.x - FACING_SAFE_MARGIN - cluster_size.x),
-		maxf(safe_min.y, size.y - deck_height - FACING_SAFE_MARGIN - cluster_size.y),
-	)
-	var cluster_origin := Vector2(
-		clampf(desired_origin.x, safe_min.x, safe_max.x),
-		clampf(desired_origin.y, safe_min.y, safe_max.y),
-	)
-	for facing: UnitState.Facing in _facing_buttons:
-		var spec: Dictionary = FACING_BUTTONS[facing]
-		var btn: Button = _facing_buttons[facing]
-		var slot: Vector2i = spec["slot"]
-		btn.size = button_size
-		btn.position = (
-			cluster_origin + Vector2(slot) * (button_size + Vector2.ONE * FACING_BUTTON_GAP)
-		)
-		_layout_facing_icon(facing, button_size)
-
-
-func _layout_facing_icon(facing: UnitState.Facing, button_size: Vector2) -> void:
-	var icon := _facing_icons.get(facing) as TextureRect
-	if icon == null:
-		return
-	icon.size = button_size - Vector2.ONE * FACING_ICON_INSET * 2.0
-	icon.pivot_offset = icon.size * 0.5
-	var origin := (button_size - icon.size) * 0.5
-	_facing_icon_origins[facing] = origin
-	icon.position = origin
-
-
-func _refresh_facing_icon(facing: UnitState.Facing) -> void:
-	var button := _facing_buttons.get(facing) as Button
-	var icon := _facing_icons.get(facing) as TextureRect
-	if button == null or icon == null:
-		return
-	var use_blue := int(facing) == _facing_emphasis or button.is_hovered()
-	var textures := FACING_ARROW_TEXTURES[facing] as Dictionary
-	icon.texture = textures["blue" if use_blue else "gold"] as Texture2D
-
-
-func _animate_facing_icons() -> void:
-	var animation_seconds := fmod(
-		float(Time.get_ticks_msec()) / 1000.0, FACING_ANIMATION_PERIOD
-	)
-	for facing: UnitState.Facing in _facing_icons:
-		var button := _facing_buttons[facing] as Button
-		var icon := _facing_icons[facing] as TextureRect
-		if button == null or icon == null:
-			continue
-		var origin: Vector2 = _facing_icon_origins.get(facing, icon.position)
-		if not button.visible:
-			icon.position = origin
-			icon.scale = Vector2.ONE
-			continue
-		var phase := float(FACING_PHASES[facing])
-		var angle := TAU * animation_seconds / FACING_ANIMATION_PERIOD + phase
-		var direction: Vector2 = FACING_DIRECTIONS[facing]
-		icon.position = origin + direction * sin(angle) * FACING_BOUNCE_AMPLITUDE
-		var pulse := 1.0 + sin(angle + PI * 0.5) * FACING_PULSE_AMPLITUDE
-		icon.scale = Vector2.ONE * pulse
-
-
-func _confirm_deploy(facing: UnitState.Facing) -> void:
-	if not _interaction_enabled:
-		return
-	if _pending_cell.x >= 0:
-		var deployment_id := _placement_op
-		var cell := _pending_cell
-		if model.apply_action([&"deploy", deployment_id, cell, int(facing)]):
-			deployment_committed.emit(deployment_id, cell, int(facing))
-		else:
-			Sfx.play("action_reject")
-			placement_rejected.emit(deployment_id, cell)
+	var deployment_id := _placement_op
+	if model.apply_action([&"deploy", deployment_id, cell, int(DEFAULT_OPERATOR_FACING)]):
+		Sfx.play("placement_ready")
+		deployment_committed.emit(deployment_id, cell, int(DEFAULT_OPERATOR_FACING))
+	else:
+		Sfx.play("action_reject")
+		placement_rejected.emit(deployment_id, cell)
 	_cancel_placement()
 
 
@@ -935,16 +746,7 @@ func _cancel_placement() -> void:
 	view.call("deploy_drag_ended")
 	_placement_op = &""
 	_placement_trap = &""
-	_pending_cell = Vector2i(-1, -1)
 	_cursor_rect.visible = false
-	set_facing_emphasis(-1)
-	for facing: UnitState.Facing in _facing_buttons:
-		var button := _facing_buttons[facing] as Button
-		var icon := _facing_icons[facing] as TextureRect
-		button.visible = false
-		button.release_focus()
-		icon.position = _facing_icon_origins.get(facing, icon.position)
-		icon.scale = Vector2.ONE
 	for child: Node in _highlight_root.get_children():
 		child.queue_free()
 
@@ -1297,7 +1099,7 @@ func _layout_operator_action_panel() -> void:
 func _avoid_operator_action_blockers(safe_bottom: float) -> bool:
 	var blockers: Array[Rect2] = []
 	for node_name: String in [
-		"BattleHud", "BattleDialogue", "BattleCommandDeck", "SpellCommandDeck",
+		"BattleHud", "BattleDialogue", "BattleCommandDeck",
 	]:
 		var blocker := view.find_child(node_name, true, false) as Control
 		if blocker != null and blocker.visible:

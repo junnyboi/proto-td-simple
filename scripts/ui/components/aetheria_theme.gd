@@ -3,7 +3,7 @@ extends Theme
 
 const GameTypographyType := preload("res://scripts/ui/game_typography.gd")
 const StagingSkinType := preload("res://scripts/ui/components/staging_skin.gd")
-const CJK_FONT_PATH := "res://assets/fonts/ProtosSansSC.otf"
+const CJK_FONT_PATH := "res://assets/fonts/GameTemplateTDSansSC.otf"
 const CJK_FONT: FontFile = preload(CJK_FONT_PATH)
 const CINZEL := preload("res://assets/fonts/Cinzel-Variable.ttf")
 const COMMAND_DECK_FRAME := preload("res://assets/ui/staging/frames/command_deck.png")
@@ -47,13 +47,13 @@ func _init() -> void:
 		_body_font.fallbacks = [ThemeDB.fallback_font]
 	else:
 		_body_font.base_font = ThemeDB.fallback_font
-	_body_font.resource_name = "Protos body with bundled Chinese coverage"
+	_body_font.resource_name = "Game template - TD body with bundled Chinese coverage"
 
 	_display_font = FontVariation.new()
 	_display_font.base_font = CINZEL
 	_display_font.fallbacks = [_body_font]
 	_display_font.variation_opentype = {&"wght": 560}
-	_display_font.resource_name = "Cinzel with Protos CJK fallback"
+	_display_font.resource_name = "Cinzel with Game template - TD CJK fallback"
 
 	default_font = _body_font
 	default_font_size = GameTypographyType.BODY

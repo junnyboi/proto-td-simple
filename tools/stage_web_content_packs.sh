@@ -56,8 +56,7 @@ stage_pack() {
 }
 
 classes=(
-  banner_guard defender gunner immovable mage_apprentice shock_trooper
-  sniper sorcerer sword_saint swordmaster witch_doctor
+  gunner mage_apprentice swordmaster
 )
 for class_id in "${classes[@]}"; do
   class_files=()
@@ -71,5 +70,5 @@ for class_id in "${classes[@]}"; do
   stage_pack "$key" 16 "${class_files[@]}"
 done
 
-[[ "$(tail -n +2 "$manifest" | wc -l)" -eq 11 ]]
-printf 'Staged 11 verified advanced-operator Web content packs in %s\n' "$OUT"
+[[ "$(tail -n +2 "$manifest" | wc -l)" -eq 3 ]]
+printf 'Staged 3 verified operator Web content packs in %s\n' "$OUT"

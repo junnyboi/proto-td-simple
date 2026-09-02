@@ -5,7 +5,7 @@ extends RefCounted
 ## database; consumers receive deep copies and can never retain model objects.
 
 const SCHEMA_ID := "prototype_td_battle_observation"
-const VERSION := 2
+const VERSION := 3
 const UPCOMING_SECONDS := 10
 
 var _value: Dictionary = {}
@@ -45,8 +45,6 @@ func _project(model: BattleModel) -> Dictionary:
 		"timeline": _project_timeline(model),
 		"deployability": _project_deployability(model),
 		"operators": _project_operators(model),
-		"spells": _project_spells(model),
-		"slow_fields": _project_slow_fields(model),
 		"trap_readiness": _project_trap_readiness(model),
 		"traps": _project_traps(model),
 		"traps_placed_total": model._next_trap_id,
@@ -64,7 +62,7 @@ func _project_timeline(model: BattleModel) -> Dictionary:
 		"entry_count": model.timeline.entries.size(),
 		"remaining_count": model.timeline.entries.size() - model.timeline.next_index,
 		"next_spawn_tick": next_tick,
-		"wave_index": model.spell_book.wave_index_of(model.tick),
+		"wave_index": model.stage.wave_index_at(model.tick),
 		"exhausted": model.timeline.exhausted(),
 	}
 
@@ -122,42 +120,6 @@ func _project_operators(model: BattleModel) -> Array:
 		rows.append(row)
 	return rows
 
-
-func _project_spells(model: BattleModel) -> Array:
-	var ids: Array[String] = []
-	for spell_id: StringName in model.spell_book.ids:
-		ids.append(String(spell_id))
-	ids.sort()
-	var rows: Array = []
-	for text_id: String in ids:
-		var spell_id := StringName(text_id)
-		rows.append({
-			"spell_id": text_id,
-			"ready": model.is_castable(spell_id),
-			"ready_at_tick": model.spell_book.ready_at(spell_id),
-			"used_in_wave": model.spell_book.used_in_wave(spell_id),
-			"casts": model.spell_book.casts(spell_id),
-		})
-	return rows
-
-
-func _project_slow_fields(model: BattleModel) -> Array:
-	var source: Array = model.slow_fields.duplicate()
-	source.sort_custom(func(a: SlowFieldState, b: SlowFieldState) -> bool: return a.id < b.id)
-	var rows: Array = []
-	for field: SlowFieldState in source:
-		rows.append({
-			"id": field.id,
-			"spell_id": String(field.spell_id),
-			"center": _cell(field.center),
-			"radius": field.radius,
-			"slow_permille": field.slow_permille,
-			"expires_tick": field.expires_tick,
-			"remaining_ticks": maxi(0, field.expires_tick - model.tick),
-		})
-	return rows
-
-
 func _project_trap_readiness(model: BattleModel) -> Array:
 	var ids: Array[String] = []
 	for trap_id: StringName in model._trap_defs:
@@ -200,7 +162,6 @@ func _project_enemies(model: BattleModel) -> Array:
 		rows.append({
 			"id": enemy.id,
 			"enemy_id": String(enemy.def_id),
-			"faction": "enemy" if enemy.faction == EnemyState.Faction.ENEMY else "charmed",
 			"hp": enemy.hp,
 			"hp_max": enemy.hp_max,
 			"path_idx": enemy.path_idx,
@@ -210,13 +171,6 @@ func _project_enemies(model: BattleModel) -> Array:
 			"block_weight": enemy.block_weight,
 			"leak_damage": enemy.leak_damage,
 			"blocked_by": enemy.blocked_by,
-			"engaged_with": enemy.engaged_with,
-			"charm_immune": enemy.charm_immune,
-			"charm_eligible": (
-				enemy.faction == EnemyState.Faction.ENEMY
-				and not enemy.aerial
-				and not enemy.charm_immune
-			),
 			"threat": enemy.leak_damage * 1000 + enemy.block_weight * 100 + enemy.hp,
 		})
 	return rows
@@ -385,7 +339,6 @@ func _enemy_by_id(model: BattleModel, enemy_id: int) -> EnemyState:
 func _is_active_enemy(enemy: EnemyState, path_idx: int) -> bool:
 	return (
 		enemy.alive
-		and enemy.faction == EnemyState.Faction.ENEMY
 		and enemy.path_idx == path_idx
 	)
 

@@ -33,7 +33,7 @@ EDGE_MAX = 640
 IDLE_FRAMES = 24
 ATTACK_FRAMES = 13
 ACTIONS = ("idle", "attack")
-EAST_DIRECTIONS = ("ne", "se")
+EAST_DIRECTIONS = ("ne",)
 GENDERS = ("male", "female")
 CHROMA_RE = re.compile(r"^#[0-9a-fA-F]{6}$")
 
@@ -436,7 +436,7 @@ def build(args: argparse.Namespace) -> dict[str, object]:
         raise ValueError("--force-final-neutral is only valid for attack sequences")
     carrier_before = sha256_file(carrier)
     metadata = probe_media(carrier)
-    west_direction = {"ne": "nw", "se": "sw"}[args.direction]
+    west_direction = "nw"
     target_dir = runtime_root / "assets/sprites/operators/animated" / args.class_id / args.gender
     east_path = target_dir / f"{args.action}_{args.direction}.webp"
     west_path = target_dir / f"{args.action}_{west_direction}.webp"

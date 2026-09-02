@@ -52,21 +52,18 @@ func _validate_enemy_definitions() -> void:
 		_check(interceptor.atk == 5, "Interceptor ATK must remain 5")
 		_check(is_equal_approx(interceptor.speed_tiles_per_s, 0.9), "Interceptor speed must remain 0.9")
 		_check(interceptor.aerial and interceptor.block_weight == 0, "Interceptor must bypass ground blocking")
-		_check(interceptor.charm_immune, "Interceptor must remain Charm-immune like Drone")
 		_check(interceptor.atk_range_cells == 2, "Interceptor must retain its short two-cell attack range")
 		_check(interceptor.target_policy.id == &"enemy_blocker_then_nearest", "Interceptor must target nearby deployed units")
 
 
 func _validate_caster_arts_counterplay() -> void:
 	var caster_1 := load("res://data/operators/caster_1.tres") as OperatorDef
-	var caster_2 := load("res://data/operators/caster_2.tres") as OperatorDef
 	var guard := load("res://data/operators/guard_1.tres") as OperatorDef
 	var shieldbearer := _enemy(&"shieldbearer")
-	_check(caster_1 != null and caster_2 != null and guard != null, "Caster and Guard fixtures must load")
-	if caster_1 == null or caster_2 == null or guard == null or shieldbearer == null:
+	_check(caster_1 != null and guard != null, "Mage Apprentice and Swordmaster fixtures must load")
+	if caster_1 == null or guard == null or shieldbearer == null:
 		return
 	_check(caster_1.attack_damage_kind == DamageRulesScript.Kind.ARTS, "Mage Apprentice basic attacks must be Arts")
-	_check(caster_2.attack_damage_kind == DamageRulesScript.Kind.ARTS, "Sorcerer basic attacks must be Arts")
 	_check(guard.attack_damage_kind == DamageRulesScript.Kind.PHYSICAL, "Swordmaster must remain Physical")
 	var caster_hit := DamageRulesScript.resolve(
 		caster_1.atk,
@@ -97,7 +94,6 @@ func _validate_stage_schedules() -> void:
 	_check(_enemy_count(s2, &"grunt") == 3 and _enemy_count(s2, &"runner") == 6, "S2 one-for-one composition must remain 3/6/1")
 	_check(_has_spawn(s2, &"shieldbearer", 0, 420), "S2 Shieldbearer must open wave two at tick 420 on path zero")
 	_check(s2.wave_starts == PackedInt32Array([0, 390]), "S2 wave boundaries must remain unchanged")
-	_check(s2.intro_hint.contains("Caster") and s2.intro_hint.contains("armored"), "S2 hint must explain armored Caster counterplay")
 
 	_check(s3.waves.size() == 9, "S3 must preserve nine total spawns")
 	_check(_enemy_count(s3, &"breacher") == 2, "S3 must contain exactly two Breachers")
@@ -105,7 +101,6 @@ func _validate_stage_schedules() -> void:
 	_check(_has_spawn(s3, &"breacher", 0, 450), "S3 first Breacher must arrive at tick 450 on path zero")
 	_check(_has_spawn(s3, &"breacher", 1, 570), "S3 second Breacher must alternate to path one at tick 570")
 	_check(s3.wave_starts == PackedInt32Array([0, 390]), "S3 wave boundaries must remain unchanged")
-	_check(s3.intro_hint.contains("Breachers") and s3.intro_hint.contains("two block"), "S3 hint must explain Breacher block pressure")
 
 	_check(s4.waves.size() == 11, "S4 must preserve eleven total spawns")
 	_check(_enemy_count(s4, &"interceptor") == 2, "S4 must contain exactly two Interceptors")
@@ -115,7 +110,6 @@ func _validate_stage_schedules() -> void:
 	_check(_has_spawn(s4, &"interceptor", 0, 750), "S4 second Interceptor must lead the closing air pair at tick 750")
 	_check(_has_spawn(s4, &"drone", 0, 810), "S4 closing Interceptor must retain a Drone escort at tick 810")
 	_check(s4.wave_starts == PackedInt32Array([0, 390]), "S4 wave boundaries must remain unchanged")
-	_check(s4.intro_hint.contains("Interceptors lead") and s4.intro_hint.contains("Sniper"), "S4 hint must explain Interceptor-led anti-air pairs")
 
 
 func _validate_campaign_context() -> void:
@@ -140,7 +134,7 @@ func _validate_interceptor_attack_authority() -> void:
 	if model == null:
 		return
 	model.dp = config.dp_cap
-	var deployed := model.apply_action([&"deploy", &"defender_1", Vector2i(8, 1), UnitState.Facing.LEFT])
+	var deployed := model.apply_action([&"deploy", &"guard_1", Vector2i(8, 1), UnitState.Facing.LEFT])
 	_check(deployed, "Interceptor authority fixture must deploy a target")
 	if not deployed:
 		return

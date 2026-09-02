@@ -17,7 +17,7 @@ var _catalogs: Dictionary = {}
 
 func _ready() -> void:
 	var loaded := reload_catalogs()
-	assert(loaded, "Protos localization catalogs must load")
+	assert(loaded, "Game template - TD localization catalogs must load")
 	_activate_locale(DEFAULT_LOCALE)
 
 
@@ -258,4 +258,4 @@ func _activate_locale(locale_id: StringName) -> void:
 	_locale = locale_id
 	_entries = (_catalogs[locale_id] as Dictionary).duplicate(true)
 	TranslationServer.set_locale(String(locale_id))
-	DisplayServer.window_set_title(t(&"ui.game_title", "Protos"))
+	DisplayServer.window_set_title(t(&"ui.game_title", "Game template - TD"))

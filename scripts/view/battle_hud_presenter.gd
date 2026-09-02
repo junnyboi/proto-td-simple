@@ -50,11 +50,11 @@ static func text_for(snapshot: Dictionary, viewport: Vector2) -> String:
 		UiCopyType.text(&"ui.battle.state_defeat", "DEFEAT"),
 	][int(snapshot["result"])]
 	if _uses_compact_layout(viewport):
-		return UiCopyType.format_text(&"ui.battle.hud_compact", "CORE {core}   DP {dp}\nELIMS {eliminations}   {state}", {
+		return UiCopyType.format_text(&"ui.battle.hud_compact", "HEALTH {core}   DP {dp}\nELIMS {eliminations}   {state}", {
 			&"core": int(snapshot["base_hp"]), &"dp": int(snapshot["dp"]),
 			&"eliminations": int(snapshot["killed"]), &"state": result_text,
 		})
-	return UiCopyType.format_text(&"ui.battle.hud_wide", "CORE  {core}    DP  {dp}    ELIMINATIONS  {eliminations}    {state}", {
+	return UiCopyType.format_text(&"ui.battle.hud_wide", "HEALTH  {core}    DP  {dp}    ELIMINATIONS  {eliminations}    {state}", {
 		&"core": int(snapshot["base_hp"]), &"dp": int(snapshot["dp"]),
 		&"eliminations": int(snapshot["killed"]), &"state": result_text,
 	})

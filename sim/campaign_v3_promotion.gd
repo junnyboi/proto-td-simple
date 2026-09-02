@@ -13,8 +13,6 @@ static func options(data: Dictionary, context: Dictionary, hero_id_value: Varian
 	var hero := _hero_by_id(data["heroes"], hero_id)
 	if hero.is_empty():
 		return _options_reject(&"unknown_hero")
-	if hero["hero_kind"] == "premium":
-		return _options_reject(&"premium_hero_untrainable")
 	if hero["life_status"] != "ready":
 		return _options_reject(&"dead_hero")
 	var current: Dictionary = context["class_by_id"].get(hero["current_class_id"], {})

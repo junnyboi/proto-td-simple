@@ -1,10 +1,8 @@
 class_name CampaignV3Attempts
 extends RefCounted
 
-const XP_PER_OPERATION := CampaignProgressionScript.XP_PER_OPERATION
 const U63_MAX := 9_223_372_036_854_775_807
 const CODEC_PATH := "res://sim/campaign_v3_codec.gd"
-const CampaignProgressionScript := preload("res://sim/campaign_progression.gd")
 const EconomyScript := preload("res://sim/campaign_v3_economy.gd")
 const CommandsScript := preload("res://sim/campaign_v3_commands.gd")
 const HashScript := preload("res://sim/campaign_v3_hash.gd")
@@ -200,18 +198,6 @@ static func resolve(
 			}
 		)
 	]
-	for loss: Dictionary in derived["resolution"]["premium_life_losses"]:
-		events.append(_event(
-			&"premium_life_consumed",
-			{
-				"hero_id": loss["hero_id"],
-				"premium_id": loss["premium_id"],
-				"lives_before": loss["lives_before"],
-				"lives_after": loss["lives_after"],
-				"locked_out": loss["locked_out"],
-				"resolution_index": derived["resolution"]["resolution_index"],
-			},
-		))
 	for hero_id: String in derived["resolution"]["dead_hero_ids"]:
 		(
 			events
@@ -294,99 +280,25 @@ static func _derive_resolution(
 		context,
 	)
 	after["unlocked_traps"] = (after["unlocked_traps"] as Array).duplicate()
-	after["unlocked_spells"] = (after["unlocked_spells"] as Array).duplicate()
 	for reward: Dictionary in rewards:
 		if reward["kind"] == "trap":
 			after["unlocked_traps"].append(reward["id"])
-		elif reward["kind"] == "spell":
-			after["unlocked_spells"].append(reward["id"])
 		elif reward["kind"] == "currency" and reward["id"] == "marks":
 			var marks_after_reward := int(after["marks"]) + int(reward["amount"])
 			if marks_after_reward > StateCodecScript.MARKS_MAX:
 				return _reject(&"marks_overflow")
 			after["marks"] = marks_after_reward
 	after["unlocked_traps"].sort()
-	after["unlocked_spells"].sort()
-	after["class_entitlements"] = _entitlements_for_stars(after["stage_stars"], context)
-	var entitlements_granted := _difference(
-		after["class_entitlements"],
-		before["class_entitlements"],
-	)
+	after["class_entitlements"] = (before["class_entitlements"] as Array).duplicate()
 	after["heroes"] = (after["heroes"] as Array).duplicate(true)
-	# Survivors earn full XP on clear, half XP on ordinary defeat, and no XP
-	# after voluntary withdrawal. Campaign authority owns the receipt amount.
-	var xp_awards := CampaignProgressionScript.nonpremium_xp_awards(
-		CampaignProgressionScript.derive_xp_awards(
-			outcome["rows"],
-			before["heroes"],
-			CampaignProgressionScript.xp_for_outcome(
-				outcome["result"], outcome["terminal_reason"],
-			),
-		),
-		before["heroes"],
-	)
-	if not CampaignProgressionScript.apply_xp(after["heroes"], xp_awards):
-		return _reject(&"xp_overflow")
-	after["memorial"] = (after["memorial"] as Array).duplicate(true)
+	# These fields remain in the save schema for legacy decoding only. Mission
+	# resolution no longer awards XP or unlocks class paths.
+	var entitlements_granted: Array[String] = []
+	var xp_awards: Array[Dictionary] = []
+	# A tactical fall ends the unit's participation in this battle only. Campaign
+	# operators remain available and no persistent casualty record is created.
 	var dead_ids: Array[String] = []
 	var memorial_ids: Array[String] = []
-	var premium_life_losses: Array[Dictionary] = []
-	for outcome_row: Dictionary in outcome["rows"]:
-		if not outcome_row["fell"]:
-			continue
-		var hero := _hero_by_id(after["heroes"], outcome_row["hero_id"])
-		if hero.is_empty() or hero["life_status"] != "ready":
-			return _reject(&"invalid_death_transition")
-		var death := {
-			"resolution_index": before["next_resolution_index"],
-			"attempt_id": ticket["attempt_id"],
-			"stage_id": stage_id,
-			"terminal_reason": outcome["terminal_reason"],
-			"terminal_tick": outcome["terminal_tick"],
-		}
-		var locked_out := true
-		if hero["hero_kind"] == "premium":
-			var lives_before := int(hero["premium_lives"])
-			if lives_before <= 0:
-				return _reject(&"invalid_premium_life_transition")
-			hero["premium_lives"] = lives_before - 1
-			locked_out = int(hero["premium_lives"]) == 0
-			premium_life_losses.append({
-				"hero_id": String(hero["hero_id"]),
-				"premium_id": String(hero["premium_id"]),
-				"lives_before": lives_before,
-				"lives_after": int(hero["premium_lives"]),
-				"locked_out": locked_out,
-			})
-		if not locked_out:
-			continue
-		hero["life_status"] = "dead"
-		hero["death"] = death
-		dead_ids.append(String(hero["hero_id"]))
-		var memorial_id := "memorial:%s" % hero["hero_id"]
-		memorial_ids.append(memorial_id)
-		(
-			after["memorial"]
-			. append(
-				{
-					"memorial_id": memorial_id,
-					"hero_id": hero["hero_id"],
-					"portrait_instance_id": hero["portrait_instance_id"],
-					"portrait_asset_id": hero["portrait_asset_id"],
-					"class_id": hero["current_class_id"],
-					"death": death,
-				}
-			)
-		)
-	dead_ids.sort()
-	memorial_ids.sort()
-	premium_life_losses.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
-		return String(a["hero_id"]) < String(b["hero_id"])
-	)
-	after["memorial"].sort_custom(
-		func(a: Dictionary, b: Dictionary) -> bool:
-			return String(a["hero_id"]) < String(b["hero_id"])
-	)
 	var before_hash := HashScript.of_core(before, context)
 	var after_hash := HashScript.of_core(after, context)
 	if not before_hash["accepted"] or not after_hash["accepted"]:
@@ -408,7 +320,6 @@ static func _derive_resolution(
 		"class_entitlements_granted": entitlements_granted,
 		"created_hero_ids": [],
 		"dead_hero_ids": dead_ids,
-		"premium_life_losses": premium_life_losses,
 		"xp_awards": xp_awards,
 		"memorial_ids": memorial_ids,
 		"marks_before": before["marks"],
@@ -443,11 +354,6 @@ static func _squad(
 		var hero := _hero_by_id(data["heroes"], hero_ids[index])
 		if hero.is_empty():
 			return _reject(&"unknown_hero")
-		if hero["life_status"] != "ready":
-			return _reject(&"dead_hero")
-		if hero["hero_kind"] == "premium" and int(hero["premium_lives"]) <= 0:
-			return _reject(&"premium_hero_out_of_lives")
-
 		var projection: Dictionary = (
 			context["operator_ticket_by_id"]
 			. get(
@@ -558,27 +464,6 @@ static func _stars_for(rows: Array, stage_id: String) -> int:
 		if row["stage_id"] == stage_id:
 			return int(row["stars"])
 	return 0
-
-
-static func _entitlements_for_stars(stage_rows: Array, context: Dictionary) -> Array[String]:
-	var cleared := {}
-	for row: Dictionary in stage_rows:
-		cleared[String(row["stage_id"])] = true
-	var result: Array[String] = []
-	for row: Dictionary in context["campaign"]["stage_class_entitlements"]:
-		if cleared.has(String(row["stage_id"])):
-			result.append(String(row["class_id"]))
-	result.sort()
-	return result
-
-
-static func _difference(after: Array, before: Array) -> Array[String]:
-	var result: Array[String] = []
-	for value: String in after:
-		if not before.has(value):
-			result.append(value)
-	result.sort()
-	return result
 
 
 static func _codec() -> GDScript:

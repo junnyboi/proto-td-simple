@@ -12,17 +12,9 @@ const OPERATOR_VISUAL_CATALOG_SCRIPT := preload(
 	"res://data/presentation/operator_visual_catalog.gd"
 )
 const FIRST_STAND_TUTORIAL_SCRIPT := preload("res://scripts/ui/first_stand_tutorial.gd")
-const SLOW_FIELD_TUTORIAL_SCRIPT := preload("res://scripts/ui/slow_field_tutorial.gd")
 const MAP_NAVIGATION_OVERLAY_SCRIPT := preload("res://scripts/ui/map_navigation_overlay.gd")
-const BATTLE_DIALOGUE_PRESENTER_SCRIPT := preload("res://scripts/ui/battle_dialogue_presenter.gd")
 const ACT2_STAGE_TRANSITION_SCRIPT := preload(
 	"res://scripts/ui/components/act2_stage_transition.gd"
-)
-const STAGE_NARRATIVE_CATALOG := preload(
-	"res://data/presentation/narrative/stage_narrative_catalog.tres"
-)
-const StageNarrativeCatalogType := preload(
-	"res://data/presentation/narrative/stage_narrative_catalog.gd"
 )
 const StageArtThemeType := preload("res://data/presentation/stage_art_theme.gd")
 const GameTypographyType := preload("res://scripts/ui/game_typography.gd")
@@ -41,9 +33,9 @@ const SPRITE_SCALE := 2  # 32px art on the 64px grid (pinned 2x integer)
 const IDLE_BOB_FRAMES := 24
 const ATTACK_POSE_FRAMES := 8
 
-const UI_OVERLAY_Z := 50
-const JUICE_Z := 60
-const HUD_Z := 70
+const UI_OVERLAY_Z := 64
+const JUICE_Z := 68
+const HUD_Z := 72
 const BACKDROP_COLOR := Color("11131f")
 const ENEMY_COLOR := Color("ef7d57")
 const AERIAL_PX := 24.0
@@ -68,8 +60,6 @@ const TRAP_SPIKE_COLOR := Color("f4b41b")
 const TRAP_SPIKE_CORE := Color("1a1c2c")
 const TRAP_SPIKE_PX := 24.0
 const TAR_OVERLAY_COLOR := Color(0.08, 0.05, 0.14, 0.6)
-const SLOW_FIELD_AURA_ALPHA := 0.46
-const SLOW_FIELD_ROTATION_SECONDS := 18.0
 const OPERATOR_SELECTION_TIME_SCALE := 0.75
 
 var model: BattleModel = null
@@ -97,44 +87,38 @@ var _portrait_flash_frames := 0
 var _continue_btn: Button = null
 var _defeat_ambient: DefeatAmbientLayerType = null
 var _deploy_bar: DeployBar = null
-var _spell_bar: SpellBar = null
 var _controls: BattleControls = null
 var _tutorial: Node = null
 var _map_navigation_overlay: MapNavigationOverlay = null
-var _battle_dialogue: BattleDialoguePresenter = null
 var _battle_confirmation_active := false
 var _act2_transition: Act2StageTransition = null
 var _act2_entry_active := false
 var _act2_exit_active := false
 var _op_defs: Dictionary = {}
 var _trap_defs: Dictionary = {}
-var _spell_defs: Dictionary = {}
 var _trap_rects: Dictionary = {}
 var _trap_kinds: Dictionary = {}
-var _slow_field_rects: Dictionary = {}
-var _slow_field_audio_ids: Dictionary = {}
-var _spell_casts_last: Dictionary = {}
 var _hud: Label = null
 var _tick_accum: float = 0.0
 var _juice: JuiceLayer = null
 var _time_tags: Dictionary = {}
-var _beat_frames_left := 0
 var _hit_stop_frames := 0
 var _deploy_seen: Dictionary = {}
 var _spark_seen: Dictionary = {}
 var _leaked_seen := 0
 var _banner_seen_wave := -1
-var _pending_high_threat_dialogue_wave := -1
 var _stamp_shown := false
 var _result_finalize_running := false
 var _result_finalized := false
 var _snaps_seen := 0
 var _trap_trigger_seen: Dictionary = {}
-var _charm_seen: Dictionary = {}
 var _enemy_defs: Dictionary = {}
+var _base_enemy_defs: Dictionary = {}
+var _base_op_defs: Dictionary = {}
 var _enemy_anim_keys: Dictionary = {}
 var _enemy_blend_frames: Dictionary = {}
 var _enemy_anim_seconds := 0.0
+var _operator_anim_seconds := 0.0
 var _enemy_damage_feedback: RefCounted = ENEMY_DAMAGE_FEEDBACK_SCRIPT.new()
 var _attack_pose_left: Dictionary = {}
 var _unit_attack_seen: Dictionary = {}
@@ -164,18 +148,25 @@ func _ready() -> void:
 	_stage_theme = theme_result["theme"] as Resource
 	var viewport_size := get_viewport_rect().size
 	var portrait_mode := viewport_size.y > viewport_size.x
-	var stage := source_stage.copy_for_viewport(viewport_size)
+	var stage := source_stage.copy_for_viewport(viewport_size).duplicate(true) as StageDef
 	if portrait_mode and _stage_theme != null:
 		_stage_theme = (_stage_theme as StageArtTheme).clockwise_rotated_copy(
 			source_stage.grid_size()
 		)
-	var config := load("res://data/config/game.tres") as GameConfig
-	var defs := _load_enemy_defs(stage)
+	var config := (load("res://data/config/game.tres") as GameConfig).duplicate(true) as GameConfig
+	TweakControls.apply_game_config(config)
+	TweakControls.apply_stage(stage)
+	var source_enemy_defs := _load_enemy_defs(stage)
+	_base_enemy_defs = TweakControls.duplicate_definitions(source_enemy_defs)
+	var defs := TweakControls.duplicate_definitions(source_enemy_defs)
+	TweakControls.apply_enemy_definitions(defs, _base_enemy_defs)
 	_enemy_defs = defs
 	# operators load as a full catalog too (squad stays the model's loadout
-	_op_defs = _load_catalog("res://data/operators", "OperatorDef")
+	var source_operator_defs := _load_catalog("res://data/operators", "OperatorDef")
+	_base_op_defs = TweakControls.duplicate_definitions(source_operator_defs)
+	_op_defs = TweakControls.duplicate_definitions(source_operator_defs)
+	TweakControls.apply_operator_definitions(_op_defs, _base_op_defs)
 	_trap_defs = _load_catalog("res://data/traps", "TrapDef")
-	_spell_defs = _load_catalog("res://data/spells", "SpellDef")
 	var launch: Dictionary = Game.battle_launch()
 	var candidate_model: BattleModel = model_factory.call(
 		stage,
@@ -185,8 +176,8 @@ func _ready() -> void:
 		defs,
 		_op_defs,
 		_trap_defs,
-		_spell_defs,
 		launch["trusted_ticket_hashes"],
+		launch["fixed_operator_ids"],
 	)
 	if candidate_model == null:
 		push_error("battle_view: model factory failed")
@@ -222,11 +213,6 @@ func _ready() -> void:
 	_deploy_bar.z_index = UI_OVERLAY_Z
 	add_child(_deploy_bar)
 	_deploy_bar.setup(candidate_model, self, _op_defs, bar_traps)
-	_spell_bar = SpellBar.new()
-	_spell_bar.name = "SpellBar"
-	_spell_bar.z_index = UI_OVERLAY_Z
-	add_child(_spell_bar)
-	_spell_bar.setup(candidate_model, self, launch["spell_ids"])
 	_controls = BattleControls.new()
 	_controls.name = "BattleControls"
 	_controls.z_index = UI_OVERLAY_Z
@@ -237,14 +223,11 @@ func _ready() -> void:
 	add_child(_map_navigation_overlay)
 	_map_navigation_overlay.setup()
 	model = candidate_model
-	_build_battle_dialogue(stage.id)
 	var initial_music_state := &"boss" if _stage.music_variant_id == &"boss" else &"low"
 	_music_director.configure(Music.minimum_state_hold_seconds(_stage.music_profile_id))
 	_music_director.reset(initial_music_state, 0.0)
 	_music_last_leaked_count = model.leaked
 	_start_stage_tutorial()
-	if _battle_dialogue != null and _tutorial == null:
-		_battle_dialogue.show_mission_start.call_deferred()
 	_relayout()
 	_refresh_map_navigation_overlay()
 	# the view is the ONE resize owner: it recomputes the grid scale first,
@@ -252,6 +235,8 @@ func _ready() -> void:
 	get_viewport().size_changed.connect(_relayout)
 	if not I18n.locale_changed.is_connected(_on_locale_changed):
 		I18n.locale_changed.connect(_on_locale_changed)
+	if not TweakControls.value_changed.is_connected(_on_tweak_value_changed):
+		TweakControls.value_changed.connect(_on_tweak_value_changed)
 	startup_succeeded = true
 	if _is_act2_stage():
 		_play_act2_entry_transition.call_deferred()
@@ -263,41 +248,6 @@ func _start_stage_tutorial() -> void:
 		_tutorial.name = "FirstStandTutorial"
 		_connect_tutorial()
 		_tutorial.call("setup", model, self, _deploy_bar)
-	elif _should_show_slow_field_tutorial():
-		_tutorial = SLOW_FIELD_TUTORIAL_SCRIPT.new()
-		_tutorial.name = "SlowFieldTutorial"
-		_connect_tutorial()
-		_tutorial.call("setup", model, self, _spell_bar)
-
-
-func _build_battle_dialogue(stage_id: StringName) -> void:
-	var record := (STAGE_NARRATIVE_CATALOG as StageNarrativeCatalogType).get_record(stage_id)
-	if record == null:
-		return
-	_battle_dialogue = BATTLE_DIALOGUE_PRESENTER_SCRIPT.new() as BattleDialoguePresenter
-	add_child(_battle_dialogue)
-	var controls_rect := _controls.command_deck_rect() if _controls != null else Rect2()
-	var deployment_rect := _deploy_bar.command_deck_rect() if _deploy_bar != null else Rect2()
-	_battle_dialogue.setup(record, get_viewport_rect().size, controls_rect, deployment_rect)
-	_battle_dialogue.layout_changed.connect(_resolve_hud_overlay_collisions)
-
-
-func _resolve_hud_overlay_collisions() -> void:
-	if _map_navigation_overlay != null:
-		_map_navigation_overlay.set_temporarily_suppressed(
-			_battle_dialogue != null and _battle_dialogue.visible
-		)
-	if _spell_bar == null:
-		return
-	_spell_bar.relayout()
-	var blocked_rects: Array[Rect2] = []
-	if _controls != null:
-		blocked_rects.append(_controls.command_deck_rect())
-	if _deploy_bar != null:
-		blocked_rects.append(_deploy_bar.command_deck_rect())
-	if _battle_dialogue != null and _battle_dialogue.visible:
-		blocked_rects.append(_battle_dialogue.get_global_rect())
-	_spell_bar.avoid_rects(blocked_rects)
 
 
 func _connect_tutorial() -> void:
@@ -309,21 +259,12 @@ func _connect_tutorial() -> void:
 func _should_show_first_stand_tutorial() -> bool:
 	# Mission 1 is the guided mission on every playthrough, including replays.
 	# Campaign completion history must never suppress its field tutorial.
-	return _stage != null and _stage.id == &"s1" and Game.campaign_active
-
-
-func _should_show_slow_field_tutorial() -> bool:
-	if (
-		_stage == null
-		or _stage.id != &"s7"
-		or not Game.campaign_active
-		or model == null
-		or not model.spell_book.has_spell(&"slow_field")
-	):
-		return false
-	var projection: Dictionary = Game.campaign_projection()
-	var stars := projection.get("stage_stars", {}) as Dictionary
-	return not stars.has(&"s7") and not stars.has("s7")
+	return (
+		_stage != null
+		and _stage.id == &"s1"
+		and Game.campaign_active
+		and bool(TweakControls.value(&"ui.tutorial_hints_enabled", true))
+	)
 
 
 func _on_tutorial_hold_changed(held: bool) -> void:
@@ -337,8 +278,6 @@ func _on_tutorial_hold_changed(held: bool) -> void:
 func _on_tutorial_finished(_skipped: bool) -> void:
 	_tutorial = null
 	_refresh_battle_interaction_gates()
-	if _battle_dialogue != null:
-		_battle_dialogue.show_mission_start.call_deferred()
 
 
 func set_battle_confirmation_active(active: bool) -> void:
@@ -350,8 +289,6 @@ func set_battle_confirmation_active(active: bool) -> void:
 			_apply_map_transform()
 		if _deploy_bar != null:
 			_deploy_bar.cancel_transient_intent()
-		if _spell_bar != null:
-			_spell_bar.stop_targeting()
 	_refresh_battle_interaction_gates()
 	if not active and model != null and model.result != BattleModel.Result.RUNNING:
 		_focus_terminal_continue()
@@ -374,12 +311,10 @@ func _refresh_battle_interaction_gates() -> void:
 	if _deploy_bar != null:
 		# FirstStandTutorial owns its step-specific operator gate. The battle-level
 		# confirmation gate composes independently so closing it cannot overwrite
-		# ROUTE/BLOCK or DEPLOY/FACING tutorial intent.
+		# ROUTE/BLOCK or DEPLOY tutorial intent.
 		_deploy_bar.set_interaction_enabled(
 			not _battle_confirmation_active and not transition_blocked and running
 		)
-	if _spell_bar != null:
-		_spell_bar.set_interaction_enabled(not _battle_confirmation_active and not transition_blocked and running)
 	_refresh_map_navigation_overlay()
 
 
@@ -464,7 +399,6 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _map_navigation_blocked() -> bool:
 	var deploy_cursor := find_child("CursorRect", true, false) as CanvasItem
-	var spell_cursor := find_child("SpellCursor", true, false) as CanvasItem
 	var deploy_bar := find_child("DeployBar", true, false) as DeployBar
 	return (
 		_battle_confirmation_active
@@ -473,7 +407,6 @@ func _map_navigation_blocked() -> bool:
 		or (model != null and model.result != BattleModel.Result.RUNNING)
 		or _tutorial_holding_battle()
 		or (deploy_cursor != null and deploy_cursor.visible)
-		or (spell_cursor != null and spell_cursor.visible)
 		or (deploy_bar != null and deploy_bar.is_mend_targeting())
 	)
 
@@ -493,11 +426,15 @@ func _physics_process(delta: float) -> void:
 		_hit_stop_frames -= 1
 		_project()
 		return
-	_tick_accum += delta * model.config.ticks_per_second * ticks_per_frame_scale
+	_tick_accum += (
+		delta
+		* model.config.ticks_per_second
+		* ticks_per_frame_scale
+		* float(TweakControls.value(&"gameplay.simulation_rate", 1.0))
+	)
 	while _tick_accum >= 1.0:
 		_tick_accum -= 1.0
 		model.step()
-		_push_spell_sfx()
 	_project()
 
 
@@ -520,7 +457,7 @@ func _process(delta: float) -> void:
 			_stage.music_variant_id,
 			_music_elapsed_seconds,
 			_music_elapsed_seconds < _music_recent_danger_until_seconds,
-		)
+		) if bool(TweakControls.value(&"audio.dynamic_music_enabled", true)) else &""
 		if (
 			not requested_music_state.is_empty()
 			and Music.request_battle_state(
@@ -529,7 +466,8 @@ func _process(delta: float) -> void:
 			)
 		):
 			_music_director.accept_state(requested_music_state, _music_elapsed_seconds)
-	_enemy_anim_seconds += delta
+	_enemy_anim_seconds += delta * float(TweakControls.value(&"enemies.animation_speed", 1.0))
+	_operator_anim_seconds += delta * float(TweakControls.value(&"player.animation_speed", 1.0))
 	_enemy_damage_feedback.process(delta, model, _enemy_rects, cfg)
 	_detect_deploys()
 	_detect_kills()
@@ -537,11 +475,6 @@ func _process(delta: float) -> void:
 	_detect_wave()
 	_detect_result_stamp()
 	_detect_trap_juice()
-	_detect_charms()
-	if _beat_frames_left > 0:
-		_beat_frames_left -= 1
-		if _beat_frames_left == 0:
-			juice_time_pop(&"charm_beat")
 	if _portrait_flash_frames > 0:
 		_portrait_flash_frames -= 1
 		if _portrait_flash_frames == 0 and _portrait_flash != null:
@@ -597,6 +530,8 @@ func _apply_time_scale() -> void:
 
 func _exit_tree() -> void:
 	ActionHoverFeedbackType.reset(_continue_btn)
+	if TweakControls.value_changed.is_connected(_on_tweak_value_changed):
+		TweakControls.value_changed.disconnect(_on_tweak_value_changed)
 	Engine.time_scale = 1.0
 
 
@@ -679,47 +614,28 @@ func _detect_leaks() -> void:
 	_juice.vignette()
 	if _hud != null:
 		_juice.knock(_hud)
-	_juice.shake("leak", cfg.leak_shake_amplitude_px, cfg.leak_shake_frames)
+	_juice.shake(
+		"leak",
+		cfg.leak_shake_amplitude_px
+			* float(TweakControls.value(&"environment.screen_shake_multiplier", 1.0)),
+		cfg.leak_shake_frames,
+	)
 	if cfg.leak_hit_stop_frames > 0:
 		_hit_stop_frames = cfg.leak_hit_stop_frames
 
 
-## Wave banner keys off the same boundary used by Charm's once-per-wave rule.
 func _detect_wave() -> void:
-	var wave := model.spell_book.wave_index_of(model.tick)
+	var wave := model.stage.wave_index_at(model.tick)
 	if wave <= _banner_seen_wave:
 		return
 	_banner_seen_wave = wave
 	if _stage.is_high_threat_wave(wave):
-		if _battle_dialogue != null:
-			_battle_dialogue.dismiss()
 		_present_high_threat_wave(wave)
-		_queue_high_threat_dialogue(wave + 1)
 	else:
 		_juice.banner(_format_copy(
 			&"ui.battle.wave", "Wave {wave}", {&"wave": wave + 1},
 		))
-		if _battle_dialogue != null:
-			_battle_dialogue.show_mid_wave(wave + 1)
 	Sfx.play("wave")
-
-
-func _queue_high_threat_dialogue(wave_number: int) -> void:
-	_pending_high_threat_dialogue_wave = wave_number
-	var delay := float(maxi(cfg.high_threat_warning_frames, 1)) / 60.0
-	get_tree().create_timer(delay).timeout.connect(
-		func() -> void:
-			if (
-				_pending_high_threat_dialogue_wave != wave_number
-				or _battle_dialogue == null
-				or model == null
-				or model.result != BattleModel.Result.RUNNING
-			):
-				return
-			_pending_high_threat_dialogue_wave = -1
-			_battle_dialogue.show_mid_wave(wave_number),
-		CONNECT_ONE_SHOT,
-	)
 
 
 func _present_high_threat_wave(wave: int) -> void:
@@ -756,8 +672,6 @@ func _detect_result_stamp() -> void:
 		return
 	if _controls != null:
 		_controls.notify_battle_terminal()
-	if _battle_dialogue != null:
-		_battle_dialogue.dismiss()
 	_refresh_battle_interaction_gates()
 	_stamp_shown = true
 	if model.result == BattleModel.Result.CLEAR:
@@ -1030,7 +944,7 @@ func _shimmer_tar(t: TrapState) -> void:
 		return
 	var occupied := false
 	for e: EnemyState in model.enemies:
-		if not e.alive or e.aerial or e.faction != EnemyState.Faction.ENEMY:
+		if not e.alive or e.aerial:
 			continue
 		if Pathing.cell_of(model.path_for(e.path_idx), e.progress_units) == t.cell:
 			occupied = true
@@ -1039,22 +953,6 @@ func _shimmer_tar(t: TrapState) -> void:
 		rect.modulate = Color(1, 1, 1, 0.55) if _juice.shimmer_on() else Color.WHITE
 	else:
 		rect.modulate = Color.WHITE
-
-
-## Charm swirl and ally-blue art both key off the authoritative faction flip.
-func _detect_charms() -> void:
-	for e: EnemyState in model.enemies:
-		if e.faction != EnemyState.Faction.CHARMED or _charm_seen.has(e.id):
-			continue
-		_charm_seen[e.id] = true
-		var pos := Pathing.position_of(model.path_for(e.path_idx), e.progress_units)
-		_juice.swirl(IsoProjection.project(pos + Vector2.ONE * 0.5))
-		juice_time_push(&"charm_beat", cfg.charm_beat_time_scale)
-		_beat_frames_left = cfg.charm_beat_frames
-		_juice.shake("charm_beat", cfg.charm_shake_amplitude_px, cfg.charm_shake_frames)
-		if cfg.charm_hit_stop_frames > 0:
-			_hit_stop_frames = cfg.charm_hit_stop_frames
-
 
 func _load_enemy_defs(stage: StageDef) -> Dictionary:
 	var defs: Dictionary = {}
@@ -1106,11 +1004,13 @@ func _build_grid(stage: StageDef) -> bool:
 
 
 func _apply_map_transform() -> void:
+	_map_nav.pan_sensitivity = float(TweakControls.value(&"environment.pan_sensitivity", 1.0))
 	_grid_scale = _map_nav.scale
 	_grid_root.scale = Vector2.ONE * _grid_scale
 	_grid_root.position = _map_nav.root_position()
 	if _juice != null:
 		_juice.refresh_base()
+	_apply_live_tweak_presentation()
 	_refresh_map_navigation_overlay()
 
 
@@ -1151,29 +1051,106 @@ func _relayout() -> void:
 		)
 	if _deploy_bar != null:
 		_deploy_bar.relayout()
-	if _spell_bar != null:
-		_spell_bar.relayout()
-		if _deploy_bar != null:
-			_spell_bar.avoid_rect(_deploy_bar.command_deck_rect())
 	if _controls != null:
 		_controls.relayout()
 	if _map_navigation_overlay != null:
 		_map_navigation_overlay.relayout()
 		_refresh_map_navigation_overlay()
-	if _battle_dialogue != null:
-		var controls_rect := _controls.command_deck_rect() if _controls != null else Rect2()
-		var deployment_rect := _deploy_bar.command_deck_rect() if _deploy_bar != null else Rect2()
-		_battle_dialogue.relayout(viewport, controls_rect, deployment_rect)
-	_resolve_hud_overlay_collisions()
 	if _tutorial != null and is_instance_valid(_tutorial):
 		_tutorial.call("relayout")
 	if _juice != null:
 		_juice.relayout(viewport)
+	_apply_live_tweak_presentation()
 
 
 func _build_hud() -> void:
 	_hud = BATTLE_HUD_PRESENTER.create(HUD_FONT_SIZE, HUD_Z, get_viewport_rect().size)
 	add_child(_hud)
+	_apply_live_tweak_presentation()
+
+
+func _on_tweak_value_changed(identifier: StringName, _value: Variant) -> void:
+	var key := String(identifier)
+	if key.begins_with("player.") and _base_op_defs.size() > 0:
+		TweakControls.apply_operator_definitions(_op_defs, _base_op_defs)
+	elif key.begins_with("enemies.") and _base_enemy_defs.size() > 0:
+		TweakControls.apply_enemy_definitions(_enemy_defs, _base_enemy_defs)
+	_apply_live_tweak_presentation()
+	_refresh_hud_copy()
+
+
+func _apply_live_tweak_presentation() -> void:
+	if _backdrop != null:
+		var backdrop: Color = TweakControls.value(
+			&"environment.backdrop_color", BACKDROP_COLOR,
+		)
+		var brightness := float(TweakControls.value(
+			&"environment.backdrop_brightness", 1.0,
+		))
+		_backdrop.color = Color(
+			backdrop.r * brightness,
+			backdrop.g * brightness,
+			backdrop.b * brightness,
+			backdrop.a,
+		)
+	if _hud != null:
+		var hud_scale := float(TweakControls.value(&"ui.hud_scale", 1.0))
+		_hud.pivot_offset = Vector2(_hud.size.x * 0.5, 0.0)
+		_hud.scale = Vector2.ONE * hud_scale
+		_hud.modulate.a = float(TweakControls.value(&"ui.hud_opacity", 1.0))
+	if _map_navigation_overlay != null:
+		_map_navigation_overlay.modulate.a = float(TweakControls.value(
+			&"ui.map_hint_opacity", 1.0,
+		))
+	if _juice != null:
+		_juice.modulate.a = float(TweakControls.value(&"environment.vfx_opacity", 1.0))
+	if _grid_root == null:
+		return
+	var terrain_tint: Color = TweakControls.value(&"environment.terrain_tint", Color.WHITE)
+	var terrain_opacity := float(TweakControls.value(&"environment.terrain_opacity", 1.0))
+	var terrain := _grid_root.get_node_or_null("ProtoIsometricTerrain") as CanvasItem
+	if terrain != null:
+		terrain.modulate = Color(terrain_tint, terrain_opacity)
+	var landmark_scale := float(TweakControls.value(&"environment.landmark_scale", 1.0))
+	var restoration_opacity := float(TweakControls.value(
+		&"environment.restoration_opacity", 0.88,
+	))
+	for child: Node in _grid_root.get_children():
+		if child.name.begins_with("SpawnLandmark") or child.name.begins_with("CoreLandmark"):
+			if child is Control:
+				var landmark := child as Control
+				landmark.pivot_offset = Vector2(landmark.size.x * 0.5, landmark.size.y)
+				landmark.scale = Vector2.ONE * landmark_scale
+				landmark.self_modulate = Color(terrain_tint, terrain_opacity)
+		elif child.name.begins_with("RestorationLattice") and child is CanvasItem:
+			(child as CanvasItem).self_modulate = Color(terrain_tint, terrain_opacity)
+			(child as CanvasItem).modulate.a = restoration_opacity
+	for rect: ColorRect in _enemy_rects.values():
+		_apply_actor_visual(rect, false)
+	for unit_node: Node2D in _unit_nodes.values():
+		var body := unit_node.get_node_or_null("Body") as ColorRect
+		if body != null:
+			_apply_actor_visual(body, true)
+
+
+func _apply_actor_visual(body: ColorRect, player: bool) -> void:
+	if body == null:
+		return
+	var prefix := "player" if player else "enemies"
+	var visual_scale := float(TweakControls.value(
+		StringName("%s.visual_scale" % prefix), 1.0,
+	))
+	var tint: Color = TweakControls.value(
+		StringName("%s.visual_tint" % prefix), Color.WHITE,
+	)
+	body.pivot_offset = Vector2(body.size.x * 0.5, body.size.y)
+	body.scale = Vector2.ONE * visual_scale
+	body.self_modulate = tint
+	var shadow := body.get_node_or_null("Shadow") as CanvasItem
+	if shadow != null:
+		shadow.self_modulate.a = float(TweakControls.value(
+			&"environment.shadow_opacity", 1.0,
+		))
 
 
 func _project() -> void:
@@ -1211,7 +1188,7 @@ func _project() -> void:
 					_enemy_defs
 				)
 			_update_hp_bar(rect, rect.size.x, e.hp, e.hp_max)
-	_project_slow_fields()
+			_apply_actor_visual(rect, false)
 	_project_traps()
 	_project_units()
 	_project_tracers()
@@ -1223,6 +1200,8 @@ func _refresh_hud_copy() -> void:
 		return
 	var s := model.snapshot()
 	_hud.text = BATTLE_HUD_PRESENTER.text_for(s, get_viewport_rect().size)
+	if TweakControls.has_gameplay_tweaks():
+		_hud.text += "  [TWEAKED]"
 	if int(s["result"]) == BattleModel.Result.CLEAR:
 		_hud.text += "  %d*" % int(s["stars"])
 
@@ -1301,80 +1280,6 @@ func _make_trap_rect(t: TrapState) -> ColorRect:
 	return rect
 
 
-## Active Slow Field geometry is a read-only projection of model records. The
-## generated 96×48 art is authored for radius 1 (3×3 cells) at the pinned 2×
-## sprite scale; other radii scale proportionally without changing rules.
-func _project_slow_fields() -> void:
-	var live := _sync_slow_field_audio_ids()
-	for field: SlowFieldState in model.slow_fields:
-		if not _slow_field_rects.has(field.id):
-			_slow_field_rects[field.id] = _make_slow_field_rect(field)
-	for field_id: int in _slow_field_rects.keys():
-		if not live.has(field_id):
-			(_slow_field_rects[field_id] as ColorRect).queue_free()
-			_slow_field_rects.erase(field_id)
-
-
-## Presentation-only lifecycle edge. Cast audio follows the SpellBook ledger in
-## _push_spell_sfx(); expiry follows disappearance of a previously observed
-## authoritative field ID. Neither path mutates battle state or hashing.
-func _sync_slow_field_audio_ids() -> Dictionary:
-	var live: Dictionary = {}
-	if model == null:
-		_slow_field_audio_ids.clear()
-		return live
-	for field: SlowFieldState in model.slow_fields:
-		live[field.id] = true
-	for field_id: int in _slow_field_audio_ids.keys():
-		if not live.has(field_id):
-			Sfx.play("slow_field_expire")
-	_slow_field_audio_ids = live
-	return live
-
-
-func _make_slow_field_rect(field: SlowFieldState) -> ColorRect:
-	var rect := ColorRect.new()
-	rect.name = "SlowField%d" % field.id
-	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	rect.color = Color(0, 0, 0, 0)
-	var span_scale := float(field.radius * 2 + 1) / 3.0
-	var native_size := Art.size(&"vfx_slow_field")
-	if native_size == Vector2i.ZERO:
-		native_size = Vector2i(96, 48)
-	rect.size = Vector2(native_size) * SPRITE_SCALE * span_scale
-	rect.position = IsoProjection.face_center(field.center) - rect.size * 0.5
-	rect.pivot_offset = rect.size * 0.5
-	rect.modulate = Color(1.0, 1.0, 1.0, SLOW_FIELD_AURA_ALPHA)
-	var tex := Art.texture(&"vfx_slow_field")
-	if tex != null:
-		var sprite := TextureRect.new()
-		sprite.name = "Aura"
-		sprite.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		sprite.texture = tex
-		sprite.stretch_mode = TextureRect.STRETCH_SCALE
-		sprite.size = rect.size
-		rect.add_child(sprite)
-	else:
-		var fallback := Polygon2D.new()
-		fallback.color = Color(0.36, 0.91, 0.95, 0.8)
-		fallback.polygon = PackedVector2Array([
-			Vector2(rect.size.x * 0.5, 0.0),
-			Vector2(rect.size.x, rect.size.y * 0.5),
-			Vector2(rect.size.x * 0.5, rect.size.y),
-			Vector2(0.0, rect.size.y * 0.5),
-		])
-		rect.add_child(fallback)
-	rect.z_index = IsoProjection.tile_z(field.center) + 1
-	_grid_root.add_child(rect)
-	var rotation_tween := rect.create_tween().set_loops()
-	rotation_tween.tween_property(
-		rect,
-		"rotation",
-		TAU,
-		SLOW_FIELD_ROTATION_SECONDS,
-	).from(0.0)
-	return rect
-
 
 ## Ranged attacks leave a short-lived unit-to-target tracer.
 func _project_tracers() -> void:
@@ -1421,6 +1326,7 @@ func _project_units() -> void:
 			var body := (_unit_nodes[u.id] as Node2D).get_node("Body") as ColorRect
 			_refresh_unit_sprite(u, body)
 			_update_hp_bar(body, body.size.x, u.hp, u.hp_max)
+			_apply_actor_visual(body, true)
 			_skill_ready_feedback.update(body, u, SP_BAR_FILL, SP_FULL_FLASH)
 		_detect_skill_trigger(u)
 
@@ -1435,11 +1341,12 @@ func _refresh_unit_sprite(u: UnitState, body: ColorRect) -> void:
 	var sprite := body.get_node_or_null("Sprite") as TextureRect
 	if sprite == null:
 		return
+	_refresh_unit_facing_chevron(u, body)
 	var visual_template_id := _operator_visual_template_id(u)
 	var animation := OPERATOR_VISUAL_CATALOG_SCRIPT.get_animation(visual_template_id)
 	var animated := (
 		animation != null
-		and OPERATOR_ANIMATOR_SCRIPT.apply(u, model.tick, _enemy_anim_seconds, sprite, animation)
+		and OPERATOR_ANIMATOR_SCRIPT.apply(u, model.tick, _operator_anim_seconds, sprite, animation)
 	)
 	if animated:
 		if not bool(body.get_meta(&"operator_animation", false)):
@@ -1448,6 +1355,7 @@ func _refresh_unit_sprite(u: UnitState, body: ColorRect) -> void:
 	var def: OperatorDef = _op_defs.get(u.op_id)
 	if def == null:
 		return
+	sprite.flip_h = u.facing == UnitState.Facing.LEFT
 	if u.last_attack_tick >= 0 and u.last_attack_tick != int(_unit_attack_seen.get(u.id, -1)):
 		_unit_attack_seen[u.id] = u.last_attack_tick
 		_attack_pose_left[u.id] = ATTACK_POSE_FRAMES
@@ -1461,6 +1369,24 @@ func _refresh_unit_sprite(u: UnitState, body: ColorRect) -> void:
 	var tex := Art.texture(art_id, frame)
 	if tex != null and sprite.texture != tex:
 		sprite.texture = tex
+
+
+func _refresh_unit_facing_chevron(u: UnitState, body: ColorRect) -> void:
+	var chevron := body.get_parent().get_node_or_null("FacingChevron") as Polygon2D
+	if chevron == null:
+		return
+	var dir := _operator_facing_screen_direction(u.facing)
+	chevron.position = dir * (maxf(UNIT_PX, body.size.x) * 0.5 + 6.0)
+	chevron.rotation = dir.angle()
+
+
+func _operator_facing_screen_direction(facing: int) -> Vector2:
+	var grid_direction := (
+		Vector2.UP
+		if OPERATOR_ANIMATOR_SCRIPT.direction_for_facing(facing) == &"ne"
+		else Vector2.LEFT
+	)
+	return IsoProjection.project(grid_direction).normalized()
 
 
 func _activate_unit_animation_body(
@@ -1527,6 +1453,13 @@ func _add_hp_bar(
 
 func _update_hp_bar(body: ColorRect, width: float, hp: int, hp_max: int) -> void:
 	BATTLE_HEALTH_BAR_SCRIPT.update(body, width, hp, hp_max)
+	var bar := body.get_node_or_null("HpBarBg") as ColorRect
+	if bar != null:
+		bar.pivot_offset = bar.size * 0.5
+		bar.scale = Vector2(
+			float(TweakControls.value(&"ui.health_bar_width_scale", 1.0)),
+			float(TweakControls.value(&"ui.health_bar_height_scale", 1.0)),
+		)
 
 
 func _add_sp_bar(body: ColorRect) -> void:
@@ -1548,7 +1481,7 @@ func _add_sp_bar(body: ColorRect) -> void:
 func _make_unit_node(u: UnitState) -> Node2D:
 	var node := Node2D.new()
 	node.position = IsoProjection.face_center(u.cell, _is_lifted_cell(u.cell))
-	node.z_index = IsoProjection.entity_z(Vector2(u.cell) + Vector2.ONE * 0.5)
+	node.z_index = IsoProjection.operator_z(Vector2(u.cell) + Vector2.ONE * 0.5)
 	var rect := ColorRect.new()
 	rect.name = "Body"
 	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -1599,19 +1532,9 @@ func _make_unit_node(u: UnitState) -> Node2D:
 	chevron.name = "FacingChevron"
 	chevron.color = CHEVRON_COLOR
 	chevron.polygon = PackedVector2Array([Vector2(-5, -7), Vector2(-5, 7), Vector2(7, 0)])
-	# grid-cardinal facing projected into iso screen space: the arrow points
-	var dir := IsoProjection.project(Vector2.RIGHT.rotated(u.facing * PI * 0.5)).normalized()
+	var dir := _operator_facing_screen_direction(u.facing)
 	chevron.position = dir * (maxf(UNIT_PX, rect.size.x) * 0.5 + 6.0)
 	chevron.rotation = dir.angle()
 	node.add_child(chevron)
 	_grid_root.add_child(node)
 	return node
-
-
-func _push_spell_sfx() -> void:
-	for spell_id: StringName in model.spell_book.ids:
-		var casts := model.spell_book.casts(spell_id)
-		var delta := casts - int(_spell_casts_last.get(spell_id, 0))
-		if delta > 0:
-			_spell_casts_last[spell_id] = casts
-			Sfx.play(String(spell_id))

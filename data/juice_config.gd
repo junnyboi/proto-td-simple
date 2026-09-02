@@ -47,15 +47,7 @@ extends Resource
 @export var trap_sprung_frames: int = 8
 @export var tar_shimmer_period_frames: int = 16
 
-@export var charm_swirl_frames: int = 16
-@export var charm_beat_time_scale: float = 0.5
-@export var charm_beat_frames: int = 12
-@export var charm_shake_amplitude_px: float = 0.0
-@export var charm_shake_frames: int = 0
-@export var charm_hit_stop_frames: int = 0
-
 @export var tracer_frames: int = 4
 
-# shake/hit-stop whitelist (parent plan: reserved for boss hits, leaks and
-# the charm beat ONLY); boss_hit stays unwired until a boss-attack model
-@export var shake_events: PackedStringArray = ["leak", "charm_beat", "boss_hit"]
+# Shake/hit-stop whitelist; boss_hit stays unwired until a boss-attack model.
+@export var shake_events: PackedStringArray = ["leak", "boss_hit"]

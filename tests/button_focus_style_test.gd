@@ -3,9 +3,6 @@ extends SceneTree
 const ThemeType := preload("res://scripts/ui/components/aetheria_theme.gd")
 const StagingSkinType := preload("res://scripts/ui/components/staging_skin.gd")
 const LunarisStyleType := preload("res://scripts/ui/components/lunaris_ops_style.gd")
-const SelectedSquadChipType := preload("res://scripts/ui/components/selected_squad_chip.gd")
-const PromotionPathCardType := preload("res://scripts/ui/components/promotion_path_card.gd")
-const StagingCommandTileType := preload("res://scripts/ui/components/staging_command_tile.gd")
 
 var _failures: Array[String] = []
 
@@ -34,24 +31,6 @@ func _run() -> void:
 	_check_focus(compact.get_theme_stylebox(&"focus"), "compact Lunaris button")
 	compact.free()
 
-	var chip := SelectedSquadChipType.new()
-	root.add_child(chip)
-	await process_frame
-	_check_focus(chip.get_theme_stylebox(&"focus"), "selected squad chip")
-	chip.queue_free()
-
-	var promotion := PromotionPathCardType.new()
-	root.add_child(promotion)
-	await process_frame
-	_check_focus(promotion.get_theme_stylebox(&"focus"), "promotion path card")
-	promotion.queue_free()
-
-	var tile := StagingCommandTileType.new()
-	root.add_child(tile)
-	await process_frame
-	_check_focus(tile.get_theme_stylebox(&"focus"), "Command Center tile")
-	tile.queue_free()
-	await process_frame
 	_finish()
 
 

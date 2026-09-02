@@ -1,20 +1,12 @@
 class_name StagingSkin
 extends RefCounted
 
-const StagingGlyphType := preload("res://scripts/ui/components/staging_glyph.gd")
-
 const CINZEL := preload("res://assets/fonts/Cinzel-Variable.ttf")
-const CJK_FONT := preload("res://assets/fonts/ProtosSansSC.otf")
+const CJK_FONT := preload("res://assets/fonts/GameTemplateTDSansSC.otf")
 
 const LUNARIS_SEAL := preload("res://assets/ui/staging/icons/lunaris_seal.png")
 const MISSION_ICON := preload("res://assets/ui/staging/icons/mission.png")
-const BARRACKS_ICON := preload("res://assets/ui/staging/icons/barracks.png")
-const RECRUIT_ICON := preload("res://assets/ui/staging/icons/recruit.png")
-const ARMORY_ICON := preload("res://assets/ui/staging/icons/armory.png")
-const MEMORIAL_ICON := preload("res://assets/ui/staging/icons/memorial.png")
-const TRAINING_ICON := preload("res://assets/ui/staging/icons/training.png")
 const EXIT_ICON := preload("res://assets/ui/staging/icons/exit.png")
-const MESSAGE_ICON := preload("res://assets/ui/staging/icons/message.png")
 const SETTINGS_ICON := preload("res://assets/ui/staging/icons/settings.png")
 const STATUS_DIAMOND := preload("res://assets/ui/staging/icons/status_diamond.png")
 const AETHER_ICON := preload("res://assets/ui/staging/icons/resource_aether.png")
@@ -42,8 +34,8 @@ const MUTED := Color("aebfd0")
 const INK := Color("07111c")
 const FOCUS_TINT_ALPHA := 0.12
 
-static var _display_font: FontVariation = null
-static var _body_font: FontVariation = null
+static var _display_font: FontVariation
+static var _body_font: FontVariation
 
 
 static func body_font() -> FontVariation:
@@ -52,7 +44,7 @@ static func body_font() -> FontVariation:
 	_body_font = FontVariation.new()
 	_body_font.base_font = CJK_FONT
 	_body_font.fallbacks = [ThemeDB.fallback_font]
-	_body_font.resource_name = "Protos bundled Chinese body"
+	_body_font.resource_name = "Game template - TD bundled Chinese body"
 	return _body_font
 
 
@@ -63,7 +55,7 @@ static func display_font() -> FontVariation:
 	_display_font.base_font = CINZEL
 	_display_font.fallbacks = [body_font()]
 	_display_font.variation_opentype = {&"wght": 520}
-	_display_font.resource_name = "Cinzel with Protos CJK fallback"
+	_display_font.resource_name = "Cinzel with Game template - TD CJK fallback"
 	return _display_font
 
 
@@ -90,25 +82,6 @@ static func apply_display_type(
 	control.add_theme_font_override(&"font", font)
 	control.add_theme_font_size_override(&"font_size", size)
 	control.add_theme_color_override(&"font_color", color)
-
-
-static func icon_for_glyph(kind: StagingGlyphType.Kind) -> Texture2D:
-	match kind:
-		StagingGlyphType.Kind.CREST:
-			return LUNARIS_SEAL
-		StagingGlyphType.Kind.BARRACKS:
-			return BARRACKS_ICON
-		StagingGlyphType.Kind.RECRUIT:
-			return RECRUIT_ICON
-		StagingGlyphType.Kind.ARMORY:
-			return ARMORY_ICON
-		StagingGlyphType.Kind.MEMORIAL:
-			return MEMORIAL_ICON
-		StagingGlyphType.Kind.TRAINING:
-			return TRAINING_ICON
-		StagingGlyphType.Kind.ARCHIVE:
-			return MISSION_ICON
-	return LUNARIS_SEAL
 
 
 static func command_deck_style(modulate: Color = Color.WHITE) -> StyleBoxTexture:

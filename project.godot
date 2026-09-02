@@ -10,11 +10,11 @@ config_version=5
 
 [application]
 
-config/name="Protos"
+config/name="Game template - TD"
 run/main_scene="res://scenes/loading.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 boot_splash/bg_color=Color(0.027, 0.063, 0.098, 1)
-boot_splash/image="res://assets/loading/command_backdrop.svg"
+boot_splash/image="res://assets/loading/command_backdrop.png"
 config/icon="res://icon.svg"
 
 [audio]
@@ -29,9 +29,10 @@ Music="*res://autoloads/music.gd"
 TextScale="*res://autoloads/text_scale.gd"
 UiFeedback="*res://autoloads/ui_feedback.gd"
 ContentPacks="*res://autoloads/content_pack_loader.gd"
-MissionCinematicPrefetch="*res://autoloads/mission_cinematic_prefetch.gd"
+Leaderboard="*res://autoloads/leaderboard.gd"
 Game="*res://autoloads/game.gd"
 Sfx="*res://autoloads/sfx.gd"
+TweakControls="*res://autoloads/tweak_controls.gd"
 
 [display]
 
@@ -77,6 +78,11 @@ battle_speed_up={
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":16,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":69,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
 ]
 }
+
+[leaderboard]
+
+api_base_url=""
+enable_in_headless=false
 
 [rendering]
 

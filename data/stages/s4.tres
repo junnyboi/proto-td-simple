@@ -58,14 +58,7 @@ waves = Array[Dictionary]([{
 wave_starts = PackedInt32Array(0, 390)
 leak_limit = 3
 squad_size = 5
-recovery_roster = Array[StringName]([&"vanguard_1", &"guard_1", &"defender_1", &"sniper_1", &"caster_1"])
-rewards = Array[Dictionary]([{
-"id": &"sniper_2",
-"kind": &"operator"
-}, {
-"id": &"bolt",
-"kind": &"spell"
-}])
+recovery_roster = Array[StringName]([&"caster_1", &"guard_1", &"sniper_1"])
+rewards = Array[Dictionary]([])
 campaign_index = 4
 requires = Array[StringName]([&"sniper_1"])
-intro_hint = "Interceptors lead each air pair. Use a Sniper for sustained fire while blockers hold the ground route."

@@ -15,7 +15,7 @@ const SOURCE_ENUM := {"starter": 0, "contract": 1, "reward": 2, "recovery": 3}
 const LIFE_ENUM := {"ready": 0, "dead": 1}
 const TERMINAL_ENUM := {"clear": 0, "leak_defeat": 1, "base_defeat": 2, "resign": 3}
 const RESULT_ENUM := {"clear": 0, "defeat": 1}
-const REWARD_ENUM := {"operator": 0, "trap": 1, "spell": 2}
+const REWARD_ENUM := {"operator": 0, "trap": 1}
 
 
 static func of_data(data: Variant, context: Dictionary) -> Dictionary:
@@ -79,7 +79,6 @@ static func _bytes_of_normalized(
 	_append_i64(out, int(value["marks"]))
 	_append_stage_stars(out, value["stage_stars"])
 	_append_strings(out, value["unlocked_traps"])
-	_append_strings(out, value["unlocked_spells"])
 	_append_offers(out, value["offers"])
 	_append_heroes(out, value["heroes"])
 	_append_promotion_receipts(
@@ -418,15 +417,12 @@ static func _derive_fresh_receipt(
 	var rewards := _derive_rewards_and_heroes(before, expected, outcome, draft, context)
 	if not rewards["accepted"]:
 		return rewards
-	var xp_awards := CampaignProgression.nonpremium_xp_awards(
-		CampaignProgression.derive_xp_awards(
+	var xp_awards := CampaignProgression.derive_xp_awards(
 			outcome["heroes"],
 			before["heroes"],
 			CampaignProgression.xp_for_outcome(
 				outcome["result"], outcome["terminal_reason"],
 			),
-		),
-		before["heroes"],
 	)
 	_copy_awarded_hero_rows(expected["heroes"], xp_awards)
 	if not CampaignProgression.apply_xp(expected["heroes"], xp_awards):
@@ -434,9 +430,7 @@ static func _derive_fresh_receipt(
 	var dead := _apply_casualties(expected, outcome, draft)
 	if not dead["accepted"]:
 		return dead
-	var unlocks := _expected_unlocks(before, rewards["authored"])
-	expected["unlocked_traps"] = unlocks["traps"]
-	expected["unlocked_spells"] = unlocks["spells"]
+	expected["unlocked_traps"] = _expected_unlocks(before, rewards["authored"])
 	var before_hash := _of_normalized_core(before)
 	var after_hash := _of_normalized_core(expected)
 	if not before_hash["accepted"] or not after_hash["accepted"]:
@@ -646,15 +640,12 @@ static func _derive_expected_after(
 		return _reject(&"transaction_rewards_mismatch")
 	if resolution["created_hero_ids"] != rewards["created"]:
 		return _reject(&"transaction_created_hero_mismatch")
-	var xp_awards := CampaignProgression.nonpremium_xp_awards(
-		CampaignProgression.derive_xp_awards(
+	var xp_awards := CampaignProgression.derive_xp_awards(
 			outcome["heroes"],
 			before["heroes"],
 			CampaignProgression.xp_for_outcome(
 				outcome["result"], outcome["terminal_reason"],
 			),
-		),
-		before["heroes"],
 	)
 	if resolution["xp_awards"] != xp_awards:
 		return _reject(&"transaction_xp_mismatch")
@@ -666,9 +657,7 @@ static func _derive_expected_after(
 		return dead
 	if resolution["dead_hero_ids"] != dead["value"]:
 		return _reject(&"transaction_casualty_mismatch")
-	var unlocks := _expected_unlocks(before, rewards["authored"])
-	expected["unlocked_traps"] = unlocks["traps"]
-	expected["unlocked_spells"] = unlocks["spells"]
+	expected["unlocked_traps"] = _expected_unlocks(before, rewards["authored"])
 	expected["resolution_anchor"] = {
 		"resolution_index": resolution["resolution_index"],
 		"save_revision_after": expected["save_revision"],
@@ -802,17 +791,13 @@ static func _manifest_matches_outcome(manifest: Array, heroes: Array) -> bool:
 	return true
 
 
-static func _expected_unlocks(before: Dictionary, rewards: Array) -> Dictionary:
+static func _expected_unlocks(before: Dictionary, rewards: Array) -> Array:
 	var traps: Array = before["unlocked_traps"].duplicate()
-	var spells: Array = before["unlocked_spells"].duplicate()
 	for reward: Dictionary in rewards:
 		if reward["kind"] == "trap" and not traps.has(reward["id"]):
 			traps.append(reward["id"])
-		if reward["kind"] == "spell" and not spells.has(reward["id"]):
-			spells.append(reward["id"])
 	traps.sort()
-	spells.sort()
-	return {"traps": traps, "spells": spells}
+	return traps
 
 
 static func _stage_stars(data: Dictionary, stage_id: String) -> int:
@@ -840,7 +825,6 @@ static func _transaction_working_copy(data: Dictionary) -> Dictionary:
 	var working := data.duplicate()
 	working["stage_stars"] = (data["stage_stars"] as Array).duplicate(true)
 	working["unlocked_traps"] = (data["unlocked_traps"] as Array).duplicate()
-	working["unlocked_spells"] = (data["unlocked_spells"] as Array).duplicate()
 	working["offers"] = (data["offers"] as Array).duplicate(true)
 	working["heroes"] = (data["heroes"] as Array).duplicate()
 	return working

@@ -17,7 +17,7 @@ from fontTools.ttLib import TTFont
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG = ROOT / "localization/zh-CN.json"
-TARGET = ROOT / "assets/fonts/ProtosSansSC.otf"
+TARGET = ROOT / "assets/fonts/GameTemplateTDSansSC.otf"
 
 
 def renderable_codepoints() -> set[int]:

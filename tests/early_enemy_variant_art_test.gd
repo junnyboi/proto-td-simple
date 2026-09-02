@@ -32,10 +32,8 @@ func _run() -> void:
 			var sprite := body.get_node_or_null("Sprite") as TextureRect
 			_check(sprite != null and sprite.texture != null, "%s static body must load" % enemy_id)
 			_check(body.get_node_or_null("BlendSprite") == null, "%s must not allocate retired blend-frame state" % enemy_id)
-			enemy.faction = EnemyState.Faction.CHARMED
-			_check(EnemyAnimator.animation_id_for(enemy, model) == asset_id, "%s Charm must retain static identity" % enemy_id)
 			EnemyAnimator.refresh(enemy, model, body, 0.25, {}, {}, enemy_defs)
-			_check(sprite != null and sprite.modulate.b > sprite.modulate.r, "%s Charm must retain supplemental blue tint" % enemy_id)
+			_check(sprite != null and sprite.modulate == Color.WHITE, "%s static identity must keep its authored colors" % enemy_id)
 			body.free()
 	_validate_historical_sources_are_not_core_runtime_dependencies()
 	Art._reset_manifests_for_test()

@@ -8,7 +8,6 @@ const DEFAULT_PATH := "user://view_preferences.cfg"
 const NAVIGATION_SECTION := "navigation"
 const PAN_HINT_KEY := "pan_hint_completed"
 const COMMAND_TUTORIAL_KEY := "command_tutorial_completed"
-const FIELD_TEAM_TUTORIAL_KEY := "field_team_tutorial_completed"
 const POST_MISSION_TUTORIAL_KEY := "post_mission_tutorial_completed"
 const LOCALIZATION_SECTION := "localization"
 const LOCALE_KEY := "locale"
@@ -62,14 +61,6 @@ static func has_seen_command_tutorial(path: String = DEFAULT_PATH) -> bool:
 
 static func mark_command_tutorial_seen(path: String = DEFAULT_PATH) -> bool:
 	return _set_value(NAVIGATION_SECTION, COMMAND_TUTORIAL_KEY, true, path)
-
-
-static func has_seen_field_team_tutorial(path: String = DEFAULT_PATH) -> bool:
-	return has_seen_tutorial(FIELD_TEAM_TUTORIAL_KEY, path)
-
-
-static func mark_field_team_tutorial_seen(path: String = DEFAULT_PATH) -> bool:
-	return mark_tutorial_seen(FIELD_TEAM_TUTORIAL_KEY, path)
 
 
 static func has_seen_post_mission_tutorial(path: String = DEFAULT_PATH) -> bool:
@@ -304,6 +295,5 @@ static func _set_value(section: String, key: String, value: Variant, path: Strin
 static func _tutorial_keys() -> Array[StringName]:
 	return [
 		StringName(COMMAND_TUTORIAL_KEY),
-		StringName(FIELD_TEAM_TUTORIAL_KEY),
 		StringName(POST_MISSION_TUTORIAL_KEY),
 	]

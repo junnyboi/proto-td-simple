@@ -4,8 +4,9 @@ extends RefCounted
 const GeneratedLocalizationSchemaType := preload("res://scripts/ui/components/generated_localization_schema.gd")
 
 const STATIC_FALLBACKS := {
-	&"ui.game_title": "Protos",
-	&"ui.title.full_title": "Protos Defense",
+	&"ui.game_title": "Game template - TD",
+	&"ui.hero.fallback_recruit": "Recruit #{index}",
+	&"ui.title.full_title": "Game template - TD",
 	&"ui.title.synopsis": "Humans discovered anima—the real human soul—and connected its power to PROTOS. The AI became corrupted, built human farms, and used stolen souls to create a robot empire. Command Company Manus to rescue the captives and break the harvesting network.",
 	&"ui.title.start": "Start",
 	&"ui.title.start_retry": "Retry Start",
@@ -31,85 +32,13 @@ const STATIC_FALLBACKS := {
 	&"ui.title.frame_limit": "Frame Limit",
 	&"ui.title.frame_unlimited": "Unlimited",
 	&"ui.title.frame_value": "{value} FPS",
-	&"ui.title.motion_state": "Animated Background  //  {state}",
+	&"ui.title.motion_state": "Reduced Motion  //  {state}",
 	&"ui.title.text_scale": "Text Scale  //  {value}%",
 	&"ui.title.seed": "seed {seed}",
 	&"ui.common.on": "On",
 	&"ui.common.off": "Off",
 	&"ui.common.cancel": "Cancel",
 	&"ui.common.apply": "Apply",
-	&"ui.gacha.back": "RETURN",
-	&"ui.gacha.close_history": "CLOSE",
-	&"ui.gacha.conversion_detail": "PREPARED BODIES {before} → {after}",
-	&"ui.gacha.conversion_duplicate": "ANOTHER BODY + SOUL ANCHOR",
-	&"ui.gacha.conversion_revival": "RECOVERY BODY READY",
-	&"ui.gacha.conversion_title": "SAME SOUL · NEW RECOVERY BODY",
-	&"ui.gacha.eyebrow": "LUNARIS RELIQUARY",
-	&"ui.gacha.title": "Premium Resonance",
-	&"ui.gacha.intro": "Resonance Shards contain no soul. Each pull reconnects one known hero’s unique soul and prepares a compatible recovery body. 5-star base rate: 5% • guaranteed within ten pulls.",
-	&"ui.gacha.guarantee": "5-STAR GUARANTEE",
-	&"ui.gacha.history_action": "HISTORY",
-	&"ui.gacha.history_badge_duplicate": "BODY PREPARED",
-	&"ui.gacha.history_badge_guarantee": "GUARANTEE",
-	&"ui.gacha.history_badge_new": "SOUL RECONNECTED",
-	&"ui.gacha.history_badge_revived": "BODY RESTORED",
-	&"ui.gacha.history_detail": "PREPARED BODIES {before} → {after} • GUARANTEE IN {guarantee}",
-	&"ui.gacha.history_empty": "NO RESONANCE RECORDS",
-	&"ui.gacha.history_empty_detail": "Completed soul-reconnection operations will appear here.",
-	&"ui.gacha.history_pull": "PULL {index}",
-	&"ui.gacha.history_summary": "{count} COMPLETED RESONANCES",
-	&"ui.gacha.history_title": "RESONANCE HISTORY",
-	&"ui.gacha.ready": "The pool is ready.",
-	&"ui.gacha.confirm_title": "CONFIRM RESONANCE",
-	&"ui.gacha.confirm_intro": "Reconnect one known soul and prepare a compatible recovery body through the random premium pool.",
-	&"ui.gacha.resonate": "RESONATE",
-	&"ui.gacha.skip_reveal": "SKIP REVEAL",
-	&"ui.gacha.signal_lock": "SIGNAL LOCK",
-	&"ui.gacha.reveal_title": "RESONANCE",
-	&"ui.gacha.signal_acquired": "SIGNAL ACQUIRED",
-	&"ui.gacha.one_life_ready": "1 RECOVERY BODY READY",
-	&"ui.gacha.guarantee_default": "5-star guaranteed within 10 pulls",
-	&"ui.gacha.campaign_offline": "CAMPAIGN OFFLINE",
-	&"ui.gacha.pull_unavailable": "PULL UNAVAILABLE",
-	&"ui.gacha.campaign_required": "Start or continue a campaign to access premium resonance.",
-	&"ui.currency.resonance_shards_name": "Resonance Shards",
-	&"ui.currency.resonance_shard_tooltip": "Resonance Shard — clean Lunaris crystal with no soul inside.\nUsed to locate one known soul and prepare a compatible recovery body.",
-	&"ui.gacha.marks": "{count}",
-	&"ui.gacha.pull_action": "RESONATE\n{cost}",
-	&"ui.gacha.pull_again": "PULL AGAIN • {cost}",
-	&"ui.gacha.guarantee_in": "5-STAR GUARANTEED IN {count} {unit}",
-	&"ui.gacha.confirm_body": "One known soul • {cost} Resonance Shards\nBalance  {before} → {after} Resonance Shards\n5-star guarantee in {count} {unit}. The soul is unique; success prepares one compatible recovery body.",
-	&"ui.gacha.attempt_pending": "Resolve the active operation before using premium resonance.",
-	&"ui.gacha.marks_needed": "Earn {count} more Resonance Shards for another resonance pull.",
-	&"ui.gacha.rarity": "{rarity}-STAR PREMIUM",
-	&"ui.gacha.rarity_short": "{rarity}-STAR",
-	&"ui.gacha.unacquired": "UNACQUIRED",
-	&"ui.gacha.pull_to_recruit": "Pull to recruit • Fixed elite kit",
-	&"ui.gacha.lives": "{count} {unit}",
-	&"ui.gacha.total_copies": "{count} prepared recovery bodies • One unique soul",
-	&"ui.gacha.locked_lives": "LOCKED • NO RECOVERY BODY",
-	&"ui.gacha.restore_hint": "Reconnect this soul to prepare another recovery body",
-	&"ui.gacha.aligning_short": "ALIGNING…",
-	&"ui.gacha.aligning": "Aligning the reliquary signal…",
-	&"ui.gacha.guarantee_fulfilled": "GUARANTEE FULFILLED",
-	&"ui.gacha.resonance_rarity": "{rarity}-STAR RESONANCE",
-	&"ui.gacha.lives_ready": "{count} {unit} READY",
-	&"ui.gacha.next_guarantee": "Next 5-star guaranteed in {count} {unit}",
-	&"ui.gacha.result_new": "NEW HERO",
-	&"ui.gacha.result_revived": "REVIVED",
-	&"ui.gacha.result_life": "LIFE +1",
-	&"ui.gacha.receipt_new": "{rarity} SIGNAL — {callsign} joins with 1 life. Next 5-star in {guarantee} pulls.",
-	&"ui.gacha.receipt_restored": "{rarity} RESTORED — {callsign} returns with 1 life. Next 5-star in {guarantee} pulls.",
-	&"ui.gacha.receipt_duplicate": "{rarity} DUPLICATE — {callsign} gains +1 life ({lives} total). Next 5-star in {guarantee} pulls.",
-	&"ui.gacha.pull_singular": "pull",
-	&"ui.gacha.pull_plural": "pulls",
-	&"ui.gacha.life_singular": "LIFE",
-	&"ui.gacha.life_plural": "LIVES",
-	&"ui.gacha.error.insufficient_marks": "Not enough Resonance Shards for another resonance pull.",
-	&"ui.gacha.error.attempt_pending": "Resolve the active operation before using the reliquary.",
-	&"ui.gacha.error.life_cap": "This hero has reached the maximum stored-life count.",
-	&"ui.gacha.error.campaign_inactive": "No active campaign is available.",
-	&"ui.gacha.error.unknown": "The resonance failed safely ({code}). Please try again.",
 	&"ui.battle.pause": "PAUSE",
 	&"ui.battle.resume": "RESUME",
 	&"ui.battle.paused": "PAUSED",
@@ -123,8 +52,8 @@ const STATIC_FALLBACKS := {
 	&"ui.battle.state_active": "ACTIVE",
 	&"ui.battle.state_clear": "CLEAR",
 	&"ui.battle.state_defeat": "DEFEAT",
-	&"ui.battle.hud_compact": "CORE {core}   DP {dp}\nELIMS {eliminations}   {state}",
-	&"ui.battle.hud_wide": "CORE  {core}    DP  {dp}    ELIMINATIONS  {eliminations}    {state}",
+	&"ui.battle.hud_compact": "HEALTH {core}   DP {dp}\nELIMS {eliminations}   {state}",
+	&"ui.battle.hud_wide": "HEALTH  {core}    DP  {dp}    ELIMINATIONS  {eliminations}    {state}",
 	&"ui.battle.continue_debrief": "CONTINUE TO DEBRIEF",
 	&"ui.battle.finalizing_debrief": "FINALIZING DEBRIEF…",
 	&"ui.battle.operator_actions": "Operator actions",
@@ -146,20 +75,12 @@ const STATIC_FALLBACKS := {
 	&"ui.battle.skill_state_targeting": "SELECT TARGET",
 	&"ui.battle.skill_targeting_description": "Choose a wounded ally in range for {skill}.",
 	&"ui.battle.skill_targeting_instruction": "Select a wounded ally in range. Right-click or press Escape to cancel.",
-	&"ui.battle.dialogue.mission_start": "MISSION START // LIVE TRANSMISSION",
-	&"ui.battle.dialogue.wave": "WAVE {wave} // LIVE TRANSMISSION",
-	&"ui.spell.cooldown": "CD {seconds}s",
-	&"ui.spell.cooldown_compact": "CD{seconds}",
-	&"ui.spell.field_duration": "FIELD {seconds}s",
-	&"ui.spell.field_duration_compact": "F{seconds}",
-	&"ui.spell.ready": "READY",
-	&"ui.spell.wave": "1 / WAVE",
 	&"ui.tutorial.block.action": "Start battle",
 	&"ui.tutorial.block.body": (
 		"A Recruit blocks 1 ground enemy and loses HP while fighting. "
 		+ "Deploy another when DP refills."
 	),
-	&"ui.tutorial.block.step": "4 / 4  BLOCK",
+	&"ui.tutorial.block.step": "3 / 3  BLOCK",
 	&"ui.tutorial.block.title": "Hold the line",
 	&"ui.tutorial.deploy.body": (
 		"DP pays for units. Drag a Recruit card onto any green path tile; "
@@ -174,7 +95,7 @@ const STATIC_FALLBACKS := {
 	&"ui.tutorial.deploy.invalid": (
 		"That cell cannot hold this Recruit. Use a green path tile."
 	),
-	&"ui.tutorial.deploy.step": "2 / 4  DEPLOY",
+	&"ui.tutorial.deploy.step": "2 / 3  DEPLOY",
 	&"ui.tutorial.deploy.title": "Deploy a Recruit",
 	&"ui.tutorial.dismiss": "Dismiss",
 	&"ui.tutorial.facing.body": (
@@ -193,62 +114,19 @@ const STATIC_FALLBACKS := {
 		"Enemies start from the portal and follow the lit path to your base crystal. "
 		+ "This mission allows 3 leaks, the 4th leak will end the mission."
 	),
-	&"ui.tutorial.route.step": "1 / 4  ROUTE",
+	&"ui.tutorial.route.step": "1 / 3  ROUTE",
 	&"ui.tutorial.route.title": "Read the route",
 	&"ui.tutorial.skip": "Skip tutorial",
-	&"ui.tutorial.slow_field.brief.action": "Select Slow Field",
-	&"ui.tutorial.slow_field.brief.body": (
-		"Slow Field covers a 3×3 ground area, halves ground movement for 8 seconds, "
-		+ "and recharges in 20 seconds. Air units ignore it."
-	),
-	&"ui.tutorial.slow_field.brief.step": "1 / 2  SLOW FIELD",
-	&"ui.tutorial.slow_field.brief.title": "Control the convergence",
-	&"ui.tutorial.slow_field.cancelled": (
-		"Targeting cancelled. Select Slow Field and cast on the shared lane."
-	),
-	&"ui.tutorial.slow_field.invalid": "That cast was rejected. Aim inside the battlefield.",
-	&"ui.tutorial.slow_field.live.body": (
-		"Cyan tracks remaining field duration. Gold tracks the 20-second cooldown. "
-		+ "The spell can be cast again when READY returns."
-	),
-	&"ui.tutorial.slow_field.live.step": "FIELD ACTIVE",
-	&"ui.tutorial.slow_field.live.title": "Watch both timers",
-	&"ui.tutorial.slow_field.target.body": (
-		"Cast on the cyan marker where all three routes converge. Duration and cooldown "
-		+ "timers will remain on the spell card."
-	),
-	&"ui.tutorial.slow_field.target.step": "2 / 2  CAST",
-	&"ui.tutorial.slow_field.target.title": "Cast on the shared lane",
-	&"ui.tutorial.slow_field.unavailable": "Slow Field is not ready yet.",
 	&"ui.map_navigation.hint_title": "DRAG TO PAN",
 	&"ui.map_navigation.hint_body": "Explore the full battlefield on every open axis.",
 	&"ui.onboarding.command.a11y": "Command Center tutorial",
 	&"ui.onboarding.command.skip": "SKIP",
 	&"ui.onboarding.command.mission.step": "1 / 2  MISSION CONTROL",
 	&"ui.onboarding.command.mission.title": "Choose an operation",
-	&"ui.onboarding.command.mission.body": "Mission Control lists every available operation. Select one to prepare its Field Team and begin the mission.",
-	&"ui.onboarding.command.resonance.step": "2 / 2  RESONANCE",
-	&"ui.onboarding.command.resonance.title": "Summon special heroes",
-	&"ui.onboarding.command.resonance.body": "Premium Resonance spends Resonance Shards to summon fixed-kit special heroes. Try your luck whenever your balance allows.",
+	&"ui.onboarding.command.mission.body": "Mission Control lists every available operation. Select one to begin the mission immediately.",
 	&"ui.onboarding.command.next": "NEXT",
 	&"ui.onboarding.command.done": "DONE",
-	&"ui.onboarding.field_team.a11y": "Field Team tutorial",
-	&"ui.onboarding.field_team.squad.step": "1 / 3  BUILD YOUR SQUAD",
-	&"ui.onboarding.field_team.squad.title": "Fill the field team",
-	&"ui.onboarding.field_team.squad.body": "Check the selected counter for this mission's squad limit, then click operator cards to build your field team.",
-	&"ui.onboarding.field_team.hire.step": "2 / 3  REINFORCE",
-	&"ui.onboarding.field_team.hire.title": "Hire more recruits",
-	&"ui.onboarding.field_team.hire.body": "Need another squad member? Hire a persistent Recruit here for 5 Marks.",
-	&"ui.onboarding.field_team.deploy.step": "3 / 3  DEPLOY",
-	&"ui.onboarding.field_team.deploy.title": "Start the mission",
-	&"ui.onboarding.field_team.deploy.body": "When your field team is ready, deploy the squad to start the mission.",
 	&"ui.onboarding.post_mission.a11y": "Post-mission tutorial",
-	&"ui.onboarding.post_mission.training.step": "1 / 2  TRAINING",
-	&"ui.onboarding.post_mission.training.title": "Promote experienced soldiers",
-	&"ui.onboarding.post_mission.training.body": "Soldiers gain XP in missions. When they have enough, use Training to promote them into new specializations.",
-	&"ui.onboarding.post_mission.valhalla.step": "2 / 2  VALHALLA",
-	&"ui.onboarding.post_mission.valhalla.title": "Honor the fallen",
-	&"ui.onboarding.post_mission.valhalla.body": "Death is permanent. Soldiers who have fallen can be remembered and honored in Valhalla.",
 	&"ui.locale.label": "Language",
 	&"ui.locale.en_us": "EN",
 	&"ui.locale.zh_cn": "中文",
@@ -277,46 +155,10 @@ const STATIC_FALLBACKS := {
 	&"ui.staging.mission_control": "Mission Control",
 	&"ui.staging.mission_control_display": "MISSION\nCONTROL",
 	&"ui.staging.mission_control_short": "Control",
-	&"ui.staging.barracks_unavailable": "Barracks — Unavailable",
-	&"ui.staging.barracks_short": "Barracks",
-	&"ui.staging.recruit": "Premium Resonance",
-	&"ui.staging.recruit_unavailable": "Premium Resonance — Unavailable",
-	&"ui.staging.recruit_short": "Resonance",
 	&"ui.staging.resource_aether": "Aether",
 	&"ui.staging.resource_sigils": "Astral Sigils",
 	&"ui.staging.resource_stamina": "Stamina",
-	&"ui.staging.training": "Training",
-	&"ui.staging.training_unavailable": "Training — Unavailable",
-	&"ui.staging.training_short": "Training",
-	&"ui.staging.armory_unavailable": "Armory — Unavailable",
-	&"ui.staging.armory_short": "Armory",
-	&"ui.staging.memorial_unavailable": "Memorial — Unavailable",
-	&"ui.staging.memorial_short": "Memorial",
-	&"ui.staging.vahalla": "Vahalla",
-	&"ui.staging.vahalla_short": "Vahalla",
-	&"ui.staging.archive": "Anima Archive",
-	&"ui.staging.archive_short": "Archive",
-	&"ui.archive.eyebrow": "LUNARIS RELIQUARY · RESTRICTED HISTORY",
-	&"ui.archive.title": "Anima Archive",
-	&"ui.archive.intro": "Recovered records track the discovery of anima, PROTOS corruption, human farms, and the robot empire. Clear operations to unlock every record.",
-	&"ui.archive.back": "Return to Company Command",
-	&"ui.archive.records": "{unlocked} / {total} RECORDS DECRYPTED",
-	&"ui.archive.locked": "ENCRYPTED RECORD",
-	&"ui.archive.unlock_requirement": "CLEAR OPERATION {index} TO DECRYPT",
-	&"ui.archive.audio.title": "INTERACTIVE AUDIO LOG",
-	&"ui.archive.audio.ready": "VOICE RECORD READY",
-	&"ui.archive.audio.playing": "ARCHIVE CASTER // NARRATING",
-	&"ui.archive.audio.paused": "NARRATION PAUSED",
-	&"ui.archive.audio.complete": "LOG COMPLETE",
-	&"ui.archive.audio.unavailable": "VOICE RECORD UNAVAILABLE",
-	&"ui.archive.audio.play": "Play audio log",
-	&"ui.archive.audio.pause": "Pause narration",
-	&"ui.archive.audio.restart": "Restart",
-	&"ui.archive.audio.seek": "Audio log position",
-	&"ui.archive.audio.time": "{current} / {total}",
 	&"ui.roster.tab.active": "Active",
-	&"ui.roster.tab.fallen": "Fallen",
-	&"ui.roster.tab.promotion_ready": "Promotion Ready",
 	&"ui.roster.filter.all": "All",
 	&"ui.roster.filter.all_factions": "All factions",
 	&"ui.roster.empty": "No soldiers match the selected roster filters.",
@@ -331,39 +173,9 @@ const STATIC_FALLBACKS := {
 	&"ui.rename.edit_short": "Edit",
 	&"ui.rename.no_title": "NO TITLE ASSIGNED",
 	&"ui.rename.committing": "RENAMING…",
-	&"ui.vahalla.back": "← Company Command",
-	&"ui.vahalla.eyebrow": "LUNARIS RELIQUARY • HALL OF THE FALLEN",
-	&"ui.vahalla.title": "Vahalla",
-	&"ui.vahalla.intro": "Valhalla records Company Manus personnel whose souls are missing, captured, or permanently lost. Recoverable souls remain rescue targets; consumed or shattered souls cannot return.",
-	&"ui.vahalla.fallen_count": "FALLEN",
-	&"ui.vahalla.empty": "No fallen soldiers are recorded for this faction.",
-	&"ui.vahalla.honor": "Honor",
-	&"ui.vahalla.honored": "Honored",
-	&"ui.vahalla.record": "FELL AT {stage} • {reason} • TICK {tick}",
-	&"ui.vahalla.record_unknown": "SERVICE RECORD SEALED",
-	&"ui.vahalla.no_selection": "NO MEMORIAL RECORD SELECTED",
-	&"ui.vahalla.terminal_record": "SOUL STATUS AND FINAL SERVICE RECORD",
-	&"ui.vahalla.permanence": "Status follows the same unique soul: missing or captured may be recoverable; consumed or shattered is permanent.",
-	&"ui.common.back_to_title": "Back to Title",
 	&"ui.common.exit": "Exit",
 	&"ui.common.back": "Back",
 	&"ui.campaign.heading": "Campaign",
-	&"ui.campaign.basic_hire_title": "Hire Recruit",
-	&"ui.campaign.basic_hire_body": "Hire one persistent basic Recruit. Training can specialize them later.",
-	&"ui.campaign.basic_hire_marks": "{count}",
-	&"ui.campaign.basic_hire_roster": "{count} PERSONNEL READY",
-	&"ui.campaign.basic_hire_action": "HIRE • {cost}",
-	&"ui.campaign.basic_hire_committing": "HIRING…",
-	&"ui.campaign.basic_hire_committing_description": "Saving the recruit contract.",
-	&"ui.campaign.basic_hire_ready": "BASIC RECRUIT CONTRACT AVAILABLE",
-	&"ui.campaign.basic_hire_success": "{callsign} • JOINED COMPANY MANUS • {remaining} MARKS REMAIN",
-	&"ui.campaign.basic_hire_insufficient": "INSUFFICIENT BALANCE",
-	&"ui.campaign.basic_hire_attempt_pending": "Resolve the active operation before hiring personnel.",
-	&"ui.campaign.basic_hire_roster_limit": "The personnel registry has reached capacity.",
-	&"ui.campaign.basic_hire_campaign_inactive": "No active campaign is available.",
-	&"ui.campaign.basic_hire_command_pending": "Resolve the pending Company command before hiring personnel.",
-	&"ui.campaign.basic_hire_save_failed": "The hire could not be saved. Activate again to retry the exact contract.",
-	&"ui.campaign.basic_hire_unknown": "Hiring failed safely ({code}). Review Mission Control and try again.",
 	&"ui.campaign.row": "{index}. {title}{status}",
 	&"ui.campaign.locked_suffix": "  LOCKED",
 	&"ui.campaign.cleared_suffix": "  {stars}",
@@ -371,9 +183,6 @@ const STATIC_FALLBACKS := {
 	&"ui.campaign.route_note": "Select an available operation, or replay a cleared one.",
 	&"ui.campaign.row_star": "{count} star",
 	&"ui.campaign.row_stars": "{count} stars",
-	&"ui.campaign.back_to_staging": "Back to Staging",
-	&"ui.campaign.objective": "OBJECTIVE — {text}",
-	&"ui.campaign.threat": "THREAT — {text}",
 	&"ui.campaign.first_clear_reward": "FIRST CLEAR — {rewards}",
 	&"ui.campaign.record_only": "RECORD ONLY",
 	&"ui.campaign.start_mission": "Start Mission",
@@ -384,31 +193,6 @@ const STATIC_FALLBACKS := {
 	&"ui.identity_sort.level_desc": "Level high–low",
 	&"ui.identity_sort.rarity_asc": "Rarity low–high",
 	&"ui.identity_sort.rarity_desc": "Rarity high–low",
-	&"ui.squad.heading": "{stage} — pick your squad",
-	&"ui.squad.operator_card": "{name}\n{cost} DP",
-	&"ui.squad.selected_count": "{selected}/{limit} selected",
-	&"ui.squad.loadout_none": "Loadout: nothing unlocked yet",
-	&"ui.squad.loadout_available": "Loadout (always available): {items}",
-	&"ui.squad.order_drag_hint": "Drag to reorder. Keyboard: Alt plus arrow keys.",
-	&"ui.squad.order_empty": "Select operators, then drag to reorder.",
-	&"ui.squad.order_heading": "Deployment Order",
-	&"ui.squad.start_battle": "Start Battle",
-	&"ui.squad.start_battle_short": "Start",
-	&"ui.squad.launch_committing": "Authenticating deployment record…",
-	&"ui.squad.launch_committing_action": "Deploying…",
-	&"ui.squad.launch_retry_action": "Retry Deployment",
-	&"ui.squad.launch_retryable_error": "Deployment was not saved. Retry the exact field-team order.",
-	&"ui.squad.launch_pending_error": "Another Company command is still pending. Return to Mission Control and resume it.",
-	&"ui.squad.launch_roster_error": "The field team changed before deployment. Review the selected operators and try again.",
-	&"ui.squad.launch_stage_error": "This operation is not currently authorized. Return to Mission Control.",
-	&"ui.squad.launch_campaign_error": "The active campaign record is unavailable. Return to the Title screen and resume the campaign.",
-	&"ui.squad.launch_integrity_error": "Campaign records could not be authenticated. Return to Mission Control before retrying.",
-	&"ui.squad.launch_unknown_error": "Deployment was rejected safely. Review Mission Control and try again.",
-	&"ui.squad.briefing.objective": "Objective",
-	&"ui.squad.briefing.threat": "Threat",
-	&"ui.squad.briefing.human_reason": "Why it matters",
-	&"ui.squad.briefing.clue": "Field note",
-	&"ui.squad.tactical_hint": "Tactical hint — {hint}",
 	&"ui.battle.deploy_operator_cooldown": "{name}{slot}\nCOOLDOWN {seconds}s",
 	&"ui.results.clear": "CLEAR",
 	&"ui.results.defeat": "DEFEAT",
@@ -417,150 +201,23 @@ const STATIC_FALLBACKS := {
 	&"ui.results.no_rewards": "NO NEW MATERIAL REWARDS",
 	&"ui.results.record_preserved": "Operation record preserved.",
 	&"ui.results.marks_reward": "+{count}",
-	&"ui.results.premium_fund": "Premium Resonance fund",
 	&"ui.results.unlocked_kind": "UNLOCKED · {kind}",
-	&"ui.results.training_path_unlocked": "ADVANCED TRAINING PATH UNLOCKED",
-	&"ui.results.xp_reward": "+{count} XP",
-	&"ui.results.fallen_record": "FALLEN · MEMORIAL RECORD SEALED",
-	&"ui.results.reserve_life_spent": "1 PREPARED BODY USED · {count} REMAINING",
-	&"ui.results.final_life_spent": "FINAL BODY LOST · SOUL ANCHORED · PREPARE ANOTHER BODY TO DEPLOY",
-	&"ui.results.company_intact": "COMPANY INTACT",
-	&"ui.results.no_losses": "No terminal losses recorded.",
 	&"ui.results.tally": "kills {kills}   leaks {leaks}",
 	&"ui.results.reward": "Unlocked: {name}",
 	&"ui.results.stage_cleared": "STAGE {stage} CLEARED",
 	&"ui.results.stage_defeated": "STAGE {stage} DEFEATED",
 	&"ui.results.retry": "Retry",
-	&"ui.results.consequence": "Consequence",
-	&"ui.results.transmission": "CLEAR TRANSMISSION",
-	&"ui.error.missing_stage_narrative": "Mission record unavailable. Return to Mission Control.",
 	&"ui.results.next_mission": "Next Mission",
 	&"ui.results.return_to_staging": "Return to Staging",
-	&"ui.results.training_available": "{count} recruits ready for training.",
-	&"ui.results.train_recruits": "Train Recruits",
-	&"ui.results.train_short": "Train",
-	&"ui.training.assignment": "COMPANY MANUS\nTRAINING ASSIGNMENT\nNEW FIELD KIT",
-	&"ui.training.cancel": "Cancel",
-	&"ui.training.choose_advanced": "CHOOSE A NEW SPECIALIZATION FOR {callsign}",
-	&"ui.training.choose_promotion": "Choose Promotion",
-	&"ui.training.choose_promotion_description": (
-		"Choose an advanced specialization for the selected operator."
-	),
-	&"ui.training.choose_path": "Choose Path",
-	&"ui.training.retry_promotion": "Retry Promotion",
-	&"ui.training.promotion_committing": "PROMOTING…",
-	&"ui.training.promotion_committing_description": "Saving {callsign}'s specialization.",
-	&"ui.training.not_now": "Return",
-	&"ui.training.choose_recruit": "Choose a recruit to train.",
-	&"ui.training.class.banner_guard": "Banner Guard",
-	&"ui.training.class.defender": "Defender",
-	&"ui.training.class.gunner": "Gunner",
-	&"ui.training.class.immovable": "Immovable",
-	&"ui.training.class.mage_apprentice": "Mage Apprentice",
-	&"ui.training.class.recruit": "Recruit",
-	&"ui.training.class.shock_trooper": "Shock Trooper",
-	&"ui.training.class.sniper": "Sniper",
-	&"ui.training.class.sorcerer": "Sorcerer",
-	&"ui.training.class.sword_saint": "Sword Saint",
-	&"ui.training.class.swordmaster": "Swordmaster",
-	&"ui.training.class.witch_doctor": "Witch Doctor",
-	&"ui.training.class_kit_placeholder": "CLASS KIT",
-	&"ui.training.error.already_promoted": "This recruit has already chosen an advanced path.",
-	&"ui.training.error.command_conflict": "This training request conflicts with an earlier command.",
-	&"ui.training.error.insufficient_xp": "This recruit needs more XP.",
-	&"ui.training.error.invalid_choice": "That training path is not available.",
-	&"ui.training.error.invalid_request": "Training request was invalid.",
-	&"ui.training.error.no_path": "This class has no advanced path here.",
-	&"ui.training.error.not_ready": "This recruit is not ready for training.",
-	&"ui.training.error.progression_failed": "Training progression could not be applied.",
-	&"ui.training.error.stale_state": "The roster changed. Review the recruit again.",
-	&"ui.training.error.unknown_hero": "That recruit is no longer in the roster.",
-	&"ui.training.error.dead_hero": "Dead recruits cannot train.",
-	&"ui.training.error.premium_hero_untrainable": "Premium heroes use fixed elite kits and cannot train.",
-	&"ui.training.error.locked_class": "This training path is not unlocked yet.",
-	&"ui.training.error.already_promoted_class": "No further training path is available.",
-	&"ui.training.error.illegal_class_edge": "That class is not a legal next duty.",
-	&"ui.training.error.missing_catalog": "Training records are incomplete.",
-	&"ui.training.error.attempt_pending": "Finish the active operation before training.",
-	&"ui.training.error.store_write_failed": "The campaign could not be saved.",
-	&"ui.training.error.campaign_inactive": "No active campaign is available.",
-	&"ui.training.error.integrity": "Training records could not be authenticated.",
-	&"ui.training.error.save_pending": "The previous save must be retried before leaving.",
-	&"ui.training.field_record": "FIELD RECORD",
-	&"ui.training.format.dp": "{value} DP",
-	&"ui.training.combat_facts": (
-		"{cost} DP • {placement} • Block {block} • Range {range} • ATK {cadence}T"
-	),
-	&"ui.training.skill_facts": "Skill: {skill}",
-	&"ui.training.placement.ground": "Ground",
-	&"ui.training.placement.elevated": "Elevated",
-	&"ui.training.field_kit": "FIELD KIT • EQUIPMENT ISSUED AFTER PROMOTION",
-	&"ui.training.hero_progress": "{callsign} — {class_name} — XP {current} / {required}",
-	&"ui.training.identity_portrait_alt": "Identity portrait for {callsign}",
-	&"ui.training.kit.sorcerer": "Kit: conductors, weather rods, control marks.",
-	&"ui.training.kit.witch_doctor": "Kit: medicine, charge, repair tools.",
-	&"ui.training.no_revive_warning": "Death remains permanent. Mend cannot revive the dead.",
-	&"ui.training.permanent_warning": "THIS CHOICE IS PERMANENT.",
-	&"ui.training.promotion_ready": "Promotion ready.",
-	&"ui.training.promotion_ready_count": "{count} PROMOTION READY",
-	&"ui.training.reason.already_promoted": "Advanced training complete.",
-	&"ui.training.reason.dead": "Dead. Training unavailable.",
-	&"ui.training.reason.premium": "Premium hero. Fixed elite kit; training unavailable.",
-	&"ui.training.reason.no_path": "No advanced class path.",
-	&"ui.training.role.damage_control": "Damage / Control",
-	&"ui.training.role.healer_support": "Healer / Support",
-	&"ui.training.same_identity": "SAME PERSON • SAME HERO ID • SAME CALLSIGN • SAME HISTORY",
-	&"ui.training.skill.mend": "Mend — Heal one living ally for {amount} HP",
-	&"ui.training.skill.tempest": "Tempest — Wide-range pressure attack",
-	&"ui.training.state_after_confirmation": "State changes only after confirmation.",
-	&"ui.training.status.dead": "DEAD",
-	&"ui.training.status.ready": "READY",
-	&"ui.training.success": "{callsign} is now a {class_name}.",
-	&"ui.training.ack_entry": "{callsign} to {class_name}",
-	&"ui.training.acknowledgement": "Training complete: {assignments}",
-	&"ui.training.title": "TRAINING",
-	&"ui.training.training_explainer": (
-		"Advanced training changes equipment, duties, and field role. "
-		+ "It does not replace the person."
-	),
-	&"ui.training.xp_needed": "Needs {remaining} XP.",
-	&"ui.training.xp_progress": "XP {current} / {required}",
 	&"ui.save.write_failed": "The campaign could not be saved.",
-	&"ui.error.unknown": "Training failed. Review the roster and try again.",
+	&"ui.error.unknown": "The request failed. Try again.",
 }
 
 const PLACEHOLDER_TYPES := {
 	&"ui.campaign.row_star": {&"count": &"int"},
 	&"ui.campaign.row_stars": {&"count": &"int"},
-	&"ui.gacha.marks": {&"count": &"int"},
-	&"ui.gacha.pull_action": {&"cost": &"int"},
-	&"ui.gacha.pull_again": {&"cost": &"int"},
-	&"ui.gacha.conversion_detail": {&"before": &"int", &"after": &"int"},
-	&"ui.gacha.history_detail": {
-		&"before": &"int", &"after": &"int", &"guarantee": &"int",
-	},
-	&"ui.gacha.history_pull": {&"index": &"int"},
-	&"ui.gacha.history_summary": {&"count": &"int"},
-	&"ui.gacha.guarantee_in": {&"count": &"int", &"unit": &"String"},
-	&"ui.gacha.confirm_body": {
-		&"cost": &"int", &"before": &"int", &"after": &"int",
-		&"count": &"int", &"unit": &"String",
-	},
-	&"ui.gacha.marks_needed": {&"count": &"int"},
-	&"ui.gacha.rarity": {&"rarity": &"int"},
-	&"ui.gacha.rarity_short": {&"rarity": &"int"},
-	&"ui.gacha.lives": {&"count": &"int", &"unit": &"String"},
-	&"ui.gacha.total_copies": {&"count": &"int"},
-	&"ui.gacha.resonance_rarity": {&"rarity": &"int"},
-	&"ui.gacha.lives_ready": {&"count": &"int", &"unit": &"String"},
-	&"ui.gacha.next_guarantee": {&"count": &"int", &"unit": &"String"},
-	&"ui.gacha.receipt_new": {&"rarity": &"String", &"callsign": &"String", &"guarantee": &"int"},
-	&"ui.gacha.receipt_restored": {&"rarity": &"String", &"callsign": &"String", &"guarantee": &"int"},
-	&"ui.gacha.receipt_duplicate": {&"rarity": &"String", &"callsign": &"String", &"lives": &"int", &"guarantee": &"int"},
-	&"ui.gacha.error.unknown": {&"code": &"String"},
 	&"ui.battle.hud_compact": {&"core": &"int", &"dp": &"int", &"eliminations": &"int", &"state": &"String"},
 	&"ui.battle.hud_wide": {&"core": &"int", &"dp": &"int", &"eliminations": &"int", &"state": &"String"},
-	&"ui.battle.dialogue.wave": {&"wave": &"int"},
 	&"ui.battle.operator_actions_description": {
 		&"operator": &"String", &"skill": &"String", &"current": &"int", &"cost": &"int",
 	},
@@ -583,12 +240,7 @@ const PLACEHOLDER_TYPES := {
 	&"ui.battle.high_threat.unlit.detail": {&"wave": &"int"},
 	&"ui.results.marks_reward": {&"count": &"int"},
 	&"ui.results.unlocked_kind": {&"kind": &"String"},
-	&"ui.results.xp_reward": {&"count": &"int"},
-	&"ui.results.reserve_life_spent": {&"count": &"int"},
-	&"ui.spell.cooldown": {&"seconds": &"String"},
-	&"ui.spell.cooldown_compact": {&"seconds": &"String"},
-	&"ui.spell.field_duration": {&"seconds": &"String"},
-	&"ui.spell.field_duration_compact": {&"seconds": &"String"},
+	&"ui.hero.fallback_recruit": {&"index": &"int"},
 	&"ui.title.music_state": {&"state": &"String"},
 	&"ui.title.motion_state": {&"state": &"String"},
 	&"ui.title.master_volume": {&"value": &"int"},
@@ -604,53 +256,15 @@ const PLACEHOLDER_TYPES := {
 	&"ui.staging.next_detail": {&"index": &"int", &"title": &"String"},
 	&"ui.staging.next_operation_title": {&"index": &"int", &"title": &"String"},
 	&"ui.staging.next_operation_action": {&"stage": &"String"},
-	&"ui.archive.records": {&"unlocked": &"int", &"total": &"int"},
-	&"ui.archive.unlock_requirement": {&"index": &"int"},
-	&"ui.archive.audio.time": {&"current": &"String", &"total": &"String"},
-	&"ui.vahalla.record": {&"stage": &"String", &"reason": &"String", &"tick": &"int"},
-	&"ui.campaign.objective": {&"text": &"String"},
-	&"ui.campaign.threat": {&"text": &"String"},
 	&"ui.campaign.first_clear_reward": {&"rewards": &"String"},
-	&"ui.campaign.basic_hire_marks": {&"count": &"int"},
-	&"ui.campaign.basic_hire_roster": {&"count": &"int"},
-	&"ui.campaign.basic_hire_action": {&"cost": &"int"},
-	&"ui.campaign.basic_hire_success": {&"callsign": &"String", &"remaining": &"int"},
-	&"ui.campaign.basic_hire_insufficient": {&"count": &"int"},
-	&"ui.campaign.basic_hire_unknown": {&"code": &"String"},
-	&"ui.training.promotion_committing_description": {&"callsign": &"String"},
 	&"ui.campaign.row": {&"index": &"int", &"title": &"String", &"status": &"String"},
 	&"ui.campaign.cleared_suffix": {&"stars": &"String"},
-	&"ui.squad.heading": {&"stage": &"String"},
-	&"ui.squad.operator_card": {&"name": &"String", &"cost": &"int"},
-	&"ui.squad.selected_count": {&"selected": &"int", &"limit": &"int"},
-	&"ui.squad.loadout_available": {&"items": &"String"},
-	&"ui.squad.tactical_hint": {&"hint": &"String"},
 	&"ui.results.tally": {&"kills": &"int", &"leaks": &"int"},
 	&"ui.results.reward": {&"name": &"String"},
 	&"ui.results.stage_cleared": {&"stage": &"String"},
 	&"ui.results.stage_defeated": {&"stage": &"String"},
-	&"ui.results.training_available": {&"count": &"int"},
 	&"ui.identity_filter.summary": {&"shown": &"int", &"total": &"int"},
 	&"ui.rename.confirm_body": {&"current": &"String", &"next": &"String"},
-	&"ui.training.choose_advanced": {&"callsign": &"String"},
-	&"ui.training.format.dp": {&"value": &"int"},
-	&"ui.training.combat_facts": {
-		&"cost": &"int", &"placement": &"String", &"block": &"int", &"range": &"int",
-		&"cadence": &"int",
-	},
-	&"ui.training.skill_facts": {&"skill": &"String"},
-	&"ui.training.ack_entry": {&"callsign": &"String", &"class_name": &"String"},
-	&"ui.training.acknowledgement": {&"assignments": &"String"},
-	&"ui.training.hero_progress": {
-		&"callsign": &"String", &"class_name": &"String",
-		&"current": &"int", &"required": &"int",
-	},
-	&"ui.training.identity_portrait_alt": {&"callsign": &"String"},
-	&"ui.training.promotion_ready_count": {&"count": &"int"},
-	&"ui.training.skill.mend": {&"amount": &"int"},
-	&"ui.training.success": {&"callsign": &"String", &"class_name": &"String"},
-	&"ui.training.xp_needed": {&"remaining": &"int"},
-	&"ui.training.xp_progress": {&"current": &"int", &"required": &"int"},
 }
 
 
@@ -671,31 +285,11 @@ static func _i18n() -> Node:
 	return null
 
 
-static func stage_narrative_text(record: Resource, field: int) -> String:
-	if record == null or not record.has_method("fallback_for") or not record.has_method("field_slug"):
-		push_error("UiCopy.stage_narrative_text: invalid record")
-		return ""
-	var record_id := StringName(record.get("id"))
-	var slug := StringName(record.call("field_slug", field))
-	var fallback := String(record.call("fallback_for", field))
-	if String(record_id).is_empty() or String(slug).is_empty() or fallback.is_empty():
-		push_error("UiCopy.stage_narrative_text: invalid record field")
-		return ""
-	return text(StringName("data.stage.%s.narrative.%s" % [record_id, slug]), fallback)
-
-
 static func stage_title(stage: StageDef) -> String:
 	if stage == null:
 		push_error("UiCopy.stage_title: null stage")
 		return ""
 	return text(StringName("data.stage.%s.title" % stage.id), stage.title)
-
-
-static func stage_hint(stage: StageDef) -> String:
-	if stage == null:
-		push_error("UiCopy.stage_hint: null stage")
-		return ""
-	return text(StringName("data.stage.%s.hint" % stage.id), stage.intro_hint)
 
 
 static func operator_name(definition: OperatorDef) -> String:
@@ -709,22 +303,14 @@ static func operator_name(definition: OperatorDef) -> String:
 
 static func skill_name(skill_id: StringName) -> String:
 	var fallbacks := {
-		&"bastion_slam": "Bastion Slam",
 		&"conflagration": "Conflagration",
 		&"deadeye": "Deadeye",
 		&"flurry": "Flurry",
-		&"hold_the_line": "Hold the Line",
-		&"mend": "Mend",
-		&"overpower": "Overpower",
-		&"rally": "Rally",
-		&"rapid_volley": "Rapid Volley",
-		&"tempest": "Tempest",
-		&"war_banner": "War Banner",
 	}
 	var fallback := String(
 		fallbacks.get(skill_id, String(skill_id).replace("_", " ").capitalize()),
 	)
-	return text(StringName("ui.training.skill_name.%s" % skill_id), fallback)
+	return text(StringName("ui.skill_name.%s" % skill_id), fallback)
 
 
 static func trap_name(definition: TrapDef) -> String:
@@ -732,14 +318,6 @@ static func trap_name(definition: TrapDef) -> String:
 		push_error("UiCopy.trap_name: null definition")
 		return ""
 	return text(StringName("data.trap.%s.name" % definition.id), definition.display_name)
-
-
-static func spell_name(definition: SpellDef) -> String:
-	if definition == null:
-		push_error("UiCopy.spell_name: null definition")
-		return ""
-	return text(StringName("data.spell.%s.name" % definition.id), definition.display_name)
-
 
 static func enemy_name(enemy_id: StringName) -> String:
 	var fallback_names := {
@@ -755,12 +333,6 @@ static func enemy_name(enemy_id: StringName) -> String:
 	}
 	var fallback := String(fallback_names.get(enemy_id, "Robot"))
 	return text(StringName("data.enemy.%s.name" % enemy_id), fallback)
-
-
-static func premium_name(premium_id: String, fallback: String) -> String:
-	if premium_id.is_empty():
-		return text(&"ui.gacha.unknown_signal", "Unknown soul anchor")
-	return text(StringName("data.premium.%s.name" % premium_id), fallback)
 
 
 static func static_fallbacks() -> Dictionary:

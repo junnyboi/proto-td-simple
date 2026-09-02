@@ -6,8 +6,7 @@ OUTPUT="${2:-/tmp/proto-td-advanced-operator-visuals}"
 GODOT_BIN=${GODOT_BIN:-godot}
 mkdir -p "$OUTPUT"
 classes=(
-  defender gunner mage_apprentice shock_trooper swordmaster immovable
-  sniper sorcerer witch_doctor banner_guard sword_saint
+  gunner mage_apprentice swordmaster
 )
 for class_id in "${classes[@]}"; do
 	  xvfb-run -a -s '-screen 0 1920x1080x24' env \

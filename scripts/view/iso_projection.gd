@@ -12,6 +12,9 @@ extends RefCounted
 const TILE_W := 64.0
 const TILE_H := 32.0
 const ELEV_LIFT_PX := 16.0
+const DEPTH_STRIDE := 3
+const ENEMY_Z_OFFSET := 1
+const OPERATOR_Z_OFFSET := 2
 ## Sprite bottom-center sits this far below its cell's face center.
 const FEET_OFFSET := 6.0
 const SPAWN_LANDMARK_SIZE := Vector2(64.0, 64.0)
@@ -64,7 +67,7 @@ static func face_center(cell: Vector2i, lifted: bool = false) -> Vector2:
 
 ## An origin-centered face diamond (top, right, bottom, left) at the given
 ## uniform scale — one shape serves every screen-space footprint overlay
-## (hover cursor, valid-cell highlights, spell footprint = scale * span).
+## (hover cursor, valid-cell highlights, area footprint = scale * span).
 static func face_polygon(scale: float = 1.0) -> PackedVector2Array:
 	return PackedVector2Array([
 		Vector2(0.0, -TILE_H * 0.5 * scale),
@@ -93,13 +96,19 @@ static func depth(p: Vector2) -> int:
 	return int(floorf(p.x) + floorf(p.y))
 
 
-## entities/traps/tracers at 2*depth + 1; UI overlays 50; juice 60; HUD 70.
+## Each painter depth reserves explicit terrain, enemy, and operator slots.
+## Ground effects use tile_z + 1 and share the enemy slot; operators occupy
+## the final slot so their sprites always win same-depth enemy overlaps.
 static func tile_z(cell: Vector2i) -> int:
-	return 2 * (cell.x + cell.y)
+	return DEPTH_STRIDE * (cell.x + cell.y)
 
 
 static func entity_z(p: Vector2) -> int:
-	return 2 * depth(p) + 1
+	return DEPTH_STRIDE * depth(p) + ENEMY_Z_OFFSET
+
+
+static func operator_z(p: Vector2) -> int:
+	return DEPTH_STRIDE * depth(p) + OPERATOR_Z_OFFSET
 
 
 ## = the diamond's exact span; vertical from -ELEV_LIFT_PX - 64 (sprite

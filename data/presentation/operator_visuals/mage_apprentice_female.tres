@@ -7,16 +7,12 @@ script = ExtResource("1_def")
 schema_version = 2
 visual_id = &"operator_mage_apprentice_female"
 idle_by_direction = {
-&"ne": &"op_anim_mage_apprentice_female_idle_se",
-&"nw": &"op_anim_mage_apprentice_female_idle_sw",
-&"se": &"op_anim_mage_apprentice_female_idle_ne",
-&"sw": &"op_anim_mage_apprentice_female_idle_nw"
+&"ne": &"op_anim_mage_apprentice_female_idle_ne",
+&"nw": &"op_anim_mage_apprentice_female_idle_nw"
 }
 attack_by_direction = {
-&"ne": &"op_anim_mage_apprentice_female_attack_se",
-&"nw": &"op_anim_mage_apprentice_female_attack_sw",
-&"se": &"op_anim_mage_apprentice_female_attack_ne",
-&"sw": &"op_anim_mage_apprentice_female_attack_nw"
+&"ne": &"op_anim_mage_apprentice_female_attack_ne",
+&"nw": &"op_anim_mage_apprentice_female_attack_nw"
 }
 idle_frame_count = 24
 attack_frame_count = 13

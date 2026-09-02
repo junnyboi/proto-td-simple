@@ -6,7 +6,7 @@ extends Node
 
 const ISOLATED_ENV := "PROTO_TD_TEST_ISOLATED"
 const RUN_ID_ENV := "PROTO_TD_TEST_RUN_ID"
-const USER_DIR_PREFIX := "ProtosTests-"
+const USER_DIR_PREFIX := "GameTemplateTDTests-"
 const REFUSAL_EXIT_CODE := 78
 const REFUSAL_MARKER := "TEST_USER_DATA_ISOLATION_REQUIRED"
 

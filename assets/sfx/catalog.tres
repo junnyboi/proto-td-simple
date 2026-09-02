@@ -20,34 +20,19 @@ entries = {
 &"defeat": {"path": "res://assets/sfx/combat/defeat.wav"},
 &"deploy_ground": {"path": "res://assets/sfx/combat/deploy_ground.wav"},
 &"deploy_elevated": {"path": "res://assets/sfx/combat/deploy_elevated.wav"},
-&"slow_field_cast": {"path": "res://assets/sfx/combat/slow_field_cast.wav"},
-&"slow_field_expire": {"path": "res://assets/sfx/combat/slow_field_expire.wav"},
-&"trap_trigger": {"path": "res://assets/sfx/combat/trap_trigger.wav"},
-&"gacha_identity_reveal": {"path": "res://assets/sfx/gacha/gacha_identity_reveal.wav"},
-&"gacha_star_bloom": {"path": "res://assets/sfx/gacha/gacha_star_bloom.wav"}
+&"trap_trigger": {"path": "res://assets/sfx/combat/trap_trigger.wav"}
 }
 aliases = {
 &"hire_recruit_hover": &"ability_ready",
-&"bastion_slam": &"ability_ready",
-&"bolt": &"ability_ready",
-&"charm": &"ability_ready",
 &"conflagration": &"ability_ready",
 &"deadeye": &"ability_ready",
 &"deploy": &"deploy_ground",
 &"flurry": &"ability_ready",
-&"hold_the_line": &"ability_ready",
 &"kill": &"operator_select",
 &"leak": &"base_breach",
-&"mend": &"ability_ready",
-&"slow_field": &"slow_field_cast",
-&"overpower": &"ability_ready",
-&"rally": &"ability_ready",
-&"rapid_volley": &"ability_ready",
-&"tempest": &"ability_ready",
 &"trap_snap": &"trap_trigger",
 &"ui_select": &"ui_click",
 &"ui_accept": &"ui_confirm",
 &"menu_transition": &"menu_open",
-&"war_banner": &"ability_ready",
 &"wave": &"placement_ready"
 }

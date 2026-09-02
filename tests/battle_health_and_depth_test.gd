@@ -15,6 +15,7 @@ func _init() -> void:
 
 func _run() -> void:
 	_verify_health_bars()
+	_verify_operator_enemy_depth_order()
 	_verify_elevated_platform_depths()
 	if _failures.is_empty():
 		print("BATTLE_HEALTH_AND_DEPTH_TEST_OK")
@@ -68,6 +69,18 @@ func _verify_bar(body: ColorRect, expected_width: float, color: Color, label: St
 	_check(_close(fill.size.y, 2.5), "%s fill is not half height" % label)
 
 
+func _verify_operator_enemy_depth_order() -> void:
+	for cell: Vector2i in [Vector2i.ZERO, Vector2i(3, 2), Vector2i(9, 4)]:
+		var center := Vector2(cell) + Vector2.ONE * 0.5
+		var enemy_z := IsoProjection.entity_z(center)
+		var operator_z := IsoProjection.operator_z(center)
+		_check(operator_z > enemy_z, "operator does not render above same-depth enemy at %s" % cell)
+		_check(
+			operator_z < IsoProjection.tile_z(cell + Vector2i.RIGHT),
+			"operator depth at %s spills into the next terrain layer" % cell,
+		)
+
+
 func _verify_elevated_platform_depths() -> void:
 	for stage_number: int in range(1, 9):
 		var stage_id := "s%d" % stage_number
@@ -107,12 +120,20 @@ func _verify_stage_occluders(stage_id: String, stage: StageDef, terrain: Node2D)
 				var behind := Vector2(cell + offset) + Vector2.ONE * 0.5
 				_check(
 					IsoProjection.entity_z(behind) < platform_z,
-					"%s does not occlude a character behind it" % node_name,
+					"%s does not occlude an enemy behind it" % node_name,
+				)
+				_check(
+					IsoProjection.operator_z(behind) < platform_z,
+					"%s does not occlude an operator behind it" % node_name,
 				)
 			var on_platform := Vector2(cell) + Vector2.ONE * 0.5
 			_check(
 				IsoProjection.entity_z(on_platform) > platform_z,
-				"%s covers a character standing on it" % node_name,
+				"%s covers an enemy standing on it" % node_name,
+			)
+			_check(
+				IsoProjection.operator_z(on_platform) > platform_z,
+				"%s covers an operator standing on it" % node_name,
 			)
 	_check(platform_count > 0, "%s has no elevated platform fixture" % stage_id)
 

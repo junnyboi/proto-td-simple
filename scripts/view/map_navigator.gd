@@ -27,6 +27,7 @@ var scale := 1.0
 var origin := Vector2.ZERO
 var pan := Vector2.ZERO
 var bounds := Rect2()
+var pan_sensitivity := 1.0
 var _stage: StageDef = null
 var _viewport := Vector2.ZERO
 var _safe_rect := Rect2()
@@ -289,7 +290,7 @@ func handle_input(event: InputEvent) -> bool:
 		if motion.button_mask & MOUSE_BUTTON_MASK_MIDDLE == 0:
 			_middle_dragging = false
 			return false
-		pan = IsoProjection.clamp_pan(pan + motion.relative, bounds)
+		pan = IsoProjection.clamp_pan(pan + motion.relative * pan_sensitivity, bounds)
 		return true
 	if event is InputEventMouseMotion and _primary_pressed:
 		return _handle_primary_motion(event as InputEventMouseMotion)
@@ -325,7 +326,7 @@ func _handle_button(event: InputEventMouseButton) -> bool:
 			delta.x = -WHEEL_STEP_PX
 		_:
 			return false
-	pan = IsoProjection.clamp_pan(pan + delta, bounds)
+	pan = IsoProjection.clamp_pan(pan + delta * pan_sensitivity, bounds)
 	return true
 
 
@@ -361,7 +362,7 @@ func _handle_primary_motion(event: InputEventMouseMotion) -> bool:
 	if not _primary_dragging:
 		return false
 	var previous_pan := pan
-	pan = _rubber_banded_pan(event.relative)
+	pan = _rubber_banded_pan(event.relative * pan_sensitivity)
 	_sample_drag_velocity(pan - previous_pan)
 	_suppress_primary_click = true
 	return true
@@ -398,7 +399,7 @@ func _handle_touch_drag(event: InputEventScreenDrag) -> bool:
 	if not _primary_dragging:
 		return false
 	var previous_pan := pan
-	pan = _rubber_banded_pan(event.relative)
+	pan = _rubber_banded_pan(event.relative * pan_sensitivity)
 	_sample_drag_velocity(pan - previous_pan)
 	_suppress_primary_click = true
 	return true

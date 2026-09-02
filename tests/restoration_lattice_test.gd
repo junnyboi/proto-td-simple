@@ -22,12 +22,9 @@ func _run() -> void:
 
 
 func _test_stage_contract_and_rotation() -> void:
-	const EXACT_REPAIR_COPY := "Repairs wounded enemy ground robots every 3 seconds; Slow Field blocks that repair."
 	for stage_index: int in range(9, 17):
 		var authored := load("res://data/stages/s%d.tres" % stage_index) as StageDef
-		_check(authored != null, "Act II repair-copy stage failed to load: s%d" % stage_index)
-		if authored != null:
-			_check(authored.intro_hint == EXACT_REPAIR_COPY, "Act II repair explanation drifted in s%d" % stage_index)
+		_check(authored != null, "Act II stage failed to load: s%d" % stage_index)
 	var stage := _stage_fixture()
 	_check(stage.restoration_contract_errors().is_empty(), "valid lattice contract was rejected")
 	var portrait := stage.clockwise_rotated_copy()
@@ -55,23 +52,20 @@ func _test_restoration_cycles() -> void:
 	if model == null:
 		return
 	model.step()
-	_check(model.enemies.size() == 4, "restoration fixture enemies did not spawn")
-	if model.enemies.size() != 4:
+	_check(model.enemies.size() == 3, "restoration fixture enemies did not spawn")
+	if model.enemies.size() != 3:
 		return
 	var hostile := model.enemies[0] as EnemyState
 	var aerial := model.enemies[1] as EnemyState
-	var charmed := model.enemies[2] as EnemyState
-	var full := model.enemies[3] as EnemyState
+	var full := model.enemies[2] as EnemyState
 	for enemy: EnemyState in model.enemies:
 		enemy.progress_units = Pathing.PROGRESS_SCALE
 		enemy.hp = 50
-	charmed.faction = EnemyState.Faction.CHARMED
 	full.hp = full.hp_max
 	var before_due_hash := model.state_hash()
 	_step_through_tick(model, stage.restoration_interval_ticks)
 	_check(hostile.hp == 58, "due lattice cycle did not repair hostile ground enemy by 8 HP")
 	_check(aerial.hp == 50, "lattice incorrectly repaired an aerial enemy")
-	_check(charmed.hp == 50, "lattice incorrectly repaired a charmed entity")
 	_check(full.hp == full.hp_max, "lattice exceeded the full-health clamp")
 	_check(model.state_hash() != before_due_hash, "restoration HP mutation was absent from battle hash")
 
@@ -79,24 +73,12 @@ func _test_restoration_cycles() -> void:
 	_step_through_tick(model, stage.restoration_interval_ticks * 2)
 	_check(hostile.hp == hostile.hp_max, "restoration did not clamp to enemy maximum HP")
 
-	hostile.hp = 50
-	var field := SlowFieldState.new()
-	field.id = 99
-	field.center = Vector2i(1, 0)
-	field.radius = 0
-	field.slow_permille = 500
-	field.expires_tick = stage.restoration_interval_ticks * 4
-	model.slow_fields.append(field)
-	_step_through_tick(model, stage.restoration_interval_ticks * 3)
-	_check(hostile.hp == 50, "Slow Field did not suppress a due restoration cycle")
-
 	var replay := _model_fixture(stage)
 	replay.step()
 	for enemy: EnemyState in replay.enemies:
 		enemy.progress_units = Pathing.PROGRESS_SCALE
 		enemy.hp = 50
-	(replay.enemies[2] as EnemyState).faction = EnemyState.Faction.CHARMED
-	(replay.enemies[3] as EnemyState).hp = (replay.enemies[3] as EnemyState).hp_max
+	(replay.enemies[2] as EnemyState).hp = (replay.enemies[2] as EnemyState).hp_max
 	_step_through_tick(replay, stage.restoration_interval_ticks)
 	_check((replay.enemies[0] as EnemyState).hp == 58, "deterministic replay restoration diverged")
 
@@ -160,7 +142,6 @@ func _stage_fixture() -> StageDef:
 	stage.waves = [
 		{"tick": 0, "enemy_id": &"hostile", "path_idx": 0},
 		{"tick": 0, "enemy_id": &"aerial", "path_idx": 0},
-		{"tick": 0, "enemy_id": &"charmed", "path_idx": 0},
 		{"tick": 0, "enemy_id": &"full", "path_idx": 0},
 	]
 	stage.wave_starts = PackedInt32Array([0])
@@ -173,7 +154,7 @@ func _stage_fixture() -> StageDef:
 
 func _model_fixture(stage: StageDef) -> BattleModel:
 	var enemy_defs := {}
-	for enemy_id: StringName in [&"hostile", &"aerial", &"charmed", &"full"]:
+	for enemy_id: StringName in [&"hostile", &"aerial", &"full"]:
 		var definition := EnemyDef.new()
 		definition.id = enemy_id
 		definition.hp = 100

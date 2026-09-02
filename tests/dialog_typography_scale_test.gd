@@ -31,7 +31,7 @@ func _verify_sheet(context: String, viewport: Vector2i) -> void:
 	var dialog := DialogSheet.create(
 		owner,
 		"TypographyDialog",
-		"CONFIRM RESONANCE ALIGNMENT",
+		"CONFIRM COMMAND ALIGNMENT",
 		"This readable confirmation message intentionally wraps across several lines without escaping its scroll-safe container.",
 		"CONFIRM ALIGNMENT",
 		"RETURN TO COMMAND",

@@ -48,8 +48,5 @@ entries = {
 &"lunaris_act2_s13_witness_engine": ExtResource("20_act2_s13"),
 &"lunaris_act2_s14_residual_mercy": ExtResource("21_act2_s14"),
 &"lunaris_act2_s15_public_ledger": ExtResource("22_act2_s15"),
-&"lunaris_act2_s16_unfinished_proof": ExtResource("23_act2_s16"),
-&"gacha_lunaris_vessel": {"path": "res://assets/cinematics/gacha/audio/lunaris-vessel-cinematic.ogg", "loop": false},
-&"gacha_reliquary_duelist": {"path": "res://assets/cinematics/gacha/audio/reliquary-duelist-cinematic.ogg", "loop": false},
-&"gacha_archive_caster": {"path": "res://assets/cinematics/gacha/audio/archive-caster-cinematic.ogg", "loop": false}
+&"lunaris_act2_s16_unfinished_proof": ExtResource("23_act2_s16")
 }

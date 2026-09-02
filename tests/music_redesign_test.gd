@@ -109,20 +109,6 @@ func _exercise_runtime(music: Node) -> void:
 	var before_missing := StringName(music.call("current_id"))
 	_check(not bool(music.call("play_cue", &"missing_audio")), "missing cue rejects")
 	_check(music.call("current_id") == before_missing, "missing cue preserves active audio")
-	_check(bool(music.call("play_cue", &"gacha_lunaris_vessel")), "legacy cinematic cue starts")
-	_check(music.call("current_id") == &"gacha_lunaris_vessel", "cinematic cue remains catalog-compatible")
-	_check(
-		bool(music.call("transition_to_staging", &"lunaris", 0.75)),
-		"staging crossfades after a cinematic",
-	)
-	_check(
-		music.call("current_id") == &"lunaris_staging_archive_command",
-		"gacha crossfade resolves the command cue",
-	)
-	_check(
-		is_equal_approx(float(music.call("last_transition_fade_seconds")), 0.75),
-		"gacha crossfade keeps the authored transition time",
-	)
 	music.call("set_enabled", false)
 	_check(StringName(music.call("current_id")).is_empty(), "global mute stops active music")
 	_check(not bool(music.call("play_staging", &"lunaris")), "global mute blocks gameplay music")
@@ -140,7 +126,8 @@ func _exercise_director() -> void:
 	model.config = GameConfig.new()
 	model.config.base_hp_start = 10
 	model.base_hp = 10
-	model.spell_book = SpellBook.create({}, PackedInt32Array([0, 300]))
+	model.stage = StageDef.new()
+	model.stage.wave_starts = PackedInt32Array([0, 300])
 	_check(director.desired_state(model, &"orbit_early") == &"low", "empty setup stays low")
 	for index: int in 4:
 		var enemy := EnemyState.new()

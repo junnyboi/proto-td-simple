@@ -9,7 +9,7 @@ func _init() -> void:
 
 func _run() -> void:
 	var run_id := OS.get_environment("PROTO_TD_TEST_RUN_ID")
-	var expected_name := "ProtosTests-%s" % run_id
+	var expected_name := "GameTemplateTDTests-%s" % run_id
 	var actual_user_dir := OS.get_user_data_dir().replace("\\", "/")
 	_check(OS.get_environment("PROTO_TD_TEST_ISOLATED") == "1", "isolation marker missing")
 	_check(not run_id.is_empty(), "test run id missing")

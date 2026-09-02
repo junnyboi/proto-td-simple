@@ -104,8 +104,6 @@ static func _derive(data: Dictionary, payload: Dictionary) -> Dictionary:
 	if target_index < 0:
 		return _reject(&"unknown_hero")
 	var target: Dictionary = data["heroes"][target_index]
-	if target["hero_kind"] != "recruit":
-		return _reject(&"premium_name_locked")
 	if target["life_status"] != "ready":
 		return _reject(&"hero_not_ready")
 	if not HeroCodecScript.valid_callsign(callsign):

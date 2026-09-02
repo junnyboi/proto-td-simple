@@ -10,24 +10,15 @@ import sys
 from pathlib import Path
 
 CLASS_ORDER = (
-    "defender", "gunner", "mage_apprentice", "shock_trooper", "swordmaster",
-    "immovable", "sniper", "sorcerer", "witch_doctor", "banner_guard", "sword_saint",
+    "gunner", "mage_apprentice", "swordmaster",
 )
 GENDER_ORDER = ("female", "male")
 ACTION_ORDER = ("idle", "attack")
-DIRECTION_ORDER = ("ne", "se")
+DIRECTION_ORDER = ("ne",)
 CHROMA = {
-	"defender": "#00FF00",
 	"gunner": "#FF00FF",
 	"mage_apprentice": "#00FF00",
-	"shock_trooper": "#FF00FF",
 	"swordmaster": "#00FF00",
-	"immovable": "#FF00FF",
-	"sniper": "#FF00FF",
-	"sorcerer": "#FF00FF",
-	"witch_doctor": "#FF00FF",
-    "banner_guard": "#FF00FF",
-    "sword_saint": "#00FF00",
 }
 
 
@@ -59,7 +50,7 @@ def build_matrix(repository: Path, source_root: Path, class_filter: set[str]) ->
                         command += ["--window-start", "0.0", "--window-end", "3.95"]
                     print(f"BUILD {class_id}/{gender}/{action}_{direction}", flush=True)
                     run(command)
-                    mirror_direction = "nw" if direction == "ne" else "sw"
+                    mirror_direction = "nw"
                     atlas_dir = repository / "assets/sprites/operators/animated" / class_id / gender
                     record = (
                         source_root / "runtime-previews" / class_id / gender

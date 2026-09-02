@@ -9,9 +9,9 @@ const RECRUIT_ID := "recruit"
 const ATTEMPT_RULES_PATH := "res://sim/campaign_v3_attempts.gd"
 const HASH_PATH := "res://sim/campaign_v3_hash.gd"
 const RECRUITMENT_RULES_PATH := "res://sim/campaign_v3_recruitment.gd"
-const GACHA_RULES_PATH := "res://sim/campaign_v3_gacha.gd"
 const RENAMING_RULES_PATH := "res://sim/campaign_v3_renaming.gd"
-const HONOR_RULES_PATH := "res://sim/campaign_v3_honor.gd"
+const LEGACY_HONOR_MARKS := 5
+const LEGACY_MARKS_MAX := 1_000_000_000
 const BattleTicketScript := preload("res://sim/battle_ticket.gd")
 const BattleOutcomeScript := preload("res://sim/battle_outcome_v3.gd")
 const PromotionRulesScript := preload("res://sim/campaign_v3_promotion_rules.gd")
@@ -33,11 +33,6 @@ static func validate(data: Dictionary, context: Dictionary) -> Dictionary:
 	if not fresh["accepted"]:
 		return _reject(&"invalid_command_history")
 	var replay: Dictionary = fresh["value"]
-	replay["premium_pity_started_at_pull"] = int(data["premium_pity_started_at_pull"])
-	replay["premium_pity_streak"] = 0
-	replay["premium_marks_started_at_resolution"] = int(
-		data["premium_marks_started_at_resolution"]
-	)
 	replay["replay_marks_started_at_resolution"] = int(
 		data["replay_marks_started_at_resolution"]
 	)
@@ -117,8 +112,6 @@ static func _replay_record(
 			return _replay_resolution(data, context, record)
 		"confirm_promotions":
 			return _replay_promotions(data, context, record)
-		"pull_premium_hero":
-			return _replay_premium_pull(data, context, record)
 		"recruit_person":
 			return _replay_recruitment(data, context, record)
 		"rename_hero":
@@ -287,24 +280,6 @@ static func _replay_promotions(
 	return _accept(working)
 
 
-static func _replay_premium_pull(
-	data: Dictionary,
-	context: Dictionary,
-	record: Dictionary,
-) -> Dictionary:
-	var derived: Dictionary = load(GACHA_RULES_PATH).call("_derive", data, context)
-	if not derived["accepted"]:
-		return _reject(&"command_history_transition_mismatch")
-	var working: Dictionary = derived["data"]
-	working["save_revision"] = int(data["save_revision"]) + 1
-	var receipt: Dictionary = derived["receipt"]
-	receipt["save_revision"] = working["save_revision"]
-	if record["receipt"] != {"premium_pull": receipt}:
-		return _reject(&"command_history_receipt_mismatch")
-	_append_record(working, record)
-	return _accept(working)
-
-
 static func _replay_recruitment(
 	data: Dictionary,
 	context: Dictionary,
@@ -348,9 +323,9 @@ static func _replay_rename(data: Dictionary, record: Dictionary) -> Dictionary:
 
 
 static func _replay_honor(data: Dictionary, record: Dictionary) -> Dictionary:
-	var derived: Dictionary = load(HONOR_RULES_PATH).call(
-		"_derive", data, record["payload"],
-	)
+	# Honor no longer exists as a command. This decode-only branch validates
+	# ledgers written before the mechanic was removed without exposing it again.
+	var derived := _derive_legacy_honor(data, record["payload"])
 	if not derived["accepted"]:
 		return _reject(&"command_history_transition_mismatch")
 	var working: Dictionary = derived["data"]
@@ -361,6 +336,39 @@ static func _replay_honor(data: Dictionary, record: Dictionary) -> Dictionary:
 		return _reject(&"command_history_receipt_mismatch")
 	_append_record(working, record)
 	return _accept(working)
+
+
+static func _derive_legacy_honor(data: Dictionary, payload: Dictionary) -> Dictionary:
+	if int(data["next_attempt_id"]) != int(data["next_resolution_index"]):
+		return _reject(&"attempt_pending")
+	var hero_id := String(payload["hero_id"])
+	var target := _hero_by_id(data["heroes"], hero_id)
+	if target.is_empty():
+		return _reject(&"unknown_hero")
+	if target["life_status"] != "dead":
+		return _reject(&"hero_not_fallen")
+	for previous: Dictionary in data.get("command_receipts", []):
+		if (
+			String(previous.get("verb", "")) == "honor_fallen"
+			and String(previous.get("payload", {}).get("hero_id", "")) == hero_id
+		):
+			return _reject(&"already_honored")
+	var marks_before := int(data["marks"])
+	if marks_before > LEGACY_MARKS_MAX - LEGACY_HONOR_MARKS:
+		return _reject(&"marks_overflow")
+	var working: Dictionary = data.duplicate(true)
+	working["marks"] = marks_before + LEGACY_HONOR_MARKS
+	return {
+		"accepted": true,
+		"error_code": &"",
+		"data": working,
+		"receipt": {
+			"hero_id": hero_id,
+			"marks_before": marks_before,
+			"marks_after": marks_before + LEGACY_HONOR_MARKS,
+			"save_revision": 0,
+		},
+	}
 
 
 static func _append_record(data: Dictionary, record: Dictionary) -> void:
@@ -416,15 +424,10 @@ static func _fresh_data(seed_value: int, generation: int, context: Dictionary) -
 			"next_recruitment_index": heroes.size(),
 			"next_attempt_id": 1,
 			"next_resolution_index": 1,
-			"next_premium_pull_index": 0,
-			"premium_pity_started_at_pull": 0,
-			"premium_pity_streak": 0,
-			"premium_marks_started_at_resolution": 1,
 			"replay_marks_started_at_resolution": 1,
 			"marks": int(campaign["initial_marks"]),
 			"stage_stars": [],
 			"unlocked_traps": [],
-			"unlocked_spells": [],
 			"class_entitlements": [],
 			"offers": offers,
 			"heroes": heroes,
@@ -461,10 +464,6 @@ static func _fresh_hero(hero_id: String, index: int, starter: Dictionary) -> Dic
 		"custom_callsign": null,
 		"life_status": "ready",
 		"death": null,
-		"hero_kind": "recruit",
-		"premium_id": null,
-		"premium_lives": 0,
-		"premium_pull_count": 0,
 	}
 
 

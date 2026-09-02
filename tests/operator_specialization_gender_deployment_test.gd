@@ -6,17 +6,9 @@ const PortraitCatalogType := preload("res://data/presentation/operator_portrait_
 const UnitStateType := preload("res://sim/unit_state.gd")
 
 const OPERATOR_BY_CLASS := {
-	&"banner_guard": &"vanguard_2",
-	&"defender": &"defender_1",
 	&"gunner": &"sniper_1",
-	&"immovable": &"defender_2",
 	&"mage_apprentice": &"caster_1",
-	&"shock_trooper": &"vanguard_1",
-	&"sniper": &"sniper_2",
-	&"sorcerer": &"caster_2",
-	&"sword_saint": &"guard_2",
 	&"swordmaster": &"guard_1",
-	&"witch_doctor": &"witch_doctor_1",
 }
 var _failures: Array[String] = []
 

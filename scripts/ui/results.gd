@@ -1,21 +1,22 @@
 extends Control
 
-## Results projection over Game.last_result. Outcome, rewards, casualties, training
-## eligibility, and route semantics remain authoritative; this script only stages them.
+## Results projection over Game.last_result. Outcome, rewards, and
+## route semantics remain authoritative; this script only stages them.
 
 const SHELL_SCENE := preload("res://scenes/ui/components/aetheria_screen_shell.tscn")
+const LEADERBOARD_DIALOG_SCENE := preload(
+	"res://scenes/ui/components/leaderboard_dialog.tscn"
+)
 const KIND_DIRS := {
 	&"operator": "res://data/operators",
 	&"trap": "res://data/traps",
-	&"spell": "res://data/spells",
 }
 const AetheriaButtonType := preload("res://scripts/ui/components/aetheria_button.gd")
 const AetheriaLabelType := preload("res://scripts/ui/components/aetheria_label.gd")
 const AetheriaScreenShellType := preload("res://scripts/ui/components/aetheria_screen_shell.gd")
 const UiCopyType := preload("res://scripts/ui/components/ui_copy.gd")
-const ClassDefType := preload("res://data/class_def.gd")
-const ResonanceStarType := preload("res://scripts/ui/components/resonance_star.gd")
-const ResonanceCurrencyDisplayType := preload("res://scripts/ui/components/resonance_currency_display.gd")
+const CampaignStarType := preload("res://scripts/ui/components/campaign_star.gd")
+const MarksCurrencyDisplayType := preload("res://scripts/ui/components/marks_currency_display.gd")
 const ActionHoverFeedbackType := preload(
 	"res://scripts/ui/components/action_hover_feedback.gd"
 )
@@ -24,10 +25,7 @@ const DefeatAmbientLayerType := preload(
 )
 const Style := preload("res://scripts/ui/components/lunaris_ops_style.gd")
 const StagingSkinType := preload("res://scripts/ui/components/staging_skin.gd")
-const NARRATIVE_CATALOG := preload("res://data/presentation/narrative/stage_narrative_catalog.tres")
-const StageNarrativeDefType := preload("res://data/presentation/narrative/stage_narrative_def.gd")
-const StageNarrativeCatalogType := preload("res://data/presentation/narrative/stage_narrative_catalog.gd")
-const LUNARIS_BACKDROP := preload("res://assets/loading/lunaris_reliquary_loading.png")
+const COMMAND_BACKDROP := preload("res://assets/loading/command_backdrop.png")
 const RESULT_ACTION_WIDTH := 260.0
 const RESULT_COMMAND_ACTION_WIDTH := 400.0
 const RESULT_CLEAR_COMMAND_ACTION_WIDTH := RESULT_COMMAND_ACTION_WIDTH
@@ -41,8 +39,12 @@ const RESULT_PANEL_PADDING := 24.0
 const RESULT_CLEAR_HORIZONTAL_PADDING := 48.0
 const RESULT_CLEAR_VERTICAL_PADDING := 24.0
 const RESULT_DEFEAT_YIELD_PADDING := 64.0
-const RESULT_RESONANCE_STAR_SIZE := 58.0
-const RESULT_RESONANCE_STAR_PORTRAIT_SIZE := 46.0
+const RESULT_STAR_SIZE := 58.0
+const RESULT_STAR_PORTRAIT_SIZE := 46.0
+const RESULT_HEADER_FILL := Color("09131ed9")
+const RESULT_HEADER_BORDER := Color("d9b96ee8")
+const RESULT_HEADER_BORDER_WIDTH := 2
+const RESULT_HEADER_CORNER_RADIUS := 14
 const REWARD_REVEAL_STAGGER_SECONDS := 0.14
 const REWARD_REVEAL_DURATION_SECONDS := 0.56
 const REWARD_REVEAL_FADE_SECONDS := 0.28
@@ -60,11 +62,11 @@ var _result_meta: BoxContainer = null
 var _headline: AetheriaLabelType = null
 var _result_stars: HBoxContainer = null
 var _rewards_heading: AetheriaLabelType = null
-var _consequence_heading: AetheriaLabelType = null
 var _rewards_panel: PanelContainer = null
-var _consequence_panel: PanelContainer = null
+var _leaderboard_button: Button = null
+var _leaderboard_dialog: MissionLeaderboardDialog = null
 var _cleared_result := false
-var _landscape_action_columns := 3
+var _landscape_action_columns := 4
 var _reward_reveal_entries: Array[Dictionary] = []
 var _reward_reveal_tween: Tween = null
 var _defeat_ambient: DefeatAmbientLayerType = null
@@ -80,7 +82,7 @@ func _ready() -> void:
 
 
 func _build_presentation() -> void:
-	Style.add_backdrop(self, LUNARIS_BACKDROP)
+	Style.add_backdrop(self, COMMAND_BACKDROP)
 	var result: Dictionary = Game.last_result
 	var cleared := int(result.get("result", 0)) == BattleModel.Result.CLEAR
 	_cleared_result = cleared
@@ -104,6 +106,9 @@ func _build_presentation() -> void:
 	_build_header(layout, result, cleared)
 	_build_body(layout, result, cleared)
 	_build_actions(layout)
+	_leaderboard_dialog = LEADERBOARD_DIALOG_SCENE.instantiate() as MissionLeaderboardDialog
+	add_child(_leaderboard_dialog)
+	_leaderboard_dialog.closed.connect(_on_leaderboard_closed)
 	_on_layout_mode_changed(_shell.layout_mode())
 	_play_reward_reveals.call_deferred()
 
@@ -134,17 +139,7 @@ func _build_header(layout: VBoxContainer, result: Dictionary, cleared: bool) -> 
 	_outcome_plate.name = "OutcomeCeremony"
 	_outcome_plate.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_outcome_plate.custom_minimum_size.y = RESULT_HEADER_HEIGHT
-	if cleared:
-		Style.apply_panel(_outcome_plate, &"result")
-		_set_panel_padding(
-			_outcome_plate,
-			RESULT_CLEAR_HORIZONTAL_PADDING,
-			RESULT_CLEAR_VERTICAL_PADDING,
-			RESULT_CLEAR_HORIZONTAL_PADDING,
-			RESULT_CLEAR_VERTICAL_PADDING,
-		)
-	else:
-		_apply_borderless_defeat_header(_outcome_plate)
+	_apply_simple_outcome_header(_outcome_plate)
 	layout.add_child(_outcome_plate)
 	_header_grid = GridContainer.new()
 	_header_grid.name = "ResultsHeader"
@@ -191,9 +186,9 @@ func _build_header(layout: VBoxContainer, result: Dictionary, cleared: bool) -> 
 	_result_stars.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	_result_stars.add_theme_constant_override(&"separation", 8)
 	for index: int in 3:
-		var star := ResonanceStarType.new()
+		var star := CampaignStarType.new()
 		star.name = "ResultStar_%d" % (index + 1)
-		star.custom_minimum_size = Vector2.ONE * RESULT_RESONANCE_STAR_SIZE
+		star.custom_minimum_size = Vector2.ONE * RESULT_STAR_SIZE
 		star.set_state(Style.GOLD, cleared and index < int(result.get("stars", 0)))
 		_result_stars.add_child(star)
 	_result_meta.add_child(_result_stars)
@@ -226,7 +221,7 @@ func _build_header(layout: VBoxContainer, result: Dictionary, cleared: bool) -> 
 func _build_body(layout: VBoxContainer, result: Dictionary, cleared: bool) -> void:
 	_body_grid = GridContainer.new()
 	_body_grid.name = "ResultsBody"
-	_body_grid.columns = 2
+	_body_grid.columns = 1
 	_body_grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_body_grid.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_body_grid.add_theme_constant_override(&"h_separation", 14)
@@ -273,7 +268,7 @@ func _build_body(layout: VBoxContainer, result: Dictionary, cleared: bool) -> vo
 			var reward_row := _result_card(
 				"Reward%d" % i,
 				UiCopyType.format_text(&"ui.results.marks_reward", "+{count}", {&"count": amount}),
-				UiCopyType.text(&"ui.results.premium_fund", "Ordinary salvage and payment"),
+				UiCopyType.text(&"ui.results.marks_fund", "Ordinary salvage and payment"),
 				false,
 				true,
 			)
@@ -288,93 +283,6 @@ func _build_body(layout: VBoxContainer, result: Dictionary, cleared: bool) -> vo
 			)
 		else:
 			rewards.add_child(_result_card("Reward%d" % i, _reward_name(reward).to_upper(), UiCopyType.format_text(&"ui.results.unlocked_kind", "UNLOCKED · {kind}", {&"kind": _reward_kind(StringName(reward.get("kind", &"record"))).to_upper()}), false, true))
-	var entitlements: Array = result.get("class_entitlements_granted", [])
-	for i: int in entitlements.size():
-		rewards.add_child(_result_card("Entitlement%d" % i, _class_name(String(entitlements[i])).to_upper(), UiCopyType.text(&"ui.results.training_path_unlocked", "ADVANCED TRAINING PATH UNLOCKED"), false, true))
-	var xp_awards: Array = result.get("xp_awards", [])
-	for i: int in xp_awards.size():
-		var award: Dictionary = xp_awards[i]
-		var amount := int(award.get("delta", 0))
-		var xp_row := _result_card(
-			"XpAward%d" % i,
-			_hero_name(String(award.get("hero_id", ""))).to_upper(),
-			UiCopyType.format_text(&"ui.results.xp_reward", "+{count} XP", {&"count": amount}),
-			false,
-			true,
-		)
-		rewards.add_child(xp_row)
-		_register_reward_reveal(
-			xp_row,
-			&"Detail",
-			amount,
-			&"ui.results.xp_reward",
-			"+{count} XP",
-		)
-
-	_consequence_panel = PanelContainer.new()
-	_consequence_panel.name = "ConsequencePanel"
-	_consequence_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_consequence_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	Style.apply_panel(_consequence_panel, &"danger" if not cleared else &"quiet")
-	if cleared:
-		_set_panel_padding(
-			_consequence_panel,
-			RESULT_CLEAR_HORIZONTAL_PADDING,
-			RESULT_CLEAR_VERTICAL_PADDING,
-			RESULT_CLEAR_HORIZONTAL_PADDING,
-			RESULT_CLEAR_VERTICAL_PADDING,
-		)
-	else:
-		_ensure_panel_padding(_consequence_panel, 30.0, 26.0, 30.0, 24.0)
-	_body_grid.add_child(_consequence_panel)
-	var consequence_scroll := ScrollContainer.new()
-	consequence_scroll.name = "ConsequenceScroll"
-	consequence_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	consequence_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	consequence_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_consequence_panel.add_child(consequence_scroll)
-	var consequences := VBoxContainer.new()
-	consequences.name = "ConsequenceColumn"
-	consequences.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	consequences.add_theme_constant_override(&"separation", 16)
-	consequence_scroll.add_child(consequences)
-	_consequence_heading = _label("ConsequenceHeading", UiCopyType.text(&"ui.results.consequence", "Consequence").to_upper(), &"heading")
-	_consequence_heading.add_theme_font_size_override(&"font_size", 45)
-	consequences.add_child(_consequence_heading)
-	var narrative := _consequence_copy(result, cleared)
-	var consequence_line := _label("ConsequenceLine", narrative, &"body")
-	consequence_line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	consequence_line.add_theme_font_size_override(&"font_size", 30)
-	consequences.add_child(consequence_line)
-	if cleared:
-		var record := _narrative_record(result)
-		if record != null:
-			consequences.add_child(_transmission_card(record))
-	var dead_ids: Array = result.get("dead_hero_ids", [])
-	for i: int in dead_ids.size():
-		consequences.add_child(_result_card("FallenHero%d" % i, _hero_name(String(dead_ids[i])).to_upper(), UiCopyType.text(&"ui.results.fallen_record", "FALLEN · MEMORIAL RECORD SEALED"), true))
-	var premium_losses: Array = result.get("premium_life_losses", [])
-	for i: int in premium_losses.size():
-		var loss: Dictionary = premium_losses[i]
-		var callsign := _premium_name(String(loss["premium_id"]))
-		var detail := UiCopyType.format_text(&"ui.results.reserve_life_spent", "1 PREPARED BODY USED · {count} REMAINING", {&"count": int(loss["lives_after"])})
-		if bool(loss["locked_out"]):
-			detail = UiCopyType.text(&"ui.results.final_life_spent", "FINAL BODY LOST · SOUL ANCHORED · PREPARE ANOTHER BODY TO DEPLOY")
-		consequences.add_child(_result_card("PremiumLifeLoss%d" % i, callsign.to_upper(), detail, bool(loss["locked_out"])))
-	if dead_ids.is_empty() and premium_losses.is_empty():
-		var intact_card := _result_card("NoCasualties", UiCopyType.text(&"ui.results.company_intact", "COMPANY INTACT"), UiCopyType.text(&"ui.results.no_losses", "No terminal losses recorded."))
-		if intact_card is PanelContainer:
-			if cleared:
-				_set_panel_padding(
-					intact_card as PanelContainer,
-					RESULT_CLEAR_HORIZONTAL_PADDING,
-					RESULT_CLEAR_VERTICAL_PADDING,
-					RESULT_CLEAR_HORIZONTAL_PADDING,
-					RESULT_CLEAR_VERTICAL_PADDING,
-				)
-			else:
-				_set_panel_padding(intact_card as PanelContainer, 48.0, 24.0, 48.0, 24.0)
-		consequences.add_child(intact_card)
 
 
 func _build_actions(layout: VBoxContainer) -> void:
@@ -392,15 +300,6 @@ func _build_actions(layout: VBoxContainer) -> void:
 	action_center.add_child(_actions)
 	var focusable: Array[Button] = []
 	if Game.campaign_active and Game.campaign != null:
-		var eligible_count := int(Game.training_call(&"eligible_count"))
-		var training_available := eligible_count > 0
-		if training_available:
-			var training := _button("TrainRecruits", UiCopyType.text(&"ui.results.train_recruits", "Train Recruits"), UiCopyType.text(&"ui.results.train_short", "Train"), &"primary")
-			training.pressed.connect(_on_train_recruits)
-			training.tooltip_text = UiCopyType.format_text(&"ui.results.training_available", "{count} recruits ready for training.", {&"count": eligible_count})
-			_actions.add_child(training)
-			focusable.append(training)
-			_landscape_action_columns = 4
 		var retry := _button("RetryButton", UiCopyType.text(&"ui.results.retry", "Retry"), UiCopyType.text(&"ui.results.retry_short", "Retry"), &"secondary")
 		retry.pressed.connect(_on_retry)
 		_actions.add_child(retry)
@@ -412,14 +311,14 @@ func _build_actions(layout: VBoxContainer) -> void:
 				"NextMission",
 				UiCopyType.text(&"ui.results.next_mission", "Next Mission"),
 				UiCopyType.text(&"ui.results.next_mission", "Next Mission"),
-				&"primary" if not training_available else &"secondary",
+				&"primary",
 			)
 			if has_next_mission
 			else _button(
 				"ReturnToStaging",
 				UiCopyType.text(&"ui.results.return_to_staging", "Return to Staging"),
 				UiCopyType.text(&"ui.results.return_to_staging_short", "Command"),
-				&"primary" if not training_available else &"secondary",
+				&"primary",
 			)
 		)
 		next.custom_minimum_size.x = RESULT_COMMAND_ACTION_WIDTH if not _cleared_result else RESULT_CLEAR_COMMAND_ACTION_WIDTH
@@ -438,20 +337,31 @@ func _build_actions(layout: VBoxContainer) -> void:
 		"BackButton",
 		UiCopyType.text(&"ui.staging.mission_control", "Mission Control")
 		if returns_to_mission_control
-		else UiCopyType.text(&"ui.common.back_to_title", "Back to Title"),
+		else UiCopyType.text(&"ui.results.return_to_staging", "Return to Staging"),
 		UiCopyType.text(&"ui.common.back", "Back"),
 		&"secondary" if not focusable.is_empty() else &"primary",
 	)
 	back.pressed.connect(_on_back)
 	_actions.add_child(back)
 	focusable.append(back)
+	_leaderboard_button = _button(
+		"LeaderboardButton",
+		UiCopyType.text(&"ui.leaderboard.open", "Leaderboard"),
+		UiCopyType.text(&"ui.leaderboard.open", "Leaderboard"),
+		&"secondary",
+	)
+	_leaderboard_button.pressed.connect(_open_leaderboard)
+	_actions.add_child(_leaderboard_button)
+	focusable.append(_leaderboard_button)
 	_wire_focus(focusable)
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
-		if Game.campaign_active and Game.campaign != null:
+		if _leaderboard_dialog != null and _leaderboard_dialog.is_open():
+			_leaderboard_dialog.close()
+		elif Game.campaign_active and Game.campaign != null:
 			_on_return_to_staging()
 		else:
 			_on_back()
@@ -473,29 +383,19 @@ func _apply_responsive_layout() -> void:
 			else (2 if mode == &"compact_landscape" else _landscape_action_columns)
 		)
 	if _body_grid != null:
-		_body_grid.columns = 1 if mode == &"portrait" else 2
+		_body_grid.columns = 1
 	if _header_grid != null:
 		_header_grid.columns = 1
 	if _outcome_plate != null:
 		_outcome_plate.custom_minimum_size.y = 180.0 if mode == &"portrait" else RESULT_HEADER_HEIGHT
-		if not _cleared_result:
-			_apply_borderless_defeat_header(_outcome_plate)
-		if _cleared_result:
-			_set_panel_padding(
-				_outcome_plate,
-				RESULT_CLEAR_HORIZONTAL_PADDING,
-				RESULT_CLEAR_VERTICAL_PADDING,
-				RESULT_CLEAR_HORIZONTAL_PADDING,
-				RESULT_CLEAR_VERTICAL_PADDING,
-			)
-		else:
-			_set_panel_padding(
-				_outcome_plate,
-				18.0 if mode == &"portrait" else 30.0,
-				14.0 if mode == &"portrait" else 22.0,
-				18.0 if mode == &"portrait" else 30.0,
-				14.0 if mode == &"portrait" else 22.0,
-			)
+		_apply_simple_outcome_header(_outcome_plate)
+		_set_panel_padding(
+			_outcome_plate,
+			18.0 if mode == &"portrait" else RESULT_CLEAR_HORIZONTAL_PADDING,
+			14.0 if mode == &"portrait" else RESULT_CLEAR_VERTICAL_PADDING,
+			18.0 if mode == &"portrait" else RESULT_CLEAR_HORIZONTAL_PADDING,
+			14.0 if mode == &"portrait" else RESULT_CLEAR_VERTICAL_PADDING,
+		)
 	if _outcome_summary != null:
 		_outcome_summary.vertical = stacked_information
 		_outcome_summary.alignment = BoxContainer.ALIGNMENT_BEGIN
@@ -506,8 +406,6 @@ func _apply_responsive_layout() -> void:
 		_result_meta.add_theme_constant_override(&"separation", 12 if stacked_information else 16)
 	if _rewards_heading != null:
 		_rewards_heading.add_theme_font_size_override(&"font_size", 30 if large_text else (36 if mode == &"portrait" else 45))
-	if _consequence_heading != null:
-		_consequence_heading.add_theme_font_size_override(&"font_size", 30 if large_text else (36 if mode == &"portrait" else 45))
 	if _rewards_panel != null:
 		if mode == &"portrait":
 			_apply_portrait_information_panel(_rewards_panel)
@@ -533,29 +431,6 @@ func _apply_responsive_layout() -> void:
 				)
 			else:
 				_set_panel_padding(_rewards_panel, RESULT_DEFEAT_YIELD_PADDING, RESULT_DEFEAT_YIELD_PADDING, RESULT_DEFEAT_YIELD_PADDING, RESULT_DEFEAT_YIELD_PADDING)
-	if _consequence_panel != null:
-		if mode == &"portrait":
-			_apply_portrait_information_panel(_consequence_panel)
-			if _cleared_result:
-				_set_panel_padding(
-					_consequence_panel,
-					RESULT_CLEAR_HORIZONTAL_PADDING,
-					RESULT_CLEAR_VERTICAL_PADDING,
-					RESULT_CLEAR_HORIZONTAL_PADDING,
-					RESULT_CLEAR_VERTICAL_PADDING,
-				)
-		else:
-			Style.apply_panel(_consequence_panel, &"quiet" if _cleared_result else &"danger")
-			if _cleared_result:
-				_set_panel_padding(
-					_consequence_panel,
-					RESULT_CLEAR_HORIZONTAL_PADDING,
-					RESULT_CLEAR_VERTICAL_PADDING,
-					RESULT_CLEAR_HORIZONTAL_PADDING,
-					RESULT_CLEAR_VERTICAL_PADDING,
-				)
-			else:
-				_set_panel_padding(_consequence_panel, 30.0, 26.0, 30.0, 24.0)
 	if _headline != null:
 		var headline_size := 34 if large_text else ((34 if _cleared_result else 45) if mode == &"portrait" else 60)
 		_headline.add_theme_font_size_override(&"font_size", headline_size)
@@ -577,7 +452,7 @@ func _apply_responsive_layout() -> void:
 	if _result_stars != null:
 		for child: Node in _result_stars.get_children():
 			(child as Control).custom_minimum_size = Vector2.ONE * (
-				RESULT_RESONANCE_STAR_PORTRAIT_SIZE if stacked_information else RESULT_RESONANCE_STAR_SIZE
+				RESULT_STAR_PORTRAIT_SIZE if stacked_information else RESULT_STAR_SIZE
 			)
 	if _tally != null:
 		_tally.custom_minimum_size.x = 0.0 if stacked_information else 270.0
@@ -631,18 +506,10 @@ func _relayout_shell() -> void:
 
 
 func _reset_information_scrolls() -> void:
-	for node_name: StringName in [&"RewardsScroll", &"ConsequenceScroll"]:
+	for node_name: StringName in [&"RewardsScroll"]:
 		var scroll := find_child(String(node_name), true, false) as ScrollContainer
 		if scroll != null:
 			scroll.scroll_vertical = 0
-
-
-func _consequence_copy(result: Dictionary, cleared: bool) -> String:
-	var record := _narrative_record(result)
-	if record == null:
-		return UiCopyType.text(&"ui.error.missing_stage_narrative", "Mission record unavailable. Return to Mission Control.")
-	var field: int = StageNarrativeDefType.Field.CLEAR_DEBRIEF if cleared else StageNarrativeDefType.Field.DEFEAT_DEBRIEF
-	return UiCopyType.stage_narrative_text(record, field)
 
 
 func _result_headline(stage_id: StringName, cleared: bool) -> String:
@@ -656,50 +523,6 @@ func _result_headline(stage_id: StringName, cleared: bool) -> String:
 		"STAGE {stage} CLEARED" if cleared else "STAGE {stage} DEFEATED",
 		{&"stage": stage_token},
 	).to_upper()
-
-
-func _narrative_record(result: Dictionary) -> StageNarrativeDefType:
-	var stage_id := StringName(result.get("stage_id", &""))
-	return (
-		(NARRATIVE_CATALOG as StageNarrativeCatalogType).get_record(stage_id)
-		if not String(stage_id).is_empty()
-		else null
-	)
-
-
-func _transmission_card(record: StageNarrativeDefType) -> PanelContainer:
-	var card := PanelContainer.new()
-	card.name = "ClearTransmission"
-	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	Style.apply_panel(card, &"selected")
-	_ensure_panel_padding(card, 24.0)
-	var stack := VBoxContainer.new()
-	stack.name = "TransmissionContent"
-	stack.add_theme_constant_override(&"separation", 5)
-	card.add_child(stack)
-	var transmission_heading := _label(
-		"TransmissionHeading",
-		UiCopyType.text(&"ui.results.transmission", "CLEAR TRANSMISSION"),
-		&"dense_detail",
-	)
-	transmission_heading.add_theme_font_size_override(&"font_size", 27)
-	stack.add_child(transmission_heading)
-	var speaker := _label(
-		"TransmissionSpeaker",
-		UiCopyType.stage_narrative_text(record, StageNarrativeDefType.Field.TRANSMISSION_SPEAKER),
-		&"dense_heading",
-	)
-	speaker.add_theme_font_size_override(&"font_size", 36)
-	stack.add_child(speaker)
-	var body := _label(
-		"TransmissionBody",
-		UiCopyType.stage_narrative_text(record, StageNarrativeDefType.Field.TRANSMISSION),
-		&"dense_body",
-	)
-	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	body.add_theme_font_size_override(&"font_size", 30)
-	stack.add_child(body)
-	return card
 
 
 func _result_card(
@@ -745,8 +568,8 @@ func _apply_currency_reward_presentation(row: Control, amount: int) -> void:
 	var title_index := title.get_index()
 	stack.remove_child(title)
 	title.free()
-	var display := ResonanceCurrencyDisplayType.new()
-	display.name = "RewardResonanceShard"
+	var display := MarksCurrencyDisplayType.new()
+	display.name = "RewardMarks"
 	display.configure("+%d" % amount, 36, 46.0, "", &"marks")
 	display.alignment = BoxContainer.ALIGNMENT_BEGIN
 	display.amount_label.name = "Title"
@@ -884,8 +707,6 @@ func _reward_name(reward: Dictionary) -> String:
 		return UiCopyType.operator_name(definition)
 	if definition is TrapDef:
 		return UiCopyType.trap_name(definition)
-	if definition is SpellDef:
-		return UiCopyType.spell_name(definition)
 	push_warning("Results: unresolved reward %s/%s" % [kind, identifier])
 	return UiCopyType.text(&"ui.results.unknown_reward", "Unknown reward")
 
@@ -894,7 +715,6 @@ func _reward_kind(kind: StringName) -> String:
 	match kind:
 		&"operator": return UiCopyType.text(&"ui.reward_kind.operator", "Operator")
 		&"trap": return UiCopyType.text(&"ui.reward_kind.trap", "Trap")
-		&"spell": return UiCopyType.text(&"ui.reward_kind.spell", "Spell")
 		_: return UiCopyType.text(&"ui.reward_kind.unknown", "Record")
 
 
@@ -928,47 +748,10 @@ func _reset_presentation_references() -> void:
 	_headline = null
 	_result_stars = null
 	_rewards_heading = null
-	_consequence_heading = null
 	_rewards_panel = null
-	_consequence_panel = null
-	_landscape_action_columns = 3
-
-
-func _hero_name(hero_id: String) -> String:
-	var projection := Game.campaign_projection()
-	for key: String in ["ready_heroes", "fallen_heroes", "premium_heroes"]:
-		for row: Dictionary in projection.get(key, []):
-			if String(row.get("hero_id", "")) == hero_id:
-				var raw_callsign: Variant = row.get("callsign", "")
-				var raw_premium_id: Variant = row.get("premium_id", "")
-				var callsign := "" if raw_callsign == null else str(raw_callsign)
-				var premium_id := "" if raw_premium_id == null else str(raw_premium_id)
-				return (
-					UiCopyType.premium_name(premium_id, callsign)
-					if not premium_id.is_empty()
-					else callsign
-				)
-	push_warning("Results: unknown hero %s" % hero_id)
-	return UiCopyType.text(&"ui.results.unknown_hero", "Unknown hero")
-
-
-func _premium_name(premium_id: String) -> String:
-	var projection := Game.campaign_projection()
-	for row: Dictionary in projection.get("premium_pool", []):
-		if String(row.get("premium_id", "")) == premium_id:
-			var raw_callsign: Variant = row.get("callsign", "")
-			var callsign := "" if raw_callsign == null else str(raw_callsign)
-			return UiCopyType.premium_name(premium_id, callsign)
-	push_warning("Results: unknown premium hero %s" % premium_id)
-	return UiCopyType.text(&"ui.results.unknown_premium_hero", "Unknown premium hero")
-
-
-func _class_name(class_id: String) -> String:
-	var definition := load("res://data/classes/%s.tres" % class_id) as ClassDefType
-	if definition != null:
-		return UiCopyType.text(definition.name_key, definition.name)
-	push_warning("Results: unknown class %s" % class_id)
-	return UiCopyType.text(&"ui.results.unknown_class", "Unknown class")
+	_leaderboard_button = null
+	_leaderboard_dialog = null
+	_landscape_action_columns = 4
 
 
 func _wire_focus(focusable: Array[Button]) -> void:
@@ -1002,25 +785,33 @@ func _next_mission_id() -> StringName:
 
 func _on_return_to_staging() -> void:
 	Sfx.play("ui_click")
-	Game.open_staging()
+	Game.open_stage_select()
 
 
 func _on_next_mission(stage_id: StringName) -> void:
 	Sfx.play("ui_click")
-	if not Game.open_field_team_for_stage(stage_id):
+	if not Game.start_campaign_stage(stage_id):
 		# If campaign authority changed after the debrief mounted, keep the player
 		# on a safe mission-selection route instead of opening a stale operation.
 		Game.open_stage_select()
 
 
-func _on_train_recruits() -> void:
-	Sfx.play("ui_click")
-	Game.training_call(&"open", &"results")
-
-
 func _on_retry() -> void:
 	Sfx.play("ui_click")
-	Game.open_squad_select()
+	var stage_id := StringName(Game.last_result.get("stage_id", &""))
+	if stage_id.is_empty() or not Game.start_campaign_stage(stage_id):
+		Game.open_stage_select()
+
+
+func _open_leaderboard() -> void:
+	if _leaderboard_dialog == null:
+		return
+	Sfx.play("menu_open")
+	_leaderboard_dialog.open(_leaderboard_button)
+
+
+func _on_leaderboard_closed() -> void:
+	Sfx.play("menu_close")
 
 
 func _on_back() -> void:
@@ -1028,7 +819,7 @@ func _on_back() -> void:
 	if _cleared_result and Game.campaign_active and Game.campaign != null:
 		Game.open_stage_select()
 	else:
-		Game.open_title()
+		Game.open_campaign_home()
 
 
 func _label(label_name: String, label_text: String, role: StringName) -> AetheriaLabelType:
@@ -1093,12 +884,16 @@ func _result_action_box(fill: Color, edge: Color, border_width: int) -> StyleBox
 	return style
 
 
-func _apply_borderless_defeat_header(panel: PanelContainer) -> void:
-	var style := StyleBoxEmpty.new()
-	style.content_margin_left = 30.0
-	style.content_margin_top = 22.0
-	style.content_margin_right = 30.0
-	style.content_margin_bottom = 22.0
+func _apply_simple_outcome_header(panel: PanelContainer) -> void:
+	var style := StyleBoxFlat.new()
+	style.bg_color = RESULT_HEADER_FILL
+	style.border_color = RESULT_HEADER_BORDER
+	style.set_border_width_all(RESULT_HEADER_BORDER_WIDTH)
+	style.set_corner_radius_all(RESULT_HEADER_CORNER_RADIUS)
+	style.content_margin_left = RESULT_CLEAR_HORIZONTAL_PADDING
+	style.content_margin_top = RESULT_CLEAR_VERTICAL_PADDING
+	style.content_margin_right = RESULT_CLEAR_HORIZONTAL_PADDING
+	style.content_margin_bottom = RESULT_CLEAR_VERTICAL_PADDING
 	panel.add_theme_stylebox_override(&"panel", style)
 
 

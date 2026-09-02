@@ -21,7 +21,7 @@ temporary_base=${TMPDIR:-/tmp}
 run_root=$(mktemp -d "$temporary_base/proto-td-test.XXXXXX")
 run_token=$(basename "$run_root")-$$
 run_id=${run_token//[^a-zA-Z0-9._-]/-}
-custom_user_dir_name="ProtosTests-$run_id"
+custom_user_dir_name="GameTemplateTDTests-$run_id"
 project_root="$run_root/project"
 xdg_data_root="$run_root/xdg-data"
 artifact_root=${PROTO_TD_TEST_ARTIFACT_DIR:-"$ROOT/build/test-runs/$run_id"}
@@ -77,7 +77,7 @@ cleanup() {
     rm -rf -- "$run_root"
   fi
   case "$isolated_user_dir" in
-    */ProtosTests-proto-td-test.*)
+    */GameTemplateTDTests-proto-td-test.*)
       rm -rf -- "$isolated_user_dir"
       ;;
     *)

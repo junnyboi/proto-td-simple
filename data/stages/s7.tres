@@ -102,11 +102,7 @@ waves = Array[Dictionary]([{
 wave_starts = PackedInt32Array(0, 500, 850)
 leak_limit = 3
 squad_size = 6
-recovery_roster = Array[StringName]([&"vanguard_1", &"guard_1", &"guard_2", &"sniper_1", &"caster_2", &"defender_1"])
-rewards = Array[Dictionary]([{
-"id": &"witch_doctor_1",
-"kind": &"operator"
-}])
+recovery_roster = Array[StringName]([&"caster_1", &"guard_1", &"sniper_1"])
+rewards = Array[Dictionary]([])
 campaign_index = 7
-requires = Array[StringName]([&"spike_plate", &"tar_pit", &"sniper_1", &"bolt", &"charm", &"slow_field"])
-intro_hint = "Three fronts share one corridor. Sequence traps, Bolt, anti-air, Charm, and Slow Field."
+requires = Array[StringName]([&"spike_plate", &"tar_pit", &"sniper_1"])

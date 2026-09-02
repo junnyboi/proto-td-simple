@@ -36,13 +36,12 @@ LOCALIZED_CALL_RE = re.compile(
 IGNORE_LITERAL = re.compile(r"^(?:|[A-Za-z0-9_./:-]+|res://.*|user://.*|uid://.*|[0-9 .,:;_+*/%<>=!&|?×←→↔↕•—-]+)$")
 FORMAT_TOKEN_RE = re.compile(r"%(?:\d+\$)?[-+#0 ]*(?:\d+|\*)?(?:\.\d+)?[diouxXeEfFgGscv%]")
 REVIEWED_RUNTIME_DEFAULTS = {
-    ("scripts/ui/title.gd", "PROTOS DEFENSE"),
     ("scenes/ui/title_settings.tscn", "MASTER VOLUME"),
     ("scenes/ui/title_settings.tscn", "MUSIC VOLUME"),
     ("scenes/ui/title_settings.tscn", "SFX VOLUME"),
     ("scenes/ui/title_settings.tscn", "MUSIC // ON"),
     ("scenes/ui/title_settings.tscn", "FRAME LIMIT"),
-    ("scenes/ui/title_settings.tscn", "ANIMATED BACKGROUND // ON"),
+    ("scenes/ui/title_settings.tscn", "REDUCED MOTION // OFF"),
     ("scenes/ui/title_settings.tscn", "TEXT SCALE  //  100%"),
     ("scenes/ui/title_settings.tscn", "Settings could not be saved."),
 }
@@ -261,7 +260,7 @@ def main() -> int:
         if str(term) in zh_text:
             chinese_glossary_failures.append({"forbidden": str(term)})
     glossary = contract.get("chinese_glossary", {})
-    for key in ("first_explanation", "company", "anima_engine", "human_farm", "soul", "soul_anchor", "moon_gate", "repair_platform", "slow_field"):
+    for key in ("first_explanation", "company", "anima_engine", "human_farm", "soul", "soul_anchor", "moon_gate", "repair_platform"):
         term = str(glossary.get(key, ""))
         if term and term not in zh_text:
             chinese_glossary_failures.append({"missing": term, "glossary_key": key})
@@ -270,15 +269,6 @@ def main() -> int:
         for key, value in zh_active.items():
             if soul_energy in value and not any(token in value for token in ("运送", "提取", "抽取", "燃烧", "供能", "能量")):
                 chinese_glossary_failures.append({"key": key, "term": soul_energy, "reason": "not clearly extracted energy"})
-
-    charm_failures: list[dict[str, Any]] = []
-    charm_values = "\n".join(value for key, value in en_active.items() if "charm" in key or "stage.s6." in key)
-    required_charm = str(contract.get("required_charm_description", ""))
-    if required_charm and required_charm.casefold() not in charm_values.casefold():
-        charm_failures.append({"missing": required_charm})
-    for term in contract.get("forbidden_charm_descriptions", []):
-        if str(term).casefold() in charm_values.casefold():
-            charm_failures.append({"forbidden": str(term)})
 
     report: dict[str, Any] = {
         "schema_version": 4,
@@ -308,7 +298,6 @@ def main() -> int:
             "company_name_failures": company_name_failures,
             "retired_canon_failures": retired_canon_failures,
             "chinese_glossary_failures": chinese_glossary_failures,
-            "charm_description_failures": charm_failures,
         },
         "temporary_phase6_waivers": contract.get("phase6_temporary_waivers", []),
         "waived_matches": waived_sources,
@@ -321,7 +310,6 @@ def main() -> int:
         "retired_canon_failures": len(retired_canon_failures),
         "required_canon_failures": len(required_canon_failures) + len(required_runtime_failures) + len(canon_hash_failures),
         "chinese_glossary_failures": len(chinese_glossary_failures),
-        "charm_description_failures": len(charm_failures),
         "temporary_phase6_waivers": len(contract.get("phase6_temporary_waivers", [])),
     }
     report["summary"] = counts | {"status": "pass" if all(v == 0 for k, v in counts.items() if k != "temporary_phase6_waivers") else "fail"}

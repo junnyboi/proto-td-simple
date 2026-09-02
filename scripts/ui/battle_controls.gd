@@ -16,8 +16,9 @@ const FONT_SIZE := GameTypographyType.DETAIL
 const SPEED_CYCLE: Array[float] = [1.0, 2.0, 4.0, 0.0]
 const SPEED_STEPS: Array[float] = [0.0, 1.0, 2.0, 4.0]
 const PAUSED_LABEL_MIN_WIDTH := 0.0
-const COMMAND_TARGET_SIZE := Vector2(112.0, 64.0)
+const COMMAND_TARGET_SIZE := Vector2(112.0, 48.0)
 const DECK_PADDING := 24.0
+const DECK_VERTICAL_PADDING := DECK_PADDING + 8.0
 const ACTION_GAP := 12
 
 enum ConfirmationState {
@@ -95,9 +96,9 @@ func _build_row() -> void:
 	_controls_deck.mouse_filter = Control.MOUSE_FILTER_PASS
 	var deck_style := Style.panel_style(&"hud").duplicate() as StyleBox
 	deck_style.content_margin_left = DECK_PADDING
-	deck_style.content_margin_top = DECK_PADDING
+	deck_style.content_margin_top = DECK_VERTICAL_PADDING
 	deck_style.content_margin_right = DECK_PADDING
-	deck_style.content_margin_bottom = DECK_PADDING
+	deck_style.content_margin_bottom = DECK_VERTICAL_PADDING
 	_controls_deck.add_theme_stylebox_override(&"panel", deck_style)
 	add_child(_controls_deck)
 	var center := CenterContainer.new()
@@ -128,7 +129,7 @@ func _build_row() -> void:
 	_paused_label.custom_minimum_size = Vector2(PAUSED_LABEL_MIN_WIDTH, 0)
 	_paused_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	Style.apply_label(_paused_label, &"status")
-	_paused_label.add_theme_font_size_override(&"font_size", GameTypographyType.DISPLAY)
+	_paused_label.add_theme_font_size_override(&"font_size", GameTypographyType.ACTION)
 	_paused_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	box.add_child(_paused_label)
 	_controls_deck.reset_size()
@@ -175,7 +176,7 @@ func _make_button(button_name: String, text: String, role: StringName) -> Button
 	btn.text = text
 	btn.focus_mode = Control.FOCUS_ALL
 	btn.custom_minimum_size = COMMAND_TARGET_SIZE
-	Style.apply_compact_rounded_button(btn, role, 12.0, 12)
+	Style.apply_compact_rounded_button(btn, role, 6.0, 12)
 	btn.add_theme_font_size_override(&"font_size", FONT_SIZE)
 	return btn
 
@@ -237,7 +238,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.is_action_pressed("ui_cancel") and _confirmation_state == ConfirmationState.ACTIVE:
 			cancel_resign_confirmation()
 		# A visible confirmation owns every event that escaped GUI dispatch. This
-		# prevents map, tutorial, deployment, spell, pause, and shortcut fallthrough.
+		# prevents map, tutorial, deployment, pause, and shortcut fallthrough.
 		get_viewport().set_input_as_handled()
 		return
 

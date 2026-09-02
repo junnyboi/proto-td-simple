@@ -8,15 +8,11 @@ schema_version = 2
 visual_id = &"operator_swordmaster_male"
 idle_by_direction = {
 &"ne": &"op_anim_swordmaster_male_idle_ne",
-&"nw": &"op_anim_swordmaster_male_idle_nw",
-&"se": &"op_anim_swordmaster_male_idle_se",
-&"sw": &"op_anim_swordmaster_male_idle_sw"
+&"nw": &"op_anim_swordmaster_male_idle_nw"
 }
 attack_by_direction = {
 &"ne": &"op_anim_swordmaster_male_attack_ne",
-&"nw": &"op_anim_swordmaster_male_attack_nw",
-&"se": &"op_anim_swordmaster_male_attack_se",
-&"sw": &"op_anim_swordmaster_male_attack_sw"
+&"nw": &"op_anim_swordmaster_male_attack_nw"
 }
 idle_frame_count = 24
 attack_frame_count = 13

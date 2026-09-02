@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3]
-
-[ext_resource type="Script" path="res://test/act1_s2_s4_playtest_visual_harness.gd" id="1_harness"]
-
-[node name="Act1S2S4PlaytestVisualHarness" type="Node2D"]
-script = ExtResource("1_harness")

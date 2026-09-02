@@ -1,4 +1,4 @@
-# Template
+# Game template - TD
 This is designed to be a lightweight game template for tower defense style games.
 
 ## Run
@@ -9,7 +9,8 @@ Open the repository in Godot 4.7.2 or run:
 godot --path .
 ```
 
-The main scene is `res://scenes/title.tscn`.
+The main scene is `res://scenes/loading.tscn`. Loading opens the start screen, and
+the campaign screen is entered only after the player activates **Start**.
 
 ## Basic development check
 

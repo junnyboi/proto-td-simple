@@ -19,17 +19,9 @@ const MAX_PACK_BYTES := 64 * 1024 * 1024
 const MAX_PREDICTIVE_CLASSES := 3
 const NETWORK_REFRESH_SECONDS := 5.0
 const ADVANCED_CLASSES := [
-	"banner_guard",
-	"defender",
 	"gunner",
-	"immovable",
 	"mage_apprentice",
-	"shock_trooper",
-	"sniper",
-	"sorcerer",
-	"sword_saint",
 	"swordmaster",
-	"witch_doctor",
 ]
 
 var _specs: Dictionary = {}
@@ -556,13 +548,13 @@ static func network_profile_from_arguments(arguments: PackedStringArray) -> Stri
 static func prefetch_limits_for_profile(profile: StringName) -> Dictionary:
 	match profile:
 		&"constrained":
-			return {&"classes": 0, &"resonance": 0, &"missions": 0}
+			return {&"classes": 0, &"missions": 0}
 		&"slow":
-			return {&"classes": 1, &"resonance": 0, &"missions": 0}
+			return {&"classes": 1, &"missions": 0}
 		&"fast":
-			return {&"classes": 3, &"resonance": 6, &"missions": 6}
+			return {&"classes": 3, &"missions": 6}
 		_:
-			return {&"classes": 2, &"resonance": 1, &"missions": 2}
+			return {&"classes": 2, &"missions": 2}
 
 
 static func predictive_class_order(

@@ -13,12 +13,16 @@ func _init() -> void:
 
 func _run() -> void:
 	_remove_prefs()
-	var title := load("res://scenes/title.tscn").instantiate() as Control
-	title.call("set_preferences_path", PREFS_PATH)
-	root.add_child(title)
+	var game := root.get_node("Game")
+	game.call("set_run_seed", 9357)
+	_check(bool(game.call("start_campaign", false, true)), "Campaign fixture failed")
+	var campaign := load("res://scenes/stage_select.tscn").instantiate() as Control
+	campaign.call("set_preferences_path", PREFS_PATH)
+	root.add_child(campaign)
 	await process_frame
 	await process_frame
 	var music := root.get_node("Music")
+	music.call("play_staging", &"lunaris")
 	var master_index := AudioServer.get_bus_index(&"Master")
 	var music_index := AudioServer.get_bus_index(&"Music")
 	var sfx_index := AudioServer.get_bus_index(&"SFX")
@@ -27,10 +31,10 @@ func _run() -> void:
 	_check(AudioServer.get_bus_send(sfx_index) == &"Master", "SFX bus is not routed through Master")
 	var active_player := music.call("_active_player") as AudioStreamPlayer
 	_check(active_player != null and active_player.bus == &"Music", "active music player bypasses the Music bus")
-	_check(music.call("current_id") == &"title_lunaris", "Title music did not start for the volume test")
+	_check(music.call("current_id") == &"lunaris_staging_archive_command", "Campaign music did not start for the volume test")
 
-	title.call("_open_settings")
-	var settings := title.get_node("TitleSettings") as Control
+	campaign.call("_open_settings")
+	var settings := campaign.get_node("TitleSettings") as Control
 	await _wait_for_transition(settings, &"ACTIVE")
 	var master := settings.find_child("MasterVolumeSlider", true, false) as HSlider
 	var master_mute := settings.find_child("MasterMuteButton", true, false) as Button
@@ -72,17 +76,19 @@ func _run() -> void:
 	master.value = 35.0
 	master_mute.pressed.emit()
 	await process_frame
-	title.call("_close_settings")
+	campaign.call("_cancel_settings")
 	await _wait_for_transition(settings, &"CLOSED")
 	_check(not AudioServer.is_bus_mute(master_index), "Settings cancel did not restore Master mute state")
 	_check(absf(db_to_linear(AudioServer.get_bus_volume_db(master_index)) - 1.0) <= EPSILON, "Settings cancel did not restore Master volume")
 	_check(absf(db_to_linear(AudioServer.get_bus_volume_db(music_index)) - 1.0) <= EPSILON, "Settings cancel did not restore Music volume")
 
-	var game := root.get_node("Game")
-	if game.get("content") == title:
+	if game.get("content") == campaign:
 		game.set("content", null)
 	music.call("stop")
-	title.queue_free()
+	campaign.queue_free()
+	game.set("campaign_active", false)
+	game.set("campaign", null)
+	game.set("campaign_store", null)
 	for _frame: int in range(10):
 		await process_frame
 	_remove_prefs()

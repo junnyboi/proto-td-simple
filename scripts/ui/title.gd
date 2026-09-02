@@ -1,12 +1,16 @@
 extends Control
 
-## Premium Lunaris player entry. Title remains the presentation and music owner;
+## Player start screen. Title remains the presentation and music owner;
 ## Settings is an explicit exclusive full-viewport child state.
 
-const LunarisBackdropType := preload("res://scripts/ui/components/lunaris_animated_backdrop.gd")
+const TopAlignedCoverType := preload("res://scripts/ui/components/top_aligned_cover.gd")
+const TITLE_ART := preload("res://assets/loading/command_backdrop.png")
 const StagingSkinType := preload("res://scripts/ui/components/staging_skin.gd")
 const UiCopyType := preload("res://scripts/ui/components/ui_copy.gd")
 const ViewPreferencesType := preload("res://scripts/view/view_preferences.gd")
+const LEADERBOARD_DIALOG_SCENE := preload(
+	"res://scenes/ui/components/leaderboard_dialog.tscn"
+)
 const STAGING_THEME := preload("res://data/presentation/ui/threshold_theme.tres")
 
 const GOLD := Color("d8b978")
@@ -18,7 +22,7 @@ const FOCUS_PULSE_SECONDS := 2.8
 const FOCUS_PULSE_MIN_ALPHA := 0.10
 const FOCUS_PULSE_MAX_ALPHA := 0.16
 const TITLE_UI_SCALE := 1.15
-const TITLE_FONT_SCALE := 3.0
+const TITLE_FONT_SCALE := 1.0
 const ENTRY_FADE_SECONDS := 0.56
 const ENTRY_STAGGER_SECONDS := 0.09
 const HOVER_SCALE := Vector2(1.025, 1.025)
@@ -33,17 +37,19 @@ const MASTER_BUS := &"Master"
 const MUSIC_BUS := &"Music"
 const SFX_BUS := &"SFX"
 
-enum ScreenState { TITLE, SETTINGS, COMMITTING }
+enum ScreenState { TITLE, LEADERBOARD, SETTINGS, COMMITTING }
 
 var _screen_state := ScreenState.TITLE
 var _settings_snapshot: Dictionary = {}
-var _backdrop: LunarisBackdropType = null
+var _backdrop: TopAlignedCoverType = null
 var _entry_scroll: ScrollContainer = null
 var _entry_host: MarginContainer = null
 var _entry_stack: VBoxContainer = null
 var _wordmark: Label = null
 var _orbit_rule: HBoxContainer = null
 var _start_button: Button = null
+var _leaderboard_button: Button = null
+var _leaderboard_dialog: MissionLeaderboardDialog = null
 var _language_toggle: Button = null
 var _footer_settings_dock: MarginContainer = null
 var _footer_settings_button: Button = null
@@ -98,12 +104,6 @@ func _ready() -> void:
 				_on_content_background_policy_changed,
 			)
 	_apply_background_download_policy()
-	var cinematic_prefetch := get_node_or_null("/root/CinematicPrefetch")
-	if cinematic_prefetch != null:
-		cinematic_prefetch.call("prefetch_from_title", get_viewport_rect().size)
-	var mission_cinematic_prefetch := get_node_or_null("/root/MissionCinematicPrefetch")
-	if mission_cinematic_prefetch != null:
-		mission_cinematic_prefetch.call("prefetch_from_title")
 	_build_screen()
 	move_child(_settings_state, get_child_count() - 1)
 	_settings_state.cancel_requested.connect(_cancel_settings)
@@ -129,8 +129,6 @@ func _exit_tree() -> void:
 	for tween_value: Variant in _hover_tweens.values():
 		if tween_value is Tween and (tween_value as Tween).is_valid():
 			(tween_value as Tween).kill()
-	if _backdrop != null:
-		_backdrop.stop()
 
 
 func _process(delta: float) -> void:
@@ -147,17 +145,20 @@ func _process(delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if _screen_state in [ScreenState.SETTINGS, ScreenState.COMMITTING] and event.is_action_pressed("ui_cancel"):
+	if _screen_state in [ScreenState.LEADERBOARD, ScreenState.SETTINGS, ScreenState.COMMITTING] and event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
-		if _screen_state == ScreenState.SETTINGS:
+		if _screen_state == ScreenState.LEADERBOARD:
+			_leaderboard_dialog.close()
+		elif _screen_state == ScreenState.SETTINGS:
 			_cancel_settings()
 
 
 func _build_screen() -> void:
-	_backdrop = LunarisBackdropType.new()
-	_backdrop.name = "LunarisBackdrop"
+	_backdrop = TopAlignedCoverType.new()
+	_backdrop.name = "TitleBackdrop"
+	_backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_backdrop.texture = TITLE_ART
 	add_child(_backdrop)
-	_backdrop.set_reduced_motion(_reduced_motion)
 
 	var atmosphere := ColorRect.new()
 	atmosphere.name = "Atmosphere"
@@ -220,6 +221,11 @@ func _build_screen() -> void:
 	_entry_stack.add_child(_start_button)
 	_wire_title_action_feedback(_start_button)
 
+	_leaderboard_button = _entry_button("LeaderboardButton", false)
+	_leaderboard_button.pressed.connect(_open_leaderboard)
+	_entry_stack.add_child(_leaderboard_button)
+	_wire_title_action_feedback(_leaderboard_button)
+
 	_language_toggle = _entry_button("LanguageToggle", false)
 	_language_toggle.toggle_mode = true
 	_language_toggle.set_pressed_no_signal(I18n.locale() == &"zh-CN")
@@ -231,6 +237,9 @@ func _build_screen() -> void:
 	_entry_stack.add_child(_language_toggle)
 	_wire_title_action_feedback(_language_toggle)
 	_build_footer_settings()
+	_leaderboard_dialog = LEADERBOARD_DIALOG_SCENE.instantiate() as MissionLeaderboardDialog
+	add_child(_leaderboard_dialog)
+	_leaderboard_dialog.closed.connect(_on_leaderboard_closed)
 	_wire_entry_focus()
 
 
@@ -333,7 +342,7 @@ func _register_focus_pulse(button: Button, accent: Color) -> void:
 
 func _wire_entry_focus() -> void:
 	var actions: Array[Control] = [
-		_start_button, _language_toggle, _footer_settings_button,
+		_start_button, _leaderboard_button, _language_toggle, _footer_settings_button,
 	]
 	for index: int in actions.size():
 		var current := actions[index]
@@ -357,7 +366,7 @@ func _on_title_action_focused(action: Control) -> void:
 
 func _begin_title_reveal() -> void:
 	var reveal_nodes: Array[CanvasItem] = [
-		_wordmark, _orbit_rule, _start_button, _language_toggle,
+		_wordmark, _orbit_rule, _start_button, _leaderboard_button, _language_toggle,
 		_footer_settings_dock,
 	]
 	_interaction_feedback_ready = false
@@ -378,7 +387,7 @@ func _begin_title_reveal() -> void:
 
 func _finish_title_reveal() -> void:
 	for item: CanvasItem in [
-		_wordmark, _orbit_rule, _start_button, _language_toggle,
+		_wordmark, _orbit_rule, _start_button, _leaderboard_button, _language_toggle,
 		_footer_settings_dock,
 	]:
 		if item != null:
@@ -489,6 +498,24 @@ func _on_language_toggled(chinese: bool) -> void:
 	Sfx.play("ui_confirm")
 
 
+func _open_leaderboard() -> void:
+	if _screen_state != ScreenState.TITLE or _leaderboard_dialog == null:
+		return
+	_screen_state = ScreenState.LEADERBOARD
+	Sfx.play("menu_open")
+	_reset_title_action_feedback()
+	_set_title_interaction_enabled(false)
+	_leaderboard_dialog.open(_leaderboard_button)
+
+
+func _on_leaderboard_closed() -> void:
+	if _screen_state != ScreenState.LEADERBOARD:
+		return
+	_screen_state = ScreenState.TITLE
+	_set_title_interaction_enabled(true)
+	Sfx.play("menu_close")
+
+
 func _open_settings() -> void:
 	if _screen_state != ScreenState.TITLE:
 		return
@@ -579,7 +606,6 @@ func _apply_preference_values(values: Dictionary, apply_background_policy := tru
 	_title_music_enabled = bool(values.get(&"title_music_enabled", _title_music_enabled))
 	_apply_graphics_settings()
 	_apply_audio_settings()
-	_backdrop.set_reduced_motion(_reduced_motion)
 	_settings_state.set_reduced_motion(_reduced_motion)
 	if apply_background_policy:
 		_apply_background_download_policy()
@@ -617,9 +643,11 @@ func _leave_settings(return_focus: Control) -> void:
 func _set_title_interaction_enabled(enabled: bool) -> void:
 	_entry_host.mouse_filter = Control.MOUSE_FILTER_PASS if enabled else Control.MOUSE_FILTER_IGNORE
 	_start_button.disabled = not enabled or _start_pending
+	_leaderboard_button.disabled = not enabled
 	_language_toggle.disabled = not enabled
 	_footer_settings_button.disabled = not enabled
 	_start_button.focus_mode = Control.FOCUS_ALL if enabled else Control.FOCUS_NONE
+	_leaderboard_button.focus_mode = Control.FOCUS_ALL if enabled else Control.FOCUS_NONE
 	_language_toggle.focus_mode = Control.FOCUS_ALL if enabled else Control.FOCUS_NONE
 	_footer_settings_button.focus_mode = Control.FOCUS_ALL if enabled else Control.FOCUS_NONE
 
@@ -647,6 +675,8 @@ func set_preferences_path(path: String) -> void:
 
 func screen_state() -> StringName:
 	match _screen_state:
+		ScreenState.LEADERBOARD:
+			return &"LEADERBOARD"
 		ScreenState.SETTINGS:
 			return &"SETTINGS"
 		ScreenState.COMMITTING:
@@ -696,36 +726,14 @@ func settings_draft() -> Dictionary:
 
 
 func _apply_background_download_policy() -> void:
-	var limits := {&"classes": 2, &"resonance": 1, &"missions": 2}
 	var content_packs := get_node_or_null("/root/ContentPacks")
 	if content_packs != null:
 		content_packs.call(
 			"set_background_downloads_enabled", _background_downloads_enabled,
 		)
-		limits = content_packs.call("adaptive_prefetch_limits") as Dictionary
-	var cinematic_prefetch := get_node_or_null("/root/CinematicPrefetch")
-	if cinematic_prefetch != null:
-		cinematic_prefetch.call(
-			"set_background_download_policy",
-			_background_downloads_enabled,
-			int(limits.get(&"resonance", 0)),
-		)
-	var mission_prefetch := get_node_or_null("/root/MissionCinematicPrefetch")
-	if mission_prefetch != null:
-		mission_prefetch.call(
-			"set_background_download_policy",
-			_background_downloads_enabled,
-			int(limits.get(&"missions", 0)),
-		)
 
 
 func _resume_background_prefetch() -> void:
-	var cinematic_prefetch := get_node_or_null("/root/CinematicPrefetch")
-	if cinematic_prefetch != null:
-		cinematic_prefetch.call("prefetch_from_title", get_viewport_rect().size)
-	var mission_prefetch := get_node_or_null("/root/MissionCinematicPrefetch")
-	if mission_prefetch != null:
-		mission_prefetch.call("prefetch_from_title")
 	var content_packs := get_node_or_null("/root/ContentPacks")
 	if content_packs != null and Game.campaign_active:
 		content_packs.call(
@@ -788,6 +796,11 @@ func _refresh_copy() -> void:
 		if _start_failed
 		else ""
 	)
+	_leaderboard_button.text = UiCopyType.text(
+		&"ui.leaderboard.open", "Leaderboard",
+	).to_upper()
+	_leaderboard_button.tooltip_text = _leaderboard_button.text
+	_leaderboard_button.accessibility_name = _leaderboard_button.text
 	_language_toggle.text = UiCopyType.text(
 		&"ui.title.quick_language", "EN / 中文",
 	)
@@ -818,7 +831,6 @@ func _apply_responsive_layout() -> void:
 	var viewport_size := get_viewport_rect().size
 	if viewport_size.x <= 0.0 or viewport_size.y <= 0.0:
 		return
-	_backdrop.fit_top_cover(viewport_size)
 	var portrait := viewport_size.y > viewport_size.x
 	var tall_landscape := not portrait and viewport_size.y >= viewport_size.x * 0.75
 	var narrow := viewport_size.x <= 520.0
@@ -864,6 +876,9 @@ func _apply_responsive_layout() -> void:
 	var wordmark_base := maxi(1, roundi(wordmark_visual / maxf(_text_scale, 0.01)))
 	_wordmark.add_theme_font_size_override(&"font_size", wordmark_base)
 	_start_button.custom_minimum_size = Vector2(minf(entry_width, _title_size(520.0)), _title_size(82.0 if not portrait else 76.0))
+	_leaderboard_button.custom_minimum_size = Vector2(
+		minf(entry_width, _title_size(430.0)), _title_size(72.0 if not portrait else 66.0),
+	)
 	_language_toggle.custom_minimum_size = Vector2(
 		minf(entry_width, _title_size(184.0)), _title_size(42.0),
 	)

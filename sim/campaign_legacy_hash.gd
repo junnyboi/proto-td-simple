@@ -14,7 +14,7 @@ const TERMINAL_ENUM := {"clear": 0, "leak_defeat": 1, "base_defeat": 2, "resign"
 const CORE_KEYS := [
 	"campaign_uid", "campaign_seed", "campaign_generation", "save_revision",
 	"next_recruitment_index", "next_attempt_id", "next_resolution_index", "marks",
-	"stage_stars", "unlocked_traps", "unlocked_spells", "offers", "heroes",
+	"stage_stars", "unlocked_traps", "offers", "heroes",
 ]
 const HERO_KEYS := [
 	"hero_id", "operator_def_id", "recruitment_index", "recruited_after_resolution_index",
@@ -38,8 +38,6 @@ static func of_core_snapshot(value: Variant) -> Dictionary:
 		return _reject()
 	if not _valid_string_array(core["unlocked_traps"]):
 		return _reject()
-	if not _valid_string_array(core["unlocked_spells"]):
-		return _reject()
 	if not _valid_rows(core["offers"], OFFER_KEYS):
 		return _reject()
 	if not _valid_heroes(core["heroes"]):
@@ -58,7 +56,6 @@ static func of_core_snapshot(value: Variant) -> Dictionary:
 	_append_i64(out, int(core["marks"]))
 	_append_stars(out, core["stage_stars"])
 	_append_strings(out, core["unlocked_traps"])
-	_append_strings(out, core["unlocked_spells"])
 	_append_offers(out, core["offers"])
 	_append_heroes(out, core["heroes"])
 	out.append(0)

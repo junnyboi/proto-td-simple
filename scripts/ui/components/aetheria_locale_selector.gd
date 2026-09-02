@@ -4,43 +4,38 @@ extends BoxContainer
 signal locale_selected(locale_id: StringName)
 
 const UiCopyType := preload("res://scripts/ui/components/ui_copy.gd")
-const COMPACT_LABEL_MIN_HEIGHT := 72.0
-const COMPACT_LIST_HEIGHT := 104.0
-const REGULAR_LIST_HEIGHT := 104.0
-const COLUMN_INSET := 28.0
+const COMPACT_LABEL_MIN_HEIGHT := 0.0
+const COMPACT_BUTTON_SIZE := Vector2(112.0, 56.0)
+const REGULAR_BUTTON_SIZE := Vector2(128.0, 64.0)
+const BUTTON_SEPARATION := 10
 
 var _draft_mode := false
 var _selected_locale: StringName = &""
 var _compact_mode := false
+var _button_group := ButtonGroup.new()
+var _locale_buttons: Array[Button] = []
 
 @onready var _label: Label = $LocaleLabel
-@onready var _list: ItemList = $LocaleList
+@onready var _button_row: HBoxContainer = $LocaleButtons
 
 
 func _ready() -> void:
-	add_theme_constant_override(&"separation", 8 if _compact_mode else 16)
+	vertical = true
+	size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	add_theme_constant_override(&"separation", 8 if _compact_mode else 12)
 	_label.clip_text = false
 	_label.custom_minimum_size = Vector2(0.0, COMPACT_LABEL_MIN_HEIGHT if _compact_mode else 0.0)
-	_list.custom_minimum_size = Vector2(0.0, COMPACT_LIST_HEIGHT if _compact_mode else REGULAR_LIST_HEIGHT)
-	_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_list.focus_mode = Control.FOCUS_ALL
-	_list.select_mode = ItemList.SELECT_SINGLE
-	_list.max_columns = 2
-	_list.same_column_width = true
-	_list.auto_height = false
-	_list.add_theme_constant_override(&"h_separation", 16)
-	_list.resized.connect(_fit_columns)
-	_list.item_selected.connect(_on_item_selected)
+	_button_row.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	_button_row.add_theme_constant_override(&"separation", BUTTON_SEPARATION)
+	_button_group.allow_unpress = false
+	_build_locale_buttons()
 	refresh()
-	_fit_columns.call_deferred()
 
 
-func set_vertical_layout(enabled: bool) -> void:
-	vertical = enabled
+func set_vertical_layout(_enabled: bool) -> void:
+	vertical = true
 	if _label != null:
-		_label.size_flags_horizontal = (
-			Control.SIZE_EXPAND_FILL if enabled else Control.SIZE_SHRINK_BEGIN
-		)
+		_label.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 		_label.autowrap_mode = TextServer.AUTOWRAP_OFF
 
 
@@ -57,9 +52,8 @@ func set_compact_mode(enabled: bool) -> void:
 		_label.clip_text = false
 		_label.custom_minimum_size = Vector2(0.0, COMPACT_LABEL_MIN_HEIGHT if enabled else 0.0)
 	if is_node_ready():
-		_list.custom_minimum_size = Vector2(0.0, COMPACT_LIST_HEIGHT if enabled else REGULAR_LIST_HEIGHT)
-		add_theme_constant_override(&"separation", 8 if enabled else 16)
-		_fit_columns.call_deferred()
+		add_theme_constant_override(&"separation", 8 if enabled else 12)
+		_apply_button_metrics()
 
 
 func set_selected_locale(locale_id: StringName) -> bool:
@@ -73,8 +67,15 @@ func selected_locale() -> StringName:
 	return _selected_locale if not _selected_locale.is_empty() else I18n.locale()
 
 
-func locale_list() -> ItemList:
-	return _list
+func locale_buttons() -> Array[Button]:
+	return _locale_buttons.duplicate()
+
+
+func focus_control() -> Button:
+	for button: Button in _locale_buttons:
+		if StringName(button.get_meta(&"locale_id", &"")) == selected_locale():
+			return button
+	return _locale_buttons[0] if not _locale_buttons.is_empty() else null
 
 
 func refresh() -> bool:
@@ -86,35 +87,58 @@ func refresh() -> bool:
 		return false
 	_selected_locale = active
 	_label.text = UiCopyType.text(&"ui.locale.label", "Language")
-	_list.clear()
-	for locale_text: String in locales:
-		var locale_id := StringName(locale_text)
-		var display := locale_text
-		if locale_id == &"en-US":
-			display = UiCopyType.text(&"ui.locale.en_us", "EN")
-		elif locale_id == &"zh-CN":
-			display = UiCopyType.text(&"ui.locale.zh_cn", "中文")
-		_list.add_item(display)
-		_list.set_item_metadata(_list.item_count - 1, locale_id)
-		if locale_id == active:
-			_list.select(_list.item_count - 1)
-	_fit_columns.call_deferred()
+	for button: Button in _locale_buttons:
+		var locale_id := StringName(button.get_meta(&"locale_id", &""))
+		button.text = _display_name(locale_id)
+		button.accessibility_name = button.text
+		button.set_pressed_no_signal(locale_id == active)
 	return true
 
 
-func _fit_columns() -> void:
-	if _list == null or not is_instance_valid(_list) or _list.size.x <= 0.0:
-		return
-	var usable_width := maxf(160.0, _list.size.x - COLUMN_INSET)
-	# ItemList expands fixed width by its item style on both sides. Quartering the
-	# usable row yields two visually equal columns without triggering scrolling.
-	_list.fixed_column_width = floori(usable_width / 4.0)
-	var vertical_scroll := _list.get_v_scroll_bar()
-	if vertical_scroll != null:
-		vertical_scroll.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var horizontal_scroll := _list.get_h_scroll_bar()
-	if horizontal_scroll != null:
-		horizontal_scroll.mouse_filter = Control.MOUSE_FILTER_IGNORE
+func _build_locale_buttons() -> void:
+	for child: Node in _button_row.get_children():
+		child.free()
+	_locale_buttons.clear()
+	for locale_text: String in I18n.supported_locales():
+		var locale_id := StringName(locale_text)
+		var button := Button.new()
+		button.name = _button_name(locale_id)
+		button.theme_type_variation = &"AuiSecondaryButton"
+		button.toggle_mode = true
+		button.button_group = _button_group
+		button.focus_mode = Control.FOCUS_ALL
+		button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+		button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		button.alignment = HORIZONTAL_ALIGNMENT_CENTER
+		button.text_overrun_behavior = TextServer.OVERRUN_NO_TRIMMING
+		button.set_meta(&"locale_id", locale_id)
+		button.pressed.connect(_on_locale_button_pressed.bind(locale_id))
+		_button_row.add_child(button)
+		_locale_buttons.append(button)
+	_apply_button_metrics()
+
+
+func _apply_button_metrics() -> void:
+	var button_size := COMPACT_BUTTON_SIZE if _compact_mode else REGULAR_BUTTON_SIZE
+	for button: Button in _locale_buttons:
+		button.custom_minimum_size = button_size
+
+
+func _display_name(locale_id: StringName) -> String:
+	if locale_id == &"en-US":
+		return UiCopyType.text(&"ui.locale.en_us", "EN")
+	if locale_id == &"zh-CN":
+		return UiCopyType.text(&"ui.locale.zh_cn", "中文")
+	return String(locale_id)
+
+
+func _button_name(locale_id: StringName) -> String:
+	if locale_id == &"en-US":
+		return "EnglishLocaleButton"
+	if locale_id == &"zh-CN":
+		return "ChineseLocaleButton"
+	return "LocaleButton%s" % String(locale_id).validate_node_name()
 
 
 func select_locale(locale_id: StringName) -> bool:
@@ -134,8 +158,5 @@ func select_locale(locale_id: StringName) -> bool:
 	return true
 
 
-func _on_item_selected(index: int) -> void:
-	var locale_id: Variant = _list.get_item_metadata(index)
-	if typeof(locale_id) != TYPE_STRING_NAME:
-		return
+func _on_locale_button_pressed(locale_id: StringName) -> void:
 	select_locale(locale_id)

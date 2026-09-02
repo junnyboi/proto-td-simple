@@ -1,12 +1,9 @@
 class_name CampaignContextValidator
 extends RefCounted
 
-const CampaignProgressionScript := preload("res://sim/campaign_progression.gd")
-const PromotionRulesResource := preload("res://data/progression/mage_advanced_v1.tres")
-
 const KEYS := [
-	"operator_ids", "trap_ids", "spell_ids", "stage_order", "stage_rewards",
-	"stage_recovery_rosters", "offers", "starting_traps", "starting_spells",
+	"operator_ids", "trap_ids", "stage_order", "stage_rewards",
+	"stage_recovery_rosters", "offers", "starting_traps",
 	"promotion_rules", "combat_rules_sha256",
 ]
 
@@ -14,13 +11,9 @@ const KEYS := [
 static func valid(context: Dictionary) -> bool:
 	if not _exact_keys(context):
 		return false
-	var normalized := CampaignProgressionScript.normalize_promotion_rules(
-		PromotionRulesResource,
-		(context["operator_ids"] as Dictionary).keys(),
-	)
 	return (
-		normalized["accepted"]
-		and context["promotion_rules"] == normalized["value"]
+		context["promotion_rules"] is Dictionary
+		and (context["promotion_rules"] as Dictionary).is_empty()
 		and _is_hex_sha256(String(context["combat_rules_sha256"]))
 	)
 

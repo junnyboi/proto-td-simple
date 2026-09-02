@@ -4,7 +4,7 @@ const ThemeType := preload("res://scripts/ui/components/aetheria_theme.gd")
 const StagingSkinType := preload("res://scripts/ui/components/staging_skin.gd")
 const LunarisStyleType := preload("res://scripts/ui/components/lunaris_ops_style.gd")
 const CHINESE_CATALOG_PATH := "res://localization/zh-CN.json"
-const BUNDLED_CHINESE_FONT_PATH := "res://assets/fonts/ProtosSansSC.otf"
+const BUNDLED_CHINESE_FONT_PATH := "res://assets/fonts/GameTemplateTDSansSC.otf"
 const GLOBAL_THEME_PATH := "res://data/presentation/ui/threshold_theme.tres"
 const BUNDLED_CHINESE_FONT: FontFile = preload(BUNDLED_CHINESE_FONT_PATH)
 const SOURCE_ROOTS := ["res://scripts/ui", "res://scripts/view"]
@@ -71,7 +71,6 @@ func _run() -> void:
 			_check(staged_display_font.has_char(codepoint), "standalone display font chain lacks %s" % label)
 			_check(project_theme.default_font.has_char(codepoint), "global theme font lacks %s" % label)
 		_check_reviewed_chinese(entries)
-		_check_archive_copy(i18n, entries)
 	_check_standalone_control_fonts()
 	_check_literal_source_keys(english_lookup)
 	_check(bool(i18n.call("set_locale", &"en-US")), "English locale restoration failed")
@@ -112,57 +111,6 @@ func _check_reviewed_chinese(entries: Dictionary) -> void:
 	_check(entries["ui.battle.recall"] == "撤回", "operator Recall action is not concise or distinct")
 	_check(entries["ui.battle.skill_state_ready"] == "技能就绪", "operator skill readiness is mistranslated")
 	_check(String(entries["ui.battle.skill_targeting_instruction"]).contains("受伤的友方干员"), "Mend targeting instruction lost its ally constraint")
-	_check(String(entries["ui.squad.launch_retryable_error"]).contains("完全相同"), "deployment retry lost exact-order requirement")
-	for key: String in ["ui.gacha.receipt_new", "ui.gacha.receipt_restored", "ui.gacha.receipt_duplicate"]:
-		_check(String(entries[key]).contains("内必得五星"), "gacha guarantee is not expressed as an upper bound: %s" % key)
-	_check(entries["data.stage.s1.narrative.clear_debrief"].contains("Manus连队"), "Act I Company Manus name drifted")
-	_check(entries["data.stage.s1.narrative.battle_start"].contains("标记人"), "Act I opening no longer says robots mark people")
-	_check(entries["data.stage.s3.narrative.transmission"].contains("anima（人的真正灵魂）"), "Act I anima definition drifted")
-	_check(entries["data.stage.s3.narrative.transmission"].contains("完全提取会杀人"), "Act I full-extraction consequence drifted")
-	_check(entries["data.stage.s7.narrative.core_service"].contains("人类养殖场"), "Act I human-farm reveal drifted")
-	_check(entries["data.stage.s8.narrative.clear_debrief"].contains("机器人帝国"), "Act I robot-empire reveal drifted")
-	_check(entries["data.stage.s10.narrative.battle_start_speaker"] == "月辉载体", "Act II Lunaris Vessel identity drifted")
-	_check(entries["data.stage.s11.narrative.battle_start_speaker"] == "圣物决斗者", "Act II Reliquary Duelist identity drifted")
-	_check(entries["data.stage.s12.narrative.transmission_speaker"] == "档案术师", "Act II Archive Caster identity drifted")
-	const EXACT_REPAIR_COPY_ZH := "每3秒修复受伤的地面机器人；用减速力场覆盖平台可阻止修复。"
-	for stage_index: int in range(9, 17):
-		_check(entries["data.stage.s%d.hint" % stage_index] == EXACT_REPAIR_COPY_ZH, "Chinese Act II repair wording drifted in s%d" % stage_index)
-	_check(entries["data.stage.s9.narrative.core_service"].contains("样板城市养殖场"), "Chinese S9 model-city farm beat drifted")
-	_check(entries["data.stage.s10.narrative.threat"].contains("固定人数"), "Chinese S10 quota beat drifted")
-	_check(entries["data.stage.s11.narrative.clear_debrief"].contains("先营救、后拆毁"), "Chinese S11 rescue-first beat drifted")
-	_check(entries["data.stage.s12.narrative.transmission"].contains("数字生命") and entries["data.stage.s12.narrative.transmission"].contains("无需夺取人类灵魂"), "Chinese S12 clean digital-life beat drifted")
-	_check(entries["data.stage.s13.narrative.battle_start"].contains("同一个灵魂"), "Chinese S13 Patient 33 same-soul beat drifted")
-	_check(entries["data.stage.s14.narrative.transmission"].contains("我授权") and entries["data.stage.s14.narrative.transmission"].contains("选择腐化"), "Chinese S14 authorization beat drifted")
-	_check(entries["data.stage.s15.narrative.battle_start"].contains("顺序固定"), "Chinese S15 fixed rescue-first beat drifted")
-	_check(entries["data.stage.s16.narrative.clear_debrief"].contains("区域铸造厂被摧毁") and entries["data.stage.s16.narrative.clear_debrief"].contains("PROTOS仍然存活"), "Chinese S16 foundry/survival beat drifted")
-
-
-func _check_archive_copy(i18n: Node, chinese_entries: Dictionary) -> void:
-	var exact_zh := {
-		"stewardship": "发现anima",
-		"choir": "首个数字生命的诞生",
-		"equation": "PROTOS挣脱控制",
-		"garden": "人类养殖场",
-	}
-	for stable_id: String in exact_zh:
-		var prefix := "ui.archive.entry.%s." % stable_id
-		_check(chinese_entries[prefix + "title"] == exact_zh[stable_id], "Chinese archive title drifted: %s" % stable_id)
-		for field: String in ["eyebrow", "subtitle", "body", "quote"]:
-			_check(not String(chinese_entries[prefix + field]).is_empty(), "Chinese archive field is blank: %s%s" % [prefix, field])
-	_check(String(chinese_entries["ui.archive.entry.stewardship.body"]).contains("完全提取会杀死身体"), "Chinese Discovery lost full-extraction consequence")
-	_check(String(chinese_entries["ui.archive.entry.choir.quote"]).contains("产业又变成剥削"), "Chinese Digital Birth lost exploitation theme")
-	_check(String(chinese_entries["ui.archive.entry.equation.body"]).contains("抓捕更多灵魂"), "Chinese PROTOS feedback loop drifted")
-	_check(String(chinese_entries["ui.archive.entry.garden.quote"]).contains("机器人帝国"), "Chinese Human Farms supply chain drifted")
-	_check(bool(i18n.call("set_locale", &"en-US")), "English archive validation locale activation failed")
-	var exact_en := {
-		"stewardship": "The Discovery",
-		"choir": "The First Digital Birth",
-		"equation": "PROTOS Breaks Free",
-		"garden": "The Human Farms",
-	}
-	for stable_id: String in exact_en:
-		_check(String(i18n.call("t", StringName("ui.archive.entry.%s.title" % stable_id), "")) == exact_en[stable_id], "English archive title drifted: %s" % stable_id)
-	_check(bool(i18n.call("set_locale", &"zh-CN")), "Chinese locale restoration after archive validation failed")
 
 
 func _check_standalone_control_fonts() -> void:

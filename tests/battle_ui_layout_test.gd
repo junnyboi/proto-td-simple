@@ -39,7 +39,6 @@ func _run() -> void:
 	var hud := battle.find_child("BattleHud", true, false) as Label
 	var deploy_bar := battle.find_child("DeployBar", true, false) as Node
 	var deployment_deck := battle.find_child("DeploymentCommandDeck", true, false) as PanelContainer
-	var owned_spell_deck := battle.find_child("SpellCommandDeck", true, false) as PanelContainer
 	var deployment_scroll := battle.find_child("DeploymentRosterScroll", true, false) as ScrollContainer
 	var slot_box := battle.find_child("SlotBox", true, false) as GridContainer
 	var controls := battle.find_child("BattleControls", true, false) as Node
@@ -48,7 +47,6 @@ func _run() -> void:
 		"confirmation_state_changed",
 		func(state: StringName) -> void: confirmation_trace.append(state),
 	)
-	var owned_spell_bar := battle.find_child("SpellBar", true, false) as Node
 	var controls_deck := battle.find_child("BattleCommandDeck", true, false) as PanelContainer
 	var pause := battle.find_child("PauseButton", true, false) as Button
 	var speed := battle.find_child("SpeedButton", true, false) as Button
@@ -58,12 +56,6 @@ func _run() -> void:
 	var tutorial_title := battle.find_child("TutorialTitle", true, false) as Label
 	var tutorial_body := battle.find_child("TutorialBody", true, false) as Label
 	var skip := battle.find_child("SkipTutorial", true, false) as Button
-	var dialogue := battle.find_child("BattleDialogue", true, false) as PanelContainer
-	var dialogue_header := battle.find_child("DialogueHeaderInset", true, false) as MarginContainer
-	var dialogue_portrait_frame := battle.find_child("DialoguePortraitFrame", true, false) as PanelContainer
-	var dialogue_portrait := battle.find_child("DialoguePortrait", true, false) as TextureRect
-	var dialogue_speaker := battle.find_child("DialogueSpeaker", true, false) as Label
-	var dialogue_line := battle.find_child("DialogueLine", true, false) as Label
 	var tutorial_primary := battle.find_child("TutorialPrimary", true, false) as Button
 	_check(hud != null and hud.get_theme_stylebox(&"normal") is StyleBoxTexture, "battle HUD does not use the Lunaris command frame")
 	if hud != null:
@@ -72,10 +64,15 @@ func _run() -> void:
 		_check(hud.horizontal_alignment == HORIZONTAL_ALIGNMENT_CENTER and hud.vertical_alignment == VERTICAL_ALIGNMENT_CENTER, "battle HUD text is not centered")
 		_check(hud_style.content_margin_left >= 48.0 and hud_style.content_margin_top >= 24.0 and hud_style.content_margin_right >= 24.0 and hud_style.content_margin_bottom >= 24.0, "battle HUD violates the 24px custom-frame padding floor")
 	_check(deployment_deck != null and deployment_deck.get_theme_stylebox(&"panel") is StyleBoxTexture, "deployment deck is not textured")
-	_check(deployment_deck != null and owned_spell_deck != null and not deployment_deck.get_global_rect().intersects(owned_spell_deck.get_global_rect()), "landscape deployment deck overlaps the spell deck")
 	if deployment_deck != null:
 		var deployment_style := deployment_deck.get_theme_stylebox(&"panel")
-		_check(deployment_style.content_margin_left >= 24.0 and deployment_style.content_margin_top >= 24.0 and deployment_style.content_margin_right >= 24.0 and deployment_style.content_margin_bottom >= 24.0, "deployment deck padding is below 24px")
+		_check(
+			is_equal_approx(deployment_style.content_margin_left, 24.0)
+			and is_equal_approx(deployment_style.content_margin_top, 32.0)
+			and is_equal_approx(deployment_style.content_margin_right, 24.0)
+			and is_equal_approx(deployment_style.content_margin_bottom, 32.0),
+			"deployment deck does not use 24px horizontal and 32px vertical padding",
+		)
 		_check(deployment_deck.size.x >= 1240.0, "landscape recruit selector did not expand to the available near-double width")
 	_check(deployment_scroll != null and deployment_scroll.vertical_scroll_mode == ScrollContainer.SCROLL_MODE_AUTO, "deployment roster is not locally scrollable")
 	_check(deployment_scroll != null and deployment_scroll.horizontal_scroll_mode == ScrollContainer.SCROLL_MODE_DISABLED, "deployment roster permits horizontal scrolling")
@@ -94,25 +91,25 @@ func _run() -> void:
 	if controls_deck != null:
 		var controls_style := controls_deck.get_theme_stylebox(&"panel")
 		_check(
-			controls_style.content_margin_left >= 24.0
-			and controls_style.content_margin_top >= 24.0
-			and controls_style.content_margin_right >= 24.0
-			and controls_style.content_margin_bottom >= 24.0,
-			"battle command deck lacks the requested 24px padding on every side",
+			is_equal_approx(controls_style.content_margin_left, 24.0)
+			and is_equal_approx(controls_style.content_margin_top, 32.0)
+			and is_equal_approx(controls_style.content_margin_right, 24.0)
+			and is_equal_approx(controls_style.content_margin_bottom, 32.0),
+			"battle command deck does not use 24px horizontal and 32px vertical padding",
 		)
 	_check(pause != null and speed != null and resign != null and pause.focus_mode == Control.FOCUS_ALL, "battle commands are not controller focusable")
 	_check(speed.tooltip_text.contains("Q: LOWER SPEED") and speed.tooltip_text.contains("E: RAISE SPEED"), "speed control does not disclose Q/E shortcuts")
 	_check(speed.accessibility_description == speed.tooltip_text, "speed shortcut help is not exposed to assistive technology")
 	for button: Button in [pause, speed, resign]:
 		var button_style := button.get_theme_stylebox(&"normal") as StyleBoxFlat
-		_check(button.custom_minimum_size.is_equal_approx(Vector2(112.0, 64.0)), "%s did not receive the compact 112×64 target" % button.name)
+		_check(button.custom_minimum_size.is_equal_approx(Vector2(112.0, 48.0)), "%s did not receive the compact 112×48 target" % button.name)
 		_check(button.get_theme_font_size(&"font_size") == 24, "%s did not receive 24px compact typography" % button.name)
 		_check(button_style != null and button_style.get_corner_radius(CORNER_TOP_LEFT) >= 8, "%s lacks rounded borders" % button.name)
 		_check(controls_deck.get_global_rect().encloses(button.get_global_rect()), "%s overflows the battle command deck" % button.name)
 	_check(battle.find_child("FirstActionInset", true, false) == null, "obsolete one-off Pause inset survived the 24px parent padding")
 	_check(battle.find_child("RecenterMap", true, false) == null, "removed CENTER feature is still present")
+	_check(battle.find_child("BattleDialogue", true, false) == null, "removed battle transmission presenter is still mounted")
 	_check(tutorial_card != null and tutorial_card.get_theme_stylebox(&"panel") is StyleBoxTexture, "tutorial card did not inherit the Lunaris modal frame")
-	_check(dialogue != null and not dialogue.visible, "mission-start dialogue competed with the guided tutorial")
 	if tutorial_card != null:
 		var tutorial_rect := tutorial_card.get_global_rect()
 		var tutorial_style := tutorial_card.get_theme_stylebox(&"panel")
@@ -146,21 +143,15 @@ func _run() -> void:
 		for child: Node in slot_box.get_children():
 			var slot := child as Button
 			_check(slot.get_theme_font(&"font").has_char("兵".unicode_at(0)), "%s lacks bundled Chinese glyph coverage" % slot.name)
-	var facing_southeast := battle.find_child("FacingRight", true, false) as Button
-	var facing_southwest := battle.find_child("FacingDown", true, false) as Button
-	var facing_northwest := battle.find_child("FacingLeft", true, false) as Button
-	var facing_northeast := battle.find_child("FacingUp", true, false) as Button
-	_check(facing_southeast.accessibility_name == "东南" and facing_southeast.accessibility_description == "面向东南部署", "southeast facing accessibility is not localized")
-	_check(facing_southwest.accessibility_name == "西南" and facing_northwest.accessibility_name == "西北" and facing_northeast.accessibility_name == "东北", "facing accessibility directions are incomplete")
+	_check(
+		battle.find_child("FacingRight", true, false) == null
+		and battle.find_child("FacingDown", true, false) == null
+		and battle.find_child("FacingLeft", true, false) == null
+		and battle.find_child("FacingUp", true, false) == null,
+		"obsolete deployment-facing controls are still present",
+	)
 	_check(bool(i18n.call("set_locale", &"en-US")), "English locale restoration failed")
 	await process_frame
-	var spell_probe := (load("res://scripts/ui/spell_bar.gd") as Script).new() as Control
-	spell_probe.name = "Phase0SpellProbe"
-	battle.add_child(spell_probe)
-	spell_probe.call("setup", model, battle, [&"slow_field"] as Array[StringName])
-	await process_frame
-	var spell_deck := spell_probe.find_child("SpellCommandDeck", true, false) as PanelContainer
-	_check(spell_deck != null and controls_deck != null and not spell_deck.get_global_rect().intersects(controls_deck.get_global_rect()), "landscape spell and battle command hit regions overlap")
 	if controls == null or deploy_bar == null or model == null:
 		_check(false, "battle controls, deployment bar, or model missing")
 		_cleanup(game, battle)
@@ -172,7 +163,7 @@ func _run() -> void:
 	_check(bool(controls.call("request_resign_confirmation")), "resign confirmation did not open under composed tutorial fixture")
 	await _wait_for_confirmation_state(controls, &"active")
 	_check(bool(battle.call("battle_confirmation_active")), "battle confirmation blocker was not published")
-	_check(not bool(deploy_bar.call("interaction_enabled")) and not bool(owned_spell_bar.call("interaction_enabled")), "confirmation did not gate deploy/spell interaction")
+	_check(not bool(deploy_bar.call("interaction_enabled")), "confirmation did not gate deployment interaction")
 	_check(not bool(deploy_bar.call("operator_interaction_enabled")), "confirmation overwrote tutorial operator blocker")
 	_check(bool(controls.call("cancel_resign_confirmation")), "composed confirmation did not cancel")
 	_check(StringName(controls.call("confirmation_state_name")) == &"exiting" and bool(battle.call("battle_confirmation_active")), "Cancel released the gate before exit")
@@ -184,71 +175,18 @@ func _run() -> void:
 	for _frame: int in range(3):
 		await process_frame
 	_check(bool(controls.call("interaction_enabled")) and bool(deploy_bar.call("operator_interaction_enabled")), "tutorial completion did not restore controls")
-	_check(dialogue != null and dialogue.visible, "mission-start dialogue did not appear after the tutorial")
-	_check(dialogue_speaker != null and not dialogue_speaker.text.is_empty(), "mission-start speaker is missing")
-	_check(dialogue_line != null and not dialogue_line.text.is_empty(), "mission-start dialogue line is missing")
-	if dialogue != null:
-		_check(dialogue.get_global_rect().end.x <= LANDSCAPE.x + 1.0, "mission-start dialogue exceeds landscape width")
-		_check(absf(dialogue.get_global_rect().end.x - controls_deck.get_global_rect().end.x) <= 2.0, "mission-start dialogue is not right-aligned below the gameplay controls")
-		_check(absf(dialogue.position.y - controls_deck.get_global_rect().end.y - 64.0) <= 2.0, "mission-start dialogue does not preserve the requested 64px control gap")
-		_check(
-			dialogue.get_global_rect().size.y <= 280.0,
-			"mission-start dialogue expanded beyond its compact tactical height: size=%s minimum=%s"
-			% [dialogue.size, dialogue.get_combined_minimum_size()],
-		)
-	_check(dialogue_header != null and dialogue_header.get_theme_constant(&"margin_bottom") == 12, "LIVE TRANSMISSION header lacks 12px bottom padding")
-	if dialogue != null:
-		var dialogue_style := dialogue.get_theme_stylebox(&"panel")
-		_check(dialogue_style.content_margin_left >= 24.0 and dialogue_style.content_margin_top >= 24.0 and dialogue_style.content_margin_right >= 24.0 and dialogue_style.content_margin_bottom >= 24.0, "live transmission custom frame padding is below 24px")
-	_check(dialogue_portrait_frame != null and dialogue_portrait_frame.visible, "mission-start speaker portrait frame is missing")
-	_check(dialogue_portrait != null and dialogue_portrait.texture != null, "mission-start speaker portrait texture is missing")
-	_check(dialogue_portrait != null and dialogue_portrait.custom_minimum_size.is_equal_approx(Vector2(88.0, 88.0)), "speaker portrait did not receive fixed readable geometry")
-	_check(dialogue_portrait_frame != null and StringName(dialogue_portrait_frame.get_meta(&"speaker_portrait_asset_id", &"")) == &"portrait_archive_caster", "Archive Caster transmission resolved the wrong portrait")
-	_check(dialogue_portrait != null and dialogue_speaker != null and dialogue_portrait.get_global_rect().end.x <= dialogue_speaker.get_global_rect().position.x + 1.0, "speaker portrait is not placed left of the character name and line")
-	_check(owned_spell_deck != null and dialogue != null and not owned_spell_deck.get_global_rect().intersects(dialogue.get_global_rect()), "right-side transmission overlaps the owned spell deck")
 	root.size = ANNOTATED_WIDE
 	await process_frame
 	_check(absf(deployment_deck.size.x - 1360.0) <= 2.0, "annotated-width recruit selector is not exactly double the former 680px fixed width")
-	_check(absf(dialogue.get_global_rect().end.x - controls_deck.get_global_rect().end.x) <= 2.0, "wide transmission lost right-side control alignment")
 	root.size = NARROW
 	for _frame: int in range(3):
 		await process_frame
-	_check(dialogue.visible, "narrow portrait unexpectedly suppressed a transmission despite having a legal lane")
-	_check(absf(dialogue.get_global_rect().position.y - controls_deck.get_global_rect().end.y - 64.0) <= 2.0, "narrow portrait transmission lost the 64px control gap")
-	_check(not dialogue.get_global_rect().intersects(deployment_deck.get_global_rect()), "narrow portrait transmission overlaps the deployment deck")
-	_check(not dialogue.get_global_rect().intersects(controls_deck.get_global_rect()), "narrow portrait transmission overlaps gameplay controls")
-	_check(dialogue_portrait.custom_minimum_size.is_equal_approx(Vector2(72.0, 72.0)), "narrow portrait did not compact the speaker visual")
-	var responsive_pan_hint := battle.find_child("MapPanHint", true, false) as Control
-	_check(responsive_pan_hint == null or not responsive_pan_hint.visible, "portrait map-pan hint overlaps the live transmission")
-	var compact_spell_box := owned_spell_bar.find_child("SpellBox", true, false) as GridContainer
-	_check(compact_spell_box != null and compact_spell_box.get_child_count() >= 2, "compact Spell deck lacks representative controls")
-	if compact_spell_box != null:
-		for child: Node in compact_spell_box.get_children():
-			var compact_slot := child as Button
-			_check(compact_slot != null, "compact Spell deck contains a non-Button control")
-			if compact_slot == null:
-				continue
-			_check(compact_slot.custom_minimum_size.is_equal_approx(Vector2(54.0, 50.0)), "%s compact footprint changed" % compact_slot.name)
-			_check(compact_slot.text.is_empty() and compact_slot.icon != null, "%s is not icon-first in compact mode" % compact_slot.name)
-			_check(not compact_slot.accessibility_name.is_empty() and not compact_slot.accessibility_description.is_empty(), "%s compact accessibility is incomplete" % compact_slot.name)
-			var duration_label := compact_slot.find_child("DurationLabel_*", false, false) as Label
-			var cooldown_label := compact_slot.find_child("CooldownLabel_*", false, false) as Label
-			_check(duration_label != null and duration_label.get_theme_font_size(&"font_size") == 13, "%s duration copy did not receive the 20-percent small-text increase" % compact_slot.name)
-			_check(cooldown_label != null and cooldown_label.get_theme_font_size(&"font_size") == 13, "%s cooldown copy did not receive the 20-percent small-text increase" % compact_slot.name)
 	root.size = SHORT
 	for _frame: int in range(3):
 		await process_frame
-	_check(not dialogue.visible, "short landscape did not suppress a transmission when no legal controls-to-deployment lane exists")
-	_check(not owned_spell_deck.get_global_rect().intersects(controls_deck.get_global_rect()), "short-landscape spell deck overlaps gameplay controls")
-	_check(not owned_spell_deck.get_global_rect().intersects(deployment_deck.get_global_rect()), "short-landscape spell deck overlaps the deployment deck")
 	root.size = LANDSCAPE
 	for _frame: int in range(3):
 		await process_frame
-	_check(dialogue.visible, "suppressed short-landscape transmission did not restore on returning to a legal lane")
-	if compact_spell_box != null:
-		for child: Node in compact_spell_box.get_children():
-			var restored_slot := child as Button
-			_check(restored_slot != null and not restored_slot.text.is_empty(), "%s did not restore its visible name after leaving compact mode" % child.name)
 	speed.grab_focus()
 	await process_frame
 	controls.call("_input", _space_key_event())
@@ -354,14 +292,9 @@ func _run() -> void:
 	_check(not bool(deploy_bar.call("transient_intent_active")), "confirmation did not cancel deployment/facing intent")
 	bool(controls.call("cancel_resign_confirmation"))
 	await _wait_for_confirmation_state(controls, &"closed")
-	spell_probe.call("_start_targeting", &"slow_field")
-	_check(StringName(spell_probe.call("targeting_spell")) == &"slow_field", "spell targeting did not start")
-	spell_probe.call("set_interaction_enabled", false)
-	_check(StringName(spell_probe.call("targeting_spell")).is_empty(), "SpellBar interaction gate did not cancel targeting")
-	spell_probe.call("set_interaction_enabled", true)
 	bool(controls.call("request_resign_confirmation"))
 	await _wait_for_confirmation_state(controls, &"active")
-	_check(not bool(owned_spell_bar.call("interaction_enabled")), "confirmation did not retain the owned SpellBar gate")
+	_check(not bool(deploy_bar.call("interaction_enabled")), "confirmation did not retain the deployment gate")
 	bool(controls.call("cancel_resign_confirmation"))
 	await _wait_for_confirmation_state(controls, &"closed")
 	model.dp = model.config.dp_cap
@@ -413,7 +346,6 @@ func _run() -> void:
 			await process_frame
 		_check(action_buttons.columns == 2, "landscape operator actions did not restore the two-action row")
 		_check(not action_panel.get_global_rect().intersects(hud.get_global_rect()), "operator actions overlap the battle HUD when a clear landscape lane exists")
-		_check(not dialogue.visible or not action_panel.get_global_rect().intersects(dialogue.get_global_rect()), "operator actions overlap the live transmission when a clear landscape lane exists")
 
 		deployed_unit.sp = deployed_unit.sp_cost
 		deploy_bar.call("_process", 0.0)
@@ -555,12 +487,12 @@ func _run() -> void:
 	var pan_hint := battle.find_child("MapPanHint", true, false) as Control
 	_check(model.result == BattleModel.Result.DEFEAT and not layer.visible, "terminal defeat retained confirmation")
 	_check(pause.disabled and speed.disabled and resign.disabled, "terminal battle controls remain actionable")
-	_check(not bool(deploy_bar.call("interaction_enabled")) and not bool(owned_spell_bar.call("interaction_enabled")), "terminal deploy/spell controls remain actionable")
+	_check(not bool(deploy_bar.call("interaction_enabled")), "terminal deployment controls remain actionable")
 	_check(pan_hint == null or not pan_hint.visible, "terminal map hint remains visible")
 	_check(continue_button != null and continue_button.has_focus(), "terminal Continue did not own focus")
 	_check(defeat_stamp != null and defeat_stamp.get_theme_font_size(&"font_size") >= 162, "DEFEAT stamp is not three times the prior 54px result size")
 	_check(defeat_ambient != null and defeat_ambient.mouse_filter == Control.MOUSE_FILTER_IGNORE, "terminal defeat ambience is missing or intercepts input")
-	_check(defeat_ambient != null and defeat_ambient.z_index == 59, "terminal defeat ambience is not staged below the result stamp")
+	_check(defeat_ambient != null and defeat_ambient.z_index == 67, "terminal defeat ambience is not staged below the result stamp")
 	_check(defeat_ambient != null and int(defeat_ambient.call("particle_count")) >= 18, "terminal defeat ambience lacks its ember field")
 	if continue_button != null:
 		var continue_style := continue_button.get_theme_stylebox(&"normal")

@@ -7,7 +7,7 @@ script = ExtResource("1")
 schema_version = 1
 name_version = 1
 initial_marks = 120
-starter_operator_ids = Array[StringName]([&"caster_1", &"defender_1", &"defender_2", &"guard_1", &"vanguard_1"])
+starter_operator_ids = Array[StringName]([&"caster_1", &"guard_1", &"sniper_1"])
 paid_offers = Array[Dictionary]([{
 "cost": 80,
 "offer_id": "p16_caster_contract",

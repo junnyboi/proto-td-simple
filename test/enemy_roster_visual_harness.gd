@@ -29,7 +29,6 @@ func _ready() -> void:
 	_enemy_defs = _load_enemy_defs(_stage)
 	_op_defs = _load_catalog("res://data/operators", "OperatorDef")
 	_trap_defs = _load_catalog("res://data/traps", "TrapDef")
-	_spell_defs = _load_catalog("res://data/spells", "SpellDef")
 	model = BattleModel.create(
 		_stage,
 		[],
@@ -38,7 +37,6 @@ func _ready() -> void:
 		_enemy_defs,
 		_op_defs,
 		_trap_defs,
-		_spell_defs,
 	)
 	if model == null or not _build_grid(_stage):
 		push_error("enemy_roster_visual_harness: setup failed")

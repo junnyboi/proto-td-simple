@@ -19,7 +19,7 @@ from PIL import Image, ImageChops, ImageStat
 CELL_SIZE = 640
 COLUMNS = 8
 ACTION_LAYOUT = {"idle": (24, 3), "attack": (13, 2)}
-DIRECTION_MIRRORS = {"ne": "nw", "se": "sw"}
+DIRECTION_MIRRORS = {"ne": "nw"}
 
 
 class ValidationError(ValueError):

@@ -14,7 +14,6 @@ const FIXTURE_PATHS := [
 	"user://view_preferences.cfg",
 	"user://content-packs/fixture.pck",
 	"user://cinematic-streams/fixture.ogv",
-	"user://mission-cinematic-streams/fixture.ogv",
 	"user://future-player-data/nested/profile.bin",
 ]
 
@@ -27,7 +26,7 @@ func _init() -> void:
 
 func _run() -> void:
 	for path: String in FIXTURE_PATHS:
-		if path == ViewPreferencesType.DEFAULT_PATH:
+		if path == ViewPreferencesType.DEFAULT_PATH or path.begins_with("user://campaign_v1"):
 			continue
 		_check(_write_fixture(path), "could not create player-data fixture: %s" % path)
 	_check(
@@ -52,17 +51,19 @@ func _run() -> void:
 	if game == null:
 		await _finish(music, sfx)
 		return
-	game.set("campaign", RefCounted.new())
-	game.set("campaign_store", RefCounted.new())
-	game.set("campaign_active", true)
+	game.call("set_run_seed", 4816)
+	_check(bool(game.call("start_campaign", false, true)), "Campaign fixture failed")
+	for path: String in FIXTURE_PATHS:
+		if path.begins_with("user://campaign_v1"):
+			_check(_write_fixture(path), "could not create campaign fixture: %s" % path)
 	game.set("selected_stage_id", &"s8")
-	game.set("selected_squad", [&"vanguard_1"])
-	var title := load("res://scenes/title.tscn").instantiate() as Control
-	root.add_child(title)
+	game.set("selected_squad", [&"guard_1"])
+	var campaign := load("res://scenes/stage_select.tscn").instantiate() as Control
+	root.add_child(campaign)
 	await process_frame
 	await process_frame
-	title.call("_open_settings")
-	var settings := title.get_node("TitleSettings") as Control
+	campaign.call("_open_settings")
+	var settings := campaign.get_node("TitleSettings") as Control
 	await _wait_for_state(settings, &"ACTIVE")
 	var clear_button := settings.find_child("ClearPlayerDataButton", true, false) as Button
 	var dialog := settings.find_child("ClearPlayerDataConfirmation", true, false) as Control
@@ -87,13 +88,14 @@ func _run() -> void:
 	for path: String in FIXTURE_PATHS:
 		_check(not FileAccess.file_exists(path), "player-data artifact survived clear: %s" % path)
 	_check(not DirAccess.dir_exists_absolute(ProjectSettings.globalize_path("user://future-player-data")), "nested future player-data directory survived clear")
-	_check(game.get("campaign") == null and not bool(game.get("campaign_active")), "live campaign authority survived clear")
+	_check(game.get("campaign") == null and not bool(game.get("campaign_active")), "clear started campaign authority before Start was activated")
 	_check(StringName(game.get("selected_stage_id")).is_empty() and (game.get("selected_squad") as Array).is_empty(), "live mission selection survived clear")
 	var restarted := game.get("content") as Control
-	_check(restarted != null and restarted != title and restarted.find_child("StartButton", true, false) != null, "clear did not return to a fresh start screen")
+	_check(restarted != null and restarted != campaign and String(restarted.get_script().resource_path) == "res://scripts/ui/title.gd", "clear did not return to the start screen")
+	_check(restarted != null and restarted.find_child("StartButton", true, false) != null, "clear did not restore the Start gate")
 	_check(ViewPreferencesType.locale() == &"en-US" and ViewPreferencesType.background_downloads_enabled(), "clear did not restore default preferences")
-	if is_instance_valid(title):
-		title.queue_free()
+	if is_instance_valid(campaign):
+		campaign.queue_free()
 	if restarted != null:
 		game.set("content", null)
 		restarted.queue_free()

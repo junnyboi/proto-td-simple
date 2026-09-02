@@ -221,10 +221,6 @@ static func _fresh_hero(
 		"custom_callsign": null,
 		"life_status": "ready",
 		"death": null,
-		"hero_kind": "recruit",
-		"premium_id": null,
-		"premium_lives": 0,
-		"premium_pull_count": 0,
 	}
 
 

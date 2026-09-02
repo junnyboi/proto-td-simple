@@ -4,7 +4,7 @@ extends Resource
 ## View-only companion resource for one operator template. The simulation never
 ## loads or hashes this presentation contract.
 
-const DIRECTIONS: Array[StringName] = [&"se", &"ne", &"nw", &"sw"]
+const DIRECTIONS: Array[StringName] = [&"ne", &"nw"]
 
 @export var schema_version: int = 1
 @export var visual_id: StringName = &""
@@ -85,7 +85,7 @@ static func _validate_direction_map(
 	label: StringName, value: Dictionary, errors: PackedStringArray
 ) -> void:
 	if value.size() != DIRECTIONS.size():
-		errors.append("%s_by_direction: expected exact four directions" % label)
+		errors.append("%s_by_direction: expected exact NE/NW directions" % label)
 		return
 	var seen_ids: Dictionary = {}
 	for direction: StringName in DIRECTIONS:

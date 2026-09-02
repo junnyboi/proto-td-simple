@@ -13,7 +13,6 @@ speed_tiles_per_s = 0.4
 aerial = false
 block_weight = 2
 leak_damage = 3
-charm_immune = true
 atk_range_cells = 0
 target_policy = ExtResource("3_target_policy")
 sprite_id = &"mini_boss"

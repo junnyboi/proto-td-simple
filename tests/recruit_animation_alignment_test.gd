@@ -12,8 +12,6 @@ var _failures: Array[String] = []
 func _init() -> void:
 	for identity: StringName in [&"recruit_female", &"recruit_male"]:
 		_validate_identity(identity)
-	var premium = OperatorVisualCatalog.get_animation(&"archive_caster")
-	_check(premium != null and is_equal_approx(premium.pivot.y, 0.94), "non-recruit pivot changed")
 	if _failures.is_empty():
 		print("RECRUIT_ANIMATION_ALIGNMENT_TEST_OK")
 		quit(0)
@@ -35,7 +33,7 @@ func _validate_identity(identity: StringName) -> void:
 	var rendered_ground_y: float = rect_origin_y + body_size.y * EXPECTED_PIVOT_Y
 	_check(absf(rendered_ground_y - IsoProjection.FEET_OFFSET) <= 0.001, "%s feet do not land on the tile face" % identity)
 	var root := "res://assets/sprites/operators/animated/%s/" % identity
-	for direction: String in ["ne", "nw", "se", "sw"]:
+	for direction: String in ["ne", "nw"]:
 		_validate_strip(identity, root, "idle", direction, 24, 148, 148)
 		# Attack poses lunge/crouch by at most six source pixels (3.4 runtime px)
 		# while preserving the same authored canvas pivot.

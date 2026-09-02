@@ -92,8 +92,6 @@ func _cleanup(game: Node) -> void:
 	game.set("current_battle", null)
 	game.set("_pending_battle_ticket", {})
 	game.set("_pending_campaign_mutation", null)
-	game.set("_pending_promotion_mutation", null)
-	game.set("_pending_recruitment_mutation", null)
 	game.set("_pending_launch_mutation", null)
 	game.set("_campaign_battle_active", false)
 	Engine.time_scale = 1.0

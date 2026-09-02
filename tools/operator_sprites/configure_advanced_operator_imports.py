@@ -14,7 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 IMPORT_ROOT = ROOT / "assets" / "sprites" / "operators" / "animated"
-EXPECTED_IMPORTS = 176
+EXPECTED_IMPORTS = 88
 REPLACEMENTS = {
     "compress/mode=0": "compress/mode=1",
     "compress/lossy_quality=0.7": "compress/lossy_quality=0.92",

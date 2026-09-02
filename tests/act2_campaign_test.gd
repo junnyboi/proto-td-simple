@@ -7,7 +7,6 @@ var _failures := PackedStringArray()
 
 func _init() -> void:
 	_test_catalog_and_balance()
-	_test_act_two_presentation()
 	_test_progression_and_save_compatibility()
 	if _failures.is_empty():
 		print("ACT2_CAMPAIGN_TEST_OK")
@@ -68,43 +67,6 @@ func _test_catalog_and_balance() -> void:
 				"S16 Gatecrasher-class bosses no longer arrive in separate windows",
 			)
 		_test_terminal_schedule(stage)
-
-
-func _test_act_two_presentation() -> void:
-	var records := {}
-	for stage_index: int in range(9, 17):
-		var record := load(
-			"res://data/presentation/narrative/stages/s%d.tres" % stage_index,
-		) as StageNarrativeDef
-		_check(record != null, "Act II narrative s%d failed to load" % stage_index)
-		if record != null:
-			records[stage_index] = record
-	if records.size() != 8:
-		return
-	var s9: StageNarrativeDef = records[9]
-	var s10: StageNarrativeDef = records[10]
-	var s11: StageNarrativeDef = records[11]
-	var s12: StageNarrativeDef = records[12]
-	var s13: StageNarrativeDef = records[13]
-	var s14: StageNarrativeDef = records[14]
-	var s15: StageNarrativeDef = records[15]
-	var s16: StageNarrativeDef = records[16]
-	_check(s9.core_service.contains("Model-City Farm"), "S9 no longer exposes the Green Cage model-city farm")
-	_check(s10.threat.contains("fixed quota") and s10.threat.contains("water"), "S10 no longer exposes the water-for-people quota")
-	_check(s11.objective.contains("living captives") and s11.clear_debrief.contains("rescue before demolition"), "S11 no longer puts living captives and rescue first")
-	_check(s12.human_reason.contains("digital people") and s12.clear_debrief.contains("without stolen souls"), "S12 no longer proves clean-powered digital life")
-	_check(s13.transmission.contains("Patient 33") and s13.battle_start.contains("same soul"), "S13 no longer identifies Patient 33 as Archive Caster's same soul")
-	_check(s14.objective.contains("human-owned anima refinery") and s14.clue.contains("authorized the first interface"), "S14 no longer exposes the refinery collaborators and Vessel authorization")
-	_check(s15.objective.begins_with("Rescue") and s15.objective.contains("then demolish"), "S15 no longer fixes rescue before demolition")
-	_check(s16.clear_debrief.contains("foundry is destroyed") and s16.clear_debrief.contains("PROTOS survives"), "S16 no longer destroys the regional foundry while PROTOS survives")
-	for stage_index: int in range(9, 17):
-		var record: StageNarrativeDef = records[stage_index]
-		var combined := " ".join([
-			record.objective, record.threat, record.human_reason, record.clue,
-			record.core_service, record.clear_debrief, record.defeat_debrief,
-			record.transmission, record.battle_start, record.mid_wave,
-		])
-		_check(not combined.to_lower().contains("factory arm"), "Act II copy promises unsupported factory arms in s%d" % stage_index)
 
 
 func _test_terminal_schedule(source: StageDef) -> void:

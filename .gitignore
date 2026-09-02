@@ -5,3 +5,4 @@ build/*
 override.cfg
 __pycache__/
 *.py[cod]
+server-data/

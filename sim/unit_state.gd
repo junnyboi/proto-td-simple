@@ -12,6 +12,7 @@ extends RefCounted
 ## "expiry restores base exactly" holds by construction.
 
 enum Facing { RIGHT, DOWN, LEFT, UP }
+const DEFAULT_FACING := Facing.LEFT
 
 var id: int = 0
 var battle_id: StringName = &""
@@ -21,7 +22,7 @@ var op_id: StringName = &""
 var sprite_id: StringName = &""
 var portrait_asset_id: StringName = &""
 var cell: Vector2i = Vector2i.ZERO
-var facing: Facing = Facing.RIGHT
+var facing: Facing = DEFAULT_FACING
 var hp: int = 1
 var hp_max: int = 1
 var alive: bool = true

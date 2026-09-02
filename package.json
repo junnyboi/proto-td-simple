@@ -1,0 +1,14 @@
+{
+  "name": "proto-td-simple",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Game template - TD with an offline-first mission leaderboard",
+  "scripts": {
+    "dev": "node server/leaderboard_server.mjs --web-root build/web",
+    "preview": "node server/leaderboard_server.mjs --web-root build/web",
+    "test:leaderboard": "node --test tests/leaderboard_server.test.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

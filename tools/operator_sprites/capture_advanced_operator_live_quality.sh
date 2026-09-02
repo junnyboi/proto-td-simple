@@ -7,8 +7,7 @@ GODOT_BIN=${GODOT_BIN:-godot}
 rm -rf "$OUT"
 mkdir -p "$OUT/live" "$OUT/closeup" "$OUT/metrics"
 classes=(
-  banner_guard defender gunner immovable mage_apprentice shock_trooper
-  sniper sorcerer sword_saint swordmaster witch_doctor
+  gunner mage_apprentice swordmaster
 )
 
 ADVANCED_COMPRESSION_FULL=1 ADVANCED_COMPRESSION_REPORT="$OUT/metrics/compression-metrics.json" \

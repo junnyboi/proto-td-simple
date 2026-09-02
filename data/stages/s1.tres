@@ -38,11 +38,7 @@ waves = Array[Dictionary]([{
 wave_starts = PackedInt32Array(0, 330)
 leak_limit = 3
 squad_size = 3
-recovery_roster = Array[StringName]([&"vanguard_1", &"guard_1", &"defender_1"])
-rewards = Array[Dictionary]([{
-"id": &"guard_2",
-"kind": &"operator"
-}])
+recovery_roster = Array[StringName]([&"caster_1", &"guard_1", &"sniper_1"])
+rewards = Array[Dictionary]([])
 campaign_index = 1
 requires = Array[StringName]([])
-intro_hint = "Deploy two melee blockers on the path to hold the shelters."

@@ -50,33 +50,21 @@ var _primary: Button = null
 
 func setup(
 	mission_control: Control,
-	resonance: Control,
 	preferences_path: String = ViewPreferencesType.DEFAULT_PATH,
 	reduced_motion: bool = false,
 ) -> bool:
 	return setup_custom(
 		"CommandCenterTutorial",
-		[mission_control, resonance],
+		[mission_control],
 		[
 			{
 				"id": &"mission_control",
 				"step_key": &"ui.onboarding.command.mission.step",
-				"step_fallback": "1 / 2  MISSION CONTROL",
+				"step_fallback": "1 / 1  MISSION CONTROL",
 				"title_key": &"ui.onboarding.command.mission.title",
 				"title_fallback": "Choose an operation",
 				"body_key": &"ui.onboarding.command.mission.body",
-				"body_fallback": "Mission Control lists every available operation. Select one to prepare its Field Team and begin the mission.",
-				"action_key": &"ui.onboarding.command.next",
-				"action_fallback": "NEXT",
-			},
-			{
-				"id": &"resonance",
-				"step_key": &"ui.onboarding.command.resonance.step",
-				"step_fallback": "2 / 2  RESONANCE",
-				"title_key": &"ui.onboarding.command.resonance.title",
-				"title_fallback": "Summon special heroes",
-				"body_key": &"ui.onboarding.command.resonance.body",
-				"body_fallback": "Premium Resonance spends Resonance Shards to summon fixed-kit special heroes. Try your luck whenever your balance allows.",
+				"body_fallback": "Mission Control lists every available operation. Select one to begin the mission immediately.",
 				"action_key": &"ui.onboarding.command.done",
 				"action_fallback": "DONE",
 			},

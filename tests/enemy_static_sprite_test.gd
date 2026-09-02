@@ -95,9 +95,6 @@ func _validate_projection_and_motion() -> void:
 			EnemyAnimator.refresh(enemy, model, body, 0.55, {}, {}, enemy_defs)
 			_check(sprite.position != first_position, "%s must receive procedural locomotion" % enemy_id)
 			_check(model.snapshot() == snapshot_before, "%s presentation must not mutate authoritative state" % enemy_id)
-			enemy.faction = EnemyState.Faction.CHARMED
-			EnemyAnimator.refresh(enemy, model, body, 0.75, {}, {}, enemy_defs)
-			_check(sprite.modulate.b > sprite.modulate.r, "%s Charm state must remain visibly supplemental blue" % enemy_id)
 		body.free()
 	ProjectSettings.set_setting("accessibility/reduced_motion", true)
 	var reduced := EnemyAnimator.static_motion_state(&"interceptor", 4, 0.37, false, 0.0, false, true, true)
@@ -166,7 +163,7 @@ func _validate_grunt_exception() -> void:
 	_check(EnemyAnimator.uses_grunt(&"grunt"), "Grunt must remain the animated exception")
 	_check(EnemyAnimator.uses_directional_animation(&"grunt"), "Grunt must retain directional animation")
 	_check(not EnemyAnimator.uses_static_sprite(&"grunt"), "Grunt must not use static sprite routing")
-	var grunt_id := EnemyAnimator.animation_id(&"walk", &"se", false)
+	var grunt_id := EnemyAnimator.animation_id(&"walk", &"se")
 	_check(Art.frame_count(grunt_id) > 1, "Grunt must remain frame-animated")
 	for enemy_id: StringName in STATIC_ENEMIES:
 		_check(Art.frame_count(EnemyAnimator.static_sprite_id(enemy_id)) == 1, "%s must remain single-frame" % enemy_id)

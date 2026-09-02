@@ -7,7 +7,7 @@ const CampaignProgression := preload("res://sim/campaign_progression.gd")
 const CampaignPromotionHistory := preload("res://sim/campaign_promotion_history.gd")
 const CanonicalJson := preload("res://sim/canonical_json.gd")
 const HeroIdentity := preload("res://sim/hero_identity.gd")
-const STARTERS := [&"caster_1", &"defender_1", &"defender_2", &"guard_1", &"vanguard_1"]
+const STARTERS := [&"caster_1", &"guard_1", &"sniper_1"]
 const INITIAL_MARKS := 120
 const U63_MAX := 9_223_372_036_854_775_807
 
@@ -417,7 +417,7 @@ static func _validate_current_from_anchor(
 	var attempt_delta := int(data["next_attempt_id"]) - int(after_core["next_attempt_id"])
 	for key: String in [
 		"campaign_uid", "campaign_seed", "campaign_generation", "next_resolution_index",
-		"stage_stars", "unlocked_traps", "unlocked_spells",
+		"stage_stars", "unlocked_traps",
 	]:
 		if data[key] != after_core[key]:
 			return _reject(&"post_resolution_mutation_mismatch")
@@ -548,8 +548,6 @@ static func _reverse_latest(data: Dictionary, receipt: Dictionary) -> Dictionary
 		for reward: Dictionary in receipt["rewards_granted"]:
 			if reward["kind"] == "trap":
 				before["unlocked_traps"].erase(reward["id"])
-			elif reward["kind"] == "spell":
-				before["unlocked_spells"].erase(reward["id"])
 	return before
 
 

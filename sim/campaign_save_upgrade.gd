@@ -8,50 +8,50 @@ const CombatContentBindingScript := preload("res://sim/combat_content_binding.gd
 const PRE_PROMOTION_DATA_KEYS := [
 	"campaign_uid", "campaign_seed", "campaign_generation", "save_revision",
 	"next_recruitment_index", "next_attempt_id", "next_resolution_index", "marks",
-	"stage_stars", "unlocked_traps", "unlocked_spells", "offers", "heroes",
+	"stage_stars", "unlocked_traps", "offers", "heroes",
 	"resolution_anchor", "last_resolution",
 ]
 const PRE_PROMOTION_CORE_KEYS := [
 	"campaign_uid", "campaign_seed", "campaign_generation", "save_revision",
 	"next_recruitment_index", "next_attempt_id", "next_resolution_index", "marks",
-	"stage_stars", "unlocked_traps", "unlocked_spells", "offers", "heroes",
+	"stage_stars", "unlocked_traps", "offers", "heroes",
 ]
 const PRE_PROOF_DATA_KEYS := [
 	"campaign_uid", "campaign_seed", "campaign_generation", "save_revision",
 	"next_recruitment_index", "next_attempt_id", "next_resolution_index", "marks",
-	"stage_stars", "unlocked_traps", "unlocked_spells", "offers", "heroes",
+	"stage_stars", "unlocked_traps", "offers", "heroes",
 	"promotion_receipts", "resolution_anchor", "last_resolution",
 ]
 const PRE_PROOF_CORE_KEYS := [
 	"campaign_uid", "campaign_seed", "campaign_generation", "save_revision",
 	"next_recruitment_index", "next_attempt_id", "next_resolution_index", "marks",
-	"stage_stars", "unlocked_traps", "unlocked_spells", "offers", "heroes",
+	"stage_stars", "unlocked_traps", "offers", "heroes",
 	"promotion_receipts",
 ]
 const PRE_MITIGATION_DATA_KEYS := [
 	"campaign_uid", "campaign_seed", "campaign_generation", "save_revision",
 	"next_recruitment_index", "next_attempt_id", "next_resolution_index", "marks",
-	"stage_stars", "unlocked_traps", "unlocked_spells", "offers", "heroes",
+	"stage_stars", "unlocked_traps", "offers", "heroes",
 	"promotion_receipts", "promotion_proofs", "resolution_anchor", "last_resolution",
 ]
 const PRE_MITIGATION_CORE_KEYS := [
 	"campaign_uid", "campaign_seed", "campaign_generation", "save_revision",
 	"next_recruitment_index", "next_attempt_id", "next_resolution_index", "marks",
-	"stage_stars", "unlocked_traps", "unlocked_spells", "offers", "heroes",
+	"stage_stars", "unlocked_traps", "offers", "heroes",
 	"promotion_receipts", "promotion_proofs",
 ]
 const CURRENT_DATA_KEYS := [
 	"campaign_uid", "campaign_seed", "campaign_generation", "save_revision",
 	"next_recruitment_index", "next_attempt_id", "next_resolution_index", "marks",
 	"combat_rules_sha256",
-	"stage_stars", "unlocked_traps", "unlocked_spells", "offers", "heroes",
+	"stage_stars", "unlocked_traps", "offers", "heroes",
 	"promotion_receipts", "promotion_proofs", "resolution_anchor", "last_resolution",
 ]
 const CURRENT_CORE_KEYS := [
 	"campaign_uid", "campaign_seed", "campaign_generation", "save_revision",
 	"next_recruitment_index", "next_attempt_id", "next_resolution_index", "marks",
 	"combat_rules_sha256",
-	"stage_stars", "unlocked_traps", "unlocked_spells", "offers", "heroes",
+	"stage_stars", "unlocked_traps", "offers", "heroes",
 	"promotion_receipts", "promotion_proofs",
 ]
 

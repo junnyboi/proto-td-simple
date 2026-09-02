@@ -78,7 +78,7 @@ func _add_tower_proxy(grid: Node2D, cell: Vector2i, elevated: bool) -> void:
 	var operator_path := (
 		"res://data/operators/caster_1.tres"
 		if elevated
-		else "res://data/operators/vanguard_1.tres"
+		else "res://data/operators/guard_1.tres"
 	)
 	var definition := load(operator_path) as OperatorDef
 	var tower := Node2D.new()

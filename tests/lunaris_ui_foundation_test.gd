@@ -26,7 +26,7 @@ func _run() -> void:
 		_check_panel_insets(theme.get_stylebox(&"panel", variation), 24.0, String(variation))
 	for role: StringName in [
 		&"screen", &"dialog", &"hud", &"workspace", &"result",
-		&"memorial", &"selected", &"quiet", &"danger", &"transmission",
+		&"memorial", &"selected", &"quiet", &"danger",
 	]:
 		_check_panel_insets(LunarisStyleType.panel_style(role), 24.0, "Lunaris %s" % role)
 	var audited_gold := Button.new()
@@ -62,9 +62,14 @@ func _run() -> void:
 	locale_selector.call("set_compact_mode", true)
 	root.add_child(locale_selector)
 	await process_frame
-	var locale_list := locale_selector.call("locale_list") as ItemList
-	_check(locale_list.custom_minimum_size.x == 0.0, "compact locale selector retained a fixed width")
-	_check(locale_list.custom_minimum_size.y == 104.0, "pre-ready scrollbar-free compact locale sizing was not retained")
+	var locale_buttons: Array[Button] = locale_selector.call("locale_buttons")
+	_check(locale_selector.vertical, "locale selector is not permanently vertical")
+	_check(locale_buttons.size() == 2, "locale selector did not create two language buttons")
+	for locale_button: Button in locale_buttons:
+		_check(
+			locale_button.custom_minimum_size == Vector2(112.0, 56.0),
+			"pre-ready compact locale button sizing was not retained",
+		)
 	_check(bool(locale_selector.call("select_locale", &"zh-CN")), "default locale selector could not activate Chinese")
 	_check(root.get_node("I18n").call("locale") == &"zh-CN", "default locale selector stopped committing its selection")
 	_check(bool(locale_selector.call("select_locale", &"en-US")), "default locale selector could not restore English")

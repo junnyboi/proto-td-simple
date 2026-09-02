@@ -3,12 +3,11 @@ extends SceneTree
 const Catalog := preload("res://data/presentation/operator_visual_catalog.gd")
 
 const CLASS_IDS := [
-	"defender", "gunner", "mage_apprentice", "shock_trooper", "swordmaster",
-	"immovable", "sniper", "sorcerer", "witch_doctor", "banner_guard", "sword_saint",
+	"gunner", "mage_apprentice", "swordmaster",
 ]
 const GENDERS := ["female", "male"]
 const ACTIONS := ["idle", "attack"]
-const DIRECTIONS := ["ne", "nw", "se", "sw"]
+const DIRECTIONS := ["ne", "nw"]
 
 
 func _init() -> void:

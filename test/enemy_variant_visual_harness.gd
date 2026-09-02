@@ -33,7 +33,6 @@ func _ready() -> void:
 	_enemy_defs = _load_enemy_defs(_stage)
 	_op_defs = _load_catalog("res://data/operators", "OperatorDef")
 	_trap_defs = _load_catalog("res://data/traps", "TrapDef")
-	_spell_defs = _load_catalog("res://data/spells", "SpellDef")
 	model = BattleModel.create(
 		_stage,
 		[],
@@ -42,7 +41,6 @@ func _ready() -> void:
 		_enemy_defs,
 		_op_defs,
 		_trap_defs,
-		_spell_defs,
 	)
 	if model == null or not _build_grid(_stage):
 		set_physics_process(false)
@@ -118,5 +116,5 @@ func _spawn_at_fraction(
 	var path_length := Pathing.length_units(model.path_for(path_idx))
 	enemy.progress_units = clampi(roundi(float(path_length) * fraction), 0, path_length - 1)
 	if attacking:
-		enemy.engaged_with = 0
+		enemy.blocked_by = 0
 		enemy.atk_counter = maxi(1, enemy.atk_interval_ticks / 2)
