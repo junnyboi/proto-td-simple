@@ -14,7 +14,7 @@ config/name="Game template - TD"
 run/main_scene="res://scenes/loading.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 boot_splash/bg_color=Color(0.027, 0.063, 0.098, 1)
-boot_splash/image="res://assets/loading/command_backdrop.png"
+boot_splash/image="res://assets/loading/lunaris_reliquary_loading.png"
 config/icon="res://icon.svg"
 
 [audio]

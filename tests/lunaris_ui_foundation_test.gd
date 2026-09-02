@@ -14,11 +14,14 @@ func _init() -> void:
 
 func _run() -> void:
 	var theme := ThemeType.new()
-	var primary_style := theme.get_stylebox(&"normal", &"AuiPrimaryButton") as StyleBoxFlat
-	_check(primary_style != null, "Aetheria primary action is not a solid style")
-	if primary_style != null:
-		_check(primary_style.bg_color.a >= 0.99, "Aetheria primary action is not solid")
-		_check(primary_style.content_margin_left >= 12.0 and primary_style.content_margin_top >= 12.0, "Aetheria primary action lacks 12px content padding")
+	for variation: StringName in [
+		&"Button", &"AuiPrimaryButton", &"AuiSecondaryButton", &"AuiSelectedButton",
+		&"AuiDestructiveButton", &"AuiDisabledButton",
+	]:
+		for state: StringName in [&"normal", &"hover", &"pressed", &"disabled"]:
+			_check_simple_gold_button_style(
+				theme.get_stylebox(state, variation), "%s %s" % [variation, state],
+			)
 	for variation: StringName in [
 		&"AuiReadingPanel", &"AuiHudPanel", &"AuiCardPanel",
 		&"AuiModalPanel", &"AuiInspectorPanel", &"AuiRewardPanel",
@@ -29,11 +32,14 @@ func _run() -> void:
 		&"memorial", &"selected", &"quiet", &"danger",
 	]:
 		_check_panel_insets(LunarisStyleType.panel_style(role), 24.0, "Lunaris %s" % role)
-	var audited_gold := Button.new()
-	LunarisStyleType.apply_button(audited_gold, &"gold")
-	_check(audited_gold.get_theme_stylebox(&"normal") is StyleBoxFlat, "shared gold action still uses a textured frame")
-	_check(audited_gold.get_theme_color(&"font_color").is_equal_approx(Color("040a12")), "shared gold action lacks high-contrast dark ink")
-	audited_gold.free()
+	for role: StringName in [&"primary", &"gold", &"secondary", &"selected", &"danger", &"disabled", &"quiet"]:
+		var audited_button := Button.new()
+		LunarisStyleType.apply_button(audited_button, role)
+		for state: StringName in [&"normal", &"hover", &"pressed", &"disabled"]:
+			_check_simple_gold_button_style(
+				audited_button.get_theme_stylebox(state), "shared %s %s" % [role, state],
+			)
+		audited_button.free()
 	_check(theme.get_stylebox(&"panel", &"AuiReadingPanel") is StyleBoxTexture, "reading panel does not use the command-deck frame")
 	_check(theme.get_font(&"font", &"AuiTitleLabel") != null, "display typography is missing")
 
@@ -263,6 +269,18 @@ func _check_panel_insets(style: StyleBox, minimum: float, context: String) -> vo
 			style.content_margin_right, style.content_margin_bottom,
 		],
 	)
+
+
+func _check_simple_gold_button_style(style: StyleBox, context: String) -> void:
+	var flat := style as StyleBoxFlat
+	_check(flat != null, "%s still uses a stylized background" % context)
+	if flat == null:
+		return
+	_check(flat.bg_color.a > 0.0 and flat.bg_color.a < 1.0, "%s fill is not translucent" % context)
+	_check(flat.border_color.is_equal_approx(LunarisStyleType.GOLD), "%s border is not gold" % context)
+	_check(flat.border_width_left > 0, "%s gold border is missing" % context)
+	_check(flat.corner_radius_top_left >= 12, "%s border is not sufficiently rounded" % context)
+	_check(flat.content_margin_left >= 12.0, "%s content padding is below 12px" % context)
 
 
 func _check(condition: bool, message: String) -> void:

@@ -6,6 +6,7 @@ var _output_path := "/tmp/proto-td-narrative.png"
 var _locale := "en-US"
 var _text_scale := 1.0
 var _stage_id := "s9"
+var _results_outcome := "clear"
 
 
 func _ready() -> void:
@@ -20,6 +21,8 @@ func _ready() -> void:
 			_text_scale = clampf(argument.trim_prefix("--text-scale=").to_float(), 0.8, 1.5)
 		elif argument.begins_with("--stage="):
 			_stage_id = argument.trim_prefix("--stage=")
+		elif argument.begins_with("--outcome="):
+			_results_outcome = argument.trim_prefix("--outcome=")
 	call_deferred("_run")
 
 
@@ -40,14 +43,15 @@ func _run() -> void:
 		for _frame: int in range(10):
 			await get_tree().process_frame
 	elif _mode == "results":
+		var cleared := _results_outcome == "clear"
 		game.call("set_run_seed", 3309)
 		game.call("start_campaign", false, true)
 		game.set("last_result", {
 			"stage_id": &"s1",
-			"result": BattleModel.Result.CLEAR,
-			"stars": 3,
+			"result": BattleModel.Result.CLEAR if cleared else BattleModel.Result.DEFEAT,
+			"stars": 3 if cleared else 0,
 			"kills": 14,
-			"leaks": 0,
+			"leaks": 0 if cleared else 6,
 			"rewards_granted": [{"kind": "currency", "id": "marks", "amount": 40}],
 			"dead_hero_ids": [],
 		})
@@ -67,7 +71,7 @@ func _run() -> void:
 		get_tree().quit(1)
 		return
 	await _cleanup()
-	print("NARRATIVE_VISUAL_CAPTURE_OK mode=%s path=%s locale=%s stage=%s text_scale=%.2f" % [_mode, _output_path, _locale, _stage_id, _text_scale])
+	print("NARRATIVE_VISUAL_CAPTURE_OK mode=%s path=%s locale=%s stage=%s text_scale=%.2f outcome=%s" % [_mode, _output_path, _locale, _stage_id, _text_scale, _results_outcome])
 	get_tree().quit(0)
 
 

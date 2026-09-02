@@ -4,7 +4,7 @@ extends Control
 ## Settings is an explicit exclusive full-viewport child state.
 
 const TopAlignedCoverType := preload("res://scripts/ui/components/top_aligned_cover.gd")
-const TITLE_ART := preload("res://assets/loading/command_backdrop.png")
+const TITLE_ART := preload("res://assets/loading/lunaris_reliquary_loading.png")
 const StagingSkinType := preload("res://scripts/ui/components/staging_skin.gd")
 const Style := preload("res://scripts/ui/components/lunaris_ops_style.gd")
 const UiCopyType := preload("res://scripts/ui/components/ui_copy.gd")
@@ -34,6 +34,8 @@ const PORTRAIT_ENTRY_DROP_RATIO := 0.16
 const SHORT_ENTRY_DROP_RATIO := 0.10
 const ENTRY_STACK_EXTRA_DROP := 64
 const FOOTER_DOCK_HEIGHT := 84.0
+const FOOTER_ROW_MAX_WIDTH := 900.0
+const FOOTER_BUTTON_HEIGHT := 52.0
 const MASTER_BUS := &"Master"
 const MUSIC_BUS := &"Music"
 const SFX_BUS := &"SFX"
@@ -53,7 +55,9 @@ var _leaderboard_button: Button = null
 var _leaderboard_dialog: MissionLeaderboardDialog = null
 var _language_toggle: Button = null
 var _footer_settings_dock: MarginContainer = null
+var _footer_actions_row: HBoxContainer = null
 var _footer_settings_button: Button = null
+var _tweak_controls_button: Button = null
 var _title_music_enabled := true
 var _reduced_motion := false
 var _master_volume := 1.0
@@ -125,6 +129,9 @@ func _ready() -> void:
 
 
 func _exit_tree() -> void:
+	var tweak_controls := get_node_or_null("/root/TweakControls")
+	if tweak_controls != null and _footer_actions_row != null:
+		tweak_controls.call("undock_launcher", _footer_actions_row)
 	if _entry_tween != null and _entry_tween.is_valid():
 		_entry_tween.kill()
 	for tween_value: Variant in _hover_tweens.values():
@@ -222,23 +229,14 @@ func _build_screen() -> void:
 	_entry_stack.add_child(_start_button)
 	_wire_title_action_feedback(_start_button)
 
-	_leaderboard_button = _entry_button("LeaderboardButton", false)
-	Style.apply_simple_gold_button(
-		_leaderboard_button, false, 24.0, TITLE_BUTTON_CORNER_RADIUS,
-	)
+	_leaderboard_button = _footer_button("LeaderboardButton", 16)
 	_leaderboard_button.pressed.connect(_open_leaderboard)
-	_entry_stack.add_child(_leaderboard_button)
 	_wire_title_action_feedback(_leaderboard_button)
 
-	_language_toggle = _entry_button("LanguageToggle", false)
+	_language_toggle = _footer_button("LanguageToggle", 13)
 	_language_toggle.toggle_mode = true
 	_language_toggle.set_pressed_no_signal(I18n.locale() == &"zh-CN")
-	_language_toggle.custom_minimum_size = Vector2(_title_size(184.0), _title_size(42.0))
-	StagingSkinType.apply_display_type(
-		_language_toggle, _title_font_size(11), IVORY, 600,
-	)
 	_language_toggle.toggled.connect(_on_language_toggled)
-	_entry_stack.add_child(_language_toggle)
 	_wire_title_action_feedback(_language_toggle)
 	_build_footer_settings()
 	_leaderboard_dialog = LEADERBOARD_DIALOG_SCENE.instantiate() as MissionLeaderboardDialog
@@ -249,7 +247,7 @@ func _build_screen() -> void:
 
 func _build_footer_settings() -> void:
 	_footer_settings_dock = MarginContainer.new()
-	_footer_settings_dock.name = "FooterSettingsDock"
+	_footer_settings_dock.name = "FooterActionsDock"
 	_footer_settings_dock.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
 	_footer_settings_dock.offset_top = -FOOTER_DOCK_HEIGHT
 	_footer_settings_dock.add_theme_constant_override(&"margin_left", 16)
@@ -257,43 +255,27 @@ func _build_footer_settings() -> void:
 	_footer_settings_dock.add_theme_constant_override(&"margin_bottom", 14)
 	add_child(_footer_settings_dock)
 
-	var center := HBoxContainer.new()
-	center.name = "FooterSettingsCenter"
-	center.alignment = BoxContainer.ALIGNMENT_CENTER
-	_footer_settings_dock.add_child(center)
+	_footer_actions_row = HBoxContainer.new()
+	_footer_actions_row.name = "FooterActionsRow"
+	_footer_actions_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	_footer_actions_row.add_theme_constant_override(&"separation", 12)
+	_footer_settings_dock.add_child(_footer_actions_row)
+	_footer_actions_row.add_child(_leaderboard_button)
+	_footer_actions_row.add_child(_language_toggle)
 
-	_footer_settings_button = Button.new()
-	_footer_settings_button.name = "FooterSettingsButton"
+	_footer_settings_button = _footer_button("FooterSettingsButton", 16)
 	_footer_settings_button.icon = StagingSkinType.SETTINGS_ICON
 	_footer_settings_button.expand_icon = true
-	_footer_settings_button.add_theme_constant_override(&"icon_max_width", 30)
-	_footer_settings_button.custom_minimum_size = Vector2(260.0, 58.0)
-	_footer_settings_button.focus_mode = Control.FOCUS_ALL
-	_footer_settings_button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	StagingSkinType.apply_display_type(_footer_settings_button, 18, IVORY, 600)
-	_footer_settings_button.add_theme_color_override(&"font_focus_color", BRIGHT_GOLD)
-	_footer_settings_button.add_theme_stylebox_override(
-		&"normal",
-		StagingSkinType.clean_button_style(
-			Color(0.012, 0.028, 0.046, 0.86), Color(GOLD, 0.34), 14,
-		),
-	)
-	_footer_settings_button.add_theme_stylebox_override(
-		&"hover",
-		StagingSkinType.clean_button_style(
-			Color(GOLD, 0.14), Color(BRIGHT_GOLD, 0.72), 14,
-		),
-	)
-	_footer_settings_button.add_theme_stylebox_override(
-		&"pressed",
-		StagingSkinType.clean_button_style(
-			Color(GOLD, 0.22), BRIGHT_GOLD, 14,
-		),
-	)
-	_register_focus_pulse(_footer_settings_button, BRIGHT_GOLD)
+	_footer_settings_button.add_theme_constant_override(&"icon_max_width", 22)
 	_footer_settings_button.pressed.connect(_open_settings)
-	center.add_child(_footer_settings_button)
+	_footer_actions_row.add_child(_footer_settings_button)
 	_wire_title_action_feedback(_footer_settings_button)
+
+	var tweak_controls := get_node_or_null("/root/TweakControls")
+	if tweak_controls != null:
+		_tweak_controls_button = tweak_controls.call(
+			"dock_launcher", _footer_actions_row,
+		) as Button
 
 
 func _entry_button(node_name: String, primary: bool) -> Button:
@@ -308,30 +290,25 @@ func _entry_button(node_name: String, primary: bool) -> Button:
 	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	StagingSkinType.apply_display_type(button, _title_font_size(24 if primary else 20), IVORY, 600)
 	button.add_theme_color_override(&"font_focus_color", BRIGHT_GOLD)
-	button.add_theme_stylebox_override(
-		&"normal",
-		StagingSkinType.clean_button_style(
-			Color(0.025, 0.08, 0.11, 0.96) if primary else Color(0.014, 0.035, 0.055, 0.94),
-			Color(MOON_CYAN, 0.62) if primary else Color(GOLD, 0.40),
-			TITLE_BUTTON_CORNER_RADIUS,
-		),
+	Style.apply_simple_gold_button(
+		button, primary, 24.0, TITLE_BUTTON_CORNER_RADIUS, 10.0,
 	)
-	button.add_theme_stylebox_override(
-		&"hover",
-		StagingSkinType.clean_button_style(
-			Color(MOON_CYAN, 0.24) if primary else Color(GOLD, 0.16),
-			Color(MOON_CYAN, 0.90) if primary else Color(BRIGHT_GOLD, 0.74),
-			TITLE_BUTTON_CORNER_RADIUS,
-		),
-	)
-	button.add_theme_stylebox_override(
-		&"pressed",
-		StagingSkinType.clean_button_style(
-			Color(MOON_CYAN, 0.34) if primary else Color(GOLD, 0.24),
-			MOON_CYAN if primary else BRIGHT_GOLD,
-			TITLE_BUTTON_CORNER_RADIUS,
-		),
-	)
+	_register_focus_pulse(button, BRIGHT_GOLD)
+	return button
+
+
+func _footer_button(node_name: String, font_size: int) -> Button:
+	var button := Button.new()
+	button.name = node_name
+	button.clip_text = true
+	button.custom_minimum_size = Vector2(0.0, FOOTER_BUTTON_HEIGHT)
+	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	button.focus_mode = Control.FOCUS_ALL
+	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	StagingSkinType.apply_display_type(button, _title_font_size(font_size), IVORY, 600)
+	button.add_theme_color_override(&"font_focus_color", BRIGHT_GOLD)
+	Style.apply_simple_gold_button(button, false, 10.0, 14, 6.0)
 	_register_focus_pulse(button, BRIGHT_GOLD)
 	return button
 
@@ -345,16 +322,24 @@ func _register_focus_pulse(button: Button, accent: Color) -> void:
 
 
 func _wire_entry_focus() -> void:
-	var actions: Array[Control] = [
-		_start_button, _leaderboard_button, _language_toggle, _footer_settings_button,
+	var footer_actions: Array[Control] = [
+		_leaderboard_button, _language_toggle, _footer_settings_button,
 	]
-	for index: int in actions.size():
-		var current := actions[index]
-		var previous := actions[(index - 1 + actions.size()) % actions.size()]
-		var following := actions[(index + 1) % actions.size()]
-		current.focus_neighbor_top = current.get_path_to(previous)
+	if _tweak_controls_button != null:
+		footer_actions.append(_tweak_controls_button)
+	_start_button.focus_neighbor_top = _start_button.get_path_to(footer_actions[-1])
+	_start_button.focus_neighbor_bottom = _start_button.get_path_to(footer_actions[0])
+	_start_button.focus_previous = _start_button.get_path_to(footer_actions[-1])
+	_start_button.focus_next = _start_button.get_path_to(footer_actions[0])
+	for index: int in footer_actions.size():
+		var current := footer_actions[index]
+		var previous := footer_actions[(index - 1 + footer_actions.size()) % footer_actions.size()]
+		var following := footer_actions[(index + 1) % footer_actions.size()]
+		current.focus_neighbor_left = current.get_path_to(previous)
+		current.focus_neighbor_right = current.get_path_to(following)
+		current.focus_neighbor_top = current.get_path_to(_start_button)
+		current.focus_neighbor_bottom = current.get_path_to(_start_button)
 		current.focus_previous = current.get_path_to(previous)
-		current.focus_neighbor_bottom = current.get_path_to(following)
 		current.focus_next = current.get_path_to(following)
 		current.focus_entered.connect(_on_title_action_focused.bind(current))
 
@@ -370,8 +355,7 @@ func _on_title_action_focused(action: Control) -> void:
 
 func _begin_title_reveal() -> void:
 	var reveal_nodes: Array[CanvasItem] = [
-		_wordmark, _orbit_rule, _start_button, _leaderboard_button, _language_toggle,
-		_footer_settings_dock,
+		_wordmark, _orbit_rule, _start_button, _footer_settings_dock,
 	]
 	_interaction_feedback_ready = false
 	_title_focus_scroll_ready = false
@@ -391,8 +375,7 @@ func _begin_title_reveal() -> void:
 
 func _finish_title_reveal() -> void:
 	for item: CanvasItem in [
-		_wordmark, _orbit_rule, _start_button, _leaderboard_button, _language_toggle,
-		_footer_settings_dock,
+		_wordmark, _orbit_rule, _start_button, _footer_settings_dock,
 	]:
 		if item != null:
 			item.modulate.a = 1.0
@@ -650,10 +633,14 @@ func _set_title_interaction_enabled(enabled: bool) -> void:
 	_leaderboard_button.disabled = not enabled
 	_language_toggle.disabled = not enabled
 	_footer_settings_button.disabled = not enabled
+	if _tweak_controls_button != null:
+		_tweak_controls_button.disabled = not enabled
 	_start_button.focus_mode = Control.FOCUS_ALL if enabled else Control.FOCUS_NONE
 	_leaderboard_button.focus_mode = Control.FOCUS_ALL if enabled else Control.FOCUS_NONE
 	_language_toggle.focus_mode = Control.FOCUS_ALL if enabled else Control.FOCUS_NONE
 	_footer_settings_button.focus_mode = Control.FOCUS_ALL if enabled else Control.FOCUS_NONE
+	if _tweak_controls_button != null:
+		_tweak_controls_button.focus_mode = Control.FOCUS_ALL if enabled else Control.FOCUS_NONE
 
 
 func _current_preferences() -> Dictionary:
@@ -880,15 +867,30 @@ func _apply_responsive_layout() -> void:
 	var wordmark_base := maxi(1, roundi(wordmark_visual / maxf(_text_scale, 0.01)))
 	_wordmark.add_theme_font_size_override(&"font_size", wordmark_base)
 	_start_button.custom_minimum_size = Vector2(minf(entry_width, _title_size(520.0)), _title_size(82.0 if not portrait else 76.0))
-	_leaderboard_button.custom_minimum_size = Vector2(
-		minf(entry_width, _title_size(430.0)), _title_size(72.0 if not portrait else 66.0),
+	var footer_width := minf(
+		FOOTER_ROW_MAX_WIDTH,
+		viewport_size.x - float(horizontal_margin * 2),
 	)
-	_language_toggle.custom_minimum_size = Vector2(
-		minf(entry_width, _title_size(184.0)), _title_size(42.0),
-	)
+	var footer_margin := maxi(horizontal_margin, roundi((viewport_size.x - footer_width) * 0.5))
+	_footer_settings_dock.add_theme_constant_override(&"margin_left", footer_margin)
+	_footer_settings_dock.add_theme_constant_override(&"margin_right", footer_margin)
+	_footer_settings_dock.add_theme_constant_override(&"margin_bottom", vertical_margin)
 	_footer_settings_dock.offset_top = -FOOTER_DOCK_HEIGHT
-	_footer_settings_button.custom_minimum_size.x = minf(
-		maxf(220.0, viewport_size.x - float(horizontal_margin * 2)), 320.0,
+	_footer_actions_row.add_theme_constant_override(&"separation", 6 if narrow else 12)
+	_leaderboard_button.size_flags_stretch_ratio = 1.3
+	_language_toggle.size_flags_stretch_ratio = 0.85
+	_footer_settings_button.size_flags_stretch_ratio = 1.15
+	if _tweak_controls_button != null:
+		_tweak_controls_button.size_flags_stretch_ratio = 1.15
+		_tweak_controls_button.custom_minimum_size = Vector2(0.0, FOOTER_BUTTON_HEIGHT)
+	var footer_font_size := _title_font_size(9 if narrow else (12 if portrait else 16))
+	_leaderboard_button.add_theme_font_size_override(&"font_size", footer_font_size)
+	_footer_settings_button.add_theme_font_size_override(&"font_size", footer_font_size)
+	_language_toggle.add_theme_font_size_override(
+		&"font_size", _title_font_size(9 if narrow else (11 if portrait else 13)),
+	)
+	_footer_settings_button.add_theme_constant_override(
+		&"icon_max_width", 16 if narrow else 22,
 	)
 
 

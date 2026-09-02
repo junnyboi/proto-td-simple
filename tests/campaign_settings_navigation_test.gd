@@ -30,12 +30,36 @@ func _run() -> void:
 	var utilities := campaign.find_child("CampaignUtilities", true, false) as GridContainer
 	var back := campaign.find_child("CampaignBack", true, false) as Button
 	var settings_button := campaign.find_child("CampaignSettingsButton", true, false) as Button
+	var back_label := back.get_node_or_null("PresentationLabel") as Label if back != null else null
+	var settings_label := (
+		settings_button.get_node_or_null("PresentationLabel") as Label
+		if settings_button != null
+		else null
+	)
 	var settings := campaign.get_node_or_null("TitleSettings") as Control
+	var mission_card := campaign.find_child("Stage_s1", true, false) as Button
 	_check(not ResourceLoader.exists("res://scenes/staging.tscn"), "removed Company Command scene is still loadable")
 	_check(campaign.find_child("BarracksButton", true, false) == null, "Campaign still exposes Barracks")
 	_check(campaign.find_child("ArmoryButton", true, false) == null, "Campaign still exposes Armory")
 	_check(utilities != null and utilities.columns == 2, "Campaign utility group is missing")
 	_check(back != null and settings_button != null and settings != null, "Campaign navigation or Settings control is missing")
+	_check(mission_card != null, "Campaign mission card is missing")
+	if mission_card != null:
+		for state: StringName in [&"normal", &"hover", &"pressed", &"disabled"]:
+			_check(
+				mission_card.get_theme_stylebox(state) is StyleBoxTexture,
+				"Campaign mission card %s background was not restored" % state,
+			)
+	_check(settings_button != null and settings_button.icon == null, "Campaign Settings still displays an icon")
+	_check(back_label != null and settings_label != null, "Campaign utility presentation labels are missing")
+	_check(
+		back_label != null and settings_label != null
+		and is_equal_approx(
+			back_label.get_global_rect().get_center().y,
+			settings_label.get_global_rect().get_center().y,
+		),
+		"Campaign Back and Settings text are not vertically aligned",
+	)
 	_check(
 		utilities != null and settings_button != null
 		and is_equal_approx(settings_button.get_global_rect().end.x, utilities.get_global_rect().end.x),

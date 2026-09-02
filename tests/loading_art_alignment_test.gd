@@ -1,7 +1,7 @@
 extends SceneTree
 
 const COVER_SCRIPT := preload("res://scripts/ui/components/top_aligned_cover.gd")
-const LOADING_ART := preload("res://assets/loading/command_backdrop.png")
+const LOADING_ART := preload("res://assets/loading/lunaris_reliquary_loading.png")
 
 var _failures: Array[String] = []
 
@@ -17,17 +17,17 @@ func _run() -> void:
 	await process_frame
 
 	var landscape := cover.source_rect_for_target(Vector2(1280.0, 720.0))
-	_check(landscape.is_equal_approx(Rect2(0.0, 0.0, 1920.0, 1080.0)), "landscape should use the complete source")
+	_check(landscape.is_equal_approx(Rect2(0.0, 0.0, 2560.0, 1440.0)), "landscape should use the complete source")
 
 	var portrait := cover.source_rect_for_target(Vector2(720.0, 1280.0))
-	_check(is_equal_approx(portrait.position.x, 656.25), "portrait crop should remain horizontally centered")
+	_check(is_equal_approx(portrait.position.x, 875.0), "portrait crop should remain horizontally centered")
 	_check(is_zero_approx(portrait.position.y), "portrait crop must begin at the source top")
-	_check(is_equal_approx(portrait.size.x, 607.5), "portrait crop width is incorrect")
-	_check(is_equal_approx(portrait.size.y, 1080.0), "portrait crop must retain full source height")
+	_check(is_equal_approx(portrait.size.x, 810.0), "portrait crop width is incorrect")
+	_check(is_equal_approx(portrait.size.y, 1440.0), "portrait crop must retain full source height")
 
 	var ultrawide := cover.source_rect_for_target(Vector2(1920.0, 720.0))
 	_check(is_zero_approx(ultrawide.position.y), "wide crop must remain pinned to the source top")
-	_check(is_equal_approx(ultrawide.size.y, 720.0), "wide crop height is incorrect")
+	_check(is_equal_approx(ultrawide.size.y, 960.0), "wide crop height is incorrect")
 	_check(cover.mouse_filter == Control.MOUSE_FILTER_IGNORE, "cover must not intercept input")
 
 	await _verify_loading_layout(Vector2i(3440, 1440), 64, "native ultrawide")

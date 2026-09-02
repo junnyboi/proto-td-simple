@@ -64,7 +64,7 @@
     "ui.action.cancel": "Cancel",
     "ui.battle.confirm_defeat": "CONFIRM DEFEAT",
     "ui.battle.confirm_defeat_description": "Withdraw from the operation and record this attempt as a defeat.",
-    "ui.battle.continue_debrief": "CONTINUE TO DEBRIEF",
+    "ui.battle.continue_debrief": "CONTINUE",
     "ui.battle.deploy_operator_card": "{name}{slot}\n{cost} DP",
     "ui.battle.deploy_operator_cooldown": "{name}{slot}\nCOOLDOWN {seconds}s",
     "ui.battle.deploy_trap_card": "{name}\n{cost} DP",

@@ -1,6 +1,6 @@
 extends SceneTree
 
-const STATIC_ART := preload("res://assets/loading/command_backdrop.png")
+const STATIC_ART := preload("res://assets/loading/lunaris_reliquary_loading.png")
 const TRANSITION_FRAMES := 180
 
 var _failures: Array[String] = []
@@ -25,11 +25,38 @@ func _run() -> void:
 	_check(title != null, "loading did not enter the start screen")
 	_check(not bool(game.get("campaign_active")), "loading started a campaign before Start was activated")
 	if title != null:
+		await process_frame
 		var backdrop := title.find_child("TitleBackdrop", true, false) as Control
 		var start := title.find_child("StartButton", true, false) as Button
+		var footer_row := title.find_child("FooterActionsRow", true, false) as HBoxContainer
+		var leaderboard := title.find_child("LeaderboardButton", true, false) as Button
+		var language := title.find_child("LanguageToggle", true, false) as Button
+		var settings := title.find_child("FooterSettingsButton", true, false) as Button
+		var tweak_service := root.get_node_or_null("TweakControls")
+		var tweak := (
+			tweak_service.get("launcher_button") as Button
+			if tweak_service != null
+			else null
+		)
 		_check(backdrop != null and backdrop.get("texture") == STATIC_ART, "start screen does not use the static loading backdrop")
 		_check(title.find_child("LunarisTitleLoop", true, false) == null, "start screen still creates cinematic playback")
 		_check(start != null and not start.disabled, "Start is missing or disabled")
+		_check(footer_row != null, "start screen is missing its bottom action row")
+		_check(
+			footer_row != null
+			and leaderboard != null and leaderboard.get_parent() == footer_row
+			and language != null and language.get_parent() == footer_row
+			and settings != null and settings.get_parent() == footer_row
+			and tweak != null and tweak.get_parent() == footer_row,
+			"secondary title actions are not grouped in the bottom row",
+		)
+		if leaderboard != null and language != null and settings != null and tweak != null:
+			var baseline := leaderboard.get_global_rect().get_center().y
+			for action: Button in [language, settings, tweak]:
+				_check(
+					is_equal_approx(action.get_global_rect().get_center().y, baseline),
+					"bottom title actions are not vertically aligned",
+				)
 		if start != null:
 			start.pressed.emit()
 	var campaign := await _wait_for_content_script(game, "res://scripts/ui/stage_select.gd")

@@ -1,6 +1,7 @@
 extends SceneTree
 
 const Catalog := preload("res://scripts/tuning/runtime_tweak_catalog.gd")
+const Style := preload("res://scripts/ui/components/lunaris_ops_style.gd")
 const SAVE_PATH := "user://runtime_tweaks.cfg"
 
 var _failures: Array[String] = []
@@ -54,6 +55,7 @@ func _test_launcher_and_modal(tweaks: Node) -> void:
 	var viewport := root.get_visible_rect().size
 	_check(launcher.visible, "tweak launcher is not visible")
 	_check(launcher.text == "TWEAK CONTROLS", "launcher copy changed")
+	_check_simple_gold_button(launcher, "tweak launcher")
 	_check(_near(launcher.modulate.a, 0.5), "launcher idle opacity is not exactly 50 percent")
 	launcher.mouse_entered.emit()
 	_check(_near(launcher.modulate.a, 1.0), "launcher does not become opaque on hover")
@@ -62,6 +64,9 @@ func _test_launcher_and_modal(tweaks: Node) -> void:
 	_check(_near(launcher.position.x + launcher.size.x, viewport.x - 16.0), "launcher is not right anchored")
 	_check(_near(launcher.position.y + launcher.size.y, viewport.y - 16.0), "launcher is not bottom anchored")
 	_check(panel.category_selector.item_count == 6, "panel does not expose the six requested categories")
+	_check_simple_gold_button(panel.category_selector, "tweak category selector")
+	_check_simple_gold_button(panel.close_button, "tweak close action")
+	_check_simple_gold_button(panel.reset_all_button, "tweak reset-all action")
 	_test_row_typography_and_alignment(panel)
 	var original_size := root.size
 	root.size = Vector2i(720, 1280)
@@ -125,6 +130,8 @@ func _test_row_typography_and_alignment(panel: RuntimeTweakPanel) -> void:
 			and is_equal_approx(reset.custom_minimum_size.y, 56.0),
 		"numeric reset control lost its centered row alignment",
 	)
+	if reset != null:
+		_check_simple_gold_button(reset, "tweak row reset action")
 
 
 func _test_global_settings_composition(tweaks: Node) -> void:
@@ -235,6 +242,17 @@ func _test_battle_resource_adapters(tweaks: Node) -> void:
 
 func _near(actual: float, expected: float) -> bool:
 	return absf(actual - expected) <= 0.001
+
+
+func _check_simple_gold_button(button: BaseButton, context: String) -> void:
+	for state: StringName in [&"normal", &"hover", &"pressed", &"disabled"]:
+		var style := button.get_theme_stylebox(state) as StyleBoxFlat
+		_check(style != null, "%s %s still uses a stylized background" % [context, state])
+		if style == null:
+			continue
+		_check(style.bg_color.a > 0.0 and style.bg_color.a < 1.0, "%s %s is not translucent" % [context, state])
+		_check(style.border_color.is_equal_approx(Style.GOLD), "%s %s border is not gold" % [context, state])
+		_check(style.corner_radius_top_left >= 12, "%s %s border is not rounded" % [context, state])
 
 
 func _check(condition: bool, message: String) -> void:

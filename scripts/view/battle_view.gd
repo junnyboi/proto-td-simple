@@ -748,7 +748,7 @@ func _finalize_terminal_result() -> void:
 	if recorded:
 		_result_finalized = true
 		_continue_btn.text = UiCopyType.text(
-			&"ui.battle.continue_debrief", "CONTINUE TO DEBRIEF",
+			&"ui.battle.continue_debrief", "CONTINUE",
 		)
 	else:
 		_continue_btn.text = UiCopyType.text(
@@ -776,7 +776,7 @@ func _on_locale_changed(_locale_id: StringName) -> void:
 	if _continue_btn != null:
 		if _result_finalized:
 			_continue_btn.text = UiCopyType.text(
-				&"ui.battle.continue_debrief", "CONTINUE TO DEBRIEF",
+				&"ui.battle.continue_debrief", "CONTINUE",
 			)
 		elif _result_finalize_running:
 			_continue_btn.text = UiCopyType.text(

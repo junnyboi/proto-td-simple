@@ -57,7 +57,7 @@ const STATIC_FALLBACKS := {
 	&"ui.battle.state_defeat": "DEFEAT",
 	&"ui.battle.hud_compact": "LEAKS {leaks} / {leak_threshold}   DP {dp}\nELIMS {eliminations}   {state}",
 	&"ui.battle.hud_wide": "LEAKS  {leaks} / {leak_threshold}    DP  {dp}    ELIMINATIONS  {eliminations}    {state}",
-	&"ui.battle.continue_debrief": "CONTINUE TO DEBRIEF",
+	&"ui.battle.continue_debrief": "CONTINUE",
 	&"ui.battle.finalizing_debrief": "FINALIZING DEBRIEF…",
 	&"ui.battle.operator_actions": "Operator actions",
 	&"ui.battle.operator_actions_description": "{operator}. {skill}. {current} of {cost} SP.",

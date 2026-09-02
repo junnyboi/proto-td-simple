@@ -26,19 +26,21 @@ const DefeatAmbientLayerType := preload(
 const Style := preload("res://scripts/ui/components/lunaris_ops_style.gd")
 const StagingSkinType := preload("res://scripts/ui/components/staging_skin.gd")
 const COMMAND_BACKDROP := preload("res://assets/loading/command_backdrop.png")
-const RESULT_ACTION_WIDTH := 260.0
-const RESULT_COMMAND_ACTION_WIDTH := 400.0
+const RESULT_ACTION_WIDTH := 200.0
+const RESULT_COMMAND_ACTION_WIDTH := 350.0
 const RESULT_CLEAR_COMMAND_ACTION_WIDTH := RESULT_COMMAND_ACTION_WIDTH
-const RESULT_COMMAND_PORTRAIT_WIDTH := 320.0
-const RESULT_ACTION_HEIGHT := 96.0
-const RESULT_ACTION_FONT_SIZE := 54
+const RESULT_COMMAND_PORTRAIT_WIDTH := 280.0
+const RESULT_LEADERBOARD_ACTION_WIDTH := 340.0
+const RESULT_ACTION_HEIGHT := 84.0
+const RESULT_ACTION_FONT_SIZE := 42
+const RESULT_ACTION_PORTRAIT_FONT_SIZE := 32
 const RESULT_ACTION_HORIZONTAL_PADDING := 28.0
 const RESULT_ACTION_VERTICAL_PADDING := 18.0
 const RESULT_HEADER_HEIGHT := 132.0
 const RESULT_PANEL_PADDING := 24.0
 const RESULT_CLEAR_HORIZONTAL_PADDING := 48.0
 const RESULT_CLEAR_VERTICAL_PADDING := 24.0
-const RESULT_DEFEAT_YIELD_PADDING := 64.0
+const RESULT_YIELD_PADDING := 100.0
 const RESULT_STAR_SIZE := 58.0
 const RESULT_STAR_PORTRAIT_SIZE := 46.0
 const RESULT_HEADER_FILL := Color("09131ed9")
@@ -66,7 +68,6 @@ var _rewards_panel: PanelContainer = null
 var _leaderboard_button: Button = null
 var _leaderboard_dialog: MissionLeaderboardDialog = null
 var _cleared_result := false
-var _landscape_action_columns := 2
 var _reward_reveal_entries: Array[Dictionary] = []
 var _reward_reveal_tween: Tween = null
 var _defeat_ambient: DefeatAmbientLayerType = null
@@ -233,16 +234,13 @@ func _build_body(layout: VBoxContainer, result: Dictionary, cleared: bool) -> vo
 	_rewards_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_rewards_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	Style.apply_panel(_rewards_panel, &"result")
-	if cleared:
-		_set_panel_padding(
-			_rewards_panel,
-			RESULT_CLEAR_HORIZONTAL_PADDING,
-			RESULT_CLEAR_VERTICAL_PADDING,
-			RESULT_PANEL_PADDING,
-			RESULT_PANEL_PADDING,
-		)
-	else:
-		_set_panel_padding(_rewards_panel, RESULT_DEFEAT_YIELD_PADDING, RESULT_DEFEAT_YIELD_PADDING, RESULT_DEFEAT_YIELD_PADDING, RESULT_DEFEAT_YIELD_PADDING)
+	_set_panel_padding(
+		_rewards_panel,
+		RESULT_YIELD_PADDING,
+		RESULT_YIELD_PADDING,
+		RESULT_YIELD_PADDING,
+		RESULT_YIELD_PADDING,
+	)
 	_body_grid.add_child(_rewards_panel)
 	var rewards_scroll := ScrollContainer.new()
 	rewards_scroll.name = "RewardsScroll"
@@ -293,7 +291,7 @@ func _build_actions(layout: VBoxContainer) -> void:
 	layout.add_child(action_center)
 	_actions = GridContainer.new()
 	_actions.name = "ActionRow"
-	_actions.columns = 3
+	_actions.columns = 4
 	_actions.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	_actions.add_theme_constant_override(&"h_separation", 18)
 	_actions.add_theme_constant_override(&"v_separation", 10)
@@ -312,6 +310,7 @@ func _build_actions(layout: VBoxContainer) -> void:
 				UiCopyType.text(&"ui.results.next_mission", "Next Mission"),
 				UiCopyType.text(&"ui.results.next_mission", "Next Mission"),
 				&"primary",
+				RESULT_COMMAND_ACTION_WIDTH,
 			)
 			if has_next_mission
 			else _button(
@@ -319,9 +318,9 @@ func _build_actions(layout: VBoxContainer) -> void:
 				UiCopyType.text(&"ui.results.return_to_staging", "Return to Staging"),
 				UiCopyType.text(&"ui.results.return_to_staging_short", "Command"),
 				&"primary",
+				RESULT_COMMAND_ACTION_WIDTH,
 			)
 		)
-		next.custom_minimum_size.x = RESULT_COMMAND_ACTION_WIDTH if not _cleared_result else RESULT_CLEAR_COMMAND_ACTION_WIDTH
 		if not _cleared_result:
 			ActionHoverFeedbackType.wire(self, next)
 		if has_next_mission:
@@ -349,6 +348,7 @@ func _build_actions(layout: VBoxContainer) -> void:
 		UiCopyType.text(&"ui.leaderboard.open", "Leaderboard"),
 		UiCopyType.text(&"ui.leaderboard.open", "Leaderboard"),
 		&"secondary",
+		RESULT_LEADERBOARD_ACTION_WIDTH,
 	)
 	Style.apply_simple_gold_button(_leaderboard_button, false, 28.0, 12)
 	_leaderboard_button.pressed.connect(_open_leaderboard)
@@ -378,11 +378,6 @@ func _apply_responsive_layout() -> void:
 	var mode := _shell.layout_mode()
 	var large_text := TextScale != null and float(TextScale.value()) > 1.20
 	var stacked_information := mode == &"portrait" or large_text
-	if _actions != null:
-		_actions.columns = (
-			1 if mode == &"portrait"
-			else (2 if mode == &"compact_landscape" else _landscape_action_columns)
-		)
 	if _body_grid != null:
 		_body_grid.columns = 1
 	if _header_grid != null:
@@ -410,35 +405,26 @@ func _apply_responsive_layout() -> void:
 	if _rewards_panel != null:
 		if mode == &"portrait":
 			_apply_portrait_information_panel(_rewards_panel)
-			if _cleared_result:
-				_set_panel_padding(
-					_rewards_panel,
-					RESULT_CLEAR_HORIZONTAL_PADDING,
-					RESULT_CLEAR_VERTICAL_PADDING,
-					RESULT_PANEL_PADDING,
-					RESULT_PANEL_PADDING,
-				)
-			else:
-				_set_panel_padding(_rewards_panel, RESULT_DEFEAT_YIELD_PADDING, RESULT_DEFEAT_YIELD_PADDING, RESULT_DEFEAT_YIELD_PADDING, RESULT_DEFEAT_YIELD_PADDING)
 		else:
 			Style.apply_panel(_rewards_panel, &"result")
-			if _cleared_result:
-				_set_panel_padding(
-					_rewards_panel,
-					RESULT_CLEAR_HORIZONTAL_PADDING,
-					RESULT_CLEAR_VERTICAL_PADDING,
-					RESULT_PANEL_PADDING,
-					RESULT_PANEL_PADDING,
-				)
-			else:
-				_set_panel_padding(_rewards_panel, RESULT_DEFEAT_YIELD_PADDING, RESULT_DEFEAT_YIELD_PADDING, RESULT_DEFEAT_YIELD_PADDING, RESULT_DEFEAT_YIELD_PADDING)
+		_set_panel_padding(
+			_rewards_panel,
+			RESULT_YIELD_PADDING,
+			RESULT_YIELD_PADDING,
+			RESULT_YIELD_PADDING,
+			RESULT_YIELD_PADDING,
+		)
 	if _headline != null:
-		var headline_size := 34 if large_text else ((34 if _cleared_result else 45) if mode == &"portrait" else 60)
+		var headline_size := (
+			34
+			if large_text
+			else ((34 if _cleared_result else 45) if mode == &"portrait" else (60 if _cleared_result else 54))
+		)
 		_headline.add_theme_font_size_override(&"font_size", headline_size)
 		_headline.autowrap_mode = (
-			TextServer.AUTOWRAP_OFF
-			if _cleared_result
-			else TextServer.AUTOWRAP_WORD_SMART
+			TextServer.AUTOWRAP_WORD_SMART
+			if not _cleared_result and stacked_information
+			else TextServer.AUTOWRAP_OFF
 		)
 		_headline.size_flags_horizontal = Control.SIZE_EXPAND_FILL if stacked_information else Control.SIZE_SHRINK_BEGIN
 		_headline.custom_minimum_size.x = 0.0 if stacked_information else minf(
@@ -460,21 +446,29 @@ func _apply_responsive_layout() -> void:
 		_tally.add_theme_font_size_override(&"font_size", 28 if large_text else (33 if mode == &"portrait" else 42))
 		_tally.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART if stacked_information else TextServer.AUTOWRAP_OFF
 		_tally.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT if stacked_information else HORIZONTAL_ALIGNMENT_RIGHT
-	if _actions != null and large_text:
+	if _actions != null:
+		var action_font_size := (
+			RESULT_ACTION_PORTRAIT_FONT_SIZE
+			if mode == &"portrait" or large_text
+			else RESULT_ACTION_FONT_SIZE
+		)
 		for child: Node in _actions.get_children():
 			if not child is Button:
 				continue
 			var action := child as Button
-			action.custom_minimum_size.x = 300.0
-			action.add_theme_font_size_override(&"font_size", 32)
+			action.add_theme_font_size_override(&"font_size", action_font_size)
 			var presentation := action.find_child("PresentationLabel", true, false) as Label
 			if presentation != null:
-				presentation.add_theme_font_size_override(&"font_size", 32)
+				presentation.add_theme_font_size_override(&"font_size", action_font_size)
 	var command := find_child(
 		"NextMission" if _cleared_result else "ReturnToStaging", true, false,
 	) as Button
+	var command_target := (
+		RESULT_CLEAR_COMMAND_ACTION_WIDTH
+		if _cleared_result
+		else RESULT_COMMAND_ACTION_WIDTH
+	)
 	if command != null:
-		var command_target := RESULT_CLEAR_COMMAND_ACTION_WIDTH if _cleared_result else RESULT_COMMAND_ACTION_WIDTH
 		if mode == &"portrait":
 			command_target = (
 				RESULT_ACTION_WIDTH
@@ -486,7 +480,9 @@ func _apply_responsive_layout() -> void:
 		command.custom_minimum_size.x = command_target
 		command.add_theme_font_size_override(
 			&"font_size",
-			32 if large_text else (48 if mode == &"portrait" else RESULT_ACTION_FONT_SIZE),
+			RESULT_ACTION_PORTRAIT_FONT_SIZE
+			if mode == &"portrait" or large_text
+			else RESULT_ACTION_FONT_SIZE,
 		)
 		var command_presentation := command.find_child(
 			"PresentationLabel", true, false,
@@ -495,15 +491,48 @@ func _apply_responsive_layout() -> void:
 			command_presentation.autowrap_mode = TextServer.AUTOWRAP_OFF
 			command_presentation.add_theme_font_size_override(
 				&"font_size",
-				32 if large_text else (48 if mode == &"portrait" else RESULT_ACTION_FONT_SIZE),
+				RESULT_ACTION_PORTRAIT_FONT_SIZE
+				if mode == &"portrait" or large_text
+				else RESULT_ACTION_FONT_SIZE,
 			)
+	if _actions != null:
+		for child: Node in _actions.get_children():
+			var action := child as AetheriaButtonType
+			if action == null:
+				continue
+			var minimum_width := float(action.get_meta(
+				&"result_action_minimum_width", RESULT_ACTION_WIDTH,
+			))
+			if large_text:
+				minimum_width = maxf(minimum_width, 300.0)
+			if action == command:
+				minimum_width = maxf(minimum_width, command_target)
+			_fit_result_action_width(action, minimum_width)
+		_apply_action_grid_columns()
 	_relayout_shell.call_deferred()
 
 
 func _relayout_shell() -> void:
 	if is_inside_tree() and _shell != null and is_instance_valid(_shell):
 		_shell.relayout(Vector2i(get_viewport_rect().size))
+		_apply_action_grid_columns.call_deferred()
 		_reset_information_scrolls.call_deferred()
+
+
+func _apply_action_grid_columns() -> void:
+	if _actions == null or _shell == null or not is_instance_valid(_actions):
+		return
+	var action_count := _actions.get_child_count()
+	if action_count <= 1 or _shell.layout_mode() == &"portrait":
+		_actions.columns = 1
+		return
+	var required_width := 0.0
+	for child: Node in _actions.get_children():
+		if child is Control:
+			required_width += (child as Control).get_combined_minimum_size().x
+	required_width += float(_actions.get_theme_constant(&"h_separation")) * float(action_count - 1)
+	var available_width := _shell.content_host().size.x
+	_actions.columns = action_count if required_width <= available_width + 1.0 else mini(2, action_count)
 
 
 func _reset_information_scrolls() -> void:
@@ -752,7 +781,6 @@ func _reset_presentation_references() -> void:
 	_rewards_panel = null
 	_leaderboard_button = null
 	_leaderboard_dialog = null
-	_landscape_action_columns = 2
 
 
 func _wire_focus(focusable: Array[Button]) -> void:
@@ -831,18 +859,47 @@ func _label(label_name: String, label_text: String, role: StringName) -> Aetheri
 	return label
 
 
-func _button(button_name: String, button_text: String, presentation_text: String, role: StringName) -> AetheriaButtonType:
+func _button(
+	button_name: String,
+	button_text: String,
+	presentation_text: String,
+	role: StringName,
+	minimum_width: float = RESULT_ACTION_WIDTH,
+	) -> AetheriaButtonType:
 	var button := AetheriaButtonType.new()
 	button.name = button_name
 	button.text = button_text
-	button.custom_minimum_size = Vector2(RESULT_ACTION_WIDTH, RESULT_ACTION_HEIGHT)
+	button.custom_minimum_size = Vector2(minimum_width, RESULT_ACTION_HEIGHT)
 	button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	button.apply_role(role)
 	button.set_presentation_text(button_text, presentation_text)
 	button.tooltip_text = button_text
 	_apply_result_action_style(button, role == &"primary")
+	button.set_meta(&"result_action_minimum_width", minimum_width)
+	_fit_result_action_width(button, minimum_width)
 	return button
+
+
+func _fit_result_action_width(button: AetheriaButtonType, minimum_width: float) -> void:
+	var presentation := button.get_node_or_null("PresentationLabel") as Label
+	if presentation == null:
+		return
+	presentation.clip_text = false
+	presentation.autowrap_mode = TextServer.AUTOWRAP_OFF
+	var font := presentation.get_theme_font(&"font")
+	var font_size := presentation.get_theme_font_size(&"font_size")
+	var text_width := font.get_string_size(
+		presentation.text,
+		HORIZONTAL_ALIGNMENT_LEFT,
+		-1.0,
+		font_size,
+	).x
+	button.custom_minimum_size.x = maxf(
+		minimum_width,
+		ceilf(text_width) + RESULT_ACTION_HORIZONTAL_PADDING * 2.0 + 4.0,
+	)
+	button.update_minimum_size()
 
 
 func _apply_result_action_style(button: AetheriaButtonType, primary: bool) -> void:
@@ -859,7 +916,7 @@ func _apply_result_action_style(button: AetheriaButtonType, primary: bool) -> vo
 	var presentation := button.get_node_or_null("PresentationLabel") as AetheriaLabelType
 	if presentation != null:
 		presentation.clip_text = false
-		presentation.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		presentation.autowrap_mode = TextServer.AUTOWRAP_OFF
 		StagingSkinType.apply_display_type(
 			presentation,
 			RESULT_ACTION_FONT_SIZE,

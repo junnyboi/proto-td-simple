@@ -50,9 +50,11 @@ func _check_results_screen(game: Node, outcome: int, label: String) -> void:
 	var header := screen.find_child("OutcomeCeremony", true, false) as PanelContainer
 	var body := screen.find_child("ResultsBody", true, false) as GridContainer
 	var rewards := screen.find_child("RewardsPanel", true, false) as PanelContainer
+	var actions := screen.find_child("ActionRow", true, false) as GridContainer
 	_check(header != null, "%s results header is missing" % label)
 	_check(body != null and body.columns == 1, "%s results body is not a single full-width column" % label)
 	_check(rewards != null, "%s Mission Yield panel is missing" % label)
+	_check(actions != null, "%s action row is missing" % label)
 	if header != null:
 		var style := header.get_theme_stylebox(&"panel") as StyleBoxFlat
 		_check(style != null, "%s results header is not a simple solid-fill panel" % label)
@@ -84,6 +86,54 @@ func _check_results_screen(game: Node, outcome: int, label: String) -> void:
 			and absf(body_rect.end.x - rewards_rect.end.x) <= 1.0,
 			"%s Mission Yield does not fill the body width" % label,
 		)
+		var rewards_style := rewards.get_theme_stylebox(&"panel")
+		_check(
+			is_equal_approx(rewards_style.content_margin_left, 100.0)
+				and is_equal_approx(rewards_style.content_margin_top, 100.0)
+				and is_equal_approx(rewards_style.content_margin_right, 100.0)
+				and is_equal_approx(rewards_style.content_margin_bottom, 100.0),
+			"%s Mission Yield does not have 100 px internal padding" % label,
+		)
+	if actions != null:
+		_check(
+			actions.columns == actions.get_child_count(),
+			"%s actions do not use one landscape row when space is available" % label,
+		)
+		_check(
+			actions.get_global_rect().end.y <= float(root.size.y) + 1.0,
+			"%s landscape actions extend below the viewport" % label,
+		)
+		for child: Node in actions.get_children():
+			if not child is Button:
+				continue
+			var button := child as Button
+			var presentation := button.find_child("PresentationLabel", true, false) as Label
+			_check(presentation != null, "%s %s presentation label is missing" % [label, button.name])
+			if presentation == null:
+				continue
+			var font := presentation.get_theme_font(&"font")
+			var font_size := presentation.get_theme_font_size(&"font_size")
+			var text_width := font.get_string_size(
+				presentation.text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size,
+			).x
+			var style := button.get_theme_stylebox(&"normal")
+			var text_space := button.size.x - style.content_margin_left - style.content_margin_right
+			_check(not presentation.clip_text, "%s %s presentation clips text" % [label, button.name])
+			_check(
+				presentation.autowrap_mode == TextServer.AUTOWRAP_OFF,
+				"%s %s presentation wraps text" % [label, button.name],
+			)
+			_check(
+				text_width <= text_space + 1.0,
+				"%s %s fixed width truncates its text" % [label, button.name],
+			)
+		root.size = Vector2i(720, 1280)
+		for _frame: int in range(3):
+			await process_frame
+		_check(actions.columns == 1, "%s portrait actions do not stack" % label)
+		root.size = VIEWPORT_SIZE
+		for _frame: int in range(3):
+			await process_frame
 	for removed_name: String in [
 		"ConsequencePanel", "ConsequenceScroll", "ConsequenceColumn",
 		"ConsequenceHeading", "ConsequenceLine", "NoCasualties",

@@ -270,7 +270,6 @@ func _button(node_name: String, role: StringName) -> Button:
 	button.focus_mode = Control.FOCUS_ALL
 	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	Style.apply_compact_rounded_button(button, role)
-	Style.apply_simple_gold_button(button, role == &"selected")
 	return button
 
 
@@ -292,8 +291,6 @@ func _update_tabs() -> void:
 	_global_tab.set_pressed_no_signal(not local_selected)
 	Style.apply_compact_rounded_button(_local_tab, &"selected" if local_selected else &"secondary")
 	Style.apply_compact_rounded_button(_global_tab, &"secondary" if local_selected else &"selected")
-	Style.apply_simple_gold_button(_local_tab, local_selected)
-	Style.apply_simple_gold_button(_global_tab, not local_selected)
 
 
 func _on_save_name_pressed() -> void:

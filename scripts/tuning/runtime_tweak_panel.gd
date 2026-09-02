@@ -4,6 +4,7 @@ extends Control
 signal close_requested
 
 const Catalog := preload("res://scripts/tuning/runtime_tweak_catalog.gd")
+const Style := preload("res://scripts/ui/components/lunaris_ops_style.gd")
 const ACCENT := Color("64e6ff")
 const TEXT := Color("f4f4f4")
 const MUTED := Color("9aa8b5")
@@ -102,6 +103,7 @@ func _build_ui() -> void:
 	close_button = Button.new()
 	close_button.name = "CloseButton"
 	close_button.text = "RESUME"
+	_style_button(close_button)
 	close_button.pressed.connect(close_requested.emit)
 	header.add_child(close_button)
 
@@ -111,6 +113,7 @@ func _build_ui() -> void:
 	category_selector = OptionButton.new()
 	category_selector.name = "CategorySelector"
 	category_selector.custom_minimum_size = Vector2(190.0, 38.0)
+	_style_button(category_selector)
 	category_selector.item_selected.connect(_on_category_selected)
 	toolbar.add_child(category_selector)
 	search_field = LineEdit.new()
@@ -123,6 +126,7 @@ func _build_ui() -> void:
 	reset_all_button = Button.new()
 	reset_all_button.name = "ResetAllButton"
 	reset_all_button.text = "RESET ALL"
+	_style_button(reset_all_button)
 	reset_all_button.pressed.connect(_on_reset_all)
 	toolbar.add_child(reset_all_button)
 
@@ -222,6 +226,7 @@ func _build_row(descriptor: Dictionary) -> Control:
 			toggle.custom_minimum_size.y = ROW_CONTROL_HEIGHT
 			toggle.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			toggle.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			_style_button(toggle, bool(current))
 			toggle.toggled.connect(func(enabled: bool) -> void:
 				toggle.text = "ON" if enabled else "OFF"
 				_request_value(descriptor[&"id"], enabled)
@@ -234,6 +239,7 @@ func _build_row(descriptor: Dictionary) -> Control:
 			picker.custom_minimum_size = Vector2(240.0, ROW_CONTROL_HEIGHT)
 			picker.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			picker.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			_style_button(picker)
 			picker.color_changed.connect(func(color: Color) -> void:
 				_request_value(descriptor[&"id"], color)
 			)
@@ -246,12 +252,17 @@ func _build_row(descriptor: Dictionary) -> Control:
 	reset.tooltip_text = "Reset to default"
 	reset.custom_minimum_size = Vector2(ROW_CONTROL_HEIGHT, ROW_CONTROL_HEIGHT)
 	reset.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_style_button(reset, false, 6.0)
 	reset.pressed.connect(func() -> void:
 		service.call("reset_value", descriptor[&"id"])
 		refresh()
 	)
 	control_host.add_child(reset)
 	return panel
+
+
+func _style_button(button: BaseButton, selected := false, padding := 12.0) -> void:
+	Style.apply_simple_gold_button(button, selected, padding, 12, 6.0)
 
 
 func _add_numeric_control(host: HBoxContainer, descriptor: Dictionary, current: Variant) -> void:

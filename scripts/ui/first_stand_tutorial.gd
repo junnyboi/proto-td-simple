@@ -7,6 +7,7 @@ signal tutorial_finished(skipped: bool)
 const UI_COPY := preload("res://scripts/ui/components/ui_copy.gd")
 const AETHERIA_THEME := preload("res://scripts/ui/components/aetheria_theme.gd")
 const AETHERIA_PANEL := preload("res://scripts/ui/components/aetheria_panel.gd")
+const STYLE := preload("res://scripts/ui/components/lunaris_ops_style.gd")
 
 const ROUTE_TEXTURE := preload("res://assets/tutorial/tutorial_route_marker.png")
 const DEPLOY_TEXTURE := preload("res://assets/tutorial/tutorial_deploy_gesture.png")
@@ -25,8 +26,11 @@ const ACTION_TARGET_SIZE := Vector2(220.0, 64.0)
 const SKIP_ACTION_WIDTH := 440.0
 const ACTION_FONT_SIZE := 27
 const ACTION_CONTENT_PADDING := 12.0
+const ACTION_CORNER_RADIUS := 12
 const CARD_CONTENT_PADDING_HORIZONTAL := 24.0
 const CARD_CONTENT_PADDING_VERTICAL := 48.0
+const CARD_CORNER_RADIUS := 18
+const CARD_BORDER_WIDTH := 2
 const TITLE_FONT_SIZE_LANDSCAPE := 54
 const TITLE_FONT_SIZE_PORTRAIT := 36
 const BODY_FONT_SIZE_LANDSCAPE := 38
@@ -190,7 +194,7 @@ func _build_card() -> void:
 	_card.mouse_filter = Control.MOUSE_FILTER_STOP
 	_card.z_index = CARD_Z
 	add_child(_card)
-	_apply_card_content_padding()
+	_apply_card_surface()
 	var column := VBoxContainer.new()
 	column.name = "TutorialColumn"
 	column.add_theme_constant_override("separation", 20)
@@ -251,16 +255,15 @@ func _build_card() -> void:
 	_apply_action_padding(_primary_button)
 
 
-func _apply_card_content_padding() -> void:
-	var source := _card.get_theme_stylebox(&"panel")
-	if source == null:
-		return
-	var padded := source.duplicate() as StyleBox
-	padded.content_margin_left = CARD_CONTENT_PADDING_HORIZONTAL
-	padded.content_margin_top = CARD_CONTENT_PADDING_VERTICAL
-	padded.content_margin_right = CARD_CONTENT_PADDING_HORIZONTAL
-	padded.content_margin_bottom = CARD_CONTENT_PADDING_VERTICAL
-	_card.add_theme_stylebox_override(&"panel", padded)
+func _apply_card_surface() -> void:
+	var surface := STYLE.simple_gold_surface(
+		STYLE.SIMPLE_GOLD_SURFACE, 0.0, CARD_CORNER_RADIUS, CARD_BORDER_WIDTH,
+	)
+	surface.content_margin_left = CARD_CONTENT_PADDING_HORIZONTAL
+	surface.content_margin_top = CARD_CONTENT_PADDING_VERTICAL
+	surface.content_margin_right = CARD_CONTENT_PADDING_HORIZONTAL
+	surface.content_margin_bottom = CARD_CONTENT_PADDING_VERTICAL
+	_card.add_theme_stylebox_override(&"panel", surface)
 
 
 func _make_button(button_name: String, variation: StringName) -> Button:
@@ -270,16 +273,26 @@ func _make_button(button_name: String, variation: StringName) -> Button:
 	button.custom_minimum_size = ACTION_TARGET_SIZE
 	button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	button.add_theme_font_size_override("font_size", ACTION_FONT_SIZE)
-	var primary := variation == &"AuiPrimaryButton"
-	var action_ink := Color("07111c") if primary else Color("f5efe1")
+	STYLE.apply_simple_gold_button(
+		button, false, ACTION_CONTENT_PADDING, ACTION_CORNER_RADIUS,
+	)
+	button.add_theme_stylebox_override(
+		&"hover_pressed",
+		STYLE.simple_gold_surface(
+			STYLE.SIMPLE_GOLD_SURFACE_SELECTED,
+			ACTION_CONTENT_PADDING,
+			ACTION_CORNER_RADIUS,
+			2,
+		),
+	)
+	var action_ink := Color("f5efe1")
 	for state: StringName in [
 		&"font_color", &"font_hover_color", &"font_pressed_color", &"font_focus_color",
 	]:
 		button.add_theme_color_override(state, action_ink)
-	button.add_theme_color_override(
-		&"font_outline_color", Color.TRANSPARENT if primary else Color(0.02, 0.04, 0.08, 0.96),
-	)
-	button.add_theme_constant_override(&"outline_size", 0 if primary else 3)
+	button.add_theme_color_override(&"font_disabled_color", Color(action_ink, 0.68))
+	button.add_theme_color_override(&"font_outline_color", Color(0.02, 0.04, 0.08, 0.96))
+	button.add_theme_constant_override(&"outline_size", 3)
 	return button
 
 

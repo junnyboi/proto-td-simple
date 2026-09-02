@@ -24,9 +24,6 @@ const MISSION_CARD_FONT_SIZE := 45
 const MISSION_CARD_STAR_SIZE := 60.0
 const MISSION_CARD_STAR_SEPARATION := 12
 const UTILITY_BUTTON_CORNER_RADIUS := 12
-const UTILITY_BUTTON_FILL := Color("0b1827c7")
-const UTILITY_BUTTON_HOVER_FILL := Color("173849df")
-const UTILITY_BUTTON_PRESSED_FILL := Color("07111ceb")
 const ROUTE_HOVER_BACKGROUND := Color("2f7f9188")
 const ROUTE_FOCUS_BACKGROUND := Color("22455355")
 const ROUTE_HOVER_SCALE := Vector2(1.025, 1.025)
@@ -172,9 +169,6 @@ func _build_header(column: VBoxContainer) -> void:
 	_settings_button = AetheriaButtonType.new()
 	_settings_button.name = "CampaignSettingsButton"
 	_settings_button.custom_minimum_size = Vector2(196.0, 64.0)
-	_settings_button.icon = StagingSkinType.SETTINGS_ICON
-	_settings_button.expand_icon = true
-	_settings_button.add_theme_constant_override(&"icon_max_width", 28)
 	_settings_button.apply_role(&"secondary")
 	_settings_button.apply_compact_action_layout()
 	_settings_button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -185,35 +179,9 @@ func _build_header(column: VBoxContainer) -> void:
 
 
 func _apply_utility_button_style(button: Button) -> void:
-	button.add_theme_stylebox_override(
-		&"normal", _utility_button_style(UTILITY_BUTTON_FILL, Style.GOLD, 2),
+	Style.apply_simple_gold_button(
+		button, false, 16.0, UTILITY_BUTTON_CORNER_RADIUS, 10.0,
 	)
-	button.add_theme_stylebox_override(
-		&"hover", _utility_button_style(UTILITY_BUTTON_HOVER_FILL, Style.GOLD, 2),
-	)
-	button.add_theme_stylebox_override(
-		&"pressed", _utility_button_style(UTILITY_BUTTON_PRESSED_FILL, Style.GOLD, 2),
-	)
-	button.add_theme_stylebox_override(
-		&"disabled",
-		_utility_button_style(Color(Style.INK, 0.52), Color(Style.GOLD, 0.36), 1),
-	)
-	var focus := _utility_button_style(Color.TRANSPARENT, Style.GOLD, 3)
-	focus.set_expand_margin_all(2.0)
-	button.add_theme_stylebox_override(&"focus", focus)
-
-
-func _utility_button_style(fill: Color, border: Color, border_width: int) -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
-	style.bg_color = fill
-	style.border_color = border
-	style.set_border_width_all(border_width)
-	style.set_corner_radius_all(UTILITY_BUTTON_CORNER_RADIUS)
-	style.content_margin_left = 16.0
-	style.content_margin_top = 10.0
-	style.content_margin_right = 16.0
-	style.content_margin_bottom = 10.0
-	return style
 
 
 func _build_body(column: VBoxContainer) -> void:
@@ -304,6 +272,7 @@ func _populate_route() -> void:
 		row.disabled = not unlocked
 		var is_next := unlocked and not stage_stars.has(stage_id) and _next_stage_id == stage_id
 		row.apply_role(&"selected" if is_next else (&"secondary" if unlocked else &"disabled"))
+		_apply_mission_card_button_style(row, unlocked, is_next)
 		_apply_route_row_presentation(row, stage, unlocked, is_next)
 		if is_next:
 			var sparkles := CampaignNextSparklesType.new()
@@ -327,6 +296,31 @@ func _populate_route() -> void:
 
 	_enabled_rows = enabled_rows
 	_refresh_focus_chain(true)
+
+
+func _apply_mission_card_button_style(row: Button, unlocked: bool, selected: bool) -> void:
+	var normal_tint := Color("b9f8fb") if selected else Color.WHITE
+	var hover_tint := Color.WHITE if selected else Color("b9f8fb")
+	var pressed_tint := Style.CYAN
+	if not unlocked:
+		normal_tint = Color(0.42, 0.48, 0.55, 0.56)
+		hover_tint = normal_tint
+		pressed_tint = normal_tint
+	row.add_theme_stylebox_override(
+		&"normal", StagingSkinType.operation_tile_style(normal_tint),
+	)
+	row.add_theme_stylebox_override(
+		&"hover", StagingSkinType.operation_tile_style(hover_tint),
+	)
+	var pressed := StagingSkinType.operation_tile_style(pressed_tint)
+	row.add_theme_stylebox_override(&"pressed", pressed)
+	row.add_theme_stylebox_override(&"hover_pressed", pressed.duplicate())
+	row.add_theme_stylebox_override(
+		&"disabled", StagingSkinType.operation_tile_style(Color(0.42, 0.48, 0.55, 0.56)),
+	)
+	row.add_theme_stylebox_override(
+		&"focus", StagingSkinType.golden_focus_tint_style(12),
+	)
 
 
 func _unhandled_input(event: InputEvent) -> void:

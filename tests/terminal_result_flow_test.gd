@@ -57,7 +57,7 @@ func _run() -> void:
 	_check(bool(battle.get("_result_finalized")), "terminal result did not finish")
 	_check(continuation != null and not continuation.disabled, "debrief stayed disabled after commit")
 	_check(
-		continuation != null and continuation.text == "CONTINUE TO DEBRIEF",
+		continuation != null and continuation.text == "CONTINUE",
 		"terminal action did not advance from finalizing to debrief",
 	)
 	_check(

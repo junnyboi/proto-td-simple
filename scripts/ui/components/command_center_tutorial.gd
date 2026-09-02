@@ -5,6 +5,7 @@ signal finished(skipped: bool, persisted: bool)
 
 const AetheriaButtonType := preload("res://scripts/ui/components/aetheria_button.gd")
 const AetheriaPanelType := preload("res://scripts/ui/components/aetheria_panel.gd")
+const StyleType := preload("res://scripts/ui/components/lunaris_ops_style.gd")
 const StagingSkinType := preload("res://scripts/ui/components/staging_skin.gd")
 const UiCopyType := preload("res://scripts/ui/components/ui_copy.gd")
 const ViewPreferencesType := preload("res://scripts/view/view_preferences.gd")
@@ -22,6 +23,9 @@ const CARD_Z := 122
 const CALLOUT_PADDING_HORIZONTAL := 12
 const CALLOUT_PADDING_VERTICAL := 24
 const ACTION_PADDING := 12
+const CALLOUT_THEME_INSET := 28.0
+const CALLOUT_CORNER_RADIUS := 18
+const ACTION_CORNER_RADIUS := 12
 const ARROW_HEAD_LENGTH := 18.0
 const ARROW_HEAD_HALF_WIDTH := 8.0
 
@@ -208,6 +212,15 @@ func _build() -> void:
 	_card.apply_role(&"modal")
 	_card.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(_card)
+	_card.add_theme_stylebox_override(
+		&"panel",
+		StyleType.simple_gold_surface(
+			StyleType.SIMPLE_GOLD_SURFACE,
+			CALLOUT_THEME_INSET,
+			CALLOUT_CORNER_RADIUS,
+			2,
+		),
+	)
 
 	var card_insets := MarginContainer.new()
 	card_insets.name = "CalloutInsets"
@@ -256,7 +269,7 @@ func _build() -> void:
 	_skip.name = "TutorialSkip"
 	_skip.apply_role(&"secondary")
 	_skip.custom_minimum_size = Vector2(164.0, 56.0)
-	_skip.add_theme_stylebox_override(&"focus", StagingSkinType.golden_focus_tint_style())
+	_apply_simple_action_surface(_skip)
 	_skip.pressed.connect(_on_skip_pressed)
 	actions.add_child(_skip)
 
@@ -264,7 +277,7 @@ func _build() -> void:
 	_primary.name = "TutorialPrimary"
 	_primary.apply_role(&"primary")
 	_primary.custom_minimum_size = Vector2(164.0, 56.0)
-	_primary.add_theme_stylebox_override(&"focus", StagingSkinType.golden_focus_tint_style())
+	_apply_simple_action_surface(_primary)
 	_primary.pressed.connect(_on_primary_pressed)
 	actions.add_child(_primary)
 
@@ -276,6 +289,26 @@ func _build() -> void:
 	_primary.focus_neighbor_right = _primary.get_path_to(_skip)
 	_skip.focus_previous = _skip.get_path_to(_primary)
 	_skip.focus_neighbor_left = _skip.get_path_to(_primary)
+
+
+func _apply_simple_action_surface(button: Button) -> void:
+	StyleType.apply_simple_gold_button(
+		button, false, ACTION_PADDING, ACTION_CORNER_RADIUS,
+	)
+	button.add_theme_stylebox_override(
+		&"hover_pressed",
+		StyleType.simple_gold_surface(
+			StyleType.SIMPLE_GOLD_SURFACE_SELECTED,
+			ACTION_PADDING,
+			ACTION_CORNER_RADIUS,
+			2,
+		),
+	)
+	for color_name: StringName in [
+		&"font_color", &"font_hover_color", &"font_pressed_color", &"font_focus_color",
+	]:
+		button.add_theme_color_override(color_name, IVORY)
+	button.add_theme_color_override(&"font_disabled_color", Color(MUTED, 0.68))
 
 
 func _set_step(value: int) -> void:

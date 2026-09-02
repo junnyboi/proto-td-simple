@@ -23,8 +23,9 @@ const COMMAND_CORNER_RADIUS := 12
 const DECK_PADDING := 24.0
 const DECK_VERTICAL_PADDING := DECK_PADDING + 8.0
 const ACTION_GAP := 12
-const PAUSE_MENU_WIDTH := 520.0
-const PAUSE_MENU_ACTION_SIZE := Vector2(360.0, 72.0)
+const PAUSE_MENU_WIDTH := 976.0
+const PAUSE_MENU_CONTENT_PADDING := 64.0
+const PAUSE_MENU_ACTION_SIZE := Vector2(240.0, 60.0)
 const MASTER_BUS := &"Master"
 const MUSIC_BUS := &"Music"
 const SFX_BUS := &"SFX"
@@ -192,7 +193,12 @@ func _build_pause_menu() -> void:
 	_pause_menu_panel.custom_minimum_size = Vector2(PAUSE_MENU_WIDTH, 0.0)
 	_pause_menu_panel.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	_pause_menu_panel.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	Style.apply_panel(_pause_menu_panel, &"dialog")
+	var panel_style := Style.panel_style(&"dialog").duplicate() as StyleBox
+	panel_style.content_margin_left = PAUSE_MENU_CONTENT_PADDING
+	panel_style.content_margin_top = PAUSE_MENU_CONTENT_PADDING
+	panel_style.content_margin_right = PAUSE_MENU_CONTENT_PADDING
+	panel_style.content_margin_bottom = PAUSE_MENU_CONTENT_PADDING
+	_pause_menu_panel.add_theme_stylebox_override(&"panel", panel_style)
 	center.add_child(_pause_menu_panel)
 
 	var stack := VBoxContainer.new()
@@ -223,7 +229,7 @@ func _build_pause_menu() -> void:
 	_pause_menu_body.add_theme_font_size_override(&"font_size", GameTypographyType.DETAIL)
 	stack.add_child(_pause_menu_body)
 
-	var actions := VBoxContainer.new()
+	var actions := HBoxContainer.new()
 	actions.name = "PauseMenuActions"
 	actions.alignment = BoxContainer.ALIGNMENT_CENTER
 	actions.add_theme_constant_override(&"separation", ACTION_GAP)
@@ -235,10 +241,10 @@ func _build_pause_menu() -> void:
 	_pause_menu_settings_button = _make_pause_menu_button("PauseMenuSettingsButton", &"secondary")
 	_pause_menu_settings_button.pressed.connect(_on_pause_menu_settings_pressed)
 	actions.add_child(_pause_menu_settings_button)
-	_pause_menu_resign_button.focus_neighbor_top = _pause_menu_resign_button.get_path_to(
+	_pause_menu_resign_button.focus_neighbor_left = _pause_menu_resign_button.get_path_to(
 		_pause_menu_settings_button,
 	)
-	_pause_menu_resign_button.focus_neighbor_bottom = _pause_menu_resign_button.get_path_to(
+	_pause_menu_resign_button.focus_neighbor_right = _pause_menu_resign_button.get_path_to(
 		_pause_menu_settings_button,
 	)
 	_pause_menu_resign_button.focus_previous = _pause_menu_resign_button.get_path_to(
@@ -247,10 +253,10 @@ func _build_pause_menu() -> void:
 	_pause_menu_resign_button.focus_next = _pause_menu_resign_button.get_path_to(
 		_pause_menu_settings_button,
 	)
-	_pause_menu_settings_button.focus_neighbor_top = _pause_menu_settings_button.get_path_to(
+	_pause_menu_settings_button.focus_neighbor_left = _pause_menu_settings_button.get_path_to(
 		_pause_menu_resign_button,
 	)
-	_pause_menu_settings_button.focus_neighbor_bottom = _pause_menu_settings_button.get_path_to(
+	_pause_menu_settings_button.focus_neighbor_right = _pause_menu_settings_button.get_path_to(
 		_pause_menu_resign_button,
 	)
 	_pause_menu_settings_button.focus_previous = _pause_menu_settings_button.get_path_to(

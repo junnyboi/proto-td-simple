@@ -6,6 +6,7 @@ signal panel_visibility_changed(open: bool)
 
 const Catalog := preload("res://scripts/tuning/runtime_tweak_catalog.gd")
 const PanelType := preload("res://scripts/tuning/runtime_tweak_panel.gd")
+const Style := preload("res://scripts/ui/components/lunaris_ops_style.gd")
 const SAVE_PATH := "user://runtime_tweaks.cfg"
 const SAVE_DEBOUNCE_SECONDS := 0.35
 const LAUNCHER_IDLE_OPACITY := 0.5
@@ -17,6 +18,7 @@ var panel: RuntimeTweakPanel = null
 var persistence_state: StringName = &"SAVED"
 
 var _values: Dictionary = {}
+var _launcher_docked := false
 var _save_remaining := -1.0
 var _paused_before_open := false
 var _text_scale_baseline := 1.0
@@ -305,6 +307,7 @@ func _build_launcher() -> void:
 	launcher_button.name = "TweakControlsButton"
 	launcher_button.text = "TWEAK CONTROLS"
 	launcher_button.tooltip_text = "Open runtime tweak controls (F10)"
+	launcher_button.clip_text = true
 	launcher_button.focus_mode = Control.FOCUS_ALL
 	launcher_button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	launcher_button.custom_minimum_size = Vector2(174.0, 42.0)
@@ -312,8 +315,7 @@ func _build_launcher() -> void:
 	launcher_button.add_theme_color_override(&"font_color", Color("d9fbff"))
 	launcher_button.add_theme_color_override(&"font_hover_color", Color.WHITE)
 	launcher_button.add_theme_color_override(&"font_pressed_color", Color.WHITE)
-	for state: StringName in [&"normal", &"hover", &"pressed", &"focus"]:
-		launcher_button.add_theme_stylebox_override(state, _launcher_style(state))
+	Style.apply_simple_gold_button(launcher_button, false, 8.0, 12, 5.0)
 	launcher_button.z_index = 100
 	launcher_button.modulate.a = LAUNCHER_IDLE_OPACITY
 	launcher_button.mouse_entered.connect(_on_launcher_mouse_entered)
@@ -322,15 +324,60 @@ func _build_launcher() -> void:
 	add_child(launcher_button)
 
 
+func dock_launcher(container: Container) -> Button:
+	if launcher_button == null or container == null:
+		return null
+	if launcher_button.get_parent() != container:
+		launcher_button.reparent(container, false)
+	_launcher_docked = true
+	launcher_button.position = Vector2.ZERO
+	launcher_button.custom_minimum_size = Vector2(0.0, 52.0)
+	launcher_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	launcher_button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	launcher_button.modulate.a = 1.0
+	_relayout()
+	return launcher_button
+
+
+func undock_launcher(container: Container = null) -> void:
+	if launcher_button == null:
+		return
+	if container != null and launcher_button.get_parent() != container:
+		return
+	if launcher_button.get_parent() != self:
+		launcher_button.reparent(self, false)
+	_launcher_docked = false
+	launcher_button.custom_minimum_size = Vector2(174.0, 42.0)
+	launcher_button.size_flags_horizontal = Control.SIZE_FILL
+	launcher_button.size_flags_vertical = Control.SIZE_FILL
+	launcher_button.disabled = false
+	launcher_button.focus_mode = Control.FOCUS_ALL
+	launcher_button.focus_neighbor_left = NodePath()
+	launcher_button.focus_neighbor_top = NodePath()
+	launcher_button.focus_neighbor_right = NodePath()
+	launcher_button.focus_neighbor_bottom = NodePath()
+	launcher_button.focus_next = NodePath()
+	launcher_button.focus_previous = NodePath()
+	launcher_button.modulate.a = LAUNCHER_IDLE_OPACITY
+	_relayout()
+
+
 func _relayout() -> void:
 	if launcher_button == null:
 		return
 	var viewport := get_viewport().get_visible_rect().size
-	var width := minf(174.0, maxf(120.0, viewport.x - 32.0))
-	launcher_button.size = Vector2(width, 42.0)
-	launcher_button.position = viewport - launcher_button.size - LAUNCHER_MARGIN
+	if _launcher_docked:
+		launcher_button.position = Vector2.ZERO
+		launcher_button.custom_minimum_size = Vector2(0.0, 52.0)
+	else:
+		var width := minf(174.0, maxf(120.0, viewport.x - 32.0))
+		launcher_button.size = Vector2(width, 42.0)
+		launcher_button.position = viewport - launcher_button.size - LAUNCHER_MARGIN
 	launcher_button.add_theme_font_size_override(
-		&"font_size", 11 if viewport.y > viewport.x else 12,
+		&"font_size",
+		9
+		if _launcher_docked and viewport.x <= 520.0
+		else (11 if viewport.y > viewport.x else 12),
 	)
 	if panel != null:
 		panel.call("_relayout")
@@ -341,30 +388,7 @@ func _on_launcher_mouse_entered() -> void:
 
 
 func _on_launcher_mouse_exited() -> void:
-	launcher_button.modulate.a = LAUNCHER_IDLE_OPACITY
-
-
-func _launcher_style(state: StringName) -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
-	style.bg_color = (
-		Color("183247")
-		if state == &"normal"
-		else Color("24506a")
-	)
-	style.border_color = Color("64e6ff")
-	style.border_width_left = 1
-	style.border_width_top = 1
-	style.border_width_right = 1
-	style.border_width_bottom = 1
-	style.corner_radius_top_left = 6
-	style.corner_radius_top_right = 6
-	style.corner_radius_bottom_left = 6
-	style.corner_radius_bottom_right = 6
-	style.content_margin_left = 8.0
-	style.content_margin_top = 5.0
-	style.content_margin_right = 8.0
-	style.content_margin_bottom = 5.0
-	return style
+	launcher_button.modulate.a = 1.0 if _launcher_docked else LAUNCHER_IDLE_OPACITY
 
 
 func _capture_global_baselines() -> void:

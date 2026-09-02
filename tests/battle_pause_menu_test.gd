@@ -1,5 +1,6 @@
 extends SceneTree
 
+const Style := preload("res://scripts/ui/components/lunaris_ops_style.gd")
 const LANDSCAPE := Vector2i(1280, 720)
 const PREFS_PATH := "user://battle_pause_menu_test.cfg"
 const WAIT_SECONDS := 2.0
@@ -31,6 +32,7 @@ func _run() -> void:
 	var controls := battle.find_child("BattleControls", true, false) as Node if battle != null else null
 	var pause_menu := battle.find_child("PauseMenuLayer", true, false) as Control if battle != null else null
 	var pause_panel := battle.find_child("PauseMenuPanel", true, false) as PanelContainer if battle != null else null
+	var pause_actions := battle.find_child("PauseMenuActions", true, false) as HBoxContainer if battle != null else null
 	var pause_resign := battle.find_child("PauseMenuResignButton", true, false) as Button if battle != null else null
 	var pause_settings := battle.find_child("PauseMenuSettingsButton", true, false) as Button if battle != null else null
 	var settings := battle.find_child("BattleSettings", true, false) as Control if battle != null else null
@@ -39,7 +41,7 @@ func _run() -> void:
 	var resign_button := battle.find_child("ResignButton", true, false) as Button if battle != null else null
 	_check(battle != null and bool(battle.get("startup_succeeded")), "battle did not start")
 	_check(
-		controls != null and pause_menu != null and pause_panel != null
+		controls != null and pause_menu != null and pause_panel != null and pause_actions != null
 		and pause_resign != null and pause_settings != null and settings != null,
 		"pause menu or Settings UI is missing",
 	)
@@ -54,6 +56,8 @@ func _run() -> void:
 		pause_resign.text == "RESIGN" and pause_settings.text == "SETTINGS",
 		"pause menu actions are not RESIGN and SETTINGS",
 	)
+	_check_simple_gold_button(pause_resign, "pause-menu Resign")
+	_check_simple_gold_button(pause_settings, "pause-menu Settings")
 	_check(bool(i18n.call("set_locale", &"zh-CN")), "Chinese locale activation failed")
 	await process_frame
 	_check(
@@ -85,6 +89,29 @@ func _run() -> void:
 	_check(
 		Rect2(Vector2.ZERO, Vector2(LANDSCAPE)).encloses(pause_panel.get_global_rect()),
 		"pause panel escapes the viewport",
+	)
+	_check(
+		is_equal_approx(pause_panel.custom_minimum_size.x, 976.0),
+		"pause panel fixed width is not 976px",
+	)
+	var pause_style := pause_panel.get_theme_stylebox(&"panel")
+	_check(
+		pause_style != null
+		and is_equal_approx(pause_style.content_margin_left, 64.0)
+		and is_equal_approx(pause_style.content_margin_top, 64.0)
+		and is_equal_approx(pause_style.content_margin_right, 64.0)
+		and is_equal_approx(pause_style.content_margin_bottom, 64.0),
+		"pause panel does not have 64px internal padding on every side",
+	)
+	_check(
+		pause_resign.custom_minimum_size == Vector2(240.0, 60.0)
+		and pause_settings.custom_minimum_size == Vector2(240.0, 60.0),
+		"pause actions were not reduced to the compact fixed size",
+	)
+	_check(
+		is_equal_approx(pause_resign.get_global_rect().position.y, pause_settings.get_global_rect().position.y)
+		and pause_resign.get_global_rect().end.x <= pause_settings.get_global_rect().position.x,
+		"Resign and Settings are not arranged on one line",
 	)
 
 	pause_settings.pressed.emit()
@@ -160,6 +187,17 @@ func _escape_event() -> InputEventKey:
 
 func _rect_matches(actual: Rect2, expected: Rect2) -> bool:
 	return actual.position.distance_to(expected.position) <= 1.0 and actual.size.distance_to(expected.size) <= 1.0
+
+
+func _check_simple_gold_button(button: Button, context: String) -> void:
+	for state: StringName in [&"normal", &"hover", &"pressed", &"disabled"]:
+		var style := button.get_theme_stylebox(state) as StyleBoxFlat
+		_check(style != null, "%s %s still uses a stylized background" % [context, state])
+		if style == null:
+			continue
+		_check(style.bg_color.a > 0.0 and style.bg_color.a < 1.0, "%s %s is not translucent" % [context, state])
+		_check(style.border_color.is_equal_approx(Style.GOLD), "%s %s border is not gold" % [context, state])
+		_check(style.corner_radius_top_left >= 12, "%s %s border is not rounded" % [context, state])
 
 
 func _cleanup(game: Node, battle: Node) -> void:

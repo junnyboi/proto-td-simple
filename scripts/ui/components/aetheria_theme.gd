@@ -3,6 +3,7 @@ extends Theme
 
 const GameTypographyType := preload("res://scripts/ui/game_typography.gd")
 const StagingSkinType := preload("res://scripts/ui/components/staging_skin.gd")
+const LunarisStyleType := preload("res://scripts/ui/components/lunaris_ops_style.gd")
 const CJK_FONT_PATH := "res://assets/fonts/GameTemplateTDSansSC.otf"
 const CJK_FONT: FontFile = preload(CJK_FONT_PATH)
 const CINZEL := preload("res://assets/fonts/Cinzel-Variable.ttf")
@@ -71,22 +72,23 @@ func _load_cjk_font() -> FontFile:
 
 
 func _build_buttons() -> void:
-	set_stylebox(&"focus", &"Button", _button_focus_box())
-	_button(&"AuiPrimaryButton", &"primary", &"dark_ink", &"primary")
+	_button(&"Button", &"secondary", &"body", &"secondary")
+	_button(&"AuiPrimaryButton", &"primary", &"body", &"primary")
 	_button(&"AuiSecondaryButton", &"secondary", &"body", &"secondary")
-	_button(&"AuiSelectedButton", &"selected", &"dark_ink", &"selected")
+	_button(&"AuiSelectedButton", &"selected", &"body", &"selected")
 	_button(&"AuiDestructiveButton", &"destructive", &"body", &"destructive")
 	_button(&"AuiDisabledButton", &"disabled_background", &"disabled_text", &"disabled")
 
 
 func _button(
 		variation: StringName,
-		background: StringName,
+		_background: StringName,
 		ink: StringName,
 		role: StringName,
 		base: StringName = &"Button",
 	) -> void:
-	set_type_variation(variation, base)
+	if variation != base:
+		set_type_variation(variation, base)
 	set_font(&"font", variation, _display_font)
 	set_font_size(&"font_size", variation, GameTypographyType.ACTION)
 	for item_name: StringName in [
@@ -94,32 +96,33 @@ func _button(
 	]:
 		set_color(item_name, variation, COLORS[ink])
 	set_color(&"font_disabled_color", variation, COLORS[&"disabled_text"])
-	if role == &"primary":
-		set_stylebox(&"normal", variation, _flat_box(COLORS[&"primary"], COLORS[&"primary_hover"], 1, 4, [12, 12, 12, 12]))
-		set_stylebox(&"hover", variation, _flat_box(COLORS[&"primary_hover"], Color("fff8df"), 2, 4, [12, 12, 12, 12]))
-		set_stylebox(&"pressed", variation, _flat_box(COLORS[&"primary_pressed"], COLORS[&"primary"], 2, 4, [12, 12, 12, 12]))
-	elif role == &"secondary" or role == &"selected" or role == &"disabled":
-		var normal_tint := Color.WHITE
-		var hover_tint := Color("b9f8fb")
-		var pressed_tint := Color("91eaf1")
-		if role == &"selected":
-			normal_tint = Color("b9f8fb")
-		elif role == &"disabled":
-			normal_tint = Color(0.42, 0.48, 0.55, 0.56)
-			hover_tint = normal_tint
-			pressed_tint = normal_tint
-		set_stylebox(&"normal", variation, _texture_box(OPERATION_TILE_FRAME, Vector4(56, 28, 56, 28), normal_tint))
-		set_stylebox(&"hover", variation, _texture_box(OPERATION_TILE_FRAME, Vector4(56, 28, 56, 28), hover_tint))
-		set_stylebox(&"pressed", variation, _texture_box(OPERATION_TILE_FRAME, Vector4(56, 28, 56, 28), pressed_tint))
-	else:
-		set_stylebox(&"normal", variation, _flat_box(COLORS[background], COLORS[&"destructive"], 1, 3, [18, 10, 18, 10]))
-		set_stylebox(&"hover", variation, _flat_box(COLORS[&"destructive_hover"], COLORS[&"primary"], 2, 3, [18, 10, 18, 10]))
-		set_stylebox(&"pressed", variation, _flat_box(COLORS[&"destructive_pressed"], COLORS[&"primary"], 2, 3, [18, 10, 18, 10]))
+	var selected := role == &"primary" or role == &"selected"
+	var normal_fill := (
+		LunarisStyleType.SIMPLE_GOLD_SURFACE_SELECTED
+		if selected
+		else LunarisStyleType.SIMPLE_GOLD_SURFACE
+	)
+	set_stylebox(
+		&"normal", variation, LunarisStyleType.simple_gold_surface(normal_fill, 12.0, 12, 1),
+	)
+	set_stylebox(
+		&"hover",
+		variation,
+		LunarisStyleType.simple_gold_surface(
+			LunarisStyleType.SIMPLE_GOLD_SURFACE_HOVER, 12.0, 12, 2,
+		),
+	)
+	var pressed := LunarisStyleType.simple_gold_surface(
+		LunarisStyleType.SIMPLE_GOLD_SURFACE_SELECTED, 12.0, 12, 2,
+	)
+	set_stylebox(&"pressed", variation, pressed)
+	set_stylebox(&"hover_pressed", variation, pressed.duplicate())
 	set_stylebox(&"focus", variation, _button_focus_box())
-	if role == &"disabled":
-		set_stylebox(&"disabled", variation, _texture_box(OPERATION_TILE_FRAME, Vector4(56, 28, 56, 28), Color(0.42, 0.48, 0.55, 0.56)))
-	else:
-		set_stylebox(&"disabled", variation, _flat_box(COLORS[&"disabled_background"], Color(COLORS[&"boundary"], 0.28), 1, 3, [18, 10, 18, 10]))
+	set_stylebox(
+		&"disabled",
+		variation,
+		LunarisStyleType.simple_gold_surface(Color(0.025, 0.035, 0.05, 0.64), 12.0, 12, 1),
+	)
 	set_constant(&"outline_size", variation, 0)
 	set_constant(&"h_separation", variation, 12)
 	set_constant(&"icon_max_width", variation, 96)
@@ -222,7 +225,7 @@ func _focus_box(corner_radius := 3) -> StyleBoxFlat:
 	return style
 
 
-func _button_focus_box(corner_radius := 3) -> StyleBoxFlat:
+func _button_focus_box(corner_radius := 12) -> StyleBoxFlat:
 	return StagingSkinType.golden_focus_tint_style(corner_radius)
 
 

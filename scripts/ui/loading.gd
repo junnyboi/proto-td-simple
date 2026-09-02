@@ -3,7 +3,7 @@ extends Control
 ## Boot bridge. The engine boot splash, loading scene, and start screen share
 ## the same static art so startup stays visually continuous.
 
-const LOADING_ART := preload("res://assets/loading/command_backdrop.png")
+const LOADING_ART := preload("res://assets/loading/lunaris_reliquary_loading.png")
 const GameTypographyType := preload("res://scripts/ui/game_typography.gd")
 const UiCopyType := preload("res://scripts/ui/components/ui_copy.gd")
 const TopAlignedCoverType := preload("res://scripts/ui/components/top_aligned_cover.gd")

@@ -85,46 +85,10 @@ static func panel_style(role: StringName) -> StyleBox:
 
 static func apply_button(button: Button, role: StringName) -> void:
 	var ink := IVORY
-	var normal: StyleBox
-	var hover: StyleBox
-	var pressed: StyleBox
-	var disabled: StyleBox
-	match role:
-		&"primary", &"gold":
-			normal = _texture_margin(
-				StagingSkinType.primary_button_style(GOLD, Color("f0d89a")), 12.0,
-			)
-			hover = _texture_margin(
-				StagingSkinType.primary_button_style(Color("f0d89a"), Color("fff8df")), 12.0,
-			)
-			pressed = _texture_margin(
-				StagingSkinType.primary_button_style(Color("b58e46"), GOLD), 12.0,
-			)
-			ink = INK_DEEP
-		&"selected":
-			normal = _texture_margin(StagingSkinType.operation_tile_style(Color("b9f8fb")), 10.0)
-			hover = _texture_margin(StagingSkinType.operation_tile_style(Color.WHITE), 10.0)
-			pressed = _texture_margin(StagingSkinType.operation_tile_style(CYAN), 10.0)
-		&"disabled":
-			var muted_tint := Color(0.42, 0.48, 0.55, 0.56)
-			normal = _texture_margin(StagingSkinType.operation_tile_style(muted_tint), 10.0)
-			hover = normal
-			pressed = normal
-			ink = Color(MUTED.r, MUTED.g, MUTED.b, 0.58)
-		&"danger":
-			normal = _button_box(Color(0.18, 0.06, 0.09, 0.96), DANGER, 1)
-			hover = _button_box(Color(0.28, 0.08, 0.12, 0.98), GOLD, 2)
-			pressed = _button_box(Color(0.12, 0.03, 0.06, 1.0), GOLD, 2)
-		_:
-			normal = _texture_margin(StagingSkinType.operation_tile_style(), 10.0)
-			hover = _texture_margin(StagingSkinType.operation_tile_style(Color("b9f8fb")), 10.0)
-			pressed = _texture_margin(StagingSkinType.operation_tile_style(CYAN), 10.0)
-	disabled = _button_box(Color(0.10, 0.14, 0.18, 0.86), Color(0.4, 0.46, 0.52, 0.28), 1)
-	button.add_theme_stylebox_override(&"normal", normal)
-	button.add_theme_stylebox_override(&"hover", hover)
-	button.add_theme_stylebox_override(&"pressed", pressed)
-	button.add_theme_stylebox_override(&"focus", StagingSkinType.golden_focus_tint_style())
-	button.add_theme_stylebox_override(&"disabled", disabled)
+	var selected := role in [&"primary", &"gold", &"selected"]
+	if role == &"disabled":
+		ink = Color(MUTED.r, MUTED.g, MUTED.b, 0.58)
+	apply_simple_gold_button(button, selected)
 	StagingSkinType.apply_display_type(button, 27, ink, 560)
 	var presentation := button.get_node_or_null("PresentationLabel") as Label
 	if presentation != null:
@@ -150,50 +114,14 @@ static func apply_compact_rounded_button(
 		corner_radius: int = 12,
 	) -> void:
 	var ink := IVORY
-	var normal_background := GLASS_SOFT
-	var normal_border := Color(CYAN.r, CYAN.g, CYAN.b, 0.56)
-	var hover_background := Color(0.08, 0.22, 0.29, 0.98)
-	var hover_border := CYAN
-	var pressed_background := Color(0.035, 0.11, 0.16, 1.0)
-	var pressed_border := GOLD
-	if role == &"gold" or role == &"primary":
-		normal_background = Color(0.17, 0.12, 0.04, 0.96)
-		normal_border = GOLD
-		hover_background = Color(0.24, 0.17, 0.05, 0.98)
-		hover_border = Color("fff2c6")
-		pressed_background = Color(0.10, 0.07, 0.02, 1.0)
-	elif role == &"danger":
-		normal_background = Color(0.18, 0.06, 0.09, 0.96)
-		normal_border = DANGER
-		hover_background = Color(0.28, 0.08, 0.12, 0.98)
-		hover_border = GOLD
-		pressed_background = Color(0.12, 0.03, 0.06, 1.0)
-	elif role == &"selected":
-		normal_background = GLASS_SELECTED
-		normal_border = CYAN
-	var normal := _rounded_button_box(
-		normal_background, normal_border, 1, corner_radius, content_padding,
-	)
-	var hover := _rounded_button_box(
-		hover_background, hover_border, 2, corner_radius, content_padding,
-	)
-	var pressed := _rounded_button_box(
-		pressed_background, pressed_border, 2, corner_radius, content_padding,
-	)
-	var disabled := _rounded_button_box(
-		Color(0.10, 0.14, 0.18, 0.86),
-		Color(0.4, 0.46, 0.52, 0.28),
-		1,
-		corner_radius,
+	if role == &"disabled":
+		ink = Color(MUTED.r, MUTED.g, MUTED.b, 0.68)
+	apply_simple_gold_button(
+		button,
+		role in [&"gold", &"primary", &"selected"],
 		content_padding,
+		corner_radius,
 	)
-	button.add_theme_stylebox_override(&"normal", normal)
-	button.add_theme_stylebox_override(&"hover", hover)
-	button.add_theme_stylebox_override(&"pressed", pressed)
-	button.add_theme_stylebox_override(
-		&"focus", StagingSkinType.golden_focus_tint_style(corner_radius),
-	)
-	button.add_theme_stylebox_override(&"disabled", disabled)
 	StagingSkinType.apply_display_type(button, GameTypographyType.ACTION, ink, 560)
 	for item: StringName in [
 		&"font_color", &"font_hover_color", &"font_pressed_color", &"font_focus_color",
@@ -205,31 +133,41 @@ static func apply_compact_rounded_button(
 ## Texture-free surface used by the leaderboard. The fill remains uniformly
 ## translucent in every state and the rounded gold edge carries the hierarchy.
 static func apply_simple_gold_button(
-		button: Button,
+		button: BaseButton,
 		selected: bool = false,
 		content_padding: float = 12.0,
 		corner_radius: int = 12,
+		vertical_padding: float = -1.0,
 	) -> void:
 	var normal_fill := SIMPLE_GOLD_SURFACE_SELECTED if selected else SIMPLE_GOLD_SURFACE
 	button.add_theme_stylebox_override(
 		&"normal",
-		simple_gold_surface(normal_fill, content_padding, corner_radius, 1),
+		simple_gold_surface(normal_fill, content_padding, corner_radius, 1, vertical_padding),
 	)
 	button.add_theme_stylebox_override(
 		&"hover",
-		simple_gold_surface(SIMPLE_GOLD_SURFACE_HOVER, content_padding, corner_radius, 2),
+		simple_gold_surface(SIMPLE_GOLD_SURFACE_HOVER, content_padding, corner_radius, 2, vertical_padding),
 	)
 	button.add_theme_stylebox_override(
 		&"pressed",
-		simple_gold_surface(SIMPLE_GOLD_SURFACE_SELECTED, content_padding, corner_radius, 2),
+		simple_gold_surface(SIMPLE_GOLD_SURFACE_SELECTED, content_padding, corner_radius, 2, vertical_padding),
 	)
 	button.add_theme_stylebox_override(
-		&"focus",
-		simple_gold_surface(Color(GOLD.r, GOLD.g, GOLD.b, 0.10), 0.0, corner_radius, 2),
+		&"hover_pressed",
+		simple_gold_surface(SIMPLE_GOLD_SURFACE_SELECTED, content_padding, corner_radius, 2, vertical_padding),
+	)
+	button.add_theme_stylebox_override(
+		&"focus", StagingSkinType.golden_focus_tint_style(corner_radius),
 	)
 	button.add_theme_stylebox_override(
 		&"disabled",
-		simple_gold_surface(Color(0.025, 0.035, 0.05, 0.64), content_padding, corner_radius, 1),
+		simple_gold_surface(
+			Color(0.025, 0.035, 0.05, 0.64),
+			content_padding,
+			corner_radius,
+			1,
+			vertical_padding,
+		),
 	)
 
 
@@ -238,6 +176,7 @@ static func simple_gold_surface(
 		content_padding: float = MIN_CONTENT_PANEL_INSET,
 		corner_radius: int = 14,
 		border_width: int = 1,
+		vertical_padding: float = -1.0,
 	) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
 	style.bg_color = background
@@ -245,9 +184,9 @@ static func simple_gold_surface(
 	style.set_border_width_all(border_width)
 	style.set_corner_radius_all(corner_radius)
 	style.content_margin_left = content_padding
-	style.content_margin_top = content_padding
 	style.content_margin_right = content_padding
-	style.content_margin_bottom = content_padding
+	style.content_margin_top = content_padding if vertical_padding < 0.0 else vertical_padding
+	style.content_margin_bottom = content_padding if vertical_padding < 0.0 else vertical_padding
 	return style
 
 
@@ -338,25 +277,6 @@ static func _button_box(background: Color, border: Color, width: int) -> StyleBo
 	style.content_margin_top = 10.0
 	style.content_margin_right = 18.0
 	style.content_margin_bottom = 10.0
-	return style
-
-
-static func _rounded_button_box(
-		background: Color,
-		border: Color,
-		width: int,
-		corner_radius: int,
-		content_padding: float,
-	) -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
-	style.bg_color = background
-	style.border_color = border
-	style.set_border_width_all(width)
-	style.set_corner_radius_all(corner_radius)
-	style.content_margin_left = content_padding
-	style.content_margin_top = content_padding
-	style.content_margin_right = content_padding
-	style.content_margin_bottom = content_padding
 	return style
 
 
