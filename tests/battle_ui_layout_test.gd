@@ -103,6 +103,7 @@ func _run() -> void:
 	for button: Button in [pause, speed, resign]:
 		var button_style := button.get_theme_stylebox(&"normal") as StyleBoxFlat
 		_check(button.custom_minimum_size.is_equal_approx(Vector2(112.0, 48.0)), "%s did not receive the compact 112×48 target" % button.name)
+		_check(is_equal_approx(button.size.y, 48.0), "%s did not render at the compact 48px height" % button.name)
 		_check(button.get_theme_font_size(&"font_size") == 24, "%s did not receive 24px compact typography" % button.name)
 		_check(button_style != null and button_style.get_corner_radius(CORNER_TOP_LEFT) >= 8, "%s lacks rounded borders" % button.name)
 		_check(controls_deck.get_global_rect().encloses(button.get_global_rect()), "%s overflows the battle command deck" % button.name)
@@ -219,6 +220,12 @@ func _run() -> void:
 	controls.call("_process", 0.0)
 	_check(is_equal_approx(float(battle.get("ticks_per_frame_scale")), 0.0), "speed selector did not cycle 4× → paused")
 	_check(speed.text == "0×" and pause.text == "RESUME", "paused speed-selector state is not visible")
+	await process_frame
+	for button: Button in [pause, speed, resign]:
+		_check(
+			is_equal_approx(button.size.y, 48.0),
+			"%s grew to %.1fpx in the paused state" % [button.name, button.size.y],
+		)
 	controls.call("_on_speed_pressed")
 	controls.call("_process", 0.0)
 	_check(is_equal_approx(float(battle.get("ticks_per_frame_scale")), 1.0), "speed selector did not cycle paused → 1×")

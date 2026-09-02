@@ -14,8 +14,9 @@ func update(
 ) -> void:
 	if unit.sp_cost <= 0:
 		return
-	var fill := body.get_node("SpBarBg/SpBarFill") as ColorRect
-	fill.size.x = body.size.x * clampf(float(unit.sp) / float(unit.sp_cost), 0.0, 1.0)
+	var bg := body.get_node("SpBarBg") as ColorRect
+	var fill := bg.get_node("SpBarFill") as ColorRect
+	fill.size.x = bg.size.x * clampf(float(unit.sp) / float(unit.sp_cost), 0.0, 1.0)
 	var is_ready := unit.is_skill_ready()
 	var was_ready := bool(_ready_state.get(unit.id, false))
 	if is_ready and not was_ready:

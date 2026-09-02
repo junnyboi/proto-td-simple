@@ -18,8 +18,10 @@ func _run() -> void:
 		return
 	tweaks.call("reset_all")
 	await process_frame
+	_check(int(tweaks.call("modified_count")) == 0, "Reset All did not restore a clean baseline")
 	_test_catalog()
 	_test_launcher_and_modal(tweaks)
+	_test_global_settings_composition(tweaks)
 	_test_validation_and_persistence(tweaks)
 	_test_battle_resource_adapters(tweaks)
 	tweaks.call("reset_all")
@@ -60,6 +62,19 @@ func _test_launcher_and_modal(tweaks: Node) -> void:
 	_check(_near(launcher.position.x + launcher.size.x, viewport.x - 16.0), "launcher is not right anchored")
 	_check(_near(launcher.position.y + launcher.size.y, viewport.y - 16.0), "launcher is not bottom anchored")
 	_check(panel.category_selector.item_count == 6, "panel does not expose the six requested categories")
+	_test_row_typography_and_alignment(panel)
+	var original_size := root.size
+	root.size = Vector2i(720, 1280)
+	tweaks.call("_relayout")
+	viewport = root.get_visible_rect().size
+	_check(_near(launcher.position.x + launcher.size.x, viewport.x - 16.0), "portrait launcher is not right anchored")
+	_check(_near(launcher.position.y + launcher.size.y, viewport.y - 16.0), "portrait launcher is not bottom anchored")
+	_check(
+		panel.frame.position.y + panel.frame.size.y < launcher.position.y,
+		"portrait panel overlaps the always-visible launcher",
+	)
+	root.size = original_size
+	tweaks.call("_relayout")
 	_check(not paused, "test unexpectedly started paused")
 	_check(bool(tweaks.call("open_panel")), "panel did not open")
 	_check(paused and panel.visible, "panel did not pause the SceneTree")
@@ -70,6 +85,69 @@ func _test_launcher_and_modal(tweaks: Node) -> void:
 	_check(bool(tweaks.call("close_panel")), "panel did not close over an existing pause")
 	_check(paused, "panel did not preserve the pre-existing paused state")
 	paused = false
+
+
+func _test_row_typography_and_alignment(panel: RuntimeTweakPanel) -> void:
+	var row := panel.rows.get_child(0) as PanelContainer
+	_check(row != null, "tweak list does not expose its first row")
+	if row == null:
+		return
+	var label := row.find_child("TweakLabel", true, false) as Label
+	var description := row.find_child("TweakDescription", true, false) as Label
+	var mode := row.find_child("TweakApplyMode", true, false) as Label
+	var slider := row.find_child("TweakSlider", true, false) as HSlider
+	var value := row.find_child("TweakValue", true, false) as SpinBox
+	var reset := row.find_child("TweakResetButton", true, false) as Button
+	_check(label != null and label.get_theme_font_size(&"font_size") == 30, "tweak label typography is not doubled")
+	_check(description != null and description.get_theme_font_size(&"font_size") == 24, "tweak description typography is not doubled")
+	_check(mode != null and mode.get_theme_font_size(&"font_size") == 22, "tweak apply-mode typography is not doubled")
+	for control: Control in [slider, value, reset]:
+		_check(control != null, "numeric tweak row is missing a control")
+		if control != null:
+			_check(
+				control.size_flags_vertical == Control.SIZE_SHRINK_CENTER
+				and is_equal_approx(control.custom_minimum_size.y, 56.0),
+				"%s is not vertically centered at the shared row-control height" % control.name,
+			)
+
+
+func _test_global_settings_composition(tweaks: Node) -> void:
+	var text_scale := root.get_node_or_null("TextScale")
+	if text_scale != null:
+		var original_text_scale := float(text_scale.call("value"))
+		tweaks.call("set_value", &"ui.text_scale_multiplier", 1.25)
+		text_scale.call("set_scale", 1.2)
+		_check(
+			_near(float(text_scale.call("value")), 1.5),
+			"text-scale tweak did not compose with an external accessibility change",
+		)
+		tweaks.call("reset_value", &"ui.text_scale_multiplier")
+		_check(
+			_near(float(text_scale.call("value")), 1.2),
+			"resetting text-scale tweak did not preserve the external accessibility value",
+		)
+		text_scale.call("set_scale", original_text_scale)
+
+	var music_bus := AudioServer.get_bus_index(&"Music")
+	if music_bus >= 0:
+		var original_linear := db_to_linear(AudioServer.get_bus_volume_db(music_bus))
+		var original_mute := AudioServer.is_bus_mute(music_bus)
+		tweaks.call("set_value", &"audio.music_gain", 0.5)
+		var external_linear := clampf(original_linear * 0.8, 0.1, 1.0)
+		AudioServer.set_bus_volume_db(music_bus, linear_to_db(external_linear))
+		tweaks.call("_sync_audio_external_changes")
+		_check(
+			_near(db_to_linear(AudioServer.get_bus_volume_db(music_bus)), external_linear * 0.5),
+			"music gain did not compose with an external volume change",
+		)
+		tweaks.call("reset_value", &"audio.music_gain")
+		_check(
+			_near(db_to_linear(AudioServer.get_bus_volume_db(music_bus)), external_linear),
+			"resetting music gain did not preserve the external volume",
+		)
+		AudioServer.set_bus_volume_db(music_bus, linear_to_db(original_linear))
+		AudioServer.set_bus_mute(music_bus, original_mute)
+		tweaks.call("_sync_audio_external_changes")
 
 
 func _test_validation_and_persistence(tweaks: Node) -> void:

@@ -8,7 +8,7 @@ const CATEGORY_ORDER: Array[StringName] = [
 	&"UI", &"GAMEPLAY", &"AUDIO", &"PLAYER", &"ENEMIES", &"ENVIRONMENT",
 ]
 const APPLY_MODES: Array[StringName] = [
-	&"LIVE", &"NEXT_BATTLE", &"NEXT_DEPLOY", &"NEXT_SPAWN",
+	&"LIVE", &"NEXT_BATTLE", &"NEXT_DEPLOY", &"NEXT_SPAWN", &"NEXT_CUE", &"NEXT_TRANSITION",
 ]
 const VALUE_TYPES: Array[StringName] = [&"bool", &"int", &"float", &"color"]
 
@@ -45,8 +45,8 @@ static func descriptors() -> Array[Dictionary]:
 		_bool(&"audio.music_enabled", &"AUDIO", "Music enabled", "Mutes or restores the music bus without stopping playback.", true, &"LIVE"),
 		_bool(&"audio.sfx_enabled", &"AUDIO", "SFX enabled", "Mutes or restores the sound-effects bus.", true, &"LIVE"),
 		_bool(&"audio.dynamic_music_enabled", &"AUDIO", "Dynamic battle music", "Allows threat and health state to change battle music.", true, &"LIVE"),
-		_float(&"audio.music_pitch_multiplier", &"AUDIO", "Music pitch", "Scales music playback pitch for newly started cues.", 1.0, 0.75, 1.25, 0.01, &"LIVE", "×"),
-		_float(&"audio.transition_duration_multiplier", &"AUDIO", "Music crossfade time", "Scales future music transition durations.", 1.0, 0.0, 2.0, 0.05, &"LIVE", "×"),
+		_float(&"audio.music_pitch_multiplier", &"AUDIO", "Music pitch", "Scales music playback pitch for newly started cues.", 1.0, 0.75, 1.25, 0.01, &"NEXT_CUE", "×"),
+		_float(&"audio.transition_duration_multiplier", &"AUDIO", "Music crossfade time", "Scales future music transition durations.", 1.0, 0.0, 2.0, 0.05, &"NEXT_TRANSITION", "×"),
 
 		# Player
 		_float(&"player.health_multiplier", &"PLAYER", "Operator health", "Scales health for the next deployed operator.", 1.0, 0.25, 5.0, 0.05, &"NEXT_DEPLOY", "×", &"GAMEPLAY"),
@@ -83,7 +83,7 @@ static func descriptors() -> Array[Dictionary]:
 		_float(&"environment.screen_shake_multiplier", &"ENVIRONMENT", "Screen shake", "Scales battle camera shake amplitude.", 1.0, 0.0, 3.0, 0.05, &"LIVE", "×"),
 		_float(&"environment.pan_sensitivity", &"ENVIRONMENT", "Map pan sensitivity", "Scales mouse, touch, trackpad, and wheel map movement.", 1.0, 0.25, 3.0, 0.05, &"LIVE", "×"),
 		_float(&"environment.landmark_scale", &"ENVIRONMENT", "Endpoint landmark scale", "Scales spawn and core landmark artwork.", 1.0, 0.5, 2.0, 0.05, &"LIVE", "×"),
-		_float(&"environment.restoration_opacity", &"ENVIRONMENT", "Restoration-seal opacity", "Changes Act II restoration-lattice visibility.", 0.88, 0.0, 1.0, 0.05, &"LIVE", ""),
+		_float(&"environment.restoration_opacity", &"ENVIRONMENT", "Restoration-seal opacity", "Changes Act II restoration-lattice visibility.", 0.88, 0.0, 1.0, 0.01, &"LIVE", ""),
 	]
 
 
@@ -155,9 +155,21 @@ static func validation_errors() -> PackedStringArray:
 			errors.append("invalid type for %s" % identifier)
 		if entry.get(&"apply_mode", &"") not in APPLY_MODES:
 			errors.append("invalid apply mode for %s" % identifier)
-		if not bool(sanitize(entry, entry.get(&"default")).get(&"ok", false)):
+		var checked := sanitize(entry, entry.get(&"default"))
+		if not bool(checked.get(&"ok", false)):
 			errors.append("invalid default for %s" % identifier)
+		elif not _values_equal(entry, checked[&"value"], entry[&"default"]):
+			errors.append("default is not aligned to its step for %s" % identifier)
 	return errors
+
+
+static func _values_equal(entry: Dictionary, first: Variant, second: Variant) -> bool:
+	match StringName(entry[&"type"]):
+		&"float":
+			return is_equal_approx(float(first), float(second))
+		&"color":
+			return (first as Color).is_equal_approx(second as Color)
+	return first == second
 
 
 static func _float(

@@ -90,6 +90,7 @@ func _run() -> void:
 		"BackgroundDownloadsButton",
 		"ClearPlayerDataButton",
 		"FrameLimitOption",
+		"SettingsApplyButton",
 		"EnglishLocaleButton",
 		"ChineseLocaleButton",
 	]:
@@ -131,15 +132,6 @@ func _run() -> void:
 			)
 			_check(chinese_button.button_pressed, "Chinese locale button did not show its selected state")
 			_check(not english_button.button_pressed, "English locale button remained selected")
-
-	var apply_button := settings.find_child("SettingsApplyButton", true, false) as Button
-	_check(apply_button != null, "SettingsApplyButton is missing")
-	if apply_button != null:
-		for state: StringName in [&"normal", &"hover", &"pressed", &"disabled"]:
-			_check(
-				apply_button.get_theme_stylebox(state) is StyleBoxTexture,
-				"APPLY %s no longer uses its ornate texture" % state,
-			)
 
 	settings.queue_free()
 	for _frame: int in range(4):

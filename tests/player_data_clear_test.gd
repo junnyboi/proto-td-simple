@@ -12,6 +12,7 @@ const FIXTURE_PATHS := [
 	"user://campaign_v1.bak.invalid",
 	"user://campaign_v1.tmp.invalid",
 	"user://view_preferences.cfg",
+	"user://leaderboard.json",
 	"user://content-packs/fixture.pck",
 	"user://cinematic-streams/fixture.ogv",
 	"user://future-player-data/nested/profile.bin",
@@ -47,6 +48,7 @@ func _run() -> void:
 	var game := root.get_node_or_null("Game")
 	var music := root.get_node_or_null("Music")
 	var sfx := root.get_node_or_null("Sfx")
+	var leaderboard := root.get_node_or_null("Leaderboard")
 	_check(game != null, "Game autoload is unavailable")
 	if game == null:
 		await _finish(music, sfx)
@@ -94,6 +96,12 @@ func _run() -> void:
 	_check(restarted != null and restarted != campaign and String(restarted.get_script().resource_path) == "res://scripts/ui/title.gd", "clear did not return to the start screen")
 	_check(restarted != null and restarted.find_child("StartButton", true, false) != null, "clear did not restore the Start gate")
 	_check(ViewPreferencesType.locale() == &"en-US" and ViewPreferencesType.background_downloads_enabled(), "clear did not restore default preferences")
+	_check(
+		leaderboard != null
+		and String(leaderboard.call("player_name")) == "COMMANDER"
+		and (leaderboard.call("local_entries", 10) as Array).is_empty(),
+		"clear did not reset the live leaderboard profile",
+	)
 	if is_instance_valid(campaign):
 		campaign.queue_free()
 	if restarted != null:

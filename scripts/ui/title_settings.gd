@@ -175,7 +175,6 @@ func _ready() -> void:
 	_refresh_copy()
 	_apply_simple_control_styles()
 	_apply_responsive_layout()
-	_apply_ornate_apply_style()
 	_set_interaction_enabled(false)
 	visible = false
 
@@ -625,22 +624,6 @@ func _configure_readable_actions() -> void:
 		action.text_overrun_behavior = TextServer.OVERRUN_NO_TRIMMING
 
 
-func _apply_ornate_apply_style() -> void:
-	_apply_button.add_theme_stylebox_override(
-		&"normal", StagingSkinType.ornate_primary_button_style(),
-	)
-	_apply_button.add_theme_stylebox_override(
-		&"hover", StagingSkinType.ornate_primary_button_style(Color("fff8df")),
-	)
-	_apply_button.add_theme_stylebox_override(
-		&"pressed", StagingSkinType.ornate_primary_button_style(Color("d9b96e")),
-	)
-	_apply_button.add_theme_stylebox_override(
-		&"disabled",
-		StagingSkinType.ornate_primary_button_style(Color(0.42, 0.48, 0.55, 0.56)),
-	)
-
-
 func _apply_simple_control_styles() -> void:
 	var simple_buttons: Array[BaseButton] = [
 		_back_button,
@@ -650,6 +633,7 @@ func _apply_simple_control_styles() -> void:
 		_background_downloads_button,
 		_clear_data_button,
 		_frame_option,
+		_apply_button,
 	]
 	for locale_button: Button in _locale_buttons:
 		simple_buttons.append(locale_button)

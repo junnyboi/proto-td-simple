@@ -52,8 +52,8 @@ const STATIC_FALLBACKS := {
 	&"ui.battle.state_active": "ACTIVE",
 	&"ui.battle.state_clear": "CLEAR",
 	&"ui.battle.state_defeat": "DEFEAT",
-	&"ui.battle.hud_compact": "HEALTH {core}   DP {dp}\nELIMS {eliminations}   {state}",
-	&"ui.battle.hud_wide": "HEALTH  {core}    DP  {dp}    ELIMINATIONS  {eliminations}    {state}",
+	&"ui.battle.hud_compact": "LEAKS {leaks} / {leak_threshold}   DP {dp}\nELIMS {eliminations}   {state}",
+	&"ui.battle.hud_wide": "LEAKS  {leaks} / {leak_threshold}    DP  {dp}    ELIMINATIONS  {eliminations}    {state}",
 	&"ui.battle.continue_debrief": "CONTINUE TO DEBRIEF",
 	&"ui.battle.finalizing_debrief": "FINALIZING DEBRIEF…",
 	&"ui.battle.operator_actions": "Operator actions",
@@ -216,8 +216,8 @@ const STATIC_FALLBACKS := {
 const PLACEHOLDER_TYPES := {
 	&"ui.campaign.row_star": {&"count": &"int"},
 	&"ui.campaign.row_stars": {&"count": &"int"},
-	&"ui.battle.hud_compact": {&"core": &"int", &"dp": &"int", &"eliminations": &"int", &"state": &"String"},
-	&"ui.battle.hud_wide": {&"core": &"int", &"dp": &"int", &"eliminations": &"int", &"state": &"String"},
+	&"ui.battle.hud_compact": {&"leaks": &"int", &"leak_threshold": &"int", &"dp": &"int", &"eliminations": &"int", &"state": &"String"},
+	&"ui.battle.hud_wide": {&"leaks": &"int", &"leak_threshold": &"int", &"dp": &"int", &"eliminations": &"int", &"state": &"String"},
 	&"ui.battle.operator_actions_description": {
 		&"operator": &"String", &"skill": &"String", &"current": &"int", &"cost": &"int",
 	},

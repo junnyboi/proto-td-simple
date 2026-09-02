@@ -9,6 +9,12 @@ const TEXT := Color("f4f4f4")
 const MUTED := Color("9aa8b5")
 const PANEL_COLOR := Color("111827")
 const ROW_COLOR := Color("172235")
+const ROW_HEIGHT := 104.0
+const ROW_TITLE_FONT_SIZE := 30
+const ROW_DESCRIPTION_FONT_SIZE := 24
+const ROW_MODE_FONT_SIZE := 22
+const ROW_CONTROL_HEIGHT := 56.0
+const ROW_MODE_WIDTH := 180.0
 
 var service: Node = null
 var frame: PanelContainer = null
@@ -54,10 +60,7 @@ func refresh() -> void:
 		if not query.is_empty() and query not in searchable.to_lower():
 			continue
 		rows.add_child(_build_row(descriptor))
-	status_label.text = "%d modified  •  %s" % [
-		int(service.call("modified_count")),
-		String(service.get("persistence_state")).replace("_", " ").capitalize(),
-	]
+	_refresh_status()
 
 
 func _build_ui() -> void:
@@ -141,19 +144,22 @@ func _build_ui() -> void:
 	boundary_note.text = "Application timing is shown per control. Gameplay changes mark the battle TWEAKED."
 	boundary_note.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	boundary_note.add_theme_color_override(&"font_color", MUTED)
+	boundary_note.add_theme_font_size_override(&"font_size", 12)
 	boundary_note.clip_text = true
 	footer.add_child(boundary_note)
 	status_label = Label.new()
 	status_label.name = "StatusLabel"
+	status_label.custom_minimum_size.x = 170.0
 	status_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	status_label.add_theme_color_override(&"font_color", ACCENT)
+	status_label.add_theme_font_size_override(&"font_size", 12)
 	footer.add_child(status_label)
 
 
 func _build_row(descriptor: Dictionary) -> Control:
 	var panel := PanelContainer.new()
 	panel.name = "Row_%s" % String(descriptor[&"id"]).replace(".", "_")
-	panel.custom_minimum_size.y = 64.0
+	panel.custom_minimum_size.y = ROW_HEIGHT
 	panel.tooltip_text = "%s\n%s" % [descriptor[&"description"], descriptor[&"id"]]
 	panel.add_theme_stylebox_override(&"panel", _flat_style(Color(ROW_COLOR, 0.88), 6.0))
 	var margin := MarginContainer.new()
@@ -167,42 +173,53 @@ func _build_row(descriptor: Dictionary) -> Control:
 	margin.add_child(line)
 
 	var copy := VBoxContainer.new()
+	copy.name = "TweakCopy"
 	copy.custom_minimum_size.x = 330.0
 	copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	copy.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	line.add_child(copy)
 	var label := Label.new()
+	label.name = "TweakLabel"
 	label.text = String(descriptor[&"label"])
 	label.add_theme_color_override(&"font_color", TEXT)
-	label.add_theme_font_size_override(&"font_size", 15)
+	label.add_theme_font_size_override(&"font_size", ROW_TITLE_FONT_SIZE)
 	copy.add_child(label)
 	var description := Label.new()
+	description.name = "TweakDescription"
 	description.text = String(descriptor[&"description"])
 	description.add_theme_color_override(&"font_color", MUTED)
-	description.add_theme_font_size_override(&"font_size", 12)
+	description.add_theme_font_size_override(&"font_size", ROW_DESCRIPTION_FONT_SIZE)
 	description.clip_text = true
 	description.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	copy.add_child(description)
 
 	var mode := Label.new()
-	mode.custom_minimum_size.x = 104.0
+	mode.name = "TweakApplyMode"
+	mode.custom_minimum_size.x = ROW_MODE_WIDTH
 	mode.text = String(descriptor[&"apply_mode"]).replace("_", " ")
 	mode.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	mode.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	mode.add_theme_color_override(&"font_color", ACCENT)
-	mode.add_theme_font_size_override(&"font_size", 11)
+	mode.add_theme_font_size_override(&"font_size", ROW_MODE_FONT_SIZE)
 	line.add_child(mode)
 
 	var control_host := HBoxContainer.new()
+	control_host.name = "TweakControlHost"
 	control_host.custom_minimum_size.x = 330.0
+	control_host.custom_minimum_size.y = ROW_CONTROL_HEIGHT
+	control_host.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	control_host.add_theme_constant_override(&"separation", 6)
 	line.add_child(control_host)
 	var current: Variant = service.call("value", descriptor[&"id"], descriptor[&"default"])
 	match StringName(descriptor[&"type"]):
 		&"bool":
 			var toggle := CheckButton.new()
+			toggle.name = "TweakToggle"
 			toggle.text = "ON" if bool(current) else "OFF"
 			toggle.button_pressed = bool(current)
+			toggle.custom_minimum_size.y = ROW_CONTROL_HEIGHT
 			toggle.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			toggle.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 			toggle.toggled.connect(func(enabled: bool) -> void:
 				toggle.text = "ON" if enabled else "OFF"
 				_request_value(descriptor[&"id"], enabled)
@@ -210,9 +227,11 @@ func _build_row(descriptor: Dictionary) -> Control:
 			control_host.add_child(toggle)
 		&"color":
 			var picker := ColorPickerButton.new()
+			picker.name = "TweakColorPicker"
 			picker.color = current as Color
-			picker.custom_minimum_size = Vector2(240.0, 36.0)
+			picker.custom_minimum_size = Vector2(240.0, ROW_CONTROL_HEIGHT)
 			picker.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			picker.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 			picker.color_changed.connect(func(color: Color) -> void:
 				_request_value(descriptor[&"id"], color)
 			)
@@ -220,10 +239,15 @@ func _build_row(descriptor: Dictionary) -> Control:
 		_:
 			_add_numeric_control(control_host, descriptor, current)
 	var reset := Button.new()
+	reset.name = "TweakResetButton"
 	reset.text = "↺"
 	reset.tooltip_text = "Reset to default"
-	reset.custom_minimum_size = Vector2(38.0, 36.0)
-	reset.pressed.connect(func() -> void: service.call("reset_value", descriptor[&"id"]))
+	reset.custom_minimum_size = Vector2(ROW_CONTROL_HEIGHT, ROW_CONTROL_HEIGHT)
+	reset.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	reset.pressed.connect(func() -> void:
+		service.call("reset_value", descriptor[&"id"])
+		refresh()
+	)
 	control_host.add_child(reset)
 	return panel
 
@@ -231,19 +255,23 @@ func _build_row(descriptor: Dictionary) -> Control:
 func _add_numeric_control(host: HBoxContainer, descriptor: Dictionary, current: Variant) -> void:
 	var guard: Array[bool] = [false]
 	var slider := HSlider.new()
+	slider.name = "TweakSlider"
 	slider.min_value = float(descriptor[&"minimum"])
 	slider.max_value = float(descriptor[&"maximum"])
 	slider.step = float(descriptor[&"step"])
 	slider.value = float(current)
 	slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	slider.custom_minimum_size.x = 165.0
+	slider.custom_minimum_size = Vector2(165.0, ROW_CONTROL_HEIGHT)
+	slider.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	host.add_child(slider)
 	var spin := SpinBox.new()
+	spin.name = "TweakValue"
 	spin.min_value = slider.min_value
 	spin.max_value = slider.max_value
 	spin.step = slider.step
 	spin.value = slider.value
-	spin.custom_minimum_size = Vector2(118.0, 36.0)
+	spin.custom_minimum_size = Vector2(118.0, ROW_CONTROL_HEIGHT)
+	spin.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	spin.suffix = String(descriptor[&"unit"])
 	host.add_child(spin)
 	slider.value_changed.connect(func(next: float) -> void:
@@ -311,7 +339,10 @@ func _relayout() -> void:
 	size = viewport
 	var margin := 10.0 if viewport.y > viewport.x else 18.0
 	frame.position = Vector2.ONE * margin
-	frame.size = viewport - Vector2.ONE * margin * 2.0
+	frame.size = Vector2(
+		viewport.x - margin * 2.0,
+		viewport.y - margin * 2.0 - 58.0,
+	)
 	if category_selector != null:
 		var portrait := viewport.y > viewport.x
 		category_selector.custom_minimum_size.x = 150.0 if portrait else 190.0
@@ -333,8 +364,18 @@ func _on_reset_all() -> void:
 
 
 func _on_value_changed(_identifier: StringName, _value: Variant) -> void:
-	refresh()
+	_refresh_panel_style()
+	_refresh_status()
 
 
 func _on_persistence_state_changed(_state: StringName) -> void:
-	refresh()
+	_refresh_status()
+
+
+func _refresh_status() -> void:
+	if service == null or status_label == null:
+		return
+	status_label.text = "%d modified  •  %s" % [
+		int(service.call("modified_count")),
+		String(service.get("persistence_state")).replace("_", " ").capitalize(),
+	]

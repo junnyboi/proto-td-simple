@@ -44,7 +44,8 @@ const SHADOW_FACE_SCALE := 0.3125
 const AERIAL_SHADOW_DROP := 10.0
 const TRACER_COLOR := Color("f4f4f4")
 const UNIT_PX := 64.0  # 32px art at the pinned 2x scale
-const SP_BAR_HEIGHT := 5.0
+const SP_BAR_WIDTH_SCALE := 0.5
+const SP_BAR_HEIGHT := 2.5
 const SP_BAR_BG := Color("20263a")
 const SP_BAR_FILL := Color("f4b41b")
 const TERMINAL_CONTINUE_WIDTH := 640.0
@@ -1413,8 +1414,7 @@ func _activate_unit_animation_body(
 		BATTLE_HEALTH_BAR_SCRIPT.layout(body, body.size.x)
 	var sp_bar := body.get_node_or_null("SpBarBg") as ColorRect
 	if sp_bar != null:
-		sp_bar.size.x = body.size.x
-		sp_bar.position.y = body.size.y + 3.0
+		_layout_sp_bar(body)
 	var chevron := body.get_parent().get_node_or_null("FacingChevron") as Polygon2D
 	if chevron != null:
 		chevron.position = chevron.position.normalized() * (maxf(UNIT_PX, body.size.x) * 0.5 + 6.0)
@@ -1467,15 +1467,22 @@ func _add_sp_bar(body: ColorRect) -> void:
 	bg.name = "SpBarBg"
 	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	bg.color = SP_BAR_BG
-	bg.size = Vector2(body.size.x, SP_BAR_HEIGHT)
-	bg.position = Vector2(0, body.size.y + 3.0)
 	body.add_child(bg)
 	var fill := ColorRect.new()
 	fill.name = "SpBarFill"
 	fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	fill.color = SP_BAR_FILL
-	fill.size = Vector2(0, SP_BAR_HEIGHT)
 	bg.add_child(fill)
+	_layout_sp_bar(body)
+
+
+func _layout_sp_bar(body: ColorRect) -> void:
+	var bg := body.get_node("SpBarBg") as ColorRect
+	var bar_width := body.size.x * SP_BAR_WIDTH_SCALE
+	bg.size = Vector2(bar_width, SP_BAR_HEIGHT)
+	bg.position = Vector2((body.size.x - bar_width) * 0.5, body.size.y + 3.0)
+	var fill := bg.get_node("SpBarFill") as ColorRect
+	fill.size.y = SP_BAR_HEIGHT
 
 
 func _make_unit_node(u: UnitState) -> Node2D:

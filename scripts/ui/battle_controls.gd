@@ -17,6 +17,8 @@ const SPEED_CYCLE: Array[float] = [1.0, 2.0, 4.0, 0.0]
 const SPEED_STEPS: Array[float] = [0.0, 1.0, 2.0, 4.0]
 const PAUSED_LABEL_MIN_WIDTH := 0.0
 const COMMAND_TARGET_SIZE := Vector2(112.0, 48.0)
+const COMMAND_CONTENT_PADDING := 6.0
+const COMMAND_CORNER_RADIUS := 12
 const DECK_PADDING := 24.0
 const DECK_VERTICAL_PADDING := DECK_PADDING + 8.0
 const ACTION_GAP := 12
@@ -176,9 +178,18 @@ func _make_button(button_name: String, text: String, role: StringName) -> Button
 	btn.text = text
 	btn.focus_mode = Control.FOCUS_ALL
 	btn.custom_minimum_size = COMMAND_TARGET_SIZE
-	Style.apply_compact_rounded_button(btn, role, 6.0, 12)
-	btn.add_theme_font_size_override(&"font_size", FONT_SIZE)
+	_apply_command_button_style(btn, role)
 	return btn
+
+
+func _apply_command_button_style(button: Button, role: StringName) -> void:
+	Style.apply_compact_rounded_button(
+		button,
+		role,
+		COMMAND_CONTENT_PADDING,
+		COMMAND_CORNER_RADIUS,
+	)
+	button.add_theme_font_size_override(&"font_size", FONT_SIZE)
 
 
 func _current_scale() -> float:
@@ -204,7 +215,7 @@ func _process(_delta: float) -> void:
 	_speed_button.text = "%d×" % int(round(current))
 	_refresh_action_enabled()
 	if paused != _last_paused:
-		Style.apply_button(_pause_button, &"selected" if paused else &"secondary")
+		_apply_command_button_style(_pause_button, &"selected" if paused else &"secondary")
 		_last_paused = paused
 		relayout()
 

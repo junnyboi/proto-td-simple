@@ -14,6 +14,7 @@ static func of(m: BattleModel) -> Dictionary:
 		"stars": m.stars,
 		"spawned": m.spawned,
 		"leaked": m.leaked,
+		"leak_limit": m.stage.leak_limit,
 		"killed": m.killed,
 		"alive": m.alive_enemy_count(),
 		"dp": m.dp,

@@ -20,8 +20,11 @@ var _values: Dictionary = {}
 var _save_remaining := -1.0
 var _paused_before_open := false
 var _text_scale_baseline := 1.0
+var _applying_text_scale := false
 var _audio_linear_baselines: Dictionary = {}
 var _audio_mute_baselines: Dictionary = {}
+var _audio_last_linear: Dictionary = {}
+var _audio_last_mute: Dictionary = {}
 
 
 func _ready() -> void:
@@ -42,6 +45,7 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	_sync_audio_external_changes()
 	if _save_remaining < 0.0:
 		return
 	_save_remaining = maxf(_save_remaining - maxf(delta, 0.0), 0.0)
@@ -304,6 +308,12 @@ func _build_launcher() -> void:
 	launcher_button.focus_mode = Control.FOCUS_ALL
 	launcher_button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	launcher_button.custom_minimum_size = Vector2(174.0, 42.0)
+	launcher_button.add_theme_font_size_override(&"font_size", 12)
+	launcher_button.add_theme_color_override(&"font_color", Color("d9fbff"))
+	launcher_button.add_theme_color_override(&"font_hover_color", Color.WHITE)
+	launcher_button.add_theme_color_override(&"font_pressed_color", Color.WHITE)
+	for state: StringName in [&"normal", &"hover", &"pressed", &"focus"]:
+		launcher_button.add_theme_stylebox_override(state, _launcher_style(state))
 	launcher_button.z_index = 100
 	launcher_button.modulate.a = LAUNCHER_IDLE_OPACITY
 	launcher_button.mouse_entered.connect(_on_launcher_mouse_entered)
@@ -334,10 +344,35 @@ func _on_launcher_mouse_exited() -> void:
 	launcher_button.modulate.a = LAUNCHER_IDLE_OPACITY
 
 
+func _launcher_style(state: StringName) -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = (
+		Color("183247")
+		if state == &"normal"
+		else Color("24506a")
+	)
+	style.border_color = Color("64e6ff")
+	style.border_width_left = 1
+	style.border_width_top = 1
+	style.border_width_right = 1
+	style.border_width_bottom = 1
+	style.corner_radius_top_left = 6
+	style.corner_radius_top_right = 6
+	style.corner_radius_bottom_left = 6
+	style.corner_radius_bottom_right = 6
+	style.content_margin_left = 8.0
+	style.content_margin_top = 5.0
+	style.content_margin_right = 8.0
+	style.content_margin_bottom = 5.0
+	return style
+
+
 func _capture_global_baselines() -> void:
 	var text_manager := get_node_or_null("/root/TextScale")
 	if text_manager != null:
 		_text_scale_baseline = float(text_manager.call("value"))
+		if not text_manager.scale_changed.is_connected(_on_external_text_scale_changed):
+			text_manager.scale_changed.connect(_on_external_text_scale_changed)
 	for bus: StringName in [&"Master", &"Music", &"SFX"]:
 		var index := AudioServer.get_bus_index(bus)
 		if index < 0:
@@ -355,10 +390,12 @@ func _apply_global_tweak(identifier: StringName) -> void:
 	if identifier == &"ui.text_scale_multiplier":
 		var text_manager := get_node_or_null("/root/TextScale")
 		if text_manager != null:
+			_applying_text_scale = true
 			text_manager.call(
 				"set_scale",
 				_text_scale_baseline * float(value(identifier, 1.0)),
 			)
+			_applying_text_scale = false
 	elif identifier == &"ui.panel_opacity" and panel != null:
 		panel.call("_refresh_panel_style")
 	elif String(identifier).begins_with("audio."):
@@ -392,6 +429,33 @@ func _apply_audio_bus(bus: StringName, gain: float, enabled: bool) -> void:
 		index,
 		bool(_audio_mute_baselines[bus]) or not enabled or linear <= 0.001,
 	)
+	_audio_last_linear[bus] = db_to_linear(AudioServer.get_bus_volume_db(index))
+	_audio_last_mute[bus] = AudioServer.is_bus_mute(index)
+
+
+func _sync_audio_external_changes() -> void:
+	var changed := false
+	for bus: StringName in [&"Master", &"Music", &"SFX"]:
+		var index := AudioServer.get_bus_index(bus)
+		if index < 0 or not _audio_last_linear.has(bus):
+			continue
+		var current_linear := db_to_linear(AudioServer.get_bus_volume_db(index))
+		var current_mute := AudioServer.is_bus_mute(index)
+		if not is_equal_approx(current_linear, float(_audio_last_linear[bus])):
+			_audio_linear_baselines[bus] = current_linear
+			changed = true
+		if current_mute != bool(_audio_last_mute[bus]):
+			_audio_mute_baselines[bus] = current_mute
+			changed = true
+	if changed:
+		_apply_audio_tweaks()
+
+
+func _on_external_text_scale_changed(next_scale: float) -> void:
+	if _applying_text_scale:
+		return
+	_text_scale_baseline = next_scale
+	_apply_global_tweak(&"ui.text_scale_multiplier")
 
 
 func _load_persisted_values() -> void:

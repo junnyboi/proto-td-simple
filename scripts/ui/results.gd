@@ -66,7 +66,7 @@ var _rewards_panel: PanelContainer = null
 var _leaderboard_button: Button = null
 var _leaderboard_dialog: MissionLeaderboardDialog = null
 var _cleared_result := false
-var _landscape_action_columns := 4
+var _landscape_action_columns := 2
 var _reward_reveal_entries: Array[Dictionary] = []
 var _reward_reveal_tween: Tween = null
 var _defeat_ambient: DefeatAmbientLayerType = null
@@ -751,7 +751,7 @@ func _reset_presentation_references() -> void:
 	_rewards_panel = null
 	_leaderboard_button = null
 	_leaderboard_dialog = null
-	_landscape_action_columns = 4
+	_landscape_action_columns = 2
 
 
 func _wire_focus(focusable: Array[Button]) -> void:
