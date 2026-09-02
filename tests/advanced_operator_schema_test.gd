@@ -70,7 +70,6 @@ func _test_manifest_profiles() -> void:
 	for path: String in [
 		"res://assets/manifest.tres",
 		"res://assets/act1_shared_manifest.tres",
-		"res://assets/experimental_salvage_manifest.tres",
 	]:
 		var existing := load(path) as AssetManifestType
 		_check(existing != null, "%s failed to load" % path)

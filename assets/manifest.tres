@@ -924,51 +924,6 @@ entries = {
 "placeholder": false,
 "size": Vector2i(32, 16)
 },
-&"world.s1.core_landmark": {
-"animations": {
-&"default": {
-&"fps": 1.0,
-&"length": 1,
-&"loop": true,
-&"start": 0
-}
-},
-"frames": 1,
-"pattern": "res://assets/world/s1/s1-core-landmark.png",
-"pivot": Vector2(0.5, 0.5),
-"placeholder": false,
-"size": Vector2i(32, 32)
-},
-&"world.s1.rain_measure": {
-"animations": {
-&"default": {
-&"fps": 1.0,
-&"length": 1,
-&"loop": true,
-&"start": 0
-}
-},
-"frames": 1,
-"pattern": "res://assets/world/s1/s1-rain-measure.png",
-"pivot": Vector2(0.5, 0.5),
-"placeholder": false,
-"size": Vector2i(16, 16)
-},
-&"world.s1.spawn_landmark": {
-"animations": {
-&"default": {
-&"fps": 1.0,
-&"length": 1,
-&"loop": true,
-&"start": 0
-}
-},
-"frames": 1,
-"pattern": "res://assets/world/s1/s1-spawn-landmark.png",
-"pivot": Vector2(0.5, 0.5),
-"placeholder": false,
-"size": Vector2i(32, 32)
-},
 &"vfx_deploy_dust": {
 "animations": {
 &"default": {

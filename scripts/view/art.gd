@@ -8,8 +8,6 @@ extends RefCounted
 
 static var _manifest: AssetManifest = null
 static var _supplemental_manifest: AssetManifest = null
-static var _experimental_manifest: AssetManifest = null
-static var _enemy_variant_manifest: AssetManifest = null
 static var _enemy_static_manifest: AssetManifest = null
 static var _manifest_entries: Dictionary = {}
 static var _manifest_error := false
@@ -21,8 +19,6 @@ static func _load_manifests() -> void:
 		(
 			_manifest != null
 				and _supplemental_manifest != null
-				and _experimental_manifest != null
-				and _enemy_variant_manifest != null
 				and _enemy_static_manifest != null
 			)
 		or _manifest_error
@@ -30,52 +26,22 @@ static func _load_manifests() -> void:
 		return
 	_manifest = load("res://assets/manifest.tres") as AssetManifest
 	_supplemental_manifest = load("res://assets/act1_shared_manifest.tres") as AssetManifest
-	_experimental_manifest = (
-		load("res://assets/experimental_salvage_manifest.tres") as AssetManifest
-	)
-	_enemy_variant_manifest = load("res://assets/enemy_variant_manifest.tres") as AssetManifest
 	_enemy_static_manifest = load("res://assets/enemy_static_manifest.tres") as AssetManifest
 	if (
 		_manifest == null
 			or _supplemental_manifest == null
-			or _experimental_manifest == null
-			or _enemy_variant_manifest == null
 			or _enemy_static_manifest == null
 		):
 		_manifest_error = true
-		push_error(
-				"Art: failed to load base, supplemental, experimental, enemy-variant, or enemy-static manifest"
-		)
+		push_error("Art: failed to load base, supplemental, or enemy-static manifest")
 		return
 	var merged := merge_manifest_entries(_manifest.entries, _supplemental_manifest.entries)
 	if not bool(merged[&"ok"]):
 		_manifest_error = true
 		push_error("Art: duplicate asset id across manifest layers: %s" % merged[&"duplicate_id"])
 		return
-	var merged_experimental := merge_manifest_entries(
-		merged[&"entries"], _experimental_manifest.entries
-	)
-	if not bool(merged_experimental[&"ok"]):
-		_manifest_error = true
-		push_error(
-			(
-				"Art: duplicate experimental asset id across manifest layers: %s"
-				% merged_experimental[&"duplicate_id"]
-			)
-		)
-		return
-	var merged_variants := merge_manifest_entries(
-		merged_experimental[&"entries"], _enemy_variant_manifest.entries
-	)
-	if not bool(merged_variants[&"ok"]):
-		_manifest_error = true
-		push_error(
-			"Art: duplicate enemy-variant asset id across manifest layers: %s"
-			% merged_variants[&"duplicate_id"]
-		)
-		return
 	var merged_static := merge_manifest_entries(
-		merged_variants[&"entries"], _enemy_static_manifest.entries
+		merged[&"entries"], _enemy_static_manifest.entries
 	)
 	if not bool(merged_static[&"ok"]):
 		_manifest_error = true
@@ -103,8 +69,6 @@ static func merge_manifest_entries(
 static func _reset_manifests_for_test() -> void:
 	_manifest = null
 	_supplemental_manifest = null
-	_experimental_manifest = null
-	_enemy_variant_manifest = null
 	_enemy_static_manifest = null
 	_manifest_entries = {}
 	_manifest_error = false

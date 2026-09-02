@@ -66,6 +66,9 @@ const ROLE_HOTSPOTS := {
 var _claims: Dictionary = {}
 var _claim_serial := 0
 var _active_role := ROLE_DEFAULT
+var _custom_cursors_installed := false
+var _pointer_is_in_window := true
+var _window_has_focus := true
 
 
 func _ready() -> void:
@@ -75,12 +78,26 @@ func _ready() -> void:
 	_apply_active_role(ROLE_DEFAULT, true)
 
 
+func _notification(what: int) -> void:
+	match what:
+		NOTIFICATION_WM_MOUSE_ENTER:
+			_pointer_is_in_window = true
+			_refresh_cursor_availability()
+		NOTIFICATION_WM_MOUSE_EXIT:
+			_pointer_is_in_window = false
+			_refresh_cursor_availability()
+		NOTIFICATION_WM_WINDOW_FOCUS_IN:
+			_window_has_focus = true
+			_refresh_cursor_availability()
+		NOTIFICATION_WM_WINDOW_FOCUS_OUT:
+			_window_has_focus = false
+			_refresh_cursor_availability()
+
+
 func _exit_tree() -> void:
 	if get_tree() != null and get_tree().node_added.is_connected(_on_node_added):
 		get_tree().node_added.disconnect(_on_node_added)
-	Input.set_default_cursor_shape(shape_for_role(ROLE_DEFAULT))
-	for role: StringName in ROLE_SHAPES:
-		Input.set_custom_mouse_cursor(null, shape_for_role(role))
+	_uninstall_custom_cursors()
 
 
 func _process(_delta: float) -> void:
@@ -182,6 +199,8 @@ func shape_for_control(control: Control) -> int:
 
 
 func _install_custom_cursors() -> void:
+	if _custom_cursors_installed:
+		return
 	for role: StringName in ROLE_SHAPES:
 		var texture := texture_for_role(role)
 		if texture == null:
@@ -192,6 +211,22 @@ func _install_custom_cursors() -> void:
 			shape_for_role(role),
 			hotspot_for_role(role),
 		)
+	_custom_cursors_installed = true
+
+
+func _uninstall_custom_cursors() -> void:
+	for role: StringName in ROLE_SHAPES:
+		Input.set_custom_mouse_cursor(null, shape_for_role(role))
+	Input.set_default_cursor_shape(shape_for_role(ROLE_DEFAULT))
+	_custom_cursors_installed = false
+
+
+func _refresh_cursor_availability() -> void:
+	if _pointer_is_in_window and _window_has_focus:
+		_install_custom_cursors()
+		_apply_active_role(_active_role, true)
+	else:
+		_uninstall_custom_cursors()
 
 
 func _resolve_claims() -> void:
@@ -220,12 +255,19 @@ func _apply_active_role(role: StringName, force: bool = false) -> void:
 	if not force and role == _active_role:
 		return
 	_active_role = role
-	Input.set_default_cursor_shape(shape_for_role(role))
+	if _custom_cursors_installed:
+		Input.set_default_cursor_shape(shape_for_role(role))
 
 
 func _on_node_added(node: Node) -> void:
 	if node is Control:
-		_apply_control_shape.call_deferred(node as Control)
+		_apply_control_shape_by_id.call_deferred(node.get_instance_id())
+
+
+func _apply_control_shape_by_id(instance_id: int) -> void:
+	var instance := instance_from_id(instance_id)
+	if instance is Control:
+		_apply_control_shape(instance as Control)
 
 
 func _classify_descendants(node: Node) -> void:

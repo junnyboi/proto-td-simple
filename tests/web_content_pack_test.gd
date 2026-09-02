@@ -45,10 +45,6 @@ func _test_argument_contract() -> void:
 
 func _test_resource_routing() -> void:
 	_check(
-		LoaderType.pack_id_for_resource("res://assets/enemy-variants/breacher_attack_ne.webp").is_empty(),
-		"retired enemy variant path must not route to a runtime pack",
-	)
-	_check(
 		LoaderType.pack_id_for_resource("res://assets/sprites/enemies/static/breacher.png").is_empty(),
 		"core static enemy path must not route to a runtime pack",
 	)
@@ -119,7 +115,6 @@ func _test_export_boundary() -> void:
 		return
 	var source := file.get_as_text()
 	file.close()
-	_check(source.contains("assets/enemy-variants/*.webp"), "enemy variant core exclusion is missing")
 	_check(not source.contains("assets/sprites/enemies/static"), "core static enemy sprites leaked into Web exclusions")
 	for class_id: String in LoaderType.ADVANCED_CLASSES:
 		var pattern := "assets/sprites/operators/animated/%s/*/*.webp" % class_id

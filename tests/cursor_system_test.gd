@@ -86,6 +86,7 @@ func _run() -> void:
 
 	_verify_control_semantics(manager)
 	_verify_claim_priority(manager)
+	_verify_window_boundary_behavior(manager)
 	await _verify_battle_cursor_semantics(manager)
 	await _capture_catalog_if_requested(manager)
 	_finish()
@@ -139,6 +140,44 @@ func _verify_claim_priority(manager: Node) -> void:
 	_check(StringName(manager.call("active_role")) == &"default", "freed claim owner stranded the cursor")
 	_check(not bool(manager.call("claim", action_owner, &"unknown", 100)), "unknown cursor role was accepted")
 	action_owner.free()
+
+
+func _verify_window_boundary_behavior(manager: Node) -> void:
+	var owner := Node.new()
+	_check(bool(manager.get("_custom_cursors_installed")), "custom cursors were not installed at startup")
+	manager.call("claim", owner, &"pan", 10)
+	manager.notification(Node.NOTIFICATION_WM_MOUSE_EXIT)
+	_check(
+		not bool(manager.get("_custom_cursors_installed")),
+		"custom cursors remained installed after the pointer left the game window",
+	)
+	_check(
+		StringName(manager.call("active_role")) == &"pan",
+		"leaving the game window discarded the active cursor role",
+	)
+	manager.notification(Node.NOTIFICATION_WM_MOUSE_ENTER)
+	_check(
+		bool(manager.get("_custom_cursors_installed")),
+		"custom cursors were not restored after the pointer re-entered the game window",
+	)
+	manager.notification(Node.NOTIFICATION_WM_WINDOW_FOCUS_OUT)
+	_check(
+		not bool(manager.get("_custom_cursors_installed")),
+		"custom cursors remained installed after the game window lost focus",
+	)
+	manager.notification(Node.NOTIFICATION_WM_MOUSE_EXIT)
+	manager.notification(Node.NOTIFICATION_WM_WINDOW_FOCUS_IN)
+	_check(
+		not bool(manager.get("_custom_cursors_installed")),
+		"custom cursors were restored while the pointer was outside the game window",
+	)
+	manager.notification(Node.NOTIFICATION_WM_MOUSE_ENTER)
+	_check(
+		bool(manager.get("_custom_cursors_installed")),
+		"custom cursors were not restored after focus and pointer returned",
+	)
+	manager.call("release_claim", owner)
+	owner.free()
 
 
 func _verify_battle_cursor_semantics(manager: Node) -> void:

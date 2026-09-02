@@ -30,9 +30,7 @@ npm run dev
 
 Native builds can set `leaderboard/api_base_url`; browser exports use the page's
 current origin. Production deployments should set `LEADERBOARD_DATA_FILE` to a
-durable absolute path. See
-[`docs/LEADERBOARD_IMPLEMENTATION_PLAN.md`](docs/LEADERBOARD_IMPLEMENTATION_PLAN.md)
-for the score/data contracts, architecture, verification, and deployment notes.
+durable absolute path.
 
 ## Basic development check
 
