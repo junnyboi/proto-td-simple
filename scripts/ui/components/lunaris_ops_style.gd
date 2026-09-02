@@ -18,6 +18,9 @@ const GOLD_DIM := Color("79683f")
 const VIOLET := Color("66577f")
 const DANGER := Color("d16f78")
 const MIN_CONTENT_PANEL_INSET := 24.0
+const SIMPLE_GOLD_SURFACE := Color(0.025, 0.045, 0.07, 0.86)
+const SIMPLE_GOLD_SURFACE_HOVER := Color(0.08, 0.07, 0.04, 0.90)
+const SIMPLE_GOLD_SURFACE_SELECTED := Color(0.16, 0.12, 0.045, 0.90)
 
 
 static func add_backdrop(root: Control, texture: Texture2D = null) -> void:
@@ -197,6 +200,55 @@ static func apply_compact_rounded_button(
 	]:
 		button.add_theme_color_override(item, ink)
 	button.add_theme_color_override(&"font_disabled_color", Color(MUTED.r, MUTED.g, MUTED.b, 0.68))
+
+
+## Texture-free surface used by the leaderboard. The fill remains uniformly
+## translucent in every state and the rounded gold edge carries the hierarchy.
+static func apply_simple_gold_button(
+		button: Button,
+		selected: bool = false,
+		content_padding: float = 12.0,
+		corner_radius: int = 12,
+	) -> void:
+	var normal_fill := SIMPLE_GOLD_SURFACE_SELECTED if selected else SIMPLE_GOLD_SURFACE
+	button.add_theme_stylebox_override(
+		&"normal",
+		simple_gold_surface(normal_fill, content_padding, corner_radius, 1),
+	)
+	button.add_theme_stylebox_override(
+		&"hover",
+		simple_gold_surface(SIMPLE_GOLD_SURFACE_HOVER, content_padding, corner_radius, 2),
+	)
+	button.add_theme_stylebox_override(
+		&"pressed",
+		simple_gold_surface(SIMPLE_GOLD_SURFACE_SELECTED, content_padding, corner_radius, 2),
+	)
+	button.add_theme_stylebox_override(
+		&"focus",
+		simple_gold_surface(Color(GOLD.r, GOLD.g, GOLD.b, 0.10), 0.0, corner_radius, 2),
+	)
+	button.add_theme_stylebox_override(
+		&"disabled",
+		simple_gold_surface(Color(0.025, 0.035, 0.05, 0.64), content_padding, corner_radius, 1),
+	)
+
+
+static func simple_gold_surface(
+		background: Color = SIMPLE_GOLD_SURFACE,
+		content_padding: float = MIN_CONTENT_PANEL_INSET,
+		corner_radius: int = 14,
+		border_width: int = 1,
+	) -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = background
+	style.border_color = GOLD
+	style.set_border_width_all(border_width)
+	style.set_corner_radius_all(corner_radius)
+	style.content_margin_left = content_padding
+	style.content_margin_top = content_padding
+	style.content_margin_right = content_padding
+	style.content_margin_bottom = content_padding
+	return style
 
 
 static func apply_label(label: Label, role: StringName) -> void:

@@ -132,8 +132,9 @@ func _build() -> void:
 	_panel = PanelContainer.new()
 	_panel.name = "LeaderboardPanel"
 	_panel.mouse_filter = Control.MOUSE_FILTER_STOP
-	Style.apply_panel(_panel, &"dialog")
-	Style.ensure_content_panel_insets(_panel, 20.0)
+	_panel.add_theme_stylebox_override(
+		&"panel", Style.simple_gold_surface(Style.SIMPLE_GOLD_SURFACE, 20.0, 18, 2),
+	)
 	placement.add_child(_panel)
 
 	_stack = VBoxContainer.new()
@@ -185,6 +186,7 @@ func _build() -> void:
 	_name_edit.text_submitted.connect(_on_name_submitted)
 	_name_edit.focus_exited.connect(_on_name_focus_exited)
 	Style.apply_line_edit(_name_edit)
+	_apply_simple_gold_field(_name_edit)
 	_identity_row.add_child(_name_edit)
 	_save_name_button = _button("SaveUsernameButton", &"gold")
 	_save_name_button.custom_minimum_size = Vector2(180.0, ACTION_HEIGHT)
@@ -268,6 +270,7 @@ func _button(node_name: String, role: StringName) -> Button:
 	button.focus_mode = Control.FOCUS_ALL
 	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	Style.apply_compact_rounded_button(button, role)
+	Style.apply_simple_gold_button(button, role == &"selected")
 	return button
 
 
@@ -289,6 +292,8 @@ func _update_tabs() -> void:
 	_global_tab.set_pressed_no_signal(not local_selected)
 	Style.apply_compact_rounded_button(_local_tab, &"selected" if local_selected else &"secondary")
 	Style.apply_compact_rounded_button(_global_tab, &"secondary" if local_selected else &"selected")
+	Style.apply_simple_gold_button(_local_tab, local_selected)
+	Style.apply_simple_gold_button(_global_tab, not local_selected)
 
 
 func _on_save_name_pressed() -> void:
@@ -408,7 +413,15 @@ func _record_row(record: Dictionary, latest_id: String) -> Control:
 	)
 	var panel := PanelContainer.new()
 	panel.name = "LeaderboardRow%d" % int(record.get("rank", 0))
-	Style.apply_panel(panel, &"selected" if highlighted else &"quiet")
+	panel.add_theme_stylebox_override(
+		&"panel",
+		Style.simple_gold_surface(
+			Style.SIMPLE_GOLD_SURFACE_SELECTED if highlighted else Style.SIMPLE_GOLD_SURFACE,
+			14.0,
+			12,
+			2 if highlighted else 1,
+		),
+	)
 	var row := VBoxContainer.new()
 	row.add_theme_constant_override(&"separation", 1)
 	panel.add_child(row)
@@ -522,6 +535,20 @@ func _wire_focus(controls: Array[Control]) -> void:
 		var following := controls[(index + 1) % controls.size()]
 		current.focus_previous = current.get_path_to(previous)
 		current.focus_next = current.get_path_to(following)
+
+
+func _apply_simple_gold_field(field: LineEdit) -> void:
+	field.add_theme_stylebox_override(
+		&"normal", Style.simple_gold_surface(Style.SIMPLE_GOLD_SURFACE, 12.0, 12, 1),
+	)
+	field.add_theme_stylebox_override(
+		&"focus",
+		Style.simple_gold_surface(Style.SIMPLE_GOLD_SURFACE_HOVER, 12.0, 12, 2),
+	)
+	field.add_theme_stylebox_override(
+		&"read_only",
+		Style.simple_gold_surface(Color(0.025, 0.035, 0.05, 0.64), 12.0, 12, 1),
+	)
 
 
 func _service() -> Node:

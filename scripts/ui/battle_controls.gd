@@ -7,6 +7,7 @@ const GameTypographyType := preload("res://scripts/ui/game_typography.gd")
 const Style := preload("res://scripts/ui/components/lunaris_ops_style.gd")
 const DialogType := preload("res://scripts/ui/components/lunaris_dialog_sheet.gd")
 const UiCopyType := preload("res://scripts/ui/components/ui_copy.gd")
+const ViewPreferencesType := preload("res://scripts/view/view_preferences.gd")
 
 ## Pause/resume, speed cycle 1x/2x/4x, Q/E directional stepping, and resign. Every write remains on
 ## ticks_per_frame_scale or model.apply_action([&"resign"]); presentation never
@@ -22,6 +23,11 @@ const COMMAND_CORNER_RADIUS := 12
 const DECK_PADDING := 24.0
 const DECK_VERTICAL_PADDING := DECK_PADDING + 8.0
 const ACTION_GAP := 12
+const PAUSE_MENU_WIDTH := 520.0
+const PAUSE_MENU_ACTION_SIZE := Vector2(360.0, 72.0)
+const MASTER_BUS := &"Master"
+const MUSIC_BUS := &"Music"
+const SFX_BUS := &"SFX"
 
 enum ConfirmationState {
 	CLOSED,
@@ -42,12 +48,25 @@ var _controls_deck: PanelContainer = null
 var _controls_box: GridContainer = null
 var _confirm: Control = null
 var _confirm_dialog: Dictionary = {}
+var _pause_menu: Control = null
+var _pause_menu_panel: PanelContainer = null
+var _pause_menu_title: Label = null
+var _pause_menu_body: Label = null
+var _pause_menu_resign_button: Button = null
+var _pause_menu_settings_button: Button = null
+var _settings_state = null
 var _resume_scale: float = 1.0
+var _pause_scale_snapshot: float = 1.0
 var _confirmation_scale_snapshot: float = 1.0
 var _confirmation_state := ConfirmationState.CLOSED
 var _resign_dispatch_count := 0
 var _interaction_enabled := true
 var _last_paused := false
+var _pause_menu_open := false
+var _pause_return_focus: Control = null
+var _settings_open := false
+var _settings_committing := false
+var _settings_snapshot: Dictionary = {}
 
 
 func setup(battle_model: BattleModel, battle_view: Node2D) -> void:
@@ -57,7 +76,9 @@ func setup(battle_model: BattleModel, battle_view: Node2D) -> void:
 	position = Vector2.ZERO
 	size = get_viewport().get_visible_rect().size
 	_build_row()
+	_build_pause_menu()
 	_build_confirm()
+	_build_settings()
 	if not I18n.locale_changed.is_connected(_on_locale_changed):
 		I18n.locale_changed.connect(_on_locale_changed)
 
@@ -79,6 +100,11 @@ func relayout() -> void:
 	size = get_viewport().get_visible_rect().size
 	if not _confirm_dialog.is_empty():
 		DialogType.relayout(_confirm_dialog)
+	if _pause_menu_panel != null:
+		_pause_menu_panel.custom_minimum_size.x = minf(
+			PAUSE_MENU_WIDTH,
+			maxf(size.x - 32.0, 280.0),
+		)
 	if _controls_deck != null:
 		var portrait := size.y > size.x
 		var compact := portrait or size.x < 760.0
@@ -138,6 +164,123 @@ func _build_row() -> void:
 	relayout()
 
 
+func _build_pause_menu() -> void:
+	_pause_menu = Control.new()
+	_pause_menu.name = "PauseMenuLayer"
+	_pause_menu.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_pause_menu.mouse_filter = Control.MOUSE_FILTER_STOP
+	_pause_menu.focus_behavior_recursive = Control.FOCUS_BEHAVIOR_ENABLED
+	_pause_menu.z_index = 90
+	_pause_menu.visible = false
+	add_child(_pause_menu)
+
+	var veil := ColorRect.new()
+	veil.name = "PauseMenuVeil"
+	veil.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	veil.color = Color(Style.INK_DEEP, 0.86)
+	veil.mouse_filter = Control.MOUSE_FILTER_STOP
+	_pause_menu.add_child(veil)
+
+	var center := CenterContainer.new()
+	center.name = "PauseMenuCenter"
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_pause_menu.add_child(center)
+
+	_pause_menu_panel = PanelContainer.new()
+	_pause_menu_panel.name = "PauseMenuPanel"
+	_pause_menu_panel.custom_minimum_size = Vector2(PAUSE_MENU_WIDTH, 0.0)
+	_pause_menu_panel.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_pause_menu_panel.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	Style.apply_panel(_pause_menu_panel, &"dialog")
+	center.add_child(_pause_menu_panel)
+
+	var stack := VBoxContainer.new()
+	stack.name = "PauseMenuContent"
+	stack.add_theme_constant_override(&"separation", 18)
+	_pause_menu_panel.add_child(stack)
+
+	_pause_menu_title = Label.new()
+	_pause_menu_title.name = "PauseMenuTitle"
+	_pause_menu_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_pause_menu_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	Style.apply_label(_pause_menu_title, &"heading")
+	_pause_menu_title.add_theme_font_size_override(&"font_size", GameTypographyType.SECTION_HEADING)
+	stack.add_child(_pause_menu_title)
+
+	var rule := ColorRect.new()
+	rule.name = "PauseMenuRule"
+	rule.custom_minimum_size = Vector2(0.0, 2.0)
+	rule.color = Color(Style.CYAN, 0.66)
+	rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	stack.add_child(rule)
+
+	_pause_menu_body = Label.new()
+	_pause_menu_body.name = "PauseMenuBody"
+	_pause_menu_body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_pause_menu_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	Style.apply_label(_pause_menu_body, &"body")
+	_pause_menu_body.add_theme_font_size_override(&"font_size", GameTypographyType.DETAIL)
+	stack.add_child(_pause_menu_body)
+
+	var actions := VBoxContainer.new()
+	actions.name = "PauseMenuActions"
+	actions.alignment = BoxContainer.ALIGNMENT_CENTER
+	actions.add_theme_constant_override(&"separation", ACTION_GAP)
+	stack.add_child(actions)
+
+	_pause_menu_resign_button = _make_pause_menu_button("PauseMenuResignButton", &"danger")
+	_pause_menu_resign_button.pressed.connect(_on_pause_menu_resign_pressed)
+	actions.add_child(_pause_menu_resign_button)
+	_pause_menu_settings_button = _make_pause_menu_button("PauseMenuSettingsButton", &"secondary")
+	_pause_menu_settings_button.pressed.connect(_on_pause_menu_settings_pressed)
+	actions.add_child(_pause_menu_settings_button)
+	_pause_menu_resign_button.focus_neighbor_top = _pause_menu_resign_button.get_path_to(
+		_pause_menu_settings_button,
+	)
+	_pause_menu_resign_button.focus_neighbor_bottom = _pause_menu_resign_button.get_path_to(
+		_pause_menu_settings_button,
+	)
+	_pause_menu_resign_button.focus_previous = _pause_menu_resign_button.get_path_to(
+		_pause_menu_settings_button,
+	)
+	_pause_menu_resign_button.focus_next = _pause_menu_resign_button.get_path_to(
+		_pause_menu_settings_button,
+	)
+	_pause_menu_settings_button.focus_neighbor_top = _pause_menu_settings_button.get_path_to(
+		_pause_menu_resign_button,
+	)
+	_pause_menu_settings_button.focus_neighbor_bottom = _pause_menu_settings_button.get_path_to(
+		_pause_menu_resign_button,
+	)
+	_pause_menu_settings_button.focus_previous = _pause_menu_settings_button.get_path_to(
+		_pause_menu_resign_button,
+	)
+	_pause_menu_settings_button.focus_next = _pause_menu_settings_button.get_path_to(
+		_pause_menu_resign_button,
+	)
+	_pause_menu_panel.accessibility_labeled_by_nodes = [
+		_pause_menu_panel.get_path_to(_pause_menu_title),
+	]
+	_pause_menu_panel.accessibility_described_by_nodes = [
+		_pause_menu_panel.get_path_to(_pause_menu_body),
+	]
+	_refresh_pause_menu_copy()
+
+
+func _make_pause_menu_button(button_name: String, role: StringName) -> Button:
+	var button := Button.new()
+	button.name = button_name
+	button.custom_minimum_size = PAUSE_MENU_ACTION_SIZE
+	button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	button.focus_mode = Control.FOCUS_ALL
+	button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	Style.apply_button(button, role)
+	button.add_theme_font_size_override(&"font_size", GameTypographyType.ACTION)
+	return button
+
+
 func _build_confirm() -> void:
 	_confirm_dialog = DialogType.create(
 		self,
@@ -170,6 +313,19 @@ func _build_confirm() -> void:
 	Style.apply_button(cancel, &"secondary")
 	confirm.pressed.connect(_on_confirm_resign)
 	cancel.pressed.connect(_on_cancel_resign)
+
+
+func _build_settings() -> void:
+	var settings_scene := load("res://scenes/ui/title_settings.tscn") as PackedScene
+	_settings_state = settings_scene.instantiate()
+	_settings_state.name = "BattleSettings"
+	_settings_state.z_index = 200
+	add_child(_settings_state)
+	_settings_state.cancel_requested.connect(_cancel_settings)
+	_settings_state.apply_requested.connect(_apply_settings)
+	_settings_state.preview_requested.connect(_preview_settings)
+	_settings_state.clear_player_data_requested.connect(_clear_player_data)
+	_settings_state.close_completed.connect(_on_settings_close_completed)
 
 
 func _make_button(button_name: String, text: String, role: StringName) -> Button:
@@ -205,6 +361,8 @@ func _process(_delta: float) -> void:
 		return
 	if _confirmation_state != ConfirmationState.CLOSED and model.result != BattleModel.Result.RUNNING:
 		notify_battle_terminal()
+	if _pause_menu_open and model.result != BattleModel.Result.RUNNING:
+		_dismiss_pause_menu_for_terminal()
 	var current := _current_scale()
 	if current > 0.0 and _confirmation_state == ConfirmationState.CLOSED:
 		_resume_scale = current
@@ -232,6 +390,8 @@ func _input(event: InputEvent) -> void:
 	if (
 		_interaction_enabled
 		and _confirmation_state == ConfirmationState.CLOSED
+		and not _pause_menu_open
+		and not _settings_open
 		and model != null
 		and model.result == BattleModel.Result.RUNNING
 	):
@@ -245,6 +405,15 @@ func _input(event: InputEvent) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if _settings_open:
+		if (
+			event.is_action_pressed("ui_cancel")
+			and not _settings_committing
+			and _settings_state.transition_state_name() == &"ACTIVE"
+		):
+			_cancel_settings()
+		get_viewport().set_input_as_handled()
+		return
 	if _confirmation_state != ConfirmationState.CLOSED:
 		if event.is_action_pressed("ui_cancel") and _confirmation_state == ConfirmationState.ACTIVE:
 			cancel_resign_confirmation()
@@ -252,10 +421,23 @@ func _unhandled_input(event: InputEvent) -> void:
 		# prevents map, tutorial, deployment, pause, and shortcut fallthrough.
 		get_viewport().set_input_as_handled()
 		return
+	if _pause_menu_open:
+		if event.is_action_pressed("ui_cancel"):
+			close_pause_menu()
+		get_viewport().set_input_as_handled()
+		return
+	if event.is_action_pressed("ui_cancel") and open_pause_menu():
+		get_viewport().set_input_as_handled()
 
 
 func _on_pause_pressed() -> void:
-	if not _interaction_enabled or _confirmation_state != ConfirmationState.CLOSED or model.result != BattleModel.Result.RUNNING:
+	if (
+		not _interaction_enabled
+		or _confirmation_state != ConfirmationState.CLOSED
+		or _pause_menu_open
+		or _settings_open
+		or model.result != BattleModel.Result.RUNNING
+	):
 		return
 	if _current_scale() == 0.0:
 		Sfx.play("menu_close")
@@ -266,7 +448,13 @@ func _on_pause_pressed() -> void:
 
 
 func _on_speed_pressed() -> void:
-	if not _interaction_enabled or _confirmation_state != ConfirmationState.CLOSED or model.result != BattleModel.Result.RUNNING:
+	if (
+		not _interaction_enabled
+		or _confirmation_state != ConfirmationState.CLOSED
+		or _pause_menu_open
+		or _settings_open
+		or model.result != BattleModel.Result.RUNNING
+	):
 		return
 	Sfx.play("ui_click")
 	var base := _current_scale()
@@ -282,6 +470,8 @@ func _step_speed(direction: int) -> bool:
 		direction == 0
 		or not _interaction_enabled
 		or _confirmation_state != ConfirmationState.CLOSED
+		or _pause_menu_open
+		or _settings_open
 		or model == null
 		or view == null
 		or model.result != BattleModel.Result.RUNNING
@@ -312,10 +502,224 @@ func _on_resign_pressed() -> void:
 	request_resign_confirmation()
 
 
-func request_resign_confirmation() -> bool:
+func open_pause_menu() -> bool:
+	if (
+		_pause_menu_open
+		or _settings_open
+		or _confirmation_state != ConfirmationState.CLOSED
+		or model == null
+		or view == null
+		or model.result != BattleModel.Result.RUNNING
+	):
+		return false
+	_pause_scale_snapshot = _current_scale()
+	_pause_return_focus = get_viewport().gui_get_focus_owner()
+	_pause_menu_open = true
+	_set_scale(0.0)
+	_pause_menu.visible = true
+	view.call("set_battle_confirmation_active", true)
+	_refresh_action_enabled()
+	Sfx.play("menu_open")
+	_pause_menu_settings_button.grab_focus.call_deferred()
+	return true
+
+
+func close_pause_menu() -> bool:
+	if (
+		not _pause_menu_open
+		or _settings_open
+		or _confirmation_state != ConfirmationState.CLOSED
+	):
+		return false
+	_pause_menu_open = false
+	_pause_menu.visible = false
+	if view != null:
+		view.call("set_battle_confirmation_active", false)
+	if model != null and model.result == BattleModel.Result.RUNNING:
+		_set_scale(_pause_scale_snapshot)
+	_refresh_action_enabled()
+	Sfx.play("menu_close")
+	var focus_target := _pause_return_focus
+	_pause_return_focus = null
+	if (
+		focus_target != null
+		and is_instance_valid(focus_target)
+		and focus_target.is_visible_in_tree()
+		and focus_target.focus_mode != Control.FOCUS_NONE
+		and (not focus_target is BaseButton or not (focus_target as BaseButton).disabled)
+	):
+		focus_target.grab_focus.call_deferred()
+	return true
+
+
+func pause_menu_active() -> bool:
+	return _pause_menu_open
+
+
+func settings_active() -> bool:
+	return _settings_open
+
+
+func _dismiss_pause_menu_for_terminal() -> void:
+	if not _pause_menu_open:
+		return
+	_pause_menu_open = false
+	_pause_menu.visible = false
+	_pause_return_focus = null
+	_refresh_action_enabled()
+
+
+func _on_pause_menu_resign_pressed() -> void:
+	if not _pause_menu_open or _settings_open:
+		return
+	_pause_menu.visible = false
+	if not request_resign_confirmation(_pause_menu_resign_button):
+		_pause_menu.visible = true
+		_pause_menu_settings_button.grab_focus.call_deferred()
+
+
+func _on_pause_menu_settings_pressed() -> void:
+	if (
+		not _pause_menu_open
+		or _settings_open
+		or _confirmation_state != ConfirmationState.CLOSED
+	):
+		return
+	_settings_snapshot = _current_preferences()
+	_settings_open = true
+	_settings_committing = false
+	_pause_menu.visible = false
+	_refresh_action_enabled()
+	Sfx.play("menu_open")
+	_settings_state.open(_settings_snapshot)
+
+
+func _cancel_settings() -> void:
+	if (
+		not _settings_open
+		or _settings_committing
+		or _settings_state.transition_state_name() != &"ACTIVE"
+	):
+		return
+	var snapshot := _settings_snapshot.duplicate(true)
+	if not _settings_state.close():
+		return
+	_apply_preference_values(snapshot)
+	Sfx.play("menu_close")
+
+
+func _apply_settings(draft: Dictionary) -> void:
+	if not _settings_open or _settings_committing:
+		return
+	_settings_committing = true
+	_settings_state.set_committing(true)
+	if not ViewPreferencesType.save_batch(draft, Game.view_preferences_path()):
+		_settings_committing = false
+		_settings_state.show_save_failure()
+		return
+	_apply_preference_values(draft)
+	Sfx.play("ui_confirm")
+	_settings_committing = false
+	_settings_state.close()
+
+
+func _preview_settings(draft: Dictionary) -> void:
+	if _settings_open and not _settings_committing:
+		_apply_preference_values(draft, false)
+
+
+func _clear_player_data() -> void:
+	if not _settings_open or _settings_committing:
+		return
+	var result: Dictionary = Game.clear_player_data()
+	if bool(result.get(&"accepted", false)):
+		Sfx.play("ui_confirm")
+		return
+	_settings_state.show_player_data_clear_failure()
+
+
+func _on_settings_close_completed() -> void:
+	if not _settings_open:
+		return
+	_settings_snapshot = {}
+	_settings_open = false
+	_settings_committing = false
+	if (
+		_pause_menu_open
+		and model != null
+		and model.result == BattleModel.Result.RUNNING
+	):
+		_pause_menu.visible = true
+		_pause_menu_settings_button.grab_focus.call_deferred()
+	else:
+		_dismiss_pause_menu_for_terminal()
+		if view != null:
+			view.call("set_battle_confirmation_active", false)
+	_refresh_action_enabled()
+
+
+func _current_preferences() -> Dictionary:
+	var path := Game.view_preferences_path()
+	return {
+		&"locale": I18n.locale(),
+		&"title_music_enabled": ViewPreferencesType.title_music_enabled(path),
+		&"master_volume": ViewPreferencesType.master_volume(path),
+		&"master_muted": ViewPreferencesType.master_muted(path),
+		&"music_volume": ViewPreferencesType.music_volume(path),
+		&"sfx_volume": ViewPreferencesType.sfx_volume(path),
+		&"frame_limit": ViewPreferencesType.frame_limit(path),
+		&"reduced_motion": ViewPreferencesType.reduced_motion(path),
+		&"text_scale": ViewPreferencesType.text_scale(path),
+		&"background_downloads_enabled": ViewPreferencesType.background_downloads_enabled(path),
+	}
+
+
+func _apply_preference_values(values: Dictionary, apply_background_policy := true) -> void:
+	var locale_id := StringName(values.get(&"locale", I18n.locale()))
+	if locale_id != I18n.locale():
+		I18n.set_locale(locale_id)
+	Engine.max_fps = int(values.get(&"frame_limit", Engine.max_fps))
+	var reduced_motion := bool(values.get(
+		&"reduced_motion",
+		ProjectSettings.get_setting("accessibility/reduced_motion", false),
+	))
+	ProjectSettings.set_setting("accessibility/reduced_motion", reduced_motion)
+	TextScale.set_scale(float(values.get(&"text_scale", TextScale.value())))
+	_set_bus_volume(
+		MASTER_BUS,
+		float(values.get(&"master_volume", 1.0)),
+		bool(values.get(&"master_muted", false)),
+	)
+	_set_bus_volume(MUSIC_BUS, float(values.get(&"music_volume", 1.0)))
+	_set_bus_volume(SFX_BUS, float(values.get(&"sfx_volume", 1.0)))
+	_settings_state.set_reduced_motion(reduced_motion)
+	if apply_background_policy:
+		var content_packs := get_node_or_null("/root/ContentPacks")
+		if content_packs != null and content_packs.has_method("set_background_downloads_enabled"):
+			content_packs.call(
+				"set_background_downloads_enabled",
+				bool(values.get(&"background_downloads_enabled", true)),
+			)
+	var music_was_enabled := Music.is_enabled()
+	var music_enabled := bool(values.get(&"title_music_enabled", music_was_enabled))
+	Music.set_enabled(music_enabled)
+	if music_enabled and not music_was_enabled and view != null:
+		view.call("resume_battle_music")
+	_settings_state.call_deferred("_apply_responsive_layout")
+
+
+func _set_bus_volume(bus_name: StringName, value: float, force_mute := false) -> void:
+	var bus_index := AudioServer.get_bus_index(bus_name)
+	if bus_index < 0:
+		return
+	AudioServer.set_bus_mute(bus_index, force_mute or value <= 0.001)
+	AudioServer.set_bus_volume_db(bus_index, linear_to_db(maxf(value, 0.001)))
+
+
+func request_resign_confirmation(return_focus: Control = null) -> bool:
 	if (
 		_confirmation_state != ConfirmationState.CLOSED
-		or not _interaction_enabled
+		or (not _interaction_enabled and not _pause_menu_open)
 		or model == null
 		or view == null
 		or model.result != BattleModel.Result.RUNNING
@@ -327,9 +731,10 @@ func request_resign_confirmation() -> bool:
 	view.call("set_battle_confirmation_active", true)
 	DialogType.set_status(_confirm_dialog, "", DialogType.StatusLive.OFF)
 	Sfx.play("menu_open")
-	if DialogType.show_dialog(_confirm_dialog, _resign_button, _on_confirmation_entered):
+	var focus_target := return_focus if return_focus != null else _resign_button
+	if DialogType.show_dialog(_confirm_dialog, focus_target, _on_confirmation_entered):
 		return true
-	view.call("set_battle_confirmation_active", false)
+	view.call("set_battle_confirmation_active", _pause_menu_open)
 	_set_scale(_confirmation_scale_snapshot)
 	_set_confirmation_state(ConfirmationState.CLOSED)
 	return false
@@ -357,8 +762,11 @@ func _finish_cancel_exit() -> void:
 		return
 	_set_scale(_confirmation_scale_snapshot)
 	if view != null:
-		view.call("set_battle_confirmation_active", false)
+		view.call("set_battle_confirmation_active", _pause_menu_open)
 	_set_confirmation_state(ConfirmationState.CLOSED)
+	if _pause_menu_open:
+		_pause_menu.visible = true
+		_pause_menu_settings_button.grab_focus.call_deferred()
 
 
 func _on_confirm_resign() -> void:
@@ -430,6 +838,7 @@ func notify_battle_terminal() -> bool:
 func _finish_terminal_exit() -> void:
 	if _confirmation_state != ConfirmationState.EXITING:
 		return
+	_dismiss_pause_menu_for_terminal()
 	if view != null:
 		view.call("set_battle_confirmation_active", false)
 	_set_confirmation_state(ConfirmationState.CLOSED)
@@ -450,6 +859,8 @@ func _refresh_action_enabled() -> void:
 		_interaction_enabled
 		and model.result == BattleModel.Result.RUNNING
 		and _confirmation_state == ConfirmationState.CLOSED
+		and not _pause_menu_open
+		and not _settings_open
 	)
 	if _pause_button != null:
 		_pause_button.disabled = not enabled
@@ -485,6 +896,31 @@ func _on_locale_changed(_locale_id: StringName) -> void:
 	_pause_button.text = _copy(&"ui.battle.resume", "RESUME") if _current_scale() == 0.0 else _copy(&"ui.battle.pause", "PAUSE")
 	_apply_speed_shortcut_help()
 	_resign_button.text = _copy(&"ui.battle.resign", "RESIGN")
+	_refresh_pause_menu_copy()
+
+
+func _refresh_pause_menu_copy() -> void:
+	if _pause_menu_title == null:
+		return
+	_pause_menu_title.text = _copy(&"ui.battle.paused", "PAUSED").to_upper()
+	_pause_menu_body.text = _copy(
+		&"ui.battle.pause_menu_body",
+		"The operation is suspended. Press Escape to return to battle.",
+	)
+	_pause_menu_resign_button.text = _copy(&"ui.battle.resign", "RESIGN").to_upper()
+	_pause_menu_resign_button.accessibility_name = _pause_menu_resign_button.text
+	_pause_menu_resign_button.accessibility_description = _copy(
+		&"ui.battle.pause_menu_resign_description",
+		"Open the confirmation to resign from this operation.",
+	)
+	_pause_menu_settings_button.text = _copy(&"ui.title.settings", "SETTINGS").to_upper()
+	_pause_menu_settings_button.accessibility_name = _pause_menu_settings_button.text
+	_pause_menu_settings_button.accessibility_description = _copy(
+		&"ui.battle.pause_menu_settings_description",
+		"Open game settings while the operation remains paused.",
+	)
+	_pause_menu.accessibility_name = _pause_menu_title.text
+	_pause_menu.accessibility_description = _pause_menu_body.text
 
 
 func _apply_speed_shortcut_help() -> void:

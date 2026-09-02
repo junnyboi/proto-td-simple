@@ -350,6 +350,7 @@ func _build_actions(layout: VBoxContainer) -> void:
 		UiCopyType.text(&"ui.leaderboard.open", "Leaderboard"),
 		&"secondary",
 	)
+	Style.apply_simple_gold_button(_leaderboard_button, false, 28.0, 12)
 	_leaderboard_button.pressed.connect(_open_leaderboard)
 	_actions.add_child(_leaderboard_button)
 	focusable.append(_leaderboard_button)

@@ -536,6 +536,16 @@ func _exit_tree() -> void:
 	Engine.time_scale = 1.0
 
 
+func resume_battle_music() -> bool:
+	if _stage == null or model == null or model.result != BattleModel.Result.RUNNING:
+		return false
+	return Music.play_battle(
+		_stage.music_profile_id,
+		_stage.music_variant_id,
+		_music_director.current_state(),
+	)
+
+
 func deploy_drag_started() -> void:
 	juice_time_push(&"deploy_drag", cfg.deploy_drag_time_scale)
 

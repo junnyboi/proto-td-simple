@@ -6,6 +6,7 @@ extends Control
 const TopAlignedCoverType := preload("res://scripts/ui/components/top_aligned_cover.gd")
 const TITLE_ART := preload("res://assets/loading/command_backdrop.png")
 const StagingSkinType := preload("res://scripts/ui/components/staging_skin.gd")
+const Style := preload("res://scripts/ui/components/lunaris_ops_style.gd")
 const UiCopyType := preload("res://scripts/ui/components/ui_copy.gd")
 const ViewPreferencesType := preload("res://scripts/view/view_preferences.gd")
 const LEADERBOARD_DIALOG_SCENE := preload(
@@ -222,6 +223,9 @@ func _build_screen() -> void:
 	_wire_title_action_feedback(_start_button)
 
 	_leaderboard_button = _entry_button("LeaderboardButton", false)
+	Style.apply_simple_gold_button(
+		_leaderboard_button, false, 24.0, TITLE_BUTTON_CORNER_RADIUS,
+	)
 	_leaderboard_button.pressed.connect(_open_leaderboard)
 	_entry_stack.add_child(_leaderboard_button)
 	_wire_title_action_feedback(_leaderboard_button)

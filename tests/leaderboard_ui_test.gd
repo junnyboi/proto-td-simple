@@ -1,6 +1,7 @@
 extends SceneTree
 
 const SAVE_PATH := "user://leaderboard_ui_test.json"
+const Style := preload("res://scripts/ui/components/lunaris_ops_style.gd")
 
 var _failures: Array[String] = []
 
@@ -36,16 +37,30 @@ func _run() -> void:
 	_check(title_button != null, "start screen is missing the Leaderboard button")
 	_check(title_dialog != null and not title_dialog.visible, "start-screen dialog did not begin closed")
 	if title_button != null:
+		_check_simple_gold_style(title_button, &"normal", "start-screen Leaderboard button")
 		title_button.pressed.emit()
 	await process_frame
 	_check(title_dialog != null and title_dialog.visible, "start-screen Leaderboard button did not open the dialog")
 	_check(StringName(title.call("screen_state")) == &"LEADERBOARD", "start screen did not enter modal leaderboard state")
 	if title_dialog != null:
+		_check_simple_gold_style(
+			title_dialog.find_child("LeaderboardPanel", true, false) as Control,
+			&"panel",
+			"leaderboard dialog",
+		)
 		var name_edit := title_dialog.find_child("UsernameEdit", true, false) as LineEdit
 		var save_name := title_dialog.find_child("SaveUsernameButton", true, false) as Button
 		var global_tab := title_dialog.find_child("GlobalTab", true, false) as Button
 		_check(name_edit != null and save_name != null, "username editor is incomplete")
 		_check(title_dialog.find_child("LeaderboardRow1", true, false) != null, "local score row was not rendered")
+		_check_simple_gold_style(name_edit, &"normal", "username field")
+		_check_simple_gold_style(save_name, &"normal", "Save Name button")
+		_check_simple_gold_style(global_tab, &"normal", "Global tab")
+		_check_simple_gold_style(
+			title_dialog.find_child("LeaderboardRow1", true, false) as Control,
+			&"panel",
+			"leaderboard score row",
+		)
 		if name_edit != null and save_name != null:
 			name_edit.text = "  star!! keeper  "
 			save_name.pressed.emit()
@@ -80,6 +95,7 @@ func _run() -> void:
 	_check(results_button != null, "mission results are missing the Leaderboard button")
 	_check(results_dialog != null and not results_dialog.visible, "results dialog opened automatically")
 	if results_button != null:
+		_check_simple_gold_style(results_button, &"normal", "mission-results Leaderboard button")
 		results_button.pressed.emit()
 	await process_frame
 	_check(results_dialog != null and results_dialog.visible, "results Leaderboard button did not open the dialog")
@@ -103,6 +119,24 @@ func _run() -> void:
 func _check(condition: bool, message: String) -> void:
 	if not condition:
 		_failures.append(message)
+
+
+func _check_simple_gold_style(control: Control, style_name: StringName, context: String) -> void:
+	if control == null:
+		_failures.append("%s is unavailable for style verification" % context)
+		return
+	var style := control.get_theme_stylebox(style_name) as StyleBoxFlat
+	_check(style != null, "%s does not use a simple solid fill" % context)
+	if style == null:
+		return
+	_check(style.bg_color.a > 0.0 and style.bg_color.a < 1.0, "%s fill is not translucent" % context)
+	_check(
+		is_equal_approx(style.border_color.r, Style.GOLD.r)
+		and is_equal_approx(style.border_color.g, Style.GOLD.g)
+		and is_equal_approx(style.border_color.b, Style.GOLD.b),
+		"%s border is not gold" % context,
+	)
+	_check(style.corner_radius_top_left >= 12, "%s border is not rounded" % context)
 
 
 func _finish() -> void:

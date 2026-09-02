@@ -15,6 +15,8 @@ const ROW_DESCRIPTION_FONT_SIZE := 24
 const ROW_MODE_FONT_SIZE := 22
 const ROW_CONTROL_HEIGHT := 56.0
 const ROW_MODE_WIDTH := 180.0
+const NUMERIC_DISPLAY_SIZE := Vector2(59.0, 28.0)
+const NUMERIC_DISPLAY_FONT_SIZE := 15
 
 var service: Node = null
 var frame: PanelContainer = null
@@ -261,7 +263,9 @@ func _add_numeric_control(host: HBoxContainer, descriptor: Dictionary, current: 
 	slider.step = float(descriptor[&"step"])
 	slider.value = float(current)
 	slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	slider.custom_minimum_size = Vector2(165.0, ROW_CONTROL_HEIGHT)
+	# HSlider draws against the top of an oversized control. Keep its intrinsic
+	# height and let the control host center that rect within the row instead.
+	slider.custom_minimum_size.x = 165.0
 	slider.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	host.add_child(slider)
 	var spin := SpinBox.new()
@@ -270,8 +274,10 @@ func _add_numeric_control(host: HBoxContainer, descriptor: Dictionary, current: 
 	spin.max_value = slider.max_value
 	spin.step = slider.step
 	spin.value = slider.value
-	spin.custom_minimum_size = Vector2(118.0, ROW_CONTROL_HEIGHT)
+	spin.custom_minimum_size = NUMERIC_DISPLAY_SIZE
 	spin.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	spin.add_theme_font_size_override(&"font_size", NUMERIC_DISPLAY_FONT_SIZE)
+	spin.get_line_edit().add_theme_font_size_override(&"font_size", NUMERIC_DISPLAY_FONT_SIZE)
 	spin.suffix = String(descriptor[&"unit"])
 	host.add_child(spin)
 	slider.value_changed.connect(func(next: float) -> void:

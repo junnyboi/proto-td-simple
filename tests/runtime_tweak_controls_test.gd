@@ -101,14 +101,30 @@ func _test_row_typography_and_alignment(panel: RuntimeTweakPanel) -> void:
 	_check(label != null and label.get_theme_font_size(&"font_size") == 30, "tweak label typography is not doubled")
 	_check(description != null and description.get_theme_font_size(&"font_size") == 24, "tweak description typography is not doubled")
 	_check(mode != null and mode.get_theme_font_size(&"font_size") == 22, "tweak apply-mode typography is not doubled")
-	for control: Control in [slider, value, reset]:
-		_check(control != null, "numeric tweak row is missing a control")
-		if control != null:
-			_check(
-				control.size_flags_vertical == Control.SIZE_SHRINK_CENTER
-				and is_equal_approx(control.custom_minimum_size.y, 56.0),
-				"%s is not vertically centered at the shared row-control height" % control.name,
-			)
+	_check(slider != null, "numeric tweak row is missing its slider")
+	if slider != null:
+		_check(
+			slider.size_flags_vertical == Control.SIZE_SHRINK_CENTER
+				and is_zero_approx(slider.custom_minimum_size.y),
+			"numeric slider is not vertically centered at its intrinsic height",
+		)
+	_check(value != null, "numeric tweak row is missing its number display")
+	if value != null:
+		_check(
+			value.size_flags_vertical == Control.SIZE_SHRINK_CENTER
+				and value.custom_minimum_size.is_equal_approx(Vector2(59.0, 28.0)),
+			"numeric display is not half-sized and vertically centered",
+		)
+		_check(
+			value.get_line_edit().get_theme_font_size(&"font_size") == 15,
+			"numeric display font is not half-sized",
+		)
+	_check(
+		reset != null
+			and reset.size_flags_vertical == Control.SIZE_SHRINK_CENTER
+			and is_equal_approx(reset.custom_minimum_size.y, 56.0),
+		"numeric reset control lost its centered row alignment",
+	)
 
 
 func _test_global_settings_composition(tweaks: Node) -> void:

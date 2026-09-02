@@ -33,7 +33,7 @@ func _capture() -> void:
 	Game.start_battle(&"s1", true)
 	for _frame: int in range(18):
 		await get_tree().process_frame
-	if mode in ["live", "paused"]:
+	if mode in ["live", "paused", "pause-menu"]:
 		var tutorial_probe := get_tree().root.find_child("FirstStandTutorial", true, false) as Control
 		var controls_probe := get_tree().root.find_child("BattleControls", true, false) as BattleControls
 		var deployment_probe := get_tree().root.find_child("DeployBar", true, false) as DeployBar
@@ -55,6 +55,24 @@ func _capture() -> void:
 			var expected_pause := "继续" if locale_id == &"zh-CN" else "RESUME"
 			if speed == null or pause == null or speed.text != "0×" or pause.text != expected_pause:
 				push_error("battle annotation visual harness did not reach paused speed cycle")
+				get_tree().quit(1)
+				return
+		elif mode == "pause-menu":
+			controls_probe._unhandled_input(_key_event(KEY_ESCAPE))
+			var pause_menu := controls_probe.find_child("PauseMenuLayer", true, false) as Control
+			var pause_resign := controls_probe.find_child("PauseMenuResignButton", true, false) as Button
+			var pause_settings := controls_probe.find_child("PauseMenuSettingsButton", true, false) as Button
+			var expected_resign := "撤出行动" if locale_id == &"zh-CN" else "RESIGN"
+			var expected_settings := "设置" if locale_id == &"zh-CN" else "SETTINGS"
+			if (
+				pause_menu == null
+				or not pause_menu.visible
+				or pause_resign == null
+				or pause_resign.text != expected_resign
+				or pause_settings == null
+				or pause_settings.text != expected_settings
+			):
+				push_error("battle annotation visual harness did not open the pause menu")
 				get_tree().quit(1)
 				return
 		for _frame: int in range(8):
