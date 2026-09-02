@@ -43,7 +43,7 @@ for mode in staging; do
   capture "$mode" 1280 720 "landscape-$mode"
   capture "$mode" 720 1280 "portrait-$mode"
 done
-for stage in s9 s12 s16; do
+for stage in s9 s10; do
   capture campaign 1280 720 "$stage-landscape-campaign" "$stage"
   capture campaign 720 1280 "$stage-portrait-campaign" "$stage"
 done

@@ -110,7 +110,7 @@ test('leaderboard API, persistence, static host, and live Godot client', async (
     const invalid = await fetch(`${baseUrl}/api/leaderboard`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(submission({ submission_id: 'invalid-stage-id', stage_id: 's17' })),
+      body: JSON.stringify(submission({ submission_id: 'invalid-stage-id', stage_id: 's11' })),
     })
     assert.equal(invalid.status, 400)
     const second = await fetch(`${baseUrl}/api/leaderboard`, {
@@ -120,7 +120,7 @@ test('leaderboard API, persistence, static host, and live Godot client', async (
         submission({
           submission_id: 'mission-submission-0002',
           name: 'SECOND',
-          stage_id: 's16',
+          stage_id: 's10',
           victory: false,
           stars: 0,
           kills: 0,

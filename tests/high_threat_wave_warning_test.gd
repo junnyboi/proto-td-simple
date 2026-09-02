@@ -7,18 +7,6 @@ var EXPECTED := {
 		"warning_asset": &"vfx_high_threat_s9_warning",
 		"particle_asset": &"vfx_high_threat_s9_particles",
 	},
-	&"s12": {
-		"waves": PackedInt32Array([1, 2]),
-		"warning_id": &"unlit",
-		"warning_asset": &"vfx_high_threat_s12_warning",
-		"particle_asset": &"vfx_high_threat_s12_particles",
-	},
-	&"s16": {
-		"waves": PackedInt32Array([1, 2, 3]),
-		"warning_id": &"empire_foundry",
-		"warning_asset": &"vfx_high_threat_s16_warning",
-		"particle_asset": &"vfx_high_threat_s16_particles",
-	},
 }
 
 var _failures: Array[String] = []
@@ -43,7 +31,7 @@ func _run() -> void:
 
 
 func _test_stage_contracts() -> void:
-	for stage_number: int in range(1, 17):
+	for stage_number: int in range(1, 11):
 		var stage_id := StringName("s%d" % stage_number)
 		var stage := load("res://data/stages/%s.tres" % stage_id) as StageDef
 		_check(stage != null, "%s failed to load" % stage_id)
@@ -112,15 +100,15 @@ func _test_juice_presentation(reduced_motion: bool) -> void:
 	juice.setup(config, grid)
 	var centers: Array[Vector2] = [Vector2(128, 160), Vector2(384, 208)]
 	juice.high_threat_warning(
-		&"unlit",
-		"BLACKOUT BREACH",
-		"Wave 3 • Void interference spike",
+		&"green_cage",
+		"CONTAINMENT SURGE",
+		"Wave 3 • Restoration pressure rising",
 		centers,
 		reduced_motion,
 	)
 	await process_frame
 	_check(juice.high_threat_warning_visible(), "warning panel was not visible")
-	_check(juice.high_threat_warning_id() == &"unlit", "warning identity was not retained")
+	_check(juice.high_threat_warning_id() == &"green_cage", "warning identity was not retained")
 	var panel := juice.get_node_or_null("HighThreatWarning") as Control
 	_check(panel != null, "high-threat panel node is missing")
 	if panel != null:
@@ -134,7 +122,7 @@ func _test_juice_presentation(reduced_motion: bool) -> void:
 			icon != null and icon.texture_filter == CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS,
 			"warning icon must use mipmapped linear filtering",
 		)
-		_check(heading != null and heading.text == "BLACKOUT BREACH", "warning heading changed")
+		_check(heading != null and heading.text == "CONTAINMENT SURGE", "warning heading changed")
 		_check(detail != null and detail.text.contains("Wave 3"), "warning detail changed")
 	var expected_count := centers.size()
 	if not reduced_motion:

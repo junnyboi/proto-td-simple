@@ -27,7 +27,7 @@ const MIME_TYPES = {
 }
 
 export function missionNumber(stageId) {
-  const match = /^s([1-9]|1[0-6])$/.exec(String(stageId ?? ''))
+  const match = /^s([1-9]|10)$/.exec(String(stageId ?? ''))
   return match ? Number.parseInt(match[1], 10) : 0
 }
 
@@ -96,7 +96,7 @@ export function validateSubmission(body) {
   }
   const stageId = String(body.stage_id ?? '')
   if (missionNumber(stageId) === 0) {
-    throw new RequestError(400, 'stage_id must be s1 through s16')
+    throw new RequestError(400, 'stage_id must be s1 through s10')
   }
   return {
     submission_id: body.submission_id,

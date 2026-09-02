@@ -11,18 +11,11 @@ var EXPECTED_ROWS := {
 	&"s8": PackedStringArray([".............", "SGGGG...E....", "....GEXX.X...", "SGGGGGGGGGGGB", "......GXX.E..", "SGGGGGG......", "............."]),
 	&"s9": PackedStringArray(["............", "SGGGG.......", "..EXG.XE....", "....GGGGGGGB", "...XG..X.E..", "SGGGG.......", "............"]),
 	&"s10": PackedStringArray([".............", "SGGGGG.......", "..E.XG.EX....", "...GGGGGGGGGB", "...GX...XE...", "SGGG.E.......", "............."]),
-	&"s11": PackedStringArray(["SGGGGGGGGGGGB", "..E..X..E....", "SGGGGGG......", "......GX..E..", "....GGGGGGGGB", "..EXG..XE....", "....G........", "SGGGG........"]),
-	&"s12": PackedStringArray(["..............", "SGGGGG........", "..E.XGX.E.....", ".....G.....E..", "SGGGGGGGGGGGGB", "...EX.XGX.....", ".......G.E....", "SGGGGGGG......"]),
-	&"s13": PackedStringArray(["..............", "SGGGGGGGGG....", "..E.X.E.XG....", ".........GE...", "......GGGGGGGB", "...E.XGX...E..", "......G..EX...", "SGGGGGG......."]),
-	&"s14": PackedStringArray(["SGGGGGGGGGGGGB", "..E.X..E......", "........X.E...", "SGGGGGGGG.....", "..E.X.EXG.....", ".....GGGGGGGGB", "...EXG..X.E...", ".....G........", "SGGGGG........"]),
-	&"s15": PackedStringArray(["SGGGGGG........", "..E..XG.E......", "SGGGG.GX...E...", "...XG.G..X.....", "..E.GGGGGGGGGGB", ".....X..GXG.E..", "SGGGGGGGG.GX...", "...E...E..G....", "SGGGGGGGGGG...."]),
-	&"s16": PackedStringArray(["SGGGGGGG........", "..E.X..G.E......", "SGGGGG.GX...E...", "....XG.G..X.....", "..E..GGGGGGGGGGB", "......X..GXG.E..", "SGGGGGGGGG.GX...", "...E....E..G....", "SGGGGGGGGGGG...."]),
 }
 var EXPECTED_PATH_COUNTS := {
 	&"s1": 1, &"s2": 1, &"s3": 2, &"s4": 2,
 	&"s5": 1, &"s6": 2, &"s7": 3, &"s8": 3,
-	&"s9": 2, &"s10": 2, &"s11": 3, &"s12": 3,
-	&"s13": 2, &"s14": 3, &"s15": 4, &"s16": 4,
+	&"s9": 2, &"s10": 2,
 }
 
 
@@ -34,7 +27,7 @@ func _run() -> void:
 	var failures := PackedStringArray()
 	var topology_owners := {}
 	var stages := {}
-	for stage_number: int in range(1, 17):
+	for stage_number: int in range(1, 11):
 		var stage_id := StringName("s%d" % stage_number)
 		var stage := load("res://data/stages/%s.tres" % stage_id) as StageDef
 		if stage == null:

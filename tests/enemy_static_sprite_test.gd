@@ -65,7 +65,7 @@ func _validate_asset_contract() -> void:
 
 
 func _validate_projection_and_motion() -> void:
-	var stage := load("res://data/stages/s16.tres") as StageDef
+	var stage := load("res://data/stages/s10.tres") as StageDef
 	var config := load("res://data/config/game.tres") as GameConfig
 	var enemy_defs := _load_catalog("res://data/enemies")
 	var operator_defs := _load_catalog("res://data/operators")
@@ -107,7 +107,7 @@ func _validate_projection_and_motion() -> void:
 
 
 func _validate_combat_effects() -> void:
-	var stage := load("res://data/stages/s16.tres") as StageDef
+	var stage := load("res://data/stages/s10.tres") as StageDef
 	var config := load("res://data/config/game.tres") as GameConfig
 	var enemy_defs := _load_catalog("res://data/enemies")
 	var operator_defs := _load_catalog("res://data/operators")

@@ -62,6 +62,7 @@ const TRAP_SPIKE_CORE := Color("1a1c2c")
 const TRAP_SPIKE_PX := 24.0
 const TAR_OVERLAY_COLOR := Color(0.08, 0.05, 0.14, 0.6)
 const OPERATOR_SELECTION_TIME_SCALE := 0.75
+const MAP_CURSOR_CLAIM_PRIORITY := 10
 
 var model: BattleModel = null
 var startup_succeeded: bool = false
@@ -127,6 +128,7 @@ var _music_director: MusicDirector = MUSIC_DIRECTOR_SCRIPT.new()
 var _music_elapsed_seconds := 0.0
 var _music_last_leaked_count := 0
 var _music_recent_danger_until_seconds := 0.0
+var _pointer := Vector2.ZERO
 
 
 func _init() -> void:
@@ -231,6 +233,8 @@ func _ready() -> void:
 	_start_stage_tutorial()
 	_relayout()
 	_refresh_map_navigation_overlay()
+	_pointer = get_viewport().get_mouse_position()
+	_refresh_map_cursor()
 	# the view is the ONE resize owner: it recomputes the grid scale first,
 	# then drives the bars (self-owned listeners raced the recompute — P14)
 	get_viewport().size_changed.connect(_relayout)
@@ -317,6 +321,7 @@ func _refresh_battle_interaction_gates() -> void:
 			not _battle_confirmation_active and not transition_blocked and running
 		)
 	_refresh_map_navigation_overlay()
+	_refresh_map_cursor()
 
 
 func _focus_terminal_continue() -> void:
@@ -383,18 +388,26 @@ func consume_map_primary_click_suppression() -> bool:
 
 
 func _input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion:
+		_pointer = (event as InputEventMouseMotion).position
+	elif event is InputEventMouseButton:
+		_pointer = (event as InputEventMouseButton).position
 	if _battle_confirmation_active:
+		_refresh_map_cursor()
 		return
 	_map_nav.recover_missed_release(event)
+	_refresh_map_cursor()
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	if _grid_root == null or _map_navigation_blocked():
+		_refresh_map_cursor()
 		return
 	if _map_nav.handle_input(event):
 		if _map_navigation_overlay != null and _map_nav.is_dragging():
 			_map_navigation_overlay.notify_pan_used()
 		_apply_map_transform()
+		_refresh_map_cursor()
 		get_viewport().set_input_as_handled()
 
 
@@ -446,6 +459,7 @@ func _process(delta: float) -> void:
 		elif _map_nav.advance_inertia(delta):
 			_apply_map_transform()
 	_refresh_map_navigation_overlay()
+	_refresh_map_cursor()
 	if model == null or _juice == null:
 		return
 	if model.leaked > _music_last_leaked_count:
@@ -531,6 +545,7 @@ func _apply_time_scale() -> void:
 
 func _exit_tree() -> void:
 	ActionHoverFeedbackType.reset(_continue_btn)
+	CursorManager.release_claim(self)
 	if TweakControls.value_changed.is_connected(_on_tweak_value_changed):
 		TweakControls.value_changed.disconnect(_on_tweak_value_changed)
 	Engine.time_scale = 1.0
@@ -559,6 +574,22 @@ func operator_selection_changed(selected: bool) -> void:
 		juice_time_push(&"operator_selection", OPERATOR_SELECTION_TIME_SCALE)
 	else:
 		juice_time_pop(&"operator_selection")
+
+
+func _refresh_map_cursor() -> void:
+	if (
+		_grid_root == null
+		or _map_navigation_blocked()
+		or not _map_nav.has_pan_range()
+		or not map_content_rect().has_point(_pointer)
+	):
+		CursorManager.release_claim(self)
+		return
+	CursorManager.claim(
+		self,
+		CursorManager.ROLE_PAN_GRAB if _map_nav.is_dragging() else CursorManager.ROLE_PAN,
+		MAP_CURSOR_CLAIM_PRIORITY,
+	)
 
 
 func _detect_deploys() -> void:

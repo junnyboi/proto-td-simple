@@ -7,7 +7,7 @@ func _init() -> void:
 
 func _run() -> void:
 	var failures := PackedStringArray()
-	for stage_number: int in range(1, 17):
+	for stage_number: int in range(1, 11):
 		var stage_id := "s%d" % stage_number
 		var source := load("res://data/stages/%s.tres" % stage_id) as StageDef
 		if source == null:

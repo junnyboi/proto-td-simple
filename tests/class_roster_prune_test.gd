@@ -119,7 +119,7 @@ func _test_campaign_context() -> void:
 	for trap_id: String in _resource_ids("res://data/traps"):
 		traps.append(StringName(trap_id))
 	var stages: Array = []
-	for stage_number: int in range(1, 17):
+	for stage_number: int in range(1, 11):
 		stages.append(load("res://data/stages/s%d.tres" % stage_number))
 	var text_entries := {}
 	for definition in classes:

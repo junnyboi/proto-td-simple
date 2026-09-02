@@ -28,7 +28,7 @@ func _init() -> void:
 
 
 func _run() -> void:
-	for stage_index: int in range(1, 17):
+	for stage_index: int in range(1, 11):
 		var stage_id := "s%d" % stage_index
 		var stage := load("res://data/stages/%s.tres" % stage_id) as StageDef
 		_check(stage != null, "stage failed to load: %s" % stage_id)

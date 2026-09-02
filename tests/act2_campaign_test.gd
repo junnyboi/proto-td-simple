@@ -19,16 +19,16 @@ func _init() -> void:
 
 func _test_catalog_and_balance() -> void:
 	var context := CampaignRuntimeContext.build()
-	_check(not context.is_empty(), "sixteen-stage campaign context failed to build")
+	_check(not context.is_empty(), "ten-stage campaign context failed to build")
 	if context.is_empty():
 		return
 	var stage_order: Array = context["stage_order"]
-	_check(stage_order.size() == 16, "campaign stage order is not sixteen operations")
-	for index: int in 16:
+	_check(stage_order.size() == 10, "campaign stage order is not ten operations")
+	for index: int in 10:
 		_check(stage_order[index] == "s%d" % (index + 1), "campaign stage order is noncanonical")
 	var reward_rows: Array = context["campaign"]["v3_stage_rewards"]
-	_check(reward_rows.size() == 16, "V3 reward projection is not one row per operation")
-	for index: int in range(8, 16):
+	_check(reward_rows.size() == 10, "V3 reward projection is not one row per operation")
+	for index: int in range(8, 10):
 		var rewards: Array = reward_rows[index]["rewards"]
 		_check(
 			rewards == [{"amount": 40, "id": "marks", "kind": "currency"}],
@@ -36,7 +36,7 @@ func _test_catalog_and_balance() -> void:
 		)
 
 	var prior_enemy_count := 17
-	for stage_index: int in range(9, 17):
+	for stage_index: int in range(9, 11):
 		var stage := load("res://data/stages/s%d.tres" % stage_index) as StageDef
 		_check(stage != null, "Act II stage s%d failed to load" % stage_index)
 		if stage == null:
@@ -55,16 +55,6 @@ func _test_catalog_and_balance() -> void:
 			_check(
 				load("res://data/enemies/%s.tres" % String(spawn["enemy_id"])) is EnemyDef,
 				"Act II wave references an unknown enemy",
-			)
-		if stage_index == 16:
-			var boss_ticks := PackedInt32Array()
-			for spawn: Dictionary in stage.waves:
-				if StringName(spawn["enemy_id"]) == &"mini_boss":
-					boss_ticks.append(int(spawn["tick"]))
-			_check(boss_ticks.size() == 2, "S16 no longer has two Gatecrasher-class boss windows")
-			_check(
-				boss_ticks.size() == 2 and boss_ticks[0] != boss_ticks[1],
-				"S16 Gatecrasher-class bosses no longer arrive in separate windows",
 			)
 		_test_terminal_schedule(stage)
 

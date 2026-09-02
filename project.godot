@@ -24,6 +24,7 @@ general/default_playback_type=1
 [autoload]
 
 TestRunGuard="*res://autoloads/test_run_guard.gd"
+CursorManager="*res://autoloads/cursor_manager.gd"
 I18n="*res://autoloads/i18n.gd"
 Music="*res://autoloads/music.gd"
 TextScale="*res://autoloads/text_scale.gd"

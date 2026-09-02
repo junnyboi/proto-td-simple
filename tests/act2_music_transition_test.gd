@@ -5,12 +5,6 @@ const PROFILE_PATH := "res://data/presentation/audio/lunaris_profile.tres"
 const EXPECTED := {
 	&"act2_s09": &"lunaris_act2_s09_return_path",
 	&"act2_s10": &"lunaris_act2_s10_covenant_orchard",
-	&"act2_s11": &"lunaris_act2_s11_choir_without_witness",
-	&"act2_s12": &"lunaris_act2_s12_archive_orchard",
-	&"act2_s13": &"lunaris_act2_s13_witness_engine",
-	&"act2_s14": &"lunaris_act2_s14_residual_mercy",
-	&"act2_s15": &"lunaris_act2_s15_public_ledger",
-	&"act2_s16": &"lunaris_act2_s16_unfinished_proof",
 }
 
 var _failures: Array[String] = []
@@ -46,7 +40,7 @@ func _test_profile_and_stage_routes() -> void:
 	_check(profile != null and profile.is_valid(), "Act II music profile is invalid")
 	_check(catalog != null, "music catalog did not load")
 	var cue_ids: Dictionary = {}
-	for stage_number: int in range(9, 17):
+	for stage_number: int in range(9, 11):
 		var variant := StringName("act2_s%02d" % stage_number)
 		var cue_id: StringName = EXPECTED[variant]
 		cue_ids[cue_id] = true
@@ -62,12 +56,12 @@ func _test_profile_and_stage_routes() -> void:
 			_check(cue.loop, "%s must loop" % cue_id)
 			_check(cue.approved_surfaces.has(&"battle"), "%s is not approved for battle" % cue_id)
 			_check(ResourceLoader.exists(cue.stream_path), "%s stream is missing" % cue_id)
-	_check(cue_ids.size() == 8, "Act II stages do not have eight distinct cue IDs")
+	_check(cue_ids.size() == 2, "Act II stages do not have two distinct cue IDs")
 
 
 func _test_runtime_music_routes() -> void:
 	_music.stop()
-	for stage_number: int in range(9, 17):
+	for stage_number: int in range(9, 11):
 		var variant := StringName("act2_s%02d" % stage_number)
 		var cue_id: StringName = EXPECTED[variant]
 		_check(_music.play_battle(&"lunaris", variant, &"low"), "%s did not start" % variant)
@@ -97,13 +91,13 @@ func _test_transition_component() -> void:
 	var reduced := TRANSITION_SCRIPT.new() as Act2StageTransition
 	root.add_child(reduced)
 	reduced.entry_finished.connect(func() -> void: flags["reduced"] = true)
-	reduced.play_entry(16, "Empire Foundry", true)
+	reduced.play_entry(10, "Rain Debt", true)
 	await create_timer(0.25, true, false, true).timeout
 	_check(bool(flags["reduced"]), "reduced-motion Act II entry did not finish promptly")
 	var exit_transition := TRANSITION_SCRIPT.new() as Act2StageTransition
 	root.add_child(exit_transition)
 	exit_transition.exit_finished.connect(func() -> void: flags["exit"] = true)
-	exit_transition.play_exit(12, "Unlit", false)
+	exit_transition.play_exit(10, "Rain Debt", false)
 	await create_timer(0.55, true, false, true).timeout
 	_check(bool(flags["exit"]), "smooth Act II exit did not finish")
 

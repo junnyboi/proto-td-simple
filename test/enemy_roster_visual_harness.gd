@@ -17,7 +17,7 @@ var _finished := false
 
 func _ready() -> void:
 	get_tree().create_timer(WATCHDOG_SECONDS).timeout.connect(_on_watchdog_timeout)
-	var source_stage := load("res://data/stages/s16.tres") as StageDef
+	var source_stage := load("res://data/stages/s10.tres") as StageDef
 	var theme_result := _resolve_stage_theme(source_stage)
 	if not String(theme_result["error"]).is_empty():
 		push_error("enemy_roster_visual_harness: stage theme failed")
@@ -26,7 +26,7 @@ func _ready() -> void:
 	_stage_theme = theme_result["theme"] as Resource
 	_stage = source_stage.copy_for_viewport(get_viewport_rect().size)
 	var config := load("res://data/config/game.tres") as GameConfig
-	_enemy_defs = _load_enemy_defs(_stage)
+	_enemy_defs = _load_catalog("res://data/enemies", "EnemyDef")
 	_op_defs = _load_catalog("res://data/operators", "OperatorDef")
 	_trap_defs = _load_catalog("res://data/traps", "TrapDef")
 	model = BattleModel.create(

@@ -19,7 +19,7 @@ Score contract version 1 is calculated from the accepted mission ledger:
 
 ```text
 2,000,000 × mission clear
-+ 100,000 × mission number (s1…s16)
++ 100,000 × mission number (s1…s10)
 +  20,000 × stars
 +      50 × kills
 -     500 × leaks

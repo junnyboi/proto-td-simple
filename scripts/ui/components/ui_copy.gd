@@ -238,9 +238,7 @@ const PLACEHOLDER_TYPES := {
 	&"ui.battle.deploy_operator_cooldown": {
 		&"name": &"String", &"slot": &"String", &"seconds": &"int",
 	},
-	&"ui.battle.high_threat.empire_foundry.detail": {&"wave": &"int"},
 	&"ui.battle.high_threat.green_cage.detail": {&"wave": &"int"},
-	&"ui.battle.high_threat.unlit.detail": {&"wave": &"int"},
 	&"ui.results.marks_reward": {&"count": &"int"},
 	&"ui.results.unlocked_kind": {&"kind": &"String"},
 	&"ui.hero.fallback_recruit": {&"index": &"int"},

@@ -36,7 +36,7 @@ func _run() -> void:
 		)
 		elevated_defs.append(definition)
 	var total_platforms := 0
-	for stage_number: int in range(1, 17):
+	for stage_number: int in range(1, 11):
 		var stage := load("res://data/stages/s%d.tres" % stage_number) as StageDef
 		_check(stage != null, "stage failed to load: s%d" % stage_number)
 		if stage == null:
@@ -58,7 +58,7 @@ func _run() -> void:
 			config,
 			stage_number * 100 + 50,
 		)
-	_check(total_platforms == 125, "expected 125 raised platforms, got %d" % total_platforms)
+	_check(total_platforms == 54, "expected 54 raised platforms, got %d" % total_platforms)
 	if _failures.is_empty():
 		print("ELEVATED_PLATFORM_ACCESSIBILITY_TEST_OK platforms=%d" % total_platforms)
 		quit(0)

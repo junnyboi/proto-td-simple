@@ -10,7 +10,7 @@
     "save_version": 3,
     "fixture_seed": 3301,
     "fixture_generation": 1,
-    "environment_sha256": "2ed4cbb53592ae9fe98434667f091a00f2d97134187138e364280e9896209b90",
+    "environment_sha256": "828f7e93d7bff3f0b02d71c2650f8b670bf46784a99513012bed6fa59f2f3614",
     "fresh_save_text_sha256": "b5c228af3122d5ca9d1a648753bf8d3e320024f5c708ab5a77b99a5923c53479",
     "fresh_strategic_hash": "b55cf196b9fa0198",
     "fresh_core_hash": "03af4bdc685d0032"
@@ -48,8 +48,7 @@
     "Anima Engine",
     "Moon Gate",
     "Hearthcross",
-    "Lunaris Reliquary",
-    "Unlit"
+    "Lunaris Reliquary"
   ],
   "required_runtime_terms": [
     "PROTOS",
@@ -62,8 +61,7 @@
     "robot empire",
     "Moon Gate",
     "Hearthcross",
-    "Lunaris Reliquary",
-    "Unlit"
+    "Lunaris Reliquary"
   ],
   "required_company_display": {
     "stable_key": "data.company.33.name",

@@ -2,29 +2,28 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://p4534ll1hc4l"
-path.bptc="res://.godot/imported/s16_empire_foundry_particles.webp-7bc0528a3a6da2d76d4afe95415d4ddc.bptc.ctex"
+uid="uid://jby657u0noo0"
+path="res://.godot/imported/cursor_action.png-dca79fc2172d603e970571f62ec940b3.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/vfx/high_threat/s16_empire_foundry_particles.webp"
-dest_files=["res://.godot/imported/s16_empire_foundry_particles.webp-7bc0528a3a6da2d76d4afe95415d4ddc.bptc.ctex"]
+source_file="res://assets/ui/cursors/cursor_action.png"
+dest_files=["res://.godot/imported/cursor_action.png-dca79fc2172d603e970571f62ec940b3.ctex"]
 
 [params]
 
-compress/mode=2
-compress/high_quality=true
-compress/lossy_quality=0.92
+compress/mode=0
+compress/high_quality=false
+compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

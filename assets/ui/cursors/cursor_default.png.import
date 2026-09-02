@@ -2,29 +2,28 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://uscltr76115g"
-path.bptc="res://.godot/imported/s12_unlit_particles.webp-907c9396784587c61daf492124d2a950.bptc.ctex"
+uid="uid://dknm7b0n31rvr"
+path="res://.godot/imported/cursor_default.png-fe100f800eacbc98435d7401eb7b5c04.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/vfx/high_threat/s12_unlit_particles.webp"
-dest_files=["res://.godot/imported/s12_unlit_particles.webp-907c9396784587c61daf492124d2a950.bptc.ctex"]
+source_file="res://assets/ui/cursors/cursor_default.png"
+dest_files=["res://.godot/imported/cursor_default.png-fe100f800eacbc98435d7401eb7b5c04.ctex"]
 
 [params]
 
-compress/mode=2
-compress/high_quality=true
-compress/lossy_quality=0.92
+compress/mode=0
+compress/high_quality=false
+compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

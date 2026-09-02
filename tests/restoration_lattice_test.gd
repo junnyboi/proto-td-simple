@@ -22,7 +22,7 @@ func _run() -> void:
 
 
 func _test_stage_contract_and_rotation() -> void:
-	for stage_index: int in range(9, 17):
+	for stage_index: int in range(9, 11):
 		var authored := load("res://data/stages/s%d.tres" % stage_index) as StageDef
 		_check(authored != null, "Act II stage failed to load: s%d" % stage_index)
 	var stage := _stage_fixture()

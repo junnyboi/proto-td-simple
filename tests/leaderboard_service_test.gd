@@ -32,14 +32,14 @@ func _run() -> void:
 		}) == 2_461_600,
 		"mission score formula drifted",
 	)
-	_check(ServiceType.mission_number("s16") == 16, "valid stage parsing failed")
-	_check(ServiceType.mission_number("s017") == 0, "invalid stage parsing was accepted")
+	_check(ServiceType.mission_number("s10") == 10, "valid stage parsing failed")
+	_check(ServiceType.mission_number("s11") == 0, "removed stage parsing was accepted")
 	_check(
 		String(service.call("set_player_name", "  moon--ace!  ")) == "MOON-ACE",
 		"saved username was not normalized",
 	)
 	var defeat: Dictionary = service.call("record_mission", {
-		"stage_id": &"s16",
+		"stage_id": &"s10",
 		"result": BattleModel.Result.DEFEAT,
 		"stars": 0,
 		"kills": 0,

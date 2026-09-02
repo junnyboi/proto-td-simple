@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="MusicCatalog" load_steps=24 format=3]
+[gd_resource type="Resource" script_class="MusicCatalog" load_steps=18 format=3]
 
 [ext_resource type="Script" path="res://assets/music/music_catalog.gd" id="1_music"]
 [ext_resource type="Resource" path="res://data/presentation/audio/cues/title_lunaris.tres" id="2_title"]
@@ -17,12 +17,6 @@
 [ext_resource type="Resource" path="res://data/presentation/audio/cues/lunaris_result_defeat.tres" id="15_lose"]
 [ext_resource type="Resource" path="res://data/presentation/audio/cues/act2/lunaris_act2_s09_return_path.tres" id="16_act2_s09"]
 [ext_resource type="Resource" path="res://data/presentation/audio/cues/act2/lunaris_act2_s10_covenant_orchard.tres" id="17_act2_s10"]
-[ext_resource type="Resource" path="res://data/presentation/audio/cues/act2/lunaris_act2_s11_choir_without_witness.tres" id="18_act2_s11"]
-[ext_resource type="Resource" path="res://data/presentation/audio/cues/act2/lunaris_act2_s12_archive_orchard.tres" id="19_act2_s12"]
-[ext_resource type="Resource" path="res://data/presentation/audio/cues/act2/lunaris_act2_s13_witness_engine.tres" id="20_act2_s13"]
-[ext_resource type="Resource" path="res://data/presentation/audio/cues/act2/lunaris_act2_s14_residual_mercy.tres" id="21_act2_s14"]
-[ext_resource type="Resource" path="res://data/presentation/audio/cues/act2/lunaris_act2_s15_public_ledger.tres" id="22_act2_s15"]
-[ext_resource type="Resource" path="res://data/presentation/audio/cues/act2/lunaris_act2_s16_unfinished_proof.tres" id="23_act2_s16"]
 
 [resource]
 script = ExtResource("1_music")
@@ -42,11 +36,5 @@ entries = {
 &"lunaris_result_victory": ExtResource("14_win"),
 &"lunaris_result_defeat": ExtResource("15_lose"),
 &"lunaris_act2_s09_return_path": ExtResource("16_act2_s09"),
-&"lunaris_act2_s10_covenant_orchard": ExtResource("17_act2_s10"),
-&"lunaris_act2_s11_choir_without_witness": ExtResource("18_act2_s11"),
-&"lunaris_act2_s12_archive_orchard": ExtResource("19_act2_s12"),
-&"lunaris_act2_s13_witness_engine": ExtResource("20_act2_s13"),
-&"lunaris_act2_s14_residual_mercy": ExtResource("21_act2_s14"),
-&"lunaris_act2_s15_public_ledger": ExtResource("22_act2_s15"),
-&"lunaris_act2_s16_unfinished_proof": ExtResource("23_act2_s16")
+&"lunaris_act2_s10_covenant_orchard": ExtResource("17_act2_s10")
 }

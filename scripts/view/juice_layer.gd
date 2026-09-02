@@ -16,18 +16,12 @@ const VFX_WAVE_BANNER := &"vfx_wave_banner"
 const VFX_RESULT_STAMP := &"vfx_result_stamp"
 const HIGH_THREAT_WARNING_ASSETS := {
 	&"green_cage": &"vfx_high_threat_s9_warning",
-	&"unlit": &"vfx_high_threat_s12_warning",
-	&"empire_foundry": &"vfx_high_threat_s16_warning",
 }
 const HIGH_THREAT_PARTICLE_ASSETS := {
 	&"green_cage": &"vfx_high_threat_s9_particles",
-	&"unlit": &"vfx_high_threat_s12_particles",
-	&"empire_foundry": &"vfx_high_threat_s16_particles",
 }
 const HIGH_THREAT_COLORS := {
 	&"green_cage": Color("9cff59"),
-	&"unlit": Color("8bc7ff"),
-	&"empire_foundry": Color("ff9a3d"),
 }
 const KNOCK_COLOR := Color(1.0, 0.3, 0.3)
 const BANNER_TEXT_SIZE := GameTypographyType.DISPLAY

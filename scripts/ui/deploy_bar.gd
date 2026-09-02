@@ -54,6 +54,8 @@ const OPERATOR_ACTION_SKILL_WIDTH := 360.0
 const OPERATOR_ACTION_RECALL_WIDTH := 180.0
 const OPERATOR_ACTION_BUTTON_HEIGHT := 64.0
 const OPERATOR_ACTION_Z := 30
+const CURSOR_CLAIM_PRIORITY := 40
+const CURSOR_INTENT_PRIORITY := 100
 
 var model: BattleModel = null
 var view: Node2D = null
@@ -109,6 +111,8 @@ func setup(
 	size = get_viewport().get_visible_rect().size
 	_build_slots(_op_defs)
 	_build_overlays()
+	_pointer = get_viewport().get_mouse_position()
+	_refresh_pointer_cursor()
 	if not I18n.locale_changed.is_connected(_on_locale_changed):
 		I18n.locale_changed.connect(_on_locale_changed)
 
@@ -121,6 +125,7 @@ func set_operator_interaction_enabled(enabled: bool) -> void:
 	_operator_interaction_enabled = enabled
 	if not enabled:
 		cancel_transient_intent()
+	_refresh_pointer_cursor()
 
 
 func operator_interaction_enabled() -> bool:
@@ -131,6 +136,7 @@ func set_interaction_enabled(enabled: bool) -> void:
 	_interaction_enabled = enabled
 	if not enabled:
 		cancel_transient_intent()
+	_refresh_pointer_cursor()
 
 
 func interaction_enabled() -> bool:
@@ -209,10 +215,16 @@ func _process(_delta: float) -> void:
 		slot.disabled = not _interaction_enabled or not _operator_interaction_enabled or not model.is_trap_placeable(trap_id)
 	_refresh_operator_actions()
 	_layout_operator_action_panel()
+	_refresh_pointer_cursor()
 
 
 func _input(event: InputEvent) -> void:
 	if not _interaction_enabled:
+		_release_cursor_claim()
+		return
+	if event is InputEventMouseMotion:
+		_pointer = (event as InputEventMouseMotion).position
+		_refresh_pointer_cursor()
 		return
 	if event.is_action_pressed("ui_cancel"):
 		if _heal_source_unit_id >= 0:
@@ -235,18 +247,12 @@ func _input(event: InputEvent) -> void:
 				_select_unit(-1)
 			return
 	if _heal_source_unit_id >= 0:
-		if event is InputEventMouseMotion:
-			_pointer = (event as InputEventMouseMotion).position
-			_update_heal_hover()
 		return
 	# Placement drag: track the pointer from motion events (injected motion
 	# never moves get_mouse_position) and end placement on left release.
 	if _placement_op == &"" and _placement_trap == &"":
 		return
-	if event is InputEventMouseMotion:
-		_pointer = (event as InputEventMouseMotion).position
-		_update_placement_hover()
-	elif event is InputEventMouseButton:
+	if event is InputEventMouseButton:
 		var mb := event as InputEventMouseButton
 		if mb.button_index == MOUSE_BUTTON_LEFT and not mb.pressed:
 			_pointer = mb.position
@@ -671,8 +677,10 @@ func _start_placement(op_id: StringName) -> void:
 	_cancel_heal_targeting()
 	_select_unit(-1)
 	_placement_op = op_id
+	_pointer = get_viewport().get_mouse_position()
 	Sfx.play("operator_select")
 	_show_valid_highlights()
+	_update_placement_hover()
 	view.call("deploy_drag_started")
 	placement_started.emit(op_id)
 
@@ -683,7 +691,9 @@ func _start_trap_placement(trap_id: StringName) -> void:
 	_cancel_heal_targeting()
 	_select_unit(-1)
 	_placement_trap = trap_id
+	_pointer = get_viewport().get_mouse_position()
 	_show_valid_highlights()
+	_update_placement_hover()
 	view.call("deploy_drag_started")
 
 
@@ -713,9 +723,16 @@ func _valid_color() -> Color:
 
 func _update_placement_hover() -> void:
 	var cell: Vector2i = view.call("cell_at", _pointer)
-	_cursor_rect.color = _valid_color() if _placement_valid_at(cell) else INVALID_COLOR
+	var valid := _placement_valid_at(cell)
+	_cursor_rect.color = _valid_color() if valid else INVALID_COLOR
 	_cursor_rect.position = view.call("cell_center", cell)
 	_cursor_rect.visible = true
+	_claim_cursor(
+		CursorManager.ROLE_TRAP if valid and _placement_trap != &"" else
+		CursorManager.ROLE_DEPLOY if valid else
+		CursorManager.ROLE_INVALID,
+		CURSOR_INTENT_PRIORITY,
+	)
 
 
 func _end_placement_drag() -> void:
@@ -749,6 +766,7 @@ func _cancel_placement() -> void:
 	_cursor_rect.visible = false
 	for child: Node in _highlight_root.get_children():
 		child.queue_free()
+	_refresh_pointer_cursor()
 
 
 func _handle_grid_click(screen_pos: Vector2) -> void:
@@ -1177,6 +1195,7 @@ func _begin_heal_targeting(healer: UnitState) -> void:
 	_heal_cursor.color = HEAL_VALID_COLOR
 	_heal_cursor.visible = true
 	_show_heal_highlights()
+	_update_heal_hover()
 	_refresh_operator_actions(true)
 	_layout_operator_action_panel()
 
@@ -1202,6 +1221,10 @@ func _update_heal_hover() -> void:
 	)
 	_heal_cursor.color = HEAL_VALID_COLOR if valid else INVALID_COLOR
 	_heal_cursor.position = view.call("cell_center", cell)
+	_claim_cursor(
+		CursorManager.ROLE_HEAL if valid else CursorManager.ROLE_INVALID,
+		CURSOR_INTENT_PRIORITY,
+	)
 
 
 func _cancel_heal_targeting() -> void:
@@ -1212,3 +1235,41 @@ func _cancel_heal_targeting() -> void:
 		_heal_cursor.visible = false
 	for child: Node in _highlight_root.get_children():
 		child.queue_free()
+	_refresh_pointer_cursor()
+
+
+func _refresh_pointer_cursor() -> void:
+	if not _interaction_enabled or model == null or view == null:
+		_release_cursor_claim()
+		return
+	if _heal_source_unit_id >= 0:
+		_update_heal_hover()
+		return
+	if _placement_op != &"" or _placement_trap != &"":
+		_update_placement_hover()
+		return
+	if not _operator_interaction_enabled:
+		_release_cursor_claim()
+		return
+	var map_rect: Rect2 = view.call("map_screen_rect")
+	if not map_rect.has_point(_pointer):
+		_release_cursor_claim()
+		return
+	var cell: Vector2i = view.call("cell_at", _pointer)
+	var unit: UnitState = model.alive_unit_at(cell)
+	if unit != null:
+		_claim_cursor(CursorManager.ROLE_SELECT, CURSOR_CLAIM_PRIORITY)
+	else:
+		_release_cursor_claim()
+
+
+func _claim_cursor(role: StringName, priority: int) -> void:
+	CursorManager.claim(self, role, priority)
+
+
+func _release_cursor_claim() -> void:
+	CursorManager.release_claim(self)
+
+
+func _exit_tree() -> void:
+	_release_cursor_claim()

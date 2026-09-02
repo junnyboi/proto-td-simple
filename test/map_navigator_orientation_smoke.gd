@@ -130,7 +130,7 @@ func _validate_campaign_matrix(failures: PackedStringArray) -> void:
 		Vector2(1280.0, 720.0),
 		Vector2(1920.0, 720.0),
 	]
-	for stage_index: int in range(1, 17):
+	for stage_index: int in range(1, 11):
 		var source := load("res://data/stages/s%d.tres" % stage_index) as StageDef
 		if source == null:
 			failures.append("S%d failed to load in layout matrix" % stage_index)

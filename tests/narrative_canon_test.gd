@@ -35,7 +35,7 @@ func _init() -> void:
 
 
 func _run() -> void:
-	for stage_index: int in range(1, 17):
+	for stage_index: int in range(1, 11):
 		var stage_id := "s%d" % stage_index
 		var stage := load("res://data/stages/%s.tres" % stage_id) as StageDef
 		_check(stage != null, "missing stage record %s" % stage_id)
@@ -99,7 +99,7 @@ func _run() -> void:
 			_check(restored.get("accepted", false), "fresh Campaign V3 fixture no longer round-trips")
 			if restored.get("accepted", false):
 				var projection: Dictionary = restored["value"].runtime_projection()
-				_check(projection.get("stage_ids", []).size() == 16, "round-tripped campaign lost stage order")
+				_check(projection.get("stage_ids", []).size() == 10, "round-tripped campaign lost stage order")
 				_check(projection.get("ready_heroes", []).size() == 5, "round-tripped campaign lost starter roster")
 				_check(int(projection.get("marks", -1)) == 120, "round-tripped campaign changed Marks")
 				_check((projection.get("stage_stars", {}) as Dictionary).is_empty(), "round-tripped campaign invented clears")

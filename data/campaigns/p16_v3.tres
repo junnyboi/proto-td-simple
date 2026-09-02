@@ -13,7 +13,7 @@ paid_offers = Array[Dictionary]([{
 "offer_id": "p16_caster_contract",
 "operator_def_id": "recruit"
 }])
-environment_sha256 = "2ed4cbb53592ae9fe98434667f091a00f2d97134187138e364280e9896209b90"
+environment_sha256 = "828f7e93d7bff3f0b02d71c2650f8b670bf46784a99513012bed6fa59f2f3614"
 starter_rows = Array[Dictionary]([{
 "class_id": "recruit",
 "operator_def_id": "recruit",
@@ -67,24 +67,6 @@ v3_stage_rewards = Array[Dictionary]([{
 }, {
 "rewards": [{"amount": 40, "id": "marks", "kind": "currency"}],
 "stage_id": "s10"
-}, {
-"rewards": [{"amount": 40, "id": "marks", "kind": "currency"}],
-"stage_id": "s11"
-}, {
-"rewards": [{"amount": 40, "id": "marks", "kind": "currency"}],
-"stage_id": "s12"
-}, {
-"rewards": [{"amount": 40, "id": "marks", "kind": "currency"}],
-"stage_id": "s13"
-}, {
-"rewards": [{"amount": 40, "id": "marks", "kind": "currency"}],
-"stage_id": "s14"
-}, {
-"rewards": [{"amount": 40, "id": "marks", "kind": "currency"}],
-"stage_id": "s15"
-}, {
-"rewards": [{"amount": 40, "id": "marks", "kind": "currency"}],
-"stage_id": "s16"
 }])
 portrait_asset_ids = Array[StringName]([&"portrait_recruit_00", &"portrait_recruit_01", &"portrait_recruit_02", &"portrait_recruit_03", &"portrait_recruit_04", &"portrait_recruit_05", &"portrait_recruit_06", &"portrait_recruit_07"])
 basic_recruit_cost = 5

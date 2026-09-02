@@ -21,12 +21,6 @@ loopify() {
 
 loopify s09_return_path -21.0
 loopify s10_covenant_orchard -21.0
-loopify s11_choir_without_witness -21.3 4.0 -1.0
-loopify s12_archive_orchard -20.5
-loopify s13_witness_engine -20.5
-loopify s14_residual_mercy -20.3
-loopify s15_public_ledger -20.0
-loopify s16_unfinished_proof -19.8 5.0
 
 printf '%s\n' 'Act II runtime score:'
 for output in "$out_root"/*.ogg; do

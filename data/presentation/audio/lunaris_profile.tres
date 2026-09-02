@@ -10,12 +10,6 @@ staging_cue_id = &"lunaris_staging_archive_command"
 battle_variants = {
 &"act2_s09": {&"low": &"lunaris_act2_s09_return_path", &"medium": &"lunaris_act2_s09_return_path", &"high": &"lunaris_act2_s09_return_path", &"critical": &"lunaris_act2_s09_return_path"},
 &"act2_s10": {&"low": &"lunaris_act2_s10_covenant_orchard", &"medium": &"lunaris_act2_s10_covenant_orchard", &"high": &"lunaris_act2_s10_covenant_orchard", &"critical": &"lunaris_act2_s10_covenant_orchard"},
-&"act2_s11": {&"low": &"lunaris_act2_s11_choir_without_witness", &"medium": &"lunaris_act2_s11_choir_without_witness", &"high": &"lunaris_act2_s11_choir_without_witness", &"critical": &"lunaris_act2_s11_choir_without_witness"},
-&"act2_s12": {&"low": &"lunaris_act2_s12_archive_orchard", &"medium": &"lunaris_act2_s12_archive_orchard", &"high": &"lunaris_act2_s12_archive_orchard", &"critical": &"lunaris_act2_s12_archive_orchard"},
-&"act2_s13": {&"low": &"lunaris_act2_s13_witness_engine", &"medium": &"lunaris_act2_s13_witness_engine", &"high": &"lunaris_act2_s13_witness_engine", &"critical": &"lunaris_act2_s13_witness_engine"},
-&"act2_s14": {&"low": &"lunaris_act2_s14_residual_mercy", &"medium": &"lunaris_act2_s14_residual_mercy", &"high": &"lunaris_act2_s14_residual_mercy", &"critical": &"lunaris_act2_s14_residual_mercy"},
-&"act2_s15": {&"low": &"lunaris_act2_s15_public_ledger", &"medium": &"lunaris_act2_s15_public_ledger", &"high": &"lunaris_act2_s15_public_ledger", &"critical": &"lunaris_act2_s15_public_ledger"},
-&"act2_s16": {&"low": &"lunaris_act2_s16_unfinished_proof", &"medium": &"lunaris_act2_s16_unfinished_proof", &"high": &"lunaris_act2_s16_unfinished_proof", &"critical": &"lunaris_act2_s16_unfinished_proof"},
 &"air_raid": {&"low": &"lunaris_battle_air_raid_low", &"medium": &"lunaris_battle_air_raid_medium", &"high": &"lunaris_battle_air_raid_high", &"critical": &"lunaris_battle_air_raid_high"},
 &"gravity_lattice": {&"low": &"lunaris_battle_gravity_lattice_low", &"medium": &"lunaris_battle_gravity_lattice_medium", &"high": &"lunaris_battle_gravity_lattice_high", &"critical": &"lunaris_battle_gravity_lattice_high"},
 &"orbit_early": {&"low": &"lunaris_battle_orbit_early_low", &"medium": &"lunaris_battle_orbit_early_medium", &"high": &"lunaris_battle_orbit_early_high", &"critical": &"lunaris_battle_orbit_early_high"}

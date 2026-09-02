@@ -1044,66 +1044,6 @@ entries = {
 "placeholder": false,
 "size": Vector2i(600, 600)
 },
-&"vfx_high_threat_s12_warning": {
-"animations": {
-&"default": {
-&"fps": 1.0,
-&"length": 1,
-&"loop": true,
-&"start": 0
-}
-},
-"frames": 1,
-"pattern": "res://assets/vfx/high_threat/s12_unlit_warning.webp",
-"pivot": Vector2(0.5, 0.5),
-"placeholder": false,
-"size": Vector2i(600, 600)
-},
-&"vfx_high_threat_s12_particles": {
-"animations": {
-&"default": {
-&"fps": 1.0,
-&"length": 1,
-&"loop": true,
-&"start": 0
-}
-},
-"frames": 1,
-"pattern": "res://assets/vfx/high_threat/s12_unlit_particles.webp",
-"pivot": Vector2(0.5, 0.5),
-"placeholder": false,
-"size": Vector2i(600, 600)
-},
-&"vfx_high_threat_s16_warning": {
-"animations": {
-&"default": {
-&"fps": 1.0,
-&"length": 1,
-&"loop": true,
-&"start": 0
-}
-},
-"frames": 1,
-"pattern": "res://assets/vfx/high_threat/s16_empire_foundry_warning.webp",
-"pivot": Vector2(0.5, 0.5),
-"placeholder": false,
-"size": Vector2i(600, 600)
-},
-&"vfx_high_threat_s16_particles": {
-"animations": {
-&"default": {
-&"fps": 1.0,
-&"length": 1,
-&"loop": true,
-&"start": 0
-}
-},
-"frames": 1,
-"pattern": "res://assets/vfx/high_threat/s16_empire_foundry_particles.webp",
-"pivot": Vector2(0.5, 0.5),
-"placeholder": false,
-"size": Vector2i(600, 600)
-},
 &"vfx_wave_banner": {
 "animations": {
 &"default": {

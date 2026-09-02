@@ -461,7 +461,7 @@ static func mission_number(stage_id: String) -> int:
 	if not suffix.is_valid_int():
 		return 0
 	var value := int(suffix)
-	return value if value >= 1 and value <= 16 and stage_id == "s%d" % value else 0
+	return value if value >= 1 and value <= 10 and stage_id == "s%d" % value else 0
 
 
 static func normalize_player_name(value: String) -> String:
