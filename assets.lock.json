@@ -1,0 +1,1411 @@
+{
+  "version": 2,
+  "groups": {
+    "template": {
+      "name": "Template",
+      "order": 10
+    }
+  },
+  "assets": {
+    "assets/fonts/GameTemplateTDSansSC.otf": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/2c76254f6fc379fddfce0a7e84fb5385bb135d3e399294f6eeb6680d0365b74b.otf",
+      "sha256": "sha256:2c76254f6fc379fddfce0a7e84fb5385bb135d3e399294f6eeb6680d0365b74b",
+      "size": 16437364,
+      "assetType": "font",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/loading/command_backdrop.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/1c1b0dcad5393e9a57c9fa4fc9285dde6582ea45691ac2c8e76c0ef18e62f49a.webp",
+      "sha256": "sha256:c57c168c18622137f461d0a58d2852c815fa3e24a3a4d3f2c8ba45b330c1e44e",
+      "size": 1578848,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/loading/lunaris_reliquary_loading.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/dd7998e9ee7952aebb2abc6599acf211db161adc435370f9ce2eadf0d90f2e10.webp",
+      "sha256": "sha256:e5b8e160bf4332eca79607566023f8b611095e4390fa1cf89013e0fe83d6b1e4",
+      "size": 5933110,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/portraits/caster_1.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/6fdf640d0d39f8fba1836bc3c358684aaf66443ec68234b3bc47e3ca999a976b.webp",
+      "sha256": "sha256:7513919c3bbf09e9037e5377c69b0f18a80ef9901527af1f66bbc85d2e055e48",
+      "size": 317838,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/portraits/guard_1.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/334e13af67e4f60a6d52bd1b90d01a136ef49772132b214c597afd4927b15679.webp",
+      "sha256": "sha256:35afced537ebc059747a389a9ab25071a4bb8119ae23c905d3d82b2971f15a9e",
+      "size": 287370,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/portraits/recruits/crimson_female.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/56a77a68dc801c30d7e20c360b621c80799e440924ca6e1cd0491fc1488fea74.webp",
+      "sha256": "sha256:fafd21dfb235072e73de292a957b85620af6e6c6c1d439935ee43f758faeb02e",
+      "size": 341705,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/portraits/recruits/crimson_male.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/0b567f71c00d3b9cdbd652c27f847abf7476c1a417f5a3fd05b3c21677a3009a.webp",
+      "sha256": "sha256:fde960661a28fce2208659c2e9e6f3ec4553e3d79f22d365424ed7b91f6c4311",
+      "size": 357561,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/portraits/recruits/lunaris_female.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/5402533368ea41bc00540444886da8b779536b4d372e0d26e518e2004ead0e0f.webp",
+      "sha256": "sha256:1154a8a51fc305a75e956f3f60b9c7da2885872898307d6513788b118ba6c0c6",
+      "size": 293460,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/portraits/recruits/lunaris_male.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/91d48c8aa6d947795aacbfd9c368c92bc5fb25f0a1971763c3a9b6412d628b0b.webp",
+      "sha256": "sha256:f903eaec25680bdebe62bb9c6e1c2f7bce3785972bfbcadb75c12617629eafba",
+      "size": 263121,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/portraits/recruits/solcrest_female.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/e7a6c2f0e1a346a95587e1cfe51dc7d4905cb22acabff10fe58890217dc83a9d.webp",
+      "sha256": "sha256:55ab55eb8e1493037b545596363d09e5c0e8c359fe5b1ffffa87decde0723cd2",
+      "size": 346968,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/portraits/recruits/solcrest_male.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/35d39f56ff8f0d4b75e65091158806c470f791efee0019e8505851bde15763cf.webp",
+      "sha256": "sha256:274e46a670722fea1e4306409de96ec4351c2b216f4e28a49756fe41f8098924",
+      "size": 373595,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/portraits/recruits/vesper_female.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/a57b6e943310c0f49c6bf96df4cdccb8fa3ebafa58e47b4e1ddd66f5c0b6c0c3.webp",
+      "sha256": "sha256:0a6e8c4ff4845d0d63bdb77bc470876343dda60b1ca917bae88fc436aaa3c9c9",
+      "size": 328200,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/portraits/recruits/vesper_male.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/abba8afc9464de3dbc3abd643d28f624eab9ec1de74b41dc4a9b88e7d331b3cb.webp",
+      "sha256": "sha256:f53480467b9230a46a0c1bd32eff3d1ebe5902995729a44f71f9d11c3d4fc7a5",
+      "size": 318116,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/portraits/sniper_1.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/21f4c0ef9107985f68df9c6810f818eff2f6167b30406f5998870884d8d64cd5.webp",
+      "sha256": "sha256:162ea91acd9d47fcea041afdb533791d2775cc00eb28db7db310d79070b88943",
+      "size": 329115,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/portraits/specializations/gunner_female.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/1020badc9be2f1aea3fa06095889b3533cd134365c4501a6d66c1d69f871feaa.webp",
+      "sha256": "sha256:a6e5c6ec6dbd37d7b433555f1d43cffcd085276d28ab1f9a636e5c3c764df90d",
+      "size": 340950,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/portraits/specializations/gunner_male.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/21f4c0ef9107985f68df9c6810f818eff2f6167b30406f5998870884d8d64cd5.webp",
+      "sha256": "sha256:162ea91acd9d47fcea041afdb533791d2775cc00eb28db7db310d79070b88943",
+      "size": 329115,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/portraits/specializations/mage_apprentice_female.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/6fdf640d0d39f8fba1836bc3c358684aaf66443ec68234b3bc47e3ca999a976b.webp",
+      "sha256": "sha256:7513919c3bbf09e9037e5377c69b0f18a80ef9901527af1f66bbc85d2e055e48",
+      "size": 317838,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/portraits/specializations/mage_apprentice_male.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/df8dc44afab07457f17261a1f86d0a168f90ee6958960e08657e387655128e70.webp",
+      "sha256": "sha256:8c3adfedb35378bb37854f5a389bd56c943a4de80ec1806a660e1003a4b92628",
+      "size": 270386,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/portraits/specializations/swordmaster_female.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/334e13af67e4f60a6d52bd1b90d01a136ef49772132b214c597afd4927b15679.webp",
+      "sha256": "sha256:35afced537ebc059747a389a9ab25071a4bb8119ae23c905d3d82b2971f15a9e",
+      "size": 287370,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/portraits/specializations/swordmaster_male.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/70c8a368859d6dba8b3844fa38f2e781820013dadde5596b1f072b22ee32c9d8.webp",
+      "sha256": "sha256:137e8d5de95d73f9952834d7c1055cb6a5e2f6042c54f5fc2dd72d53c8021c0b",
+      "size": 295576,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/caster_1_0.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/9abc88c3c71c30ab0fa5afe95e848c2b0112d720b8bb630a31b5e0297424a311.webp",
+      "sha256": "sha256:71729042d5b76647536ecbe364783a82933087489a8d3d7a4088b98f9720ed0a",
+      "size": 628,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/caster_1_1.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/25086a71327ad92948dda8c1e274cb7cd8ed44ed1b23547ef071dffa1f78e6ed.webp",
+      "sha256": "sha256:d39b379dba79d1b13a8a13e8fd3002988957decfd0f32e018adc693887b8a8a0",
+      "size": 628,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/caster_1_2.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/c63b06c84cbeb09d6ffc0c2c65b086ce245ea7f6310f02872fae476fe57bdbb6.webp",
+      "sha256": "sha256:ed8531a51b6345e9f41a71d513916498affd623f33f04084100a51262efa9976",
+      "size": 641,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/caster_1_3.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/1fe6a93b37b86228d8ab1d4da9a2856a095805f907fa8e34f91ef5ac500e9036.webp",
+      "sha256": "sha256:dad53b8d46885db479558b3a1cac1a03f7ade1bcf4f604fd86b784bc188e651e",
+      "size": 614,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/caster_1_4.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/3c347e8e8ffffd0ca2d8feef8111234c51439364883b29b046043669b5f15403.webp",
+      "sha256": "sha256:c4341326270cd3ecbcea11a88644065999efd992ec325b3d15558ff248b9b111",
+      "size": 590,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/drone_0.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/883eb77d487a73fd19ccbb9d4934938aa9666c88d4513c0dbc400c65cf8c8fcf.webp",
+      "sha256": "sha256:77e07a5b3508ce1b12a0816d0f2a04f16e2e23315c0d6cf620be55ef3ba7e9f6",
+      "size": 464,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/drone_1.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/cac66143849190cc32c88332ac756936114bfd6fc3830da472ca386a0c93aabc.webp",
+      "sha256": "sha256:e5b4fee6a0a08e0b13be0219eee7eceaf4edf7dc38f0519378baa9b5c551accc",
+      "size": 463,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/enemies/static/breacher.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/088382bb5714d98dfebcc42c16f36c52f013d83ab28c1df2afc69cc57b427cc4.webp",
+      "sha256": "sha256:79b75bcc8740ec0f3058239fdcb63e3d648728f82ce358c24793223bb653d786",
+      "size": 501918,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/enemies/static/drone.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/0299058b1cc2a38a437b2a1e1e05a956b7a016b4eb5fd2ad2d3dbcd9264cac53.webp",
+      "sha256": "sha256:7490a258cd2d0928ca0a59d736158f5f342896a8667b8b07e2906c9b2fa004d2",
+      "size": 303408,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/enemies/static/heavy.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/cfb6e5714c4cd52cc84ae14441f4287e3cf8103a5ac448cce0e46b169842c53c.webp",
+      "sha256": "sha256:3df1ee0951d60012882efc3320f08445f09cdbb5a206cec2c51af65368adc8c2",
+      "size": 574643,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/enemies/static/interceptor.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/ea6293ee2d85487ab0efbac29471367b0f6ff838bf0a9644b7f2daa791c14256.webp",
+      "sha256": "sha256:dbb6071c0629ad100f2e4ebdcf9fb7c39583bcafcd014707250b25ba62090787",
+      "size": 370493,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/enemies/static/mini_boss.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/f7c36ddcaf753a6a6c869ee8ea5271bf2bd639d6dabdc3d0cb7cc761eb7ea637.webp",
+      "sha256": "sha256:ccadf33416a071305d490489caf14651b98774de8a27ab8025cca7f6f376c3fd",
+      "size": 441722,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/enemies/static/runner.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/011d8d150143a76a28d426e668f7b5866e0c37e244b9cb348ef4a92f293b8c46.webp",
+      "sha256": "sha256:2516d677e76c28856cdbbe2411e0ef0be4e93ae2d817c30d6136a8fa753b7683",
+      "size": 321873,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/enemies/static/shieldbearer.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/fa1e521f1a380d490618fd4c99cfe88874a55206ef68bad9b1ced254c4df41c9.webp",
+      "sha256": "sha256:e16a112ebbe261c6527b10f42f6429bddcd5cad5580bcf2a7a6c70a353e2a00b",
+      "size": 485432,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/enemies/static/spellcaster.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/9b5bee59548e6b7867840c3ca962afa6672a8ce8ad27d4cb446eb6b009d5a7bd.webp",
+      "sha256": "sha256:3be2f5a009de4fe29b1db8d4e3b07fa2b9a74932225ffb0a1a9fa96809927f94",
+      "size": 385710,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/grunt_0.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/6c33f5b53d9386ff386f75b21acf5cda6dc574a1eea86167ddaf8572f8859f09.webp",
+      "sha256": "sha256:d2695190e06e83344ebf906aff6813f69e757d0314152b3263ec7810673edcc7",
+      "size": 983,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/grunt_1.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/2730065ffc037d8cf150048f3b7e54b634ff5807471c462907a466b2a4b71761.webp",
+      "sha256": "sha256:6a60a1f1f7f8c11642b4828e6ea5048fc6b8417cf97e2d0499670766e2e5ce2c",
+      "size": 982,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/grunt_anim_attack_ne.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/38c46615a42b705c5d08e76339f443b1396771d532bc168130ff01efd7e1fa2d.webp",
+      "sha256": "sha256:80ae917addec022a0497cbc962451d0e717b10c3c07917fdb04e2046b1d6556e",
+      "size": 221517,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/grunt_anim_attack_nw.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/9b1465546d1dfd51d65f3dfd5bf14952644542f92a69c0b8cf63a82a5ae39e94.webp",
+      "sha256": "sha256:dbe3cf3c3093dc5b1a48fa5318b19f5add2c88815655f837c04da42c2c0f299a",
+      "size": 221753,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/grunt_anim_attack_se.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/e367371d999bf869c0ea11a4e16e80622ed55d8fdcb2687a430ab059340c8beb.webp",
+      "sha256": "sha256:b02aa05939a1d61230ebd3c526e1868c4e37567dbec770bad9fe46462672be06",
+      "size": 260424,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/grunt_anim_attack_sw.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/fac07431dc3d15bf81431837bdf8eb59cf5eb0021a9471f397107b5069fec6ea.webp",
+      "sha256": "sha256:b9d1e96fb8a60e0bc56057f6a1d35a32bef1ea5188048afbaf7ac027903dbf4d",
+      "size": 259112,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/grunt_anim_walk_ne.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/5b4aac53cc4c8f53dd8ca34f7d007a8a62c14e1984b376a81565c0c8e884e135.webp",
+      "sha256": "sha256:250a021e87cb49ccbf6bb63b4af2b74e03b9c7820afdd1686c07b2786ae87992",
+      "size": 309044,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/grunt_anim_walk_nw.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/828626396dcb84b0d8ac2b237d655833f25515e37e291db0a87820902d3e564f.webp",
+      "sha256": "sha256:94a377961d1bec8023dac7402819f9d99a01695f60088e75a807d23b5a28ee73",
+      "size": 311104,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/grunt_anim_walk_se.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/1de622c7d769046dc242437f9fb5c24d91c11745734319ff502217e8429ffb9b.webp",
+      "sha256": "sha256:947849571d0af71f3167ee05002e6b15032c1a9151e67cc46c134d70ec1b39b3",
+      "size": 385080,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/grunt_anim_walk_sw.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/b4ed2b6cc394464ec7ced4dcbecad74de3afaa37cf45e602876562bdf9f602b9.webp",
+      "sha256": "sha256:422a3912675f63e535fd64ec31d66f2c9bc4c04c8324b699dee3ff82287d7b4d",
+      "size": 391854,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/guard_1_0.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/ee33c9f6cf04663262fe87c99ef1a55a39fbde9c6425ba742241cef675d64bd6.webp",
+      "sha256": "sha256:7bc0ebdd07a88ffd3fc0cdcf4772788f889259b1e4e15c9925ce0a5a40e4e523",
+      "size": 768,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/guard_1_1.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/7d7f6aa3f488cf2594da334290bad453ddea31ae2c1678ef37d9999b4b658844.webp",
+      "sha256": "sha256:d4866bff3fe096739e58d219d47817463c75f2a9f056cd40a08165893d97a769",
+      "size": 767,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/guard_1_2.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/e07cf959d46f6006e8db19f1f7546ce0e75e1fa707170ab7973f2d25957255fc.webp",
+      "sha256": "sha256:7b3df159c4c41372e05143d240cbe02a12b6fb12adb626f253e241fa35204f76",
+      "size": 773,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/guard_1_3.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/c4eca57b36276211e6d35e75330333e996356079f20b40544f4b7019696e5608.webp",
+      "sha256": "sha256:831d516ef8e7013c135b5bdd78e89414a9e872af516ec5349313beb782769fd0",
+      "size": 758,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/guard_1_4.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/8c17a899cdf005f95cf90a42c3afa86b33cd79fdcb4ff14dca627668d2b69835.webp",
+      "sha256": "sha256:1edf35fb755cda9f2473c25772cde331f7260de8698f77aea66178e641349197",
+      "size": 696,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/heavy_0.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/e87832c575343fb755bed0a67eb59311e8908a56ee26bba9b5465d8026b0fc9f.webp",
+      "sha256": "sha256:21b24b2760e811600afeabe75744c475e5ae49dbf9be04f5302ac217210149c9",
+      "size": 1051,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/heavy_1.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/249a01ec9976104f112d61e451f55decab47504bfc7ea9aab9ed6a577d8ac896.webp",
+      "sha256": "sha256:785746af4b1d5cd1c7818a3c23fb407735e05ffeed80233820f32bf58884b50a",
+      "size": 1051,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/mini_boss_0.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/89eb608d7868a3ab79a634ca89920dd3e9041a26591b6443fd30b9d4dc46277b.webp",
+      "sha256": "sha256:386f6ef8fc9c3579e45c9c69188757abe1d6e74bc6704f6fa67fbcb9b91e39bc",
+      "size": 2248,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/mini_boss_1.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/ac6cd13fa9a2647aa5b294431086fc5584f221791d45effe895d3e35d599d812.webp",
+      "sha256": "sha256:c4cf6e68f83c1acde037f2f8441646d1659583b9b04a5f084e957132294c7a1b",
+      "size": 2246,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/caster_1/attack_ne.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/848640bd6e7a2614327077472a80d9b3ef8e9ae9efaa7693c4aad315ce8a53e8.webp",
+      "sha256": "sha256:76dfad48db431aa198597b5bbc4e6a244993cc49de7d0ff159438ebef589ff7d",
+      "size": 92105,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/caster_1/attack_nw.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/d45f0e692780318ed39a4f15956e1515fc75fab5f1e38b1812730a095e4d8282.webp",
+      "sha256": "sha256:bd97d907fc006f63dfb9e12e3667d74fd732e2b3de44b7d7eae14a4a93fdef4e",
+      "size": 227601,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/caster_1/idle_ne.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/a1106c183a46d0ab866ef6da4c8d6421b6971b7f02b89fb1ca041fa9440edcc2.webp",
+      "sha256": "sha256:19a363e7b3ca6b62bd042dd934602269a5deff8d387e1d9fe426be5cc6e6b9f9",
+      "size": 171855,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/caster_1/idle_nw.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/aa68de3245391cd506d382d8e5651e072cd2eb97efc78723e5d090de58f6b0f4.webp",
+      "sha256": "sha256:fe792aa953771046110ac5f0c8e3eca03c5f9057327f15bbf72fee451687f62e",
+      "size": 411702,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/guard_1/attack_ne.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/8803ab8530faeca3d7929a191457117c9e1e941b8365f00fc9d9be10d3212455.webp",
+      "sha256": "sha256:3a7a57cf3db28001256b3d4baff253335a0afec3e35e447df4c325af8cc1ad13",
+      "size": 66555,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/guard_1/attack_nw.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/ea94fd84da0e5abd452c333c8ade86955526f2f141da17b242b2867a389ace8f.webp",
+      "sha256": "sha256:8ac91dd6731f4fa94367834892f7b3171588dc630fa539f94b14b58d6518409d",
+      "size": 63911,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/guard_1/idle_ne.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/6135ebadb57d24e08593c51e1942133b8506bb07d0319f2b37e968b5d786c660.webp",
+      "sha256": "sha256:1894ea290d11ad689e03bfc1e66f8b24635196dffd1f1a7d499c00199d318b76",
+      "size": 123873,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/guard_1/idle_nw.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/895393b2bcf33fe54633fb24819e1e5d1ff7653b0cb3b1f9159c463988334e82.webp",
+      "sha256": "sha256:fe9bb0a228ebed51849340e6bc41b094a4fa797594cdff0fb058afab270a7ccc",
+      "size": 122023,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/gunner/female/attack_ne.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/598fa9e319af20d2e317b00ea4b3c2a6215b59d4c0d3a6ec5a84d8f53d892125.webp",
+      "sha256": "sha256:598fa9e319af20d2e317b00ea4b3c2a6215b59d4c0d3a6ec5a84d8f53d892125",
+      "size": 883858,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/gunner/female/attack_nw.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/b59c2d6953bf1b90596f309d1e840a3be2bd45d01c06b1465281adc642d0e3ea.webp",
+      "sha256": "sha256:b59c2d6953bf1b90596f309d1e840a3be2bd45d01c06b1465281adc642d0e3ea",
+      "size": 885246,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/gunner/female/idle_ne.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/88979e5e4de276db2cc418c02b5966e3da07397afe99661d15fed6ef9fedfbda.webp",
+      "sha256": "sha256:88979e5e4de276db2cc418c02b5966e3da07397afe99661d15fed6ef9fedfbda",
+      "size": 1727076,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/gunner/female/idle_nw.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/38edb583913448da40f8b54c3e54c3397ee70e4ca084be0cb4caa827119091da.webp",
+      "sha256": "sha256:38edb583913448da40f8b54c3e54c3397ee70e4ca084be0cb4caa827119091da",
+      "size": 1728110,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/gunner/male/attack_ne.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/96796d453858a0a9b187e89ef9c4313c1d21a52920b0d60f531496a7d6dc2f43.webp",
+      "sha256": "sha256:96796d453858a0a9b187e89ef9c4313c1d21a52920b0d60f531496a7d6dc2f43",
+      "size": 1100320,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/gunner/male/attack_nw.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/cf6e13578993899c53054d9ea3f720fca1efc098fddd0b4786761a0cd949a204.webp",
+      "sha256": "sha256:cf6e13578993899c53054d9ea3f720fca1efc098fddd0b4786761a0cd949a204",
+      "size": 1098178,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/gunner/male/idle_ne.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/8827f3d3ef77e053d8abe81844ce8d51ec6dd72d7ed5002f09b6f868aefb1caf.webp",
+      "sha256": "sha256:8827f3d3ef77e053d8abe81844ce8d51ec6dd72d7ed5002f09b6f868aefb1caf",
+      "size": 2197212,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/gunner/male/idle_nw.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/4ffb349a5d19dc73cf497da4be587f968d965895b41e01a15e71a7c0f45dc8c6.webp",
+      "sha256": "sha256:4ffb349a5d19dc73cf497da4be587f968d965895b41e01a15e71a7c0f45dc8c6",
+      "size": 2186906,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/mage_apprentice/female/attack_ne.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/99f40bfcc0655971f86db9c15128d634281dcee0ae561edaa34fb9402d30ddc7.webp",
+      "sha256": "sha256:99f40bfcc0655971f86db9c15128d634281dcee0ae561edaa34fb9402d30ddc7",
+      "size": 670644,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/mage_apprentice/female/attack_nw.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/7256bf39e49c0cdf529a7f6d2f4733ad5e317aa9afd78f4dc2cf05fece902e44.webp",
+      "sha256": "sha256:7256bf39e49c0cdf529a7f6d2f4733ad5e317aa9afd78f4dc2cf05fece902e44",
+      "size": 671520,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/mage_apprentice/female/idle_ne.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/35845254c5f9e1e614b1f619a3464215d46ae943dd785f43397966d7b7716530.webp",
+      "sha256": "sha256:35845254c5f9e1e614b1f619a3464215d46ae943dd785f43397966d7b7716530",
+      "size": 1254594,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/mage_apprentice/female/idle_nw.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/d21bc02b052070b639512543fd0480fa4e087381ee21caef545dd504345c69f7.webp",
+      "sha256": "sha256:d21bc02b052070b639512543fd0480fa4e087381ee21caef545dd504345c69f7",
+      "size": 1252470,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/mage_apprentice/male/attack_ne.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/76c7c3130e2835071f7b9fb5ffd860a14018035b69464e8e8d3c1bc8598d26eb.webp",
+      "sha256": "sha256:76c7c3130e2835071f7b9fb5ffd860a14018035b69464e8e8d3c1bc8598d26eb",
+      "size": 810486,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/mage_apprentice/male/attack_nw.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/69f940d0aeb6c55547f556042dac7ddfe8c15ace18b3000fde743fa6eb3f4835.webp",
+      "sha256": "sha256:69f940d0aeb6c55547f556042dac7ddfe8c15ace18b3000fde743fa6eb3f4835",
+      "size": 808556,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/mage_apprentice/male/idle_ne.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/e217522e4d4a13136d67d0a893f97ed539e8a7b82d6963296bdee7c105e4f9b0.webp",
+      "sha256": "sha256:e217522e4d4a13136d67d0a893f97ed539e8a7b82d6963296bdee7c105e4f9b0",
+      "size": 1408454,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/mage_apprentice/male/idle_nw.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/67814f19e1a8edaeaa6090e7933a61be34814350deb22c5eb35a751b29230de8.webp",
+      "sha256": "sha256:67814f19e1a8edaeaa6090e7933a61be34814350deb22c5eb35a751b29230de8",
+      "size": 1408168,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/recruit_female/attack_ne.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/2f23c0aa3a81df161c4c32040de42b772418dc189aa355cdd9af2f428b187b94.webp",
+      "sha256": "sha256:4387f6c7a6b63c6c5be96a9fbae1b00ad826a3a1854757c00bbb09c1e6c4a865",
+      "size": 115964,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/recruit_female/attack_nw.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/9c190a93a04de1b0709a689677c0c5b3f09a9792eb9f9607e52b760181202dbd.webp",
+      "sha256": "sha256:38efd045a1958656346d60e9d4366f14b423192f149404c646eb840901940f7a",
+      "size": 115507,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/recruit_female/idle_ne.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/4a6c1d7a1c08c93e47aab768c85648c817ef0221afaed076644f91e44c963d9f.webp",
+      "sha256": "sha256:881918529a050323bc8baa7cfc084892cca0508ccddcaecc5e4f6ccfd4fc186a",
+      "size": 203638,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/recruit_female/idle_nw.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/27019ba05fe82bc96c51ac784277b38d216590381c5c0045f678ef5bf3e2be35.webp",
+      "sha256": "sha256:f95156fb1601b11940b77423ec3c1b05f02728e842c066ef2ce5e257e3e665d4",
+      "size": 203216,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/recruit_male/attack_ne.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/475e7fc6e1ed15820d9c67c2de95c5814786ba976db9488facb8d35afc28965f.webp",
+      "sha256": "sha256:dca3520e8baf6ff14159cbf03825f96edc677686ebcd4bdeb88c279d1396a1f0",
+      "size": 120136,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/recruit_male/attack_nw.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/b2fb7e7da7a918f9b6dcc459289e6d860aff0dea4d3cbd0513fda19ddf954fdc.webp",
+      "sha256": "sha256:a2a6e571a9c2fa5a93fb93bb00da4759b0f3359291c714439aad8eee7cd2a6b5",
+      "size": 120429,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/recruit_male/idle_ne.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/c3d2eba9bf7d7b5720ad61bcaa500025572f0b2328dbf35ad9bf01156342f5e5.webp",
+      "sha256": "sha256:07dc6a81088f5d7caa71dca77a586b25461d2d5ec1f6984e6c082d4057129bd3",
+      "size": 203331,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/recruit_male/idle_nw.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/14ec8461e0e18ad99a48591c08e9060b16605beeb9c373f2401a44c4ad0c15c6.webp",
+      "sha256": "sha256:135c03ce51c41272000f03d71f58bc8a75003676b37449d52b118a41a52124c5",
+      "size": 203237,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/sniper_1/attack_ne.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/f0da0eadda7b2f4505ec71fdc64341196089c240b018162948bcc279c44fbddd.webp",
+      "sha256": "sha256:c41085f6d8e692a9fee613de7c0c3f299fff3aa98e955ed74fc447511706f9db",
+      "size": 157304,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/sniper_1/attack_nw.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/b87082d5a4384ae1543af22da474f8f0769f583991ac2c24e8cc1afc965bed7c.webp",
+      "sha256": "sha256:cea55316d881e1a899bba975d7406473a50c7b87a20b074803e224af3eb35b39",
+      "size": 178652,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/sniper_1/idle_ne.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/7c4c85f40f320a2dd0965017ed2baff2fe6e8f057eda2b2c5b4f3d7b7e5d7e8c.webp",
+      "sha256": "sha256:b188bc8aacd18b291b34f378db9e2ccdb91c1b7bd138e726e875f34df90ed4d5",
+      "size": 317128,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/sniper_1/idle_nw.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/6a54c5e88b5d877c14ea4cff6548e46caec5199b5eb7697cfe68403445ce50d0.webp",
+      "sha256": "sha256:752430429ac439439da1936c741a9aa2b296bd9afccc18b35562d7247ec94af0",
+      "size": 378663,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/swordmaster/female/attack_ne.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/26613d6bdb4ff8eb3eb7cc37f9d2b2fd290f39548f34a513a72171c09b49ba8e.webp",
+      "sha256": "sha256:26613d6bdb4ff8eb3eb7cc37f9d2b2fd290f39548f34a513a72171c09b49ba8e",
+      "size": 714984,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/swordmaster/female/attack_nw.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/2d68e10c5a53d4922605f7bf3b9b1e35c3ae2c32c67463b25842d2162ce75b8a.webp",
+      "sha256": "sha256:2d68e10c5a53d4922605f7bf3b9b1e35c3ae2c32c67463b25842d2162ce75b8a",
+      "size": 713474,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/swordmaster/female/idle_ne.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/a151235565213eeea281a83447a617ee8082899fbb967780625c817fc1fb2cba.webp",
+      "sha256": "sha256:a151235565213eeea281a83447a617ee8082899fbb967780625c817fc1fb2cba",
+      "size": 1184540,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/swordmaster/female/idle_nw.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/71bf33c820890c634315d42db8b303d2912891cab01f978afa73d4ad3e4fa13e.webp",
+      "sha256": "sha256:71bf33c820890c634315d42db8b303d2912891cab01f978afa73d4ad3e4fa13e",
+      "size": 1184460,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/swordmaster/male/attack_ne.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/24077183a745d68fe849874e3c7703da968317348eb9cb4219be12ff31298a93.webp",
+      "sha256": "sha256:24077183a745d68fe849874e3c7703da968317348eb9cb4219be12ff31298a93",
+      "size": 829046,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/swordmaster/male/attack_nw.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/3c37e3ebbb8c02a92d73e1431144600080b051b0e07719da40b4cb03858ba71e.webp",
+      "sha256": "sha256:3c37e3ebbb8c02a92d73e1431144600080b051b0e07719da40b4cb03858ba71e",
+      "size": 829090,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/swordmaster/male/idle_ne.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/7a33cab3a72a82e8f7c5974a2de2fd8403ebd4168d8f83ac98e375f6d537c06d.webp",
+      "sha256": "sha256:7a33cab3a72a82e8f7c5974a2de2fd8403ebd4168d8f83ac98e375f6d537c06d",
+      "size": 1416564,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/operators/animated/swordmaster/male/idle_nw.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/c61deaf0738a1a7ddad92bf2d405bb12a0a1f329d57cd1f6b29eaea30b7f5a6a.webp",
+      "sha256": "sha256:c61deaf0738a1a7ddad92bf2d405bb12a0a1f329d57cd1f6b29eaea30b7f5a6a",
+      "size": 1419570,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/runner_0.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/fd5bd6c17d2d078d2f5a1275cddd39519054d7e63be1c7d3bd322e9f985bd58b.webp",
+      "sha256": "sha256:0b087254bc43ef90da8c8743f30a5f36ba246b447415be91b276d55cbe7edf72",
+      "size": 971,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/runner_1.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/41f83c10c30027368fe6312e7366b789d24b9dea42f18649512af50a1a9055e9.webp",
+      "sha256": "sha256:ceaac14937858ac92f5a7664b8aefd51f84858fce924fbb9f6006806ac39bcb3",
+      "size": 971,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/sniper_1_0.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/f93aa11229e0d0fdaf801d2fccb9a3313187f429e9ca21614994731da4c774e9.webp",
+      "sha256": "sha256:109784f469a5330db8f56294d3501081a25eed40da0010703f40ec60dcca1d60",
+      "size": 655,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/sniper_1_1.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/a764d72635fc1cf15ad9a60c1fe8ef642b00d07b9a2984732d84e4d365381175.webp",
+      "sha256": "sha256:96ee8b26d698638545526dd6c98c79ae8e6e588d1c34d3bed48c5869aada54df",
+      "size": 654,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/sniper_1_2.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/c23575516793d13c84ed15649aba1ec6ad56df7e762e7b3c5693cf81f25eca3c.webp",
+      "sha256": "sha256:ee680fa3b581fbcb9d6579fcea8cfeef82872615b901cad2543d81ed31db1dfb",
+      "size": 672,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/sniper_1_3.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/9931850eab996a4282d414a72a26bd915fb0edd4b379619c9a91886ccc38eda1.webp",
+      "sha256": "sha256:cfe4dbfb7eb68d9a37c200e2998d737f907291b0c5392bb115ad1eea4745ea40",
+      "size": 662,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/sniper_1_4.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/8b96088580a59eb1fb37210529efed4f1fcab54eea80a4d3835d9e91342f7171.webp",
+      "sha256": "sha256:faa644698f66cf3375690dc9ce53ea816d5898616ac40c7b459d84895ffda8cb",
+      "size": 599,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/spellcaster_0.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/1b35ddcba7d1c2a24faa7afb7cd0c3d0bec943c243429016835a203eefaf563d.webp",
+      "sha256": "sha256:334acb613420bee08a7afee6e2192fab30ced9ea4ce9015c3855c07c1bec7ae6",
+      "size": 912,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/spellcaster_1.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/69c6034c11d4e1bb0865c340043d97b7b3032c45183b1daf3bfab2c6c2474ddd.webp",
+      "sha256": "sha256:802c55a47ad8c12371d961764526501685a5035fc5530e16c7be27a629a9c89f",
+      "size": 911,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/trap_spike_armed.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/e4dc2b4dec385c867355f7dd43983f22e200ad08abeea770380fdc2b304716e0.webp",
+      "sha256": "sha256:6ca38a77b4d6caa8f2ead3a81ad9b0504d4c7093301fb5c365a4274e71e5b057",
+      "size": 287,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/trap_spike_sprung.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/8ff98ce87675e76511a66775328b0b7f454c92166a9f69114e271829a20a8fd3.webp",
+      "sha256": "sha256:9d535a1f82de856d6f84e4507ef85bb09a78ed9469b64c777fb01dc8b431c893",
+      "size": 390,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/sprites/trap_tar.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/8a3aedaf4e5d9c2b42d9fa3a6a0b8dfe70a7821974f58a5381415159e5771652.webp",
+      "sha256": "sha256:e4cb98b3f09a0e176e583a19826b2088c60dc960955a61b7ac983d0ff57f31e3",
+      "size": 247,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/terrain/proto_isometric/ancient_ruin.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/807a451ef08bea1933c1bb0c97a4f5bbe40ee0ebc38de45b3900e17b53cf2bbe.webp",
+      "sha256": "sha256:0d8e7d508ea263a71ab570498ca22d9a43bb314300057b9f14abc947662db1f4",
+      "size": 462000,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/terrain/proto_isometric/blue_ice.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/9ae5f4e7636919b61067ade7aac9804b028a16b4cc15bc23f67ceae755595002.webp",
+      "sha256": "sha256:3d2cb8e9f6b208f27474add6ace8c83f49ec4c77bcabce957254c54519923f0d",
+      "size": 538347,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/terrain/proto_isometric/dark_mud.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/fd460afb3f12fc12c623975211bb9a93622e3160b615e76586260808fc214872.webp",
+      "sha256": "sha256:cf882c47f404fe69ddea35ec34c1144a1ac3ebde9c7577d11e21ec056c315c8d",
+      "size": 402146,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/terrain/proto_isometric/desert_sand.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/15e68ca47ba7c5709dc8a45570b9f1b9dfdc59d09037c84b9fba7b3fc42885de.webp",
+      "sha256": "sha256:d9dbd2e331962993e54bb65e314eec4a483a93b3e4471edc2ce927f283d3df24",
+      "size": 466986,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/terrain/proto_isometric/iron_rock.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/a195e5966a80c100199b07ff2eea3e1ce36745a6a3abcb5af4a781faa246d684.webp",
+      "sha256": "sha256:fba5e206d4d88a8f7541a876fc6e0c4c6ef3638ef26fd2e43cafcbb5887f74c8",
+      "size": 534742,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/terrain/proto_isometric/lava_basalt.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/dc5084b000d65fcec948f119af5c085758bab3a8779a75facd28b77e85f33710.webp",
+      "sha256": "sha256:d2327cfea86c29f3133eaac03a12583d7ae04ce9adbf427da72afc02b8d3967d",
+      "size": 398585,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/terrain/proto_isometric/lava_flow.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/244cb06ac8ef858d19bcaabbe0b748972a1ac2247accdd1eeefe359b3c867db4.webp",
+      "sha256": "sha256:2c317efc3b1ae9c8853d14e6b3d5e990b5309880598a15e822f3b5804f433247",
+      "size": 572319,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/terrain/proto_isometric/oasis_wetland.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/41471781bf9a833cca09851db700ae3100f657c43c64cb15cc821e80eed48a43.webp",
+      "sha256": "sha256:0ea02a38b94f5caea44be1d91697e7ab679fd416dd5278f05e475f6645cdad37",
+      "size": 473089,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/terrain/proto_isometric/obstacles/frozen_pine.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/613f6d2f23d9f0281ff3ef413ca00c4f12eaac337dc70f80f5075fb174cb6faf.webp",
+      "sha256": "sha256:236ad6331014b27d74f5de3f138cf106ba179248d0f8f67aa835e82972990637",
+      "size": 93864,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/terrain/proto_isometric/obstacles/frozen_snow_rock.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/3435bd954c2c94be3bc4a24cde6b3be30a4298ee29beae01f3fa719a37ec631a.webp",
+      "sha256": "sha256:0752bb790e7e73f4dd9234d9bbc16a5f030855bf59b6aca4e701f6f39f2afc4e",
+      "size": 90158,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/terrain/proto_isometric/obstacles/lava_basalt_chimney.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/ac38ece166644f085a0de48e740e073f3cf9e75bdd5afb0d2438b301dd91acbb.webp",
+      "sha256": "sha256:0d2574da96578ee6ab97f2cd98cde904551ffd0d231105f71a116a2e7f7b3ba0",
+      "size": 88889,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/terrain/proto_isometric/obstacles/lava_obsidian_cluster.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/d14364f01a5e47594740d4e61e473c3ebf05a30ea77b238f8c6ec7bbc7bb15bc.webp",
+      "sha256": "sha256:e14eb079bc66ae1ef650c1644f6aa9a41ea7f1cce0e7b612f04c83a0e16e34f3",
+      "size": 87003,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/terrain/proto_isometric/obstacles/wetland_mangrove.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/1e95396d654e4a9cf89dc594373ed8798566619d34fb39092bda842bd5896155.webp",
+      "sha256": "sha256:f8eb8788315037c50a81747b733fd150339b113b225c1a37bf3f430af62c0409",
+      "size": 71879,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/terrain/proto_isometric/obstacles/wetland_stump.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/b553d6bb856b5febd2c31925ec3d20027c2d03166f91a9e8529483ea77df32e7.webp",
+      "sha256": "sha256:6ceb690dbda2099678530506a456534296ef6522666b9aae0698ffc1c5615df1",
+      "size": 76283,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/terrain/proto_isometric/salt_crust.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/6e0f82ba63ec2c9d158e015091e563f239e8dc58d55e16d95f5ae21b3b7d8398.webp",
+      "sha256": "sha256:1cd6712a76bd7f6d4e1457df439c8a4c3f4ab0956baf3ccd3b0eb17c2d525f9d",
+      "size": 457825,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/terrain/proto_isometric/tundra_snow.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/bfc714c670af9a3fdb0d05344f8aada24a886badb8f2df9aed1a8bb397a05cd7.webp",
+      "sha256": "sha256:e28b84df4f8e6d9db54becafe485c6ffb95e3fd9b41583bbce5bec1f6ff58c4e",
+      "size": 428643,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/terrain/proto_isometric/volcanic_ash.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/a04334bca3c1f0c5b4fbb059391c724bffca06cd33bbb1bc8a1f14ed91465f7e.webp",
+      "sha256": "sha256:8d4352bf34aea0d6c6200cb1d51f858556db2010c78dd93f3b40510977d017c9",
+      "size": 447302,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/tutorial/tutorial_block_shield.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/cf2453eefe37a5b2cc2095b1575d93a18d7272bd640cf8a27c1b548a233daac4.webp",
+      "sha256": "sha256:21ece0f78533293357c1be5316561913f15c8d66a4dd3d1bbebe33048e155c2f",
+      "size": 249440,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/tutorial/tutorial_deploy_gesture.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/c3f8df8aa0530300f8fc50067574547ddd26d7b6ed61f3144d01715bd0bb329b.webp",
+      "sha256": "sha256:0e32fd01ed150a821e9720f68c830c9bc3534a19e71461e0c90b6df606667544",
+      "size": 223514,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/tutorial/tutorial_route_marker.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/0838d9dc5139d1b126dcd3a5151d3c27b82aa2f0ef3781c4d0cbbec53397e961.webp",
+      "sha256": "sha256:ac70eb6bf3bf1706446e9dc70c8ddde16ec5aad75b1b2e7816ca30f427907310",
+      "size": 228335,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/cursors/cursor_action.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/b04e882a1f140a8154e262f5792edd96a76b4cbc3bf8d24a1bddceeb1169d1d8.webp",
+      "sha256": "sha256:54a47c5f767b648942abc9e400ba5c35b1700b98dab7df3f70f1ae620c572e05",
+      "size": 2011,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/cursors/cursor_busy.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/91bf910efc563428da95569922c7d9bf2ce87581140836f3e508bc72c1b0242f.webp",
+      "sha256": "sha256:fcea03c893b8cf7b35535e1009ee118cadeea460075644c85afabd78274255a7",
+      "size": 2217,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/cursors/cursor_default.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/ceb59e6a40ef826d8c0c4dd3af1499a3003c8edbbc5b4f574fd40c7bfed6e3d4.webp",
+      "sha256": "sha256:e118b330f93fa6959a6112343afcfaede8c0246ca58ba91d676ac282c169ec8c",
+      "size": 1826,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/cursors/cursor_deploy.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/6baab50bcdc6edb084f8b943c31de395904da3ac5cb5462aa8c04dbb26216ce1.webp",
+      "sha256": "sha256:65e58ddccafa8604f73de227fa261bb95b289c86db82e99dc20ca2fe5e2e7e2b",
+      "size": 2032,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/cursors/cursor_heal.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/28093095b48b61a984b62499fc6bafa06f0e293bdadc2332d04e51a4ec0add6f.webp",
+      "sha256": "sha256:6b19451a8d9d53f576c983dad532a5244f1e745cd3561bfc93de9b3947ea42ac",
+      "size": 2241,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/cursors/cursor_invalid.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/e188737be9eb199069f2cb3d9a20301c6feb828a0ff17624fcf6989698c5d837.webp",
+      "sha256": "sha256:f516674b7cb6bc86abcde35a80d1dce80892b20943eee2c504d15858eaeedd98",
+      "size": 2287,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/cursors/cursor_pan.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/a204bac7d7e55dfab498f14fc4ab6c30d03659464a3d423b614610133f6840b5.webp",
+      "sha256": "sha256:31c428a05aba4404ae739acfcd932c6076c009b635448131b95db937da7b36b3",
+      "size": 2093,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/cursors/cursor_pan_grab.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/e5c924197051a370ff901a82aec578efebbd750ff4122baace76dccec34e730e.webp",
+      "sha256": "sha256:c9d07917523859b3e955bb9009b08a6c4da8e2d1bf23d5f6b6579e22853471c4",
+      "size": 1912,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/cursors/cursor_select.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/a73e473a60a3121a8eb9921662e50ae0a73c327558c1a8a44aa561aaa8df2202.webp",
+      "sha256": "sha256:68256f9f929de1048103485e068aa0aa4a949febe305efdd990a3abd095b69f2",
+      "size": 1906,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/cursors/cursor_text.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/fc323de3e32b28a5a21855b0f8327478b1b504668372538908e6efbd640b1ecc.webp",
+      "sha256": "sha256:e79849a3a22f341ea6e08f990610215f676768dc48960f853cc8af96d443a1b3",
+      "size": 1397,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/cursors/cursor_trap.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/9d875686eec309886aa51915e4268db17b80221ef983df4e8c328e6b36d9b75e.webp",
+      "sha256": "sha256:20fdc794a032380a54e4fbc2208ab15b39104a784fef1d660805e66ad7d32aa0",
+      "size": 2046,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/factions/crimson_aegis_banner.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/b6167023a3d4ee05863bf46b5e7a1474ee10f98585169fa976a8a3c17ce21a53.webp",
+      "sha256": "sha256:b6167023a3d4ee05863bf46b5e7a1474ee10f98585169fa976a8a3c17ce21a53",
+      "size": 33300,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/factions/crimson_aegis_symbol.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/9397331ced3924108b361967f370d85a5500961a3ee16c93def5eb0b5fc4a9de.webp",
+      "sha256": "sha256:9397331ced3924108b361967f370d85a5500961a3ee16c93def5eb0b5fc4a9de",
+      "size": 31930,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/factions/lunaris_reliquary_banner.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/7f8bc9fee2bca6a7876eb8d641cefc5e5ac34214c90452645f8ac41b5af774f0.webp",
+      "sha256": "sha256:7f8bc9fee2bca6a7876eb8d641cefc5e5ac34214c90452645f8ac41b5af774f0",
+      "size": 38890,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/factions/lunaris_reliquary_symbol.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/0c1bd8a4fb9c522c405d4108f83b5a927bad66b9372f9dbcd319b5476df75011.webp",
+      "sha256": "sha256:8337d41d9a29fc9ff87378058d0d1b689582f92e076dc13f3f57205846124196",
+      "size": 185851,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/factions/solcrest_accord_banner.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/4865df611a278df92eb79fa0f5bc23642c9417d6a8c149aa417e5074bf29af64.webp",
+      "sha256": "sha256:4865df611a278df92eb79fa0f5bc23642c9417d6a8c149aa417e5074bf29af64",
+      "size": 42654,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/factions/solcrest_accord_symbol.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/eb3e5af7df312cd9fe4c486f2f9b1b2aa7b7caac23e34fe0c876ff0fa0c69576.webp",
+      "sha256": "sha256:eb3e5af7df312cd9fe4c486f2f9b1b2aa7b7caac23e34fe0c876ff0fa0c69576",
+      "size": 27706,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/factions/vesper_circuit_banner.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/5e21f7922fb20b819669c4ba0695d5ec38603c9e15c1dc66a7cc397aa5ec1666.webp",
+      "sha256": "sha256:5e21f7922fb20b819669c4ba0695d5ec38603c9e15c1dc66a7cc397aa5ec1666",
+      "size": 30178,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/factions/vesper_circuit_symbol.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/a2427c973d69d558f9ae601be7fac08822b680ca4f3234937cfa597d569864e6.webp",
+      "sha256": "sha256:a2427c973d69d558f9ae601be7fac08822b680ca4f3234937cfa597d569864e6",
+      "size": 24816,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/staging/frames/command_deck.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/6327e2fc0a1ae1c68a1779e34a8a95bc7de040c63b3442d30335463442a27b11.webp",
+      "sha256": "sha256:2d54bc46650ce7635f974768883313e9510324e6854144325392fd57843b1089",
+      "size": 687783,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/staging/frames/company_hud_plate.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/1a00dc1b64f6b51794b6e4988aa5e70f0ae032eaf775b6a78fa83f8c6212e4c5.webp",
+      "sha256": "sha256:3592cd1e23baff39d1bbd2add76cca3fde84a75d930b6c96c4b51e8ec33377c2",
+      "size": 411730,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/staging/frames/company_navigation_rail.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/c025550e9a34915ba621c77e7a3ee324144f58f55651fa8ba0a09065e867a381.webp",
+      "sha256": "sha256:a19e2ed3d39306af1ec4a1fe496ba54c589c41fddbbd6f64aa6b2ce35bec0b4d",
+      "size": 557235,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/staging/frames/mission_card.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/e17f5e9cde03bdf749f0006332442ef2b0e3808e2054001f013c40a9b4ae97b3.webp",
+      "sha256": "sha256:3d85381f7c0abc27c7a8d0a5167e232eb39a8da7af5f8ba2e9ceab4d1c02c924",
+      "size": 578491,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/staging/frames/navbar.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/330e280e70036bfabd3792f67ba12699d9b5626b244ccb024adba985cf450016.webp",
+      "sha256": "sha256:111e7123aa24e0b30b5e6e9676941936f8e08e2aa38360ebeaf8db04e7bea01a",
+      "size": 214701,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/staging/frames/operation_tile.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/66ad989f6bd031d7929424795d7072f57446ef93e48d73d5ccfb2be927bf0ba4.webp",
+      "sha256": "sha256:f38dab73244ed144c2bfaa04ef79b864518bf8c78787572c421f59b4795b27dc",
+      "size": 307409,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/staging/frames/primary_button.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/688464536bd1d387eb31e7870f7ba871767222156c248c7a0bfb195997542920.webp",
+      "sha256": "sha256:30455adff8574ab6e0caee596aa05a57bff6f72d6e6cb2e9b1aebdca2aba5cd7",
+      "size": 327470,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/staging/frames/resource_chip.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/4f9cc823d25790de32b784ce6b72c77a6048ff1685f4afc1609c20c21a93ba42.webp",
+      "sha256": "sha256:b0733ef34204be9a3a96e846c85da6a2075d2b4ac1f71ec4d05cd792a57b93b1",
+      "size": 114266,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/staging/icons/exit.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/a47efd79a162a2d14151e0d0fc29f18e489b906e57e7de396ebfeabf69bdd0e3.webp",
+      "sha256": "sha256:032fd76398e40fe21859358da6fcef88248a3beb77865549128e9d8901f868ab",
+      "size": 120058,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/staging/icons/lunaris_seal.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/74496dd9b7dd2b306d0c7f43e02bb342b45f7e50b838647b79d392bb068efc32.webp",
+      "sha256": "sha256:e6c9fe49bb463deee7826947e21b3a893e5ddbf5689ce0d2c47a46e9127dbcab",
+      "size": 256957,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/staging/icons/mission.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/32b853f3d75400e886413b5312c3656a1f4162794ad0e59917365a02c5661366.webp",
+      "sha256": "sha256:a5200f9a0c56154ff1ed2d1f1d94d37f628e2d4ce541604fc1ff27e094ad0d4e",
+      "size": 171636,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/staging/icons/resource_aether.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/ec047f0d1c0b86785e618cde4afe10becf76192beef6456e24fd63dfb026c445.webp",
+      "sha256": "sha256:7a17140153beba34286d5e5af338e901d6a6f92a4305c7a84656525f07504130",
+      "size": 197905,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/staging/icons/resource_sigil.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/d223ed6ff72992d96c8c2062de0f6606c36b6d573273c4f802a13bdf71fe532e.webp",
+      "sha256": "sha256:6814426ff77ed335469528cd7d9e7d0048b3608a5543cc4affe78fb4b281c047",
+      "size": 148179,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/staging/icons/resource_stamina.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/712ff2e2e9894226b1f2a9d87efcc2e9b0a0b1563235270b09b8ea91c404b883.webp",
+      "sha256": "sha256:499899cb8a0caa69e41182e49a5b8f8b8b1193a1b8fb5a67d18230a825825c63",
+      "size": 323144,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/staging/icons/settings.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/21afb76e17dfffadf77d240cc06dc36444ce4069301c36fd136c5dbc622a4ee5.webp",
+      "sha256": "sha256:c8b8aecc21847e3a33c09ed004fbdf106591f100936daad530333878a1c42ea1",
+      "size": 250017,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/ui/staging/icons/status_diamond.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/7f175f8dcca15a38b931d2ff096b019e4b02bd7d5e049fce44ace6d808a85a6d.webp",
+      "sha256": "sha256:5f483bc0d95422f73f3c8528a6beb2600a882dddf982c5c5289499836ab32692",
+      "size": 101558,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/vfx/high_threat/s9_green_cage_particles.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/9548cc6c5b1f2592f4d4d46833bb1937f066c88d5b1632c55a3c7c41df02edf5.webp",
+      "sha256": "sha256:9548cc6c5b1f2592f4d4d46833bb1937f066c88d5b1632c55a3c7c41df02edf5",
+      "size": 245940,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/vfx/high_threat/s9_green_cage_warning.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/2f2ab64203345a2685bbc072c359568293ae48c4ee75200d31ce3975ce68522d.webp",
+      "sha256": "sha256:2f2ab64203345a2685bbc072c359568293ae48c4ee75200d31ce3975ce68522d",
+      "size": 229326,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/vfx/vfx_deploy_dust.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/849365329d7d45dfe2ba47011543e9b84eb0450f4ec738484cae04abdf0ea5cf.webp",
+      "sha256": "sha256:d910a4cc5e78e8d00123130e415e0e79b8b044103284a66317dbdd79ec06631a",
+      "size": 349,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/vfx/vfx_kill_spark.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/b5303c27a2c8b8ac7159d014c110801f4dbf23e662f3a5d3595e74eb1801ca6c.webp",
+      "sha256": "sha256:58bd7e51571ff1787178c39491e09a051a0a8326c08ce650edad97586713c08c",
+      "size": 272,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/vfx/vfx_leak_vignette.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/3f836add054fac1ab9441a227b09d2a5e60b7d6fabe112ef5029561952864903.webp",
+      "sha256": "sha256:5e541d69e9a926ae278025d36757fd80ad57a4e495102606ac04f4fda59175ac",
+      "size": 2250,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/vfx/vfx_result_stamp.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/3dcf1c79a00e7af2b08cf34b10f3899e927b380822fa540ea8941035d42ec75e.webp",
+      "sha256": "sha256:3c3f69ef7206489a6ba22cc0798f396e4df4eaa97d2e27dda4a9ab6709fe9caa",
+      "size": 7709,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/vfx/vfx_wave_banner.png": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/cca5078064ae678d00e6914d9b97df1f818aef874a6ba6dc0b2213748228f9e1.webp",
+      "sha256": "sha256:061589929059a1c2e241bb3844233722530844239a9288c8b1a115e9df381ba5",
+      "size": 3047,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/world/act2/restoration_lattice_seal.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/086fba607778eac4f109ef39fc0efd27fd56757abb61c94e0cf04b17e3362d7d.webp",
+      "sha256": "sha256:086fba607778eac4f109ef39fc0efd27fd56757abb61c94e0cf04b17e3362d7d",
+      "size": 329162,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/world/endpoints/holy_crystal_idle.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/b09e449d4cd0dce6afae4bfba03581ca23762570e37fc7934b0ff52831356103.webp",
+      "sha256": "sha256:b09e449d4cd0dce6afae4bfba03581ca23762570e37fc7934b0ff52831356103",
+      "size": 680006,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/world/endpoints/photon_portal_idle.webp": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/16bae5e73b64e27d53d9d0987ec32f4d20b1573a540270a1d1ab096cb26aeb68.webp",
+      "sha256": "sha256:16bae5e73b64e27d53d9d0987ec32f4d20b1573a540270a1d1ab096cb26aeb68",
+      "size": 7151520,
+      "assetType": "image",
+      "groupId": "template",
+      "used": true
+    }
+  }
+}
