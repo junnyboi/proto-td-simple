@@ -10,7 +10,8 @@ godot --path .
 ```
 
 The main scene is `res://scenes/loading.tscn`. Loading opens the start screen, and
-the campaign screen is entered only after the player activates **Start**.
+**Start** always opens Campaign mission selection. If a durable interrupted
+mission exists, it resumes only after the player explicitly selects that mission.
 
 ## Leaderboards
 

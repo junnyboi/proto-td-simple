@@ -457,8 +457,9 @@ func _on_start_pressed() -> void:
 	_start_failed = false
 	_start_button.disabled = true
 	Sfx.play("ui_confirm")
-	if Game.start_campaign():
+	if Game.start_campaign(false):
 		Game.request_command_tutorial()
+		Game.open_stage_select()
 		return
 	_start_pending = false
 	_start_failed = true

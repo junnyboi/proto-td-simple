@@ -257,6 +257,7 @@ func _build_body(column: VBoxContainer) -> void:
 
 func _populate_route() -> void:
 	var stage_stars: Dictionary = Game.campaign_projection().get("stage_stars", {})
+	var pending_stage_id := Game.pending_campaign_stage_id()
 	var enabled_rows: Array[Button] = []
 	for stage_id: StringName in Game.campaign_stage_ids():
 		var stage := load("res://data/stages/%s.tres" % stage_id) as StageDef
@@ -264,15 +265,19 @@ func _populate_route() -> void:
 		var unlocked: bool = Game.is_stage_unlocked(stage_id)
 		if unlocked and not stage_stars.has(stage_id) and _next_stage_id.is_empty():
 			_next_stage_id = stage_id
+		var selectable := (
+			unlocked
+			and (pending_stage_id.is_empty() or stage_id == pending_stage_id)
+		)
 		var row := AetheriaButtonType.new()
 		row.name = "Stage_%s" % stage_id
 		row.custom_minimum_size = MISSION_CARD_SIZE
 		row.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 		row.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-		row.disabled = not unlocked
-		var is_next := unlocked and not stage_stars.has(stage_id) and _next_stage_id == stage_id
-		row.apply_role(&"selected" if is_next else (&"secondary" if unlocked else &"disabled"))
-		_apply_mission_card_button_style(row, unlocked, is_next)
+		row.disabled = not selectable
+		var is_next := selectable and not stage_stars.has(stage_id) and _next_stage_id == stage_id
+		row.apply_role(&"selected" if is_next else (&"secondary" if selectable else &"disabled"))
+		_apply_mission_card_button_style(row, selectable, is_next)
 		_apply_route_row_presentation(row, stage, unlocked, is_next)
 		if is_next:
 			var sparkles := CampaignNextSparklesType.new()
@@ -286,7 +291,7 @@ func _populate_route() -> void:
 				&"ui.campaign.next_highlight_description",
 				"Recommended next operation, highlighted with a glow and sparkles.",
 			)
-		if not unlocked:
+		if not selectable:
 			row.focus_mode = Control.FOCUS_NONE
 		else:
 			enabled_rows.append(row)

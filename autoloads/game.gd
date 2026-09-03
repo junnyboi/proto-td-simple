@@ -529,14 +529,30 @@ func open_stage_select() -> void:
 	_swap_content.call_deferred(STAGE_SELECT_SCENE_PATH)
 
 
-## Commit a campaign attempt and enter the mission immediately. The ticket keeps
-## one stable campaign-personnel witness for save/replay integrity; tactical
-## deployment uses the fixed repeatable four-operator roster.
+## Reports the durable mission awaiting an explicit resume selection, if any.
+func pending_campaign_stage_id() -> StringName:
+	if not _campaign_battle_active or _pending_battle_ticket.is_empty():
+		return &""
+	return selected_stage_id
+
+
+## Resume the matching pending mission, or commit a new campaign attempt and
+## enter it. The ticket keeps one stable campaign-personnel witness for
+## save/replay integrity; tactical deployment uses the fixed repeatable roster.
 func start_campaign_stage(stage_id: StringName, open_battle: bool = true) -> bool:
 	if not campaign_active or campaign == null or stage_id.is_empty():
 		return false
 	if stage_id not in campaign_stage_ids() or not is_stage_unlocked(stage_id):
 		return false
+	var pending_stage_id := pending_campaign_stage_id()
+	if not pending_stage_id.is_empty():
+		if stage_id != pending_stage_id:
+			last_campaign_error = &"mission_attempt_pending"
+			return false
+		if open_battle:
+			_queue_battle(stage_id)
+		last_campaign_error = &""
+		return true
 	var stage_path := "res://data/stages/%s.tres" % stage_id
 	if not ResourceLoader.exists(stage_path):
 		return false
