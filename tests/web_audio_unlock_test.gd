@@ -2,6 +2,7 @@ extends SceneTree
 
 const EXPORT_PRESETS_PATH := "res://export_presets.cfg"
 const SFX_CATALOG_PATH := "res://assets/sfx/catalog.tres"
+const OPERATOR_DIRECTORY := "res://data/operators"
 const REQUIRED_UNLOCK_TOKENS := [
 	"window.AudioContext=Wrapped",
 	"window.__protosAudioContexts=contexts",
@@ -10,20 +11,9 @@ const REQUIRED_UNLOCK_TOKENS := [
 	"['pointerdown','touchstart','keydown']",
 	"visibilitychange",
 ]
-const REQUIRED_SFX_ALIASES := {
+const REQUIRED_EVENT_ALIASES := {
 	&"kill": &"operator_select",
 	&"wave": &"placement_ready",
-	&"bastion_slam": &"ability_ready",
-	&"conflagration": &"ability_ready",
-	&"deadeye": &"ability_ready",
-	&"flurry": &"ability_ready",
-	&"hold_the_line": &"ability_ready",
-	&"mend": &"ability_ready",
-	&"overpower": &"ability_ready",
-	&"rally": &"ability_ready",
-	&"rapid_volley": &"ability_ready",
-	&"tempest": &"ability_ready",
-	&"war_banner": &"ability_ready",
 }
 
 var _failures: Array[String] = []
@@ -63,14 +53,25 @@ func _run() -> void:
 				)
 	var catalog := load(SFX_CATALOG_PATH) as Resource
 	_check(catalog != null, "SFX catalog is unavailable")
+	var entries_value: Variant = catalog.get("entries") if catalog != null else null
 	var aliases_value: Variant = catalog.get("aliases") if catalog != null else null
+	_check(entries_value is Dictionary, "SFX entries are unavailable")
 	_check(aliases_value is Dictionary, "SFX aliases are unavailable")
-	if aliases_value is Dictionary:
+	if entries_value is Dictionary and aliases_value is Dictionary:
+		var entries: Dictionary = entries_value
 		var aliases: Dictionary = aliases_value
-		for semantic_id: StringName in REQUIRED_SFX_ALIASES:
+		for semantic_id: StringName in REQUIRED_EVENT_ALIASES:
 			_check(
-				aliases.get(semantic_id, &"") == REQUIRED_SFX_ALIASES[semantic_id],
+				aliases.get(semantic_id, &"") == REQUIRED_EVENT_ALIASES[semantic_id]
+				and _resolves_to_direct_entry(semantic_id, entries, aliases),
 				"%s is not routed to an audible shipped cue" % semantic_id,
+			)
+		var skill_ids := _shipping_skill_ids()
+		_check(not skill_ids.is_empty(), "no shipped operator skills were discovered")
+		for skill_id: StringName in skill_ids:
+			_check(
+				_resolves_to_direct_entry(skill_id, entries, aliases),
+				"shipped skill %s is not routed to a direct audible cue" % skill_id,
 			)
 	if _failures.is_empty():
 		print("WEB_AUDIO_UNLOCK_TEST_OK")
@@ -79,6 +80,37 @@ func _run() -> void:
 	for failure: String in _failures:
 		push_error(failure)
 	quit(1)
+
+
+func _shipping_skill_ids() -> Array[StringName]:
+	var result: Array[StringName] = []
+	var files := DirAccess.get_files_at(OPERATOR_DIRECTORY)
+	_check(not files.is_empty(), "shipped operator directory is unavailable")
+	files.sort()
+	for file_name: String in files:
+		if not file_name.ends_with(".tres"):
+			continue
+		var path := "%s/%s" % [OPERATOR_DIRECTORY, file_name]
+		var definition := load(path) as OperatorDef
+		_check(definition != null, "shipped operator is unavailable: %s" % path)
+		if definition == null or definition.skill == null:
+			continue
+		var skill_id := definition.skill.id
+		_check(not skill_id.is_empty(), "shipped operator skill id is empty: %s" % path)
+		if not skill_id.is_empty() and not result.has(skill_id):
+			result.append(skill_id)
+	return result
+
+
+func _resolves_to_direct_entry(
+	semantic_id: StringName,
+	entries: Dictionary,
+	aliases: Dictionary,
+) -> bool:
+	if entries.has(semantic_id):
+		return true
+	var target := StringName(aliases.get(semantic_id, &""))
+	return not target.is_empty() and entries.has(target) and not aliases.has(target)
 
 
 func _check(condition: bool, message: String) -> void:

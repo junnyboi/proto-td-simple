@@ -20,7 +20,7 @@ This repository is a reusable **Godot 4.7.2** template for a small isometric tow
 | Leaderboard | Every accepted `s1`–`s10` clear or defeat records locally first; optional Node synchronization is summary-only and non-authoritative. |
 | Audio | Central `Music` uses two crossfade players; `Sfx` uses eight round-robin voices. Both use direct streaming; browser AudioContext unlock is best-effort. |
 | VFX | Procedural/transient 2D nodes through `JuiceLayer`; no `GPUParticles2D`/`CPUParticles2D` dependency. |
-| Web delivery | Web is the only checked-in export preset. Advanced operator art packs are optional and currently require manual repair/integration before release. |
+| Web delivery | Web is the only checked-in export preset. Advanced operator art packs are optional and stage as three verified PCKs; host argument injection remains a manual integration. |
 
 ## Quick start
 
@@ -486,7 +486,7 @@ npm run dev
 
 The core build remains playable without advanced specialization art. Optional pack specifications must be user arguments in the form `--content-pack=id|http(s)-url|bytes|sha256`; accepted IDs are `operator-gunner`, `operator-mage-apprentice`, and `operator-swordmaster`. Packs download serially, are capped at 64 MiB and 180 seconds, verify exact bytes/SHA-256, cache under `user://content-packs`, and mount add-only with `load_resource_pack(path, false)`. Missing, disabled, failed, or unconfigured packs retain core/placeholder art and never block gameplay. Background prefetch defaults on; foreground requests remain allowed when it is disabled. [5]
 
-> **Known release blocker at audited commit `941693f6`:** `tools/stage_web_content_packs.sh` expects 16 WebP resources per retained class but finds 8, so staging aborts before usable packs/manifest rows exist. Export and `npm run dev` also do not convert a manifest into content-pack launch arguments. Do not claim an automated advanced-pack release until staging, immutable/cache-safe hosting, argument injection, actual mount/hash behavior, cross-origin policy, and a browser smoke pass. [5]
+`tools/stage_web_content_packs.sh` validates the exact eight-file female/male × idle/attack × NE/NW atlas contract for each retained class and emits three verified PCKs plus `manifest.tsv`. Its end-to-end regression checks every manifest row against the generated file's size and SHA-256. Export and `npm run dev` still do **not** translate that manifest into Godot user arguments; the host must provide immutable/cache-safe pack URLs and the matching `--content-pack` values. Do not claim fully automated advanced-pack deployment until host injection, cross-origin policy, actual browser mount/hash behavior, and a browser smoke pass exist. [5]
 
 ## Focused validation matrix
 
@@ -502,7 +502,7 @@ Documentation-only edits need `git diff --check` and path/command validation. Fo
 | Tutorial/warnings | `tests/first_mission_tutorial_replay_test.gd`, `tests/high_threat_wave_warning_test.gd` |
 | UI/responsive style | Relevant layout/focus/dialog/cursor test plus one representative visual capture when pixels changed |
 | Localization/font | `tests/localization_ui_parity_test.gd`, `tests/chinese_primary_flow_ui_test.gd`, and affected text-scale tests |
-| Art/manifests/terrain/packs | `tests/advanced_operator_schema_test.gd`, `tests/enemy_static_sprite_test.gd`, `tests/web_content_pack_test.gd`, `test/agent4_isometric_renderer_smoke.gd` as applicable |
+| Art/manifests/terrain/packs | `tests/advanced_operator_schema_test.gd`, `tests/enemy_static_sprite_test.gd`, `tests/web_content_pack_test.gd`, `tests/web_content_pack_staging_test.sh`, `test/agent4_isometric_renderer_smoke.gd` as applicable |
 | Music/SFX/Web audio | `tests/music_redesign_test.gd`, `tests/ui_audio_direction_test.gd`, `tests/web_audio_unlock_test.gd` as applicable |
 | Runtime tweaks | `tests/runtime_tweak_controls_test.gd`, `tests/runtime_tweak_battle_integration_test.gd` |
 | Leaderboard | `tests/leaderboard_service_test.gd`, `tests/leaderboard_ui_test.gd`, `npm run test:leaderboard` |
@@ -518,7 +518,7 @@ npm run test:leaderboard
 
 ### Audit baseline caveats
 
-At audited commit `941693f6`, focused domain checks found two confirmed release-readiness defects: optional pack staging fails on a 16-expected/8-found resource-count mismatch, and `tests/web_audio_unlock_test.gd` expects eight unshipped/legacy skill aliases absent from the current SFX catalog. A static mismatch also remains between `tests/global_font_scale_test.gd` (`TITLE_FONT_SCALE = 3.0`) and implementation (`1.5`). Treat these as current defects/contracts to reconcile—not evidence that the corresponding dormant skills are live.
+The readiness regressions follow current shipped contracts: pack staging enforces eight exact resources per retained class; Web-audio coverage derives active skill IDs from shipped operator resources instead of retired skills; and the global typography test reads the intentional Title Settings `TITLE_FONT_SCALE = 1.5` constant directly. Dormant skill names in compatibility tests or localization do not become shipped audio requirements merely by existing.
 
 No tracked CI/workflow exists. This matrix is manual guidance; no automation currently runs Godot/Node gates, Web export, pack staging/mounting, browser smoke, or publication. Web export requires matching Godot 4.7.2 templates in the actual environment.
 

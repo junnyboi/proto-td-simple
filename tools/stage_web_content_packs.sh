@@ -58,16 +58,39 @@ stage_pack() {
 classes=(
   gunner mage_apprentice swordmaster
 )
+operator_resources=(
+  female/attack_ne.webp
+  female/attack_nw.webp
+  female/idle_ne.webp
+  female/idle_nw.webp
+  male/attack_ne.webp
+  male/attack_nw.webp
+  male/idle_ne.webp
+  male/idle_nw.webp
+)
 for class_id in "${classes[@]}"; do
   class_files=()
-  while IFS= read -r class_file; do
-    class_files+=("${class_file#${ROOT}/}")
-  done < <(
+  for relative_path in "${operator_resources[@]}"; do
+    class_file="assets/sprites/operators/animated/${class_id}/${relative_path}"
+    if [[ ! -f "$ROOT/$class_file" ]]; then
+      printf 'Missing required resource for operator-%s: %s\n' "$class_id" "$class_file" >&2
+      exit 1
+    fi
+    class_files+=("$class_file")
+  done
+  actual_count="$(
     find "$ROOT/assets/sprites/operators/animated/${class_id}" \
-      -mindepth 2 -maxdepth 2 -type f -name '*.webp' -print | sort
-  )
+      -mindepth 2 -maxdepth 2 -type f -name '*.webp' -print \
+      | wc -l \
+      | tr -d '[:space:]'
+  )"
+  if [[ "$actual_count" -ne "${#operator_resources[@]}" ]]; then
+    printf 'Expected exactly %d retained resources for operator-%s, found %d\n' \
+      "${#operator_resources[@]}" "$class_id" "$actual_count" >&2
+    exit 1
+  fi
   key="operator-${class_id//_/-}"
-  stage_pack "$key" 16 "${class_files[@]}"
+  stage_pack "$key" "${#operator_resources[@]}" "${class_files[@]}"
 done
 
 [[ "$(tail -n +2 "$manifest" | wc -l)" -eq 3 ]]
