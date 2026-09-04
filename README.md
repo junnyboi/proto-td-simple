@@ -11,15 +11,16 @@ This repository is a reusable **Godot 4.7.2** template for a small isometric tow
 | Engine | Godot `4.7.2`, Forward Plus; do not silently upgrade the project format. |
 | Main loop | Loading → Start → Campaign mission selection → Battle → Results. |
 | Stages | Ten authored `StageDef` resources, `s1`–`s10`. A new fork can expose only `s1`/`s2`, but deleting the others is a migration; see [Stage count](#stage-count-one-or-two-stage-forks). |
-| Tactical deck | Fixed repeatable roster: Recruit, Gunner, Swordmaster, Mage Apprentice via IDs `[recruit, sniper_1, guard_1, caster_1]`. |
-| Core rules | Integer-tick deterministic simulation, explicit paths/waves, ground/elevated placement, blocking, aerial enemies, traps, skills, leaks, stars, restoration cells, and high-threat warnings. |
-| UI | Start, Campaign, Battle HUD/deployment deck, pause/settings/resign, Results, leaderboard, responsive shells, keyboard/controller support. |
-| Tutorial | `FirstStandTutorial` on eligible campaign `s1` plays; currently replayable, not one-time. |
-| Languages | `en-US` and `zh-CN`, custom catalog validation, bundled CJK font, 80–150% text scale. |
-| Tuning | F10 runtime tweak panel with 58 typed controls and local `ConfigFile` persistence. |
-| Leaderboard | Offline-first local records plus optional same-origin Node global board. |
-| Audio | Central `Music` and `Sfx` autoloads; static OGG/WAV assets; browser audio-unlock shim. |
+| Tactical deck | Fixed **repeat-purchase** pool `[recruit, sniper_1, guard_1, caster_1]`: duplicates are legal while DP, an empty cell, and the stage living-unit cap permit them. Fixed-deck retreats refund 50% and have no redeploy cooldown. |
+| Core rules | Integer-tick deterministic simulation, explicit paths/waves, ground/elevated placement, weighted blocking, aerial enemies, traps, skills, leaks, stars, restoration cells, and high-threat warnings. |
+| UI | Title, Campaign, Battle HUD/deployment deck, pause/settings/resign, Results, and leaderboard. GUI focus supports keyboard/controller accept/cancel; tactical play and map navigation are pointer/touch-first. |
+| Tutorial | `FirstStandTutorial` plays on every eligible campaign `s1` attempt; a separate one-time portrait pan hint is also active. |
+| Languages | Main player screens use `en-US` and `zh-CN`, catalog validation, a bundled CJK font, and 80–150% text scale. F10 developer tuning and `[TWEAKED]` remain English-only. |
+| Tuning | F10 opens 58 local developer overrides. Gameplay overrides can affect campaign and leaderboard runs; `[TWEAKED]` is disclosure only, not eligibility or saved provenance. |
+| Leaderboard | Every accepted `s1`–`s10` clear or defeat records locally first; optional Node synchronization is summary-only and non-authoritative. |
+| Audio | Central `Music` uses two crossfade players; `Sfx` uses eight round-robin voices. Both use direct streaming; browser AudioContext unlock is best-effort. |
 | VFX | Procedural/transient 2D nodes through `JuiceLayer`; no `GPUParticles2D`/`CPUParticles2D` dependency. |
+| Web delivery | Web is the only checked-in export preset. Advanced operator art packs are optional and currently require manual repair/integration before release. |
 
 ## Quick start
 
@@ -31,6 +32,8 @@ godot --path .
 
 The main scene is `res://scenes/loading.tscn`. Loading opens the Start screen. **Start always opens Campaign mission selection**; even a durable interrupted mission resumes only after the player explicitly selects that mission.
 
+`Loading` is a fixed **1.8-second visual bridge plus a 0.35-second fade**. Its progress is cosmetic: it does not poll assets, validate campaign data, or wait for content packs, and it has no boot error/retry state. Optional pack configuration begins later at Title.
+
 For a safe import and bounded boot:
 
 ```bash
@@ -38,7 +41,7 @@ tools/run_godot_isolated.sh --headless --import
 tools/run_godot_isolated.sh --headless --fixed-fps 60 --quit-after 120
 ```
 
-Run test scripts only through `tools/run_godot_test.sh`. The wrapper creates a disposable `user://`; direct `godot --script tests/...` runs fail closed to protect playable saves.
+Use `tools/run_godot_test.sh` for supported headless GDScript targets under `test/` or `tests/`; use `tools/run_godot_isolated.sh` for imports, controlled Godot tools, and visual harnesses. Both isolate `user://` and add fail-closed guards, but source-linked files and the shared `.godot` import cache are not immutable. Direct repository-test invocations intentionally fail closed to protect playable saves.
 
 ## Architecture: know what you are allowed to change
 
@@ -53,14 +56,31 @@ Run test scripts only through `tools/run_godot_test.sh`. The wrapper creates a d
 | Presentation services | `Art`, `Music`, `Sfx`, `JuiceLayer` | Resolve and present assets. | Affect battle hashes, tickets, saves, or gameplay RNG. |
 | Runtime tweaks | `RuntimeTweakCatalog`, `TweakControls` | Sanitize and persist local deltas; adapt copied inputs. | Write `_values` or source `.tres` files directly. |
 | Leaderboard | `autoloads/leaderboard.gd`, `server/leaderboard_server.mjs` | Local ledger and optional global standings. | Gate mission completion or claim authenticated anti-cheat. |
+| Optional packs | `autoloads/content_pack_loader.gd` | Verified, cached, add-only presentation resources. | Replace core files or make gameplay depend on a download. |
 
-### Route and save contract
+### Runtime-global lifecycle
 
-`Game._swap_content()` creates and validates a candidate screen before retiring the current screen. Battle candidates must report successful startup and contain a `BattleModel`; otherwise the previous route is restored. Keep this transaction.
+Autoload declaration order is an integration boundary. `project.godot` initializes `TestRunGuard`, `CursorManager`, `I18n`, `Music`, `TextScale`, `UiFeedback`, `ContentPacks`, `Leaderboard`, `Game`, `Sfx`, then `TweakControls`. Later services may rely on earlier state. A new persistent service needs explicit exit cleanup and must join Clear Player Data if it writes or retains user state.
 
-Campaign stages commit a durable `begin_attempt` before Battle opens. Terminal UI waits one frame, prepares the result, waits another frame, and durably commits `resolve_attempt` before enabling Continue. A retryable write must retry the retained `CampaignMutation` against the same preimage; never reconstruct the command, ticket, or outcome.
+### Route, result, and integrity contract
 
-The production campaign slot is `user://campaign_v1.json` despite containing V3 data. Its `.tmp`, `.bak`, and `.invalid` siblings are one recovery protocol. Clear player data only through `Game.clear_player_data()`.
+`Game` is the only route owner. `_swap_content()` mounts a candidate before retiring the incumbent; strict startup validation and rollback apply specifically to Battle candidates (`startup_succeeded` plus a `BattleModel`). Do not infer equivalent rollback guarantees for every non-Battle screen. `Game.start_battle()` and non-campaign `start_stage()` are compatibility/test seams, not the normal Title flow. [1]
+
+Campaign stages durably commit `begin_attempt` before Battle opens. One unresolved ticket restricts post-restart selection to its matching stage; selecting it starts a **fresh battle from that ticket**, not a mid-battle resume. There is no tactical action log, restorable battle snapshot, or committed-attempt abandon action.
+
+At terminal state, Battle renders its stamp/audio, waits one frame to prepare the result, and a second frame to commit `resolve_attempt`. Continue remains disabled until that durable commit succeeds; failure exposes **Retry Finalization** and blocks Results navigation. Retry the retained `CampaignMutation` against the same preimage; never reconstruct its command, ticket, or outcome. [1] [2]
+
+The production slot is `user://campaign_v1.json` despite V3 contents. Main, `.tmp`, `.bak`, and `.invalid` form a conservative recovery protocol: valid main wins; recovery candidates must not conflict; unrecoverable candidates are quarantined before a fresh generation. Legacy/pre-command data may decode as migration input but cannot continue as an authenticated V3 command ledger, so the runtime rolls it into a fresh Recruit generation. Clear persisted player data only through `Game.clear_player_data()`.
+
+> **Integrity boundary:** Tickets and outcomes are canonical SHA-256 self-consistency documents checked against local trusted hashes; they are not digital signatures, replay proofs, or server-certified combat. V3 resolution validates ticket/outcome consistency but does not re-simulate tactics. `state_hash()` is a signed 64-bit FNV-1a dynamic-state divergence digest, not a complete content/configuration fingerprint. `BattleSnapshot` is an aggregate HUD/result projection and has no restore API. [2]
+
+### Current campaign loop
+
+A new V3 campaign begins with **five persistent Recruit witnesses**, **120 Marks**, no clears, no campaign traps/entitlements, and one 80-Mark Recruit contract. The witness roster is not the tactical deck: shipping Campaign launch tickets the first persistent hero as a witness, while Battle deploys the fixed repeat-purchase four-card pool.
+
+Stages unlock sequentially. S1 starts available; any 1–3-star clear unlocks the next stage; cleared stages remain replayable; stars only improve. Every first clear grants **40 Marks**, plus Spike Plate at S2 and Tar Pit at S3. A successful replay grants **20 Marks**; defeat grants none. Marks cap at 1,000,000,000. [3]
+
+The active Campaign screen contains operation cards, Back, and Settings only. It has no shipped squad selector, Barracks, recruitment, promotion, training, memorial, or roster screen. Results currently grant no permanent death, XP, class entitlement, or promotion. Related classes, commands, fields, and helpers are extension/compatibility surfaces, not live progression.
 
 ## Recommended fork workflow
 
@@ -177,9 +197,9 @@ Battle-facing assets resolve through `scripts/view/art.gd` and three manifests:
 - `assets/act1_shared_manifest.tres`
 - `assets/enemy_static_manifest.tres`
 
-Duplicate logical IDs fail closed; a later manifest does **not** override an earlier one. Prefer replacing source files behind existing IDs.
+`Art` serves only those three merged manifests. Terrain, restoration, loading/UI/cursor assets, and several world assets are direct preloads. A duplicate logical ID anywhere makes aggregate lookup fail closed rather than override; an individually missing advanced atlas requests its optional pack while retaining core/`ColorRect` fallback. Prefer replacing source files behind stable IDs.
 
-Visible terrain does not route through manifest or `StageArtTheme` tile IDs. It is directly preloaded by `scripts/view/proto_isometric_terrain.gd`; change its textures and `BIOME_PROFILES`.
+Visible terrain does not route through manifest or `StageArtTheme` tile IDs. It is directly preloaded by `scripts/view/proto_isometric_terrain.gd`; change its textures and `BIOME_PROFILES`. Keep painter depth stable: terrain/platform is `3*(x+y)`, enemies `+1`, operators `+2`; traps, restoration, and endpoints use `+1`. `E`/`X` platforms occlude actors behind them but not occupants. StageArtTheme is required for S1–S3 preflight, although most of its terrain/backdrop/prop selection fields are not consumed by the renderer.
 
 Keep filtering intentional:
 
@@ -188,7 +208,7 @@ Keep filtering intentional:
 | Legacy pixel sprites, traps, common tiny VFX | Nearest. |
 | Terrain textures | Linear and repeating. |
 | Static 640×640 enemies, endpoints, restoration/high-threat art | Linear with mipmaps. |
-| Generated advanced WebP operators | High-quality lossy import with mipmaps; preserve schema tests. |
+| Generated advanced WebP operators | Lossy import quality `.92`, generated mipmaps, and `compress/high_quality=false`; current operator `TextureRect`s inherit project nearest filtering unless overridden. |
 
 There is no current full-screen post-processing filter. `threshold_material.tres` is UI-tier data, not a shader. Add a color-grade/filter only as a presentation `CanvasLayer`/shader layer, keep it out of model state, place it so HUD readability is intentional, expose an accessibility-safe disable path, and classify any tweak as cosmetic.
 
@@ -221,6 +241,27 @@ Most UI is built in GDScript even when a `.tscn` root exists. Preserve runtime-c
 - Background art must ignore mouse input. Modal veils must stop it.
 - Space is both UI Accept and Battle Pause. `BattleControls._input()` must continue to claim Space/Q/E before GUI dispatch.
 
+### Active input and interaction contract
+
+| Interaction | Current behavior |
+|---|---|
+| GUI focus | Enter, keypad Enter, Space, or Joypad A accepts; Escape or Joypad B cancels. Normal directional focus uses Godot's built-in UI mappings. |
+| Battle pause/speed | Space toggles pause; Q/E step `0×/1×/2×/4×`. There is no explicit controller binding for battle pause or speed. |
+| Tactical play | Deployment, trap placement, unit selection, recall, and healing-target selection are pointer/touch-first; no gamepad tactical cursor exists. UI legality and overlays must query `BattleModel`. |
+| Map navigation | Landscape uses middle drag and wheel/Shift-wheel. Portrait uses primary/touch drag after a 10 px threshold, with view-only rubber-band/inertia. There is no keyboard/controller pan route. |
+| Pause menu | Escape snapshots the exact tactical speed, sets tick delivery to zero, blocks world/deploy input, and exposes Settings plus confirmed Resign. Closing restores the prior speed. |
+| Escape caveat | `DeployBar` cancels selection/placement/heal intent but does not consume Escape, so the same press can also open Battle pause. Right-click cancels intent without that fallthrough. |
+
+GUI/controller support therefore does **not** mean controller-complete tactical play. New controls need explicit InputMap actions, focus behavior, cursor/touch equivalents, modal gating, and focused tests. [8]
+
+### Preferences, accessibility, and reset
+
+`user://view_preferences.cfg` stores one validated presentation batch: locale (`en-US`/`zh-CN`), global Music enabled, Master/Music/SFX volumes, Master mute, background downloads, reduced motion, frame limit (`0/30/60/120`), and text scale (`0.80`–`1.50` in `0.05` steps). Settings previews a snapshot live; Apply atomically writes the complete valid batch; Back/Escape restores the snapshot. The Title quick-language control intentionally persists immediately. Despite its historical name, `title_music_enabled` controls the global Music service beyond Title. [7]
+
+Dialogs are functional input/focus barriers. They suppress background focus, begin destructive confirmations on a safe Cancel action, announce status, keep overflow copy scrollable/focusable, and restore a valid invoking target. `CursorManager` supplies semantic cursor roles, while `UiFeedback` supplies global enabled-button press feedback. Reduced motion remains presentation-only and is not exhaustive: First Stand and the portrait pan hint still pulse.
+
+**Clear Player Data** requires explicit confirmation and recursively deletes persisted `user://` contents, including campaign artifacts, preferences, local leaderboard data, cached packs, and tweak deltas. It is non-transactional: a removal failure can leave surviving artifacts and reports an error rather than routing to Title. A successful clear resets campaign/leaderboard authority, but currently loaded F10 values/pending writes and mounted content packs can survive in the running process; do not promise a fully fresh runtime without restart.
+
 ## Stage authoring and isometric mechanics
 
 Each stage is a `data/stages/<id>.tres` `StageDef`. The map, paths, waves, capacity, leak allowance, and special mechanics are data; the battle scene projects them.
@@ -240,12 +281,14 @@ Rules:
 
 1. Keep every `grid_rows` row the same width and use only `. G E S B X`.
 2. Paths are explicit ordered integer grid coordinates, not pixels. Start on `S`, end on `B`, move one cardinal cell per step, and traverse only `G/S/B`.
-3. Waves are chronological dictionaries `{ "enemy_id", "path_idx", "tick" }`. Preserve source order for equal ticks because it affects deterministic IDs and ties.
+3. Waves are chronological dictionaries `{ "enemy_id", "path_idx", "tick" }`. Same-tick order affects IDs and ties, but `WaveTimeline` currently sorts only by tick and has no explicit source-index tie-breaker. Do not rely on preserved source order until code and tests guarantee it.
 4. `wave_starts` defines UI wave windows, not spawns. It must start at `0` and strictly increase.
 5. UI must call `BattleModel.can_deploy_at()` and `can_place_trap_at()` rather than duplicate cell rules.
-6. Portrait mode rotates a runtime copy of the grid, paths, and all cell-indexed metadata. Never author a second portrait map or pre-rotate source data.
+6. Portrait mode chooses a rotated runtime copy at Battle startup. It rotates grid, paths, and cell-indexed metadata together; it does not live-rotate an active Battle when the viewport changes.
 7. Isometric projection uses 64×32 diamonds and a 16 px elevation lift. Grid cells remain authority; screen position is presentation.
 8. Defeat is `leaked > leak_limit` or `base_hp <= 0`. A leak limit of 3 allows exactly three leaks; the fourth loses.
+
+> **Validation boundary:** these are authoring requirements, not a complete production preflight. `test/stage_redesign_smoke.gd` is the practical gate for grids, glyphs, paths, waves, starts, and enemy references. Malformed resources can otherwise fail late or behave inertly.
 
 ### Stage count: one- or two-stage forks
 
@@ -260,42 +303,52 @@ A true one/two-stage reduction must update together:
 - leaderboard stage validators in both GDScript and Node;
 - localization, tests, and any stage-specific art/audio routing.
 
-For a new game built quickly, keep the compatibility shell, edit `s1`/`s2`, hide later cards, and perform destructive pruning only after the new loop is approved.
+For a new game built quickly, keep the compatibility shell, edit `s1`/`s2`, hide later cards, and perform destructive pruning only after the new loop is approved. `campaign_index` and contiguous `s1`–`s10` content govern current progression; `StageDef.requires` is unconsumed metadata, and `recovery_roster` is legacy compatibility data rather than deck authority.
 
 ### Unique tactical mechanics
 
-- **Deterministic ticks:** `BattleModel` uses fixed phase order and integer state. One tile equals `1,000,000` path units.
+- **Deterministic ticks:** `BattleModel` uses fixed phase order and integer state. One tile equals `1,000,000` path units; per-tick speed is floored once at spawn.
 - **Phase order:** expire effects → regenerate DP/SP → move/block/leak existing enemies → trigger traps → restoration → unit then enemy combat → spawn → terminal check → increment tick.
-- **Blocking:** ground enemies consume weighted block capacity; overflow continues walking. Block links are bidirectional and release atomically.
-- **Aerial enemies:** bypass blocking and traps. Elevated ranged units are the intended counter.
-- **Targeting:** closed policies use canonical ties. Operators acquire targets omnidirectionally; facing is automatic visual NE/NW state, not attack-cone legality.
-- **Damage:** integer Physical/Arts mitigation with a 5% minimum for valid positive hits. Route enemy damage through `EnemyDamage.apply()` so stagger and kill accounting remain correct.
-- **Skills:** Skill activation, Mend, deployment, retreat, trap placement, and resign are `BattleModel.apply_action()` verbs.
-- **Traps:** Spike Plate is ON_ENTER damage with charges; Tar Pit is a permanent ground-cell slow aura. Units and traps may share a cell.
-- **Restoration:** selected route cells heal damaged non-aerial ground enemies at deterministic intervals. It is gameplay/state-hashed, not decoration.
-- **High-threat warnings:** stage-authorized presentation keyed to wave-window indexes. Keep them out of simulation authority.
+- **Blocking:** ground enemies consume weighted block capacity; overflow continues walking rather than queueing. Block links are bidirectional and release atomically on kill, retreat, enemy death, or capacity-effect expiry.
+- **Aerial enemies:** use normal routes but bypass blocking and both shipped trap modes. Gunner is the only stock anti-air attacker. Mage is ground-only and its splash excludes aerials; Recruit/Swordmaster require blocked targets. Damage stagger still slows aerial movement. Drone's blocker-only policy finds no stock target; Interceptor attacks the nearest unit in Chebyshev range 2.
+- **Targeting:** the policy vocabulary is closed and fail-closed. Operators acquire through an omnidirectional union of range rotations; automatic NW/NE facing is presentation only and never gates damage/range.
+- **Damage:** Physical is `max(raw-defense, ceil(raw/20))`; Arts is `max(floor(raw*(1000-resistance)/1000), ceil(raw/20))`. Thus valid positive hits retain a 5% floor, even at 1000‰ resistance. Route model-level hostile damage through `BattleModel._damage_enemy()`, which owns mitigation, stagger, kill accounting, and block release. Stagger delays movement but does not suppress enemy attacks; stun suppresses both.
+- **Skills:** Skill activation, Mend, deployment, retreat, trap placement, and resign are `BattleModel.apply_action()` verbs, but several verbs/effects have no shipped content.
+- **Traps:** Spike Plate is 4 DP, 20 Physical ON_ENTER damage, and three charges. Tar Pit is 6 DP and applies a permanent strongest-only 500‰ slow sampled from the enemy's start cell. Units and traps may share a cell. Campaign unlocks filter cards in UI only; model/ticket trap authorization is not enforced for programmatic callers.
+- **Restoration:** S9 `(6,3)` and S10 `(5,2)`, `(3,4)` heal damaged non-aerial ground enemies for 8 HP every 90 ticks after movement/traps and before combat. It is gameplay/state-hashed, not decoration.
+- **High-threat warnings:** stage-authorized presentation is keyed to wave-window indexes. Only the S9 `green_cage` route is active; unknown IDs silently produce no warning.
 - **Speed:** button cycle is `1× → 2× → 4× → Pause`; Q decreases, E increases, Space toggles pause. Speed changes tick delivery, never phase order.
 - **Presentation slowdowns:** deploy/tutorial/selection effects use view-time tags. Do not confuse `Engine.time_scale` with tactical `ticks_per_frame_scale`.
 
-When adding outcome-affecting state, update `BattleHash`, snapshots, tickets, outcomes, codecs, and deterministic tests in the same change. Serialized enum values are append-only; never reorder them.
+| Mechanism | Current contract |
+|---|---|
+| Simulation | Default is 30 ticks/s with uncapped catch-up in `BattleView`; newly spawned enemies first act on a later tick because spawn occurs after combat. |
+| Battle pause/speed | Space toggles tick delivery; Speed cycles `1× → 2× → 4× → 0×`; Q/E step those values. This changes `ticks_per_frame_scale`, not SceneTree state. |
+| Presentation holds | `BattleView` owns `Engine.time_scale` through minimum-valued tags: tutorial `0`, deploy drag `0.3`, selected-unit panel `0.75`. Use `juice_time_push/pop`, not competing global writes. |
+| F10 panel | Pauses the whole SceneTree while its always-processing UI remains active, then restores the prior paused state. |
+| Default economy | Base HP 10; start DP 10; DP cap 99; passive DP and skilled-unit SP each advance every 30 ticks; retreat refund 50%; enemy damage stagger 8 ticks. |
+
+A clear requires an exhausted timeline and no living enemy. Defeat is `leaked > leak_limit` **or** `base_hp <= 0`. Stars are 3 at zero leaks, 2 at one or two leaks, and 1 for another clear within the leak limit. S8 has leak limit 2, so it has no one-star clear. Shipped leak hit-stop is disabled (`0` frames). Tactical code currently makes no random draw; `run_seed` is identity/future-extension data rather than active combat variance.
+
+Actions reject invalid/wrong-arity/post-terminal requests without tactical mutation. Units and enemies remain append-only after death, leak, or retreat so IDs/history stay stable; only exhausted ON_ENTER traps are erased. When adding outcome-affecting state, update `BattleHash`, snapshots, tickets, outcomes, codecs, and deterministic tests in the same change. Serialized enum values are append-only; never reorder them.
 
 ## Operators, enemies, and balance
 
-Balance sources are:
+Balance sources are `data/config/game.tres`, `data/operators/`, `data/skills/`, `data/target_policies/`, `data/enemies/`, `data/traps/`, and `data/stages/`. The nine active enemy IDs are `grunt`, `runner`, `shieldbearer`, `breacher`, `drone`, `interceptor`, `spellcaster`, `heavy`, and `mini_boss`. Keep full encounter/stat matrices in a versioned content reference rather than hard-coding them into this field manual.
 
-- `data/config/game.tres` for base HP, tick rate, DP/SP cadence, refund, and stagger;
-- `data/operators/*.tres`, `data/skills/*.tres`, and `data/target_policies/*.tres` for operators;
-- `data/enemies/*.tres` for hostile archetypes;
-- `data/traps/*.tres` for traps;
-- `data/stages/*.tres` for maps and spawn schedules.
+The fixed deck is an unlimited repeat-purchase pool bounded by current DP, one-unit-per-cell occupancy, and stage living-unit capacity (`s1` 3; `s2`–`s3` 4; `s4`–`s5` 5; `s6`–`s10` 6). Fixed-roster retreat refunds `floor(cost × 50%)` subject to the DP cap and creates no cooldown. The hard-coded 10-second standard and 3-second Vanguard cooldowns apply only to non-fixed compatibility modes.
 
-Definitions are copied into runtime state at deploy/spawn/place. Do not mutate already materialized units because a tweak changed a resource.
+Shipping manual full-SP skills are Gunner **Deadeye** (2× ATK, 15 SP, 150 ticks), Swordmaster **Flurry** (0.5× interval, 15 SP, 150 ticks), and Mage Apprentice **Conflagration** (3×3 to 5×5 ground-only splash, 25 SP, 150 ticks). Recruit has no skill. `mend`/`HEAL_TARGET`, DP burst, block bonus, stun, healer/Defender/Vanguard classes, and `no_automatic_target` are implemented extension or compatibility seams, not shipped deck mechanics. No current operator heals allies; restoration heals enemies only.
 
-The current primary battle roster is fixed and repeatable. Campaign witness/ticket identity is intentionally separate from the deploy deck. The current result path also deliberately grants **no permanent death, memorial, XP, or class unlocks**. Restoring XP/specialization is a campaign-schema and balance redesign, not a cosmetic toggle.
+Ground operators may use any `G` cell; traps require a routed `G`; elevated operators use `E` or legacy `X`; one living unit occupies a cell. Deployment facing is validated then normalized to NW, while target-driven NW/NE facing remains visual only.
+
+`BattleView` duplicates authored stage/config/operator/enemy inputs at battle startup; units and enemies then copy required data at deploy/spawn. Do not mutate source `.tres` resources or retroactively retune materialized state. Content changes that affect campaign context require environment-hash, save, and migration review. Campaign witness/ticket identity remains separate from the fixed deploy deck; current witness participation counters are not reliable evidence of fixed-deck tactical use.
+
+The result path deliberately grants **no permanent death, memorial, XP, or class unlocks**. Restoring persistent person progression is a campaign-schema, UI, ticket, migration, and balance redesign—not a cosmetic toggle.
 
 ## VFX and particle effects
 
-`BattleView` detects authoritative model edges; `scripts/view/juice_layer.gd` renders and ages transient visuals. Tune ordinary effect counts, colors, lifetimes, shake, and opacity in `data/juice_config.tres`.
+`BattleView` detects authoritative model edges; `scripts/view/juice_layer.gd` renders and ages transient visuals. `data/juice_config.tres` is the principal, not exhaustive, juice source: some counts/geometry remain in `JuiceLayer`, static-enemy death profiles live in `EnemyAnimator`, and Act II/defeat overlays own separate constants. Most JuiceLayer state is render-frame based, while static-enemy deaths are second-based.
 
 This template draws “particles” with `TextureRect`, `Line2D`, `Polygon2D`, and procedural `_draw()` nodes rather than Particle2D systems. Keep them presentation-only and preserve:
 
@@ -325,8 +378,12 @@ Then:
 2. Trim only if necessary, verify a clean musical loop, and convert to 48 kHz stereo Vorbis OGG.
 3. Point existing `AudioCue.stream_path` values to the one runtime OGG while retaining logical cue IDs used by Title, Campaign, Battle, and Results.
 4. Keep cue BPM, meter, loop flag, approved surfaces, and catalog/profile mapping truthful.
-5. Map all battle intensity states to the same cue if dynamic stems are not wanted. Repeated same-cue requests must remain no-restart.
-6. Decide explicitly whether Results continue the shared loop or use short victory/defeat SFX; update music tests with that product decision.
+5. A one-master reskin is supported by deliberately mapping all logical routes to one source; it is not the shipped topology. Preserve truthful BPM, meter, and loop metadata because adaptive scheduling consumes them.
+6. Current terminal behavior plays victory/defeat SFX **and** crossfades to an eight-second non-looping Music result cue before persistence. Results does not restart a background cue after that result track ends.
+
+Direct `Music.play_cue()` and Act II identical-cue state changes no-op. Ordinary high/critical and boss/boss-critical adaptive transitions can restart an identical mapped cue at a scheduled boundary; do not generalize no-restart behavior without preserving and testing route-specific policy.
+
+Battle's adaptive director is presentation-only: it derives routine/high/critical/boss states from projected pressure, waits for stability (default hold 8 seconds; critical 0.15 seconds, ordinary escalation 0.75, de-escalation 3), and schedules cue changes to musical bar boundaries from profile BPM/meter. Its elapsed clock advances only while tactical tick delivery is positive and hit-stop is inactive; it never changes model state.
 
 All BGM must go through `autoloads/music.gd`; all effects through `autoloads/sfx.gd`. Do not add scene-local competing `AudioStreamPlayer`s. Preserve two BGM crossfade players, eight SFX voices, `Music`/`SFX` buses sending to `Master`, and direct-stream Web playback.
 
@@ -343,18 +400,24 @@ Preferred replacement flow:
 
 If ElevenLabs is unavailable, an agent may add an **offline authoring tool** using Godot `AudioStreamWAV`/PCM data and `save_to_wav()` to synthesize basic sine/noise/envelope cues. Keep it under `tools/audio/`, run it only during asset production, and commit the generated WAVs. Do not make runtime `AudioStreamGenerator` a game dependency merely to create clicks and impacts.
 
-`UiFeedback` already owns one `ui_click` request per enabled button press. Avoid duplicate click calls. Current routine hover/back/confirm/menu cues are intentionally muted by policy even when files exist.
+`UiFeedback` is the global enabled-button `ui_click` requester, but several handlers also request that cue. `Sfx` deduplicates the resolved direct ID once per process frame, so these usually produce one audible start. Routine hover/back/confirm/menu IDs are intentionally muted by policy.
+
+SFX aliases are one level and must resolve to a direct entry. Every newly authored active skill ID needs a direct SFX entry or alias because Battle requests its logical skill ID. The browser AudioContext hook is an inline export-preset, best-effort unlock wrapper; it does not guarantee autoplay or recovery from browser policy failure.
 
 ## Runtime tweak UI and sandbox handoff
 
-Press **F10** to open the schema-driven tweak panel. Controls cover UI, gameplay, audio, player, enemy, and environment values. Each descriptor declares an application boundary such as `LIVE`, `NEXT_BATTLE`, `NEXT_DEPLOY`, `NEXT_SPAWN`, `NEXT_CUE`, or `NEXT_TRANSITION`.
+Press **F10** to open the schema-driven 58-control developer panel. Controls span UI, gameplay, audio, player, enemies, and environment; 26 are `GAMEPLAY` and 32 are `COSMETIC`. Each descriptor declares `LIVE`, `NEXT_BATTLE`, `NEXT_DEPLOY`, `NEXT_SPAWN`, `NEXT_CUE`, or `NEXT_TRANSITION`.
+
+> **Integrity limitation:** F10 is an unauthenticated local override layer. A non-default gameplay value can change direct and campaign battle inputs and still grant campaign rewards and local/global leaderboard records. `[TWEAKED]` is a live HUD suffix only: it is not latched, serialized in tickets/outcomes/saves/submissions, or used as an eligibility gate. Resetting controls can remove the marker after already-materialized units or enemies were tuned.
 
 To add a control:
 
 1. Add one descriptor in `scripts/tuning/runtime_tweak_catalog.gd` with a stable ID, type, default, range, step, unit, apply mode, and honest `GAMEPLAY`/`COSMETIC` classification.
 2. Read it at the advertised boundary through `TweakControls` or the appropriate view/audio consumer.
-3. Adapt deep-copied resources from immutable baselines; never modify loaded source resources.
-4. Add a focused test. A non-default gameplay tweak must retain the `[TWEAKED]` HUD disclosure.
+3. Adapt deep-copied resources from immutable baselines; never modify loaded source resources or retroactively rewrite existing entities.
+4. Add a focused test. Preserve truthful `[TWEAKED]` disclosure, and decide explicitly whether durable progression/leaderboards should accept the changed run.
+
+The panel is an always-available raw-F10 `CanvasLayer`. It pauses the SceneTree, stores only non-default deltas in `user://runtime_tweaks.cfg`, debounces writes by 0.35 seconds, flushes on close, then restores the prior paused state. Its schema version is written but not enforced/migrated; invalid loads are silent and failed saves have no retry.
 
 Local deltas are saved to `user://runtime_tweaks.cfg`. In a native/editor sandbox, locate and copy the file with:
 
@@ -365,7 +428,9 @@ find "${XDG_DATA_HOME:-$HOME/.local/share}/godot/app_userdata" \
 # cp "/resolved/path/runtime_tweaks.cfg" /home/ubuntu/runtime_tweaks.cfg
 ```
 
-Treat that file as a tuning handoff, not source authority. Promote accepted values into the corresponding `.tres` resources and matching catalog defaults, then test once. Browser `user://` is browser storage; the project currently has no tweak export/import or cloud sync. Implement and test an explicit versioned export/import format before claiming Web-to-sandbox synchronization.
+Treat that file as a tuning handoff, not source authority. Promote values according to their adapter. Absolute GameConfig values must change both `data/config/game.tres` and their matching catalog defaults because catalog defaults overwrite copied config fields at battle startup. Relative player/enemy multipliers, bonuses, spawn timing/count, and leak bonuses must be either retained as non-identity catalog defaults **or** baked into authored data with catalog defaults reset to identity; doing both double-applies the change. Existing entities do not retroactively adopt `NEXT_DEPLOY`/`NEXT_SPAWN` changes.
+
+Browser `user://` is browser storage. The project has no tweak server, export/import, cloud sync, or Web-to-sandbox synchronization; implement a versioned exchange format before claiming one exists.
 
 ## Tutorial and onboarding
 
@@ -378,11 +443,13 @@ Preserve the state machine:
 3. `BLOCK`: explain interception/blocking; battle held.
 4. `LIVE`: release the hold, re-enable normal controls, then auto-dismiss.
 
-The generic `CommandCenterTutorial` component exists, but its request APIs are not currently consumed by a runtime screen. Do not claim it is active. If a fork wants one-time onboarding, add a deliberate `ViewPreferences` completion flag and update replay, reset, localization, and lifecycle tests.
+First Stand advances on any successful operator deployment, not specifically Recruit or a recommended cell, and stores no completion flag. LIVE releases its time hold and auto-dismisses after six seconds. A separate portrait map-pan hint appears only when pan range exists, lasts up to seven seconds, persists completion after a successful pan, and is independent of `ui.tutorial_hints_enabled`.
+
+The generic `CommandCenterTutorial`, command/post-mission request APIs, and their preference completion flags are not consumed by an active screen. Do not advertise them as live. If a fork wants one-time onboarding, create a deliberate consumed route and update replay, reset, localization, accessibility, and lifecycle tests.
 
 ## English and Simplified-Chinese support
 
-Visible copy must flow through `scripts/ui/components/ui_copy.gd` and `I18n`, not hard-coded screen strings.
+Main screens and ordinary player-facing copy must flow through `scripts/ui/components/ui_copy.gd` and `I18n`, not hard-coded strings. The active F10 launcher/panel/catalog and Battle `[TWEAKED]` suffix are current English-only developer-tool exceptions; localize and subscribe them to locale changes before claiming universal bilingual coverage.
 
 - Update `localization/en-US.json` and `localization/zh-CN.json` together.
 - Preserve canonical root order, sorted keys, LF line endings, final newline, nonempty strings, and exact placeholder-name parity.
@@ -393,22 +460,33 @@ Visible copy must flow through `scripts/ui/components/ui_copy.gd` and `I18n`, no
 
 ## Local and global leaderboards
 
-The title and Results screens share one leaderboard dialog. Mission results are recorded locally before networking; failed global submissions remain queued in `user://leaderboard.json` and retry on later sync triggers. Networking never blocks rewards, Results, or navigation.
+The Title and Results screens share one dialog. After an accepted direct result or durable campaign resolution, every valid `s1`–`s10` **clear or defeat** creates a local record. Score version 1 is `max(0, clear*2,000,000 + stage*100,000 + stars*20,000 + kills*50 - leaks*500)`. The local ledger retains its best 50 rows, the UI shows 10, and the FIFO pending queue keeps only its newest 100 submissions.
 
-The global service is a zero-dependency Node 22 server:
+Remote synchronization is best-effort, sequential, and trigger-driven: startup pending work, a new result, dialog open/tab/refresh. It has an eight-second timeout and no periodic retry/backoff. An error leaves the queue front pending and may leave stale global rows visible. Networking never blocks rewards, Results, or navigation. Native/headless defaults are offline (`leaderboard/api_base_url=""`; `leaderboard/enable_in_headless=false`); browser builds use an HTTP(S) page origin where available.
+
+The optional zero-dependency Node 22 service exposes `GET /api/health`, `GET /api/leaderboard?limit=`, and `POST /api/leaderboard`; it serves `build/web` on `127.0.0.1:3000` by default. It recomputes bounded client summaries and retains only the top 1,000 JSON records. Submission IDs are deduplicated **only while their records remain retained**: at capacity, a low score can receive `201` with no rank, be discarded, and later be accepted again under the same ID. There are no accounts, credentials, replay/hash/ticket verification, server simulation, or gameplay-plausibility checks. This is a community board, **not anti-cheat**. [6]
 
 ```bash
-# First export the Godot Web preset to build/web/index.html.
 npm run dev
-# Service and parity tests:
 npm run test:leaderboard
 ```
 
-Browser builds use their page origin for `/api/leaderboard`; native builds use `leaderboard/api_base_url`. Production must set `LEADERBOARD_DATA_FILE` to a durable writable absolute path and add TLS, reverse proxy/firewall, process supervision, monitoring, and backups.
-
-Keep client and server score version, formula, stage validation, name normalization, sorting, and bounds synchronized. The current server recomputes scores and deduplicates IDs, but it validates client summaries rather than signed replays; it is a lightweight community board, **not anti-cheat**.
+Production must configure a durable writable data path plus TLS, reverse proxy/firewall, process supervision, monitoring, backups, origin policy, and rate-limit review. The bundled service has no backup/migration/multiprocess coordination; corrupt top-level server JSON prevents normal boot.
 
 For a one/two-stage fork, update allowed stage IDs in both `autoloads/leaderboard.gd` and `server/leaderboard_server.mjs`, bump/migrate score policy deliberately, and update tests and localized formula copy.
+
+## Web export and optional packs
+
+Web is the only checked-in export preset; `build/web` is generated and ignored. With matching Godot 4.7.2 Web templates installed:
+
+```bash
+godot --headless --path . --export-release "Web" build/web/index.html
+npm run dev
+```
+
+The core build remains playable without advanced specialization art. Optional pack specifications must be user arguments in the form `--content-pack=id|http(s)-url|bytes|sha256`; accepted IDs are `operator-gunner`, `operator-mage-apprentice`, and `operator-swordmaster`. Packs download serially, are capped at 64 MiB and 180 seconds, verify exact bytes/SHA-256, cache under `user://content-packs`, and mount add-only with `load_resource_pack(path, false)`. Missing, disabled, failed, or unconfigured packs retain core/placeholder art and never block gameplay. Background prefetch defaults on; foreground requests remain allowed when it is disabled. [5]
+
+> **Known release blocker at audited commit `941693f6`:** `tools/stage_web_content_packs.sh` expects 16 WebP resources per retained class but finds 8, so staging aborts before usable packs/manifest rows exist. Export and `npm run dev` also do not convert a manifest into content-pack launch arguments. Do not claim an automated advanced-pack release until staging, immutable/cache-safe hosting, argument injection, actual mount/hash behavior, cross-origin policy, and a browser smoke pass. [5]
 
 ## Focused validation matrix
 
@@ -418,13 +496,13 @@ Documentation-only edits need `git diff --check` and path/command validation. Fo
 |---|---|
 | Start/Campaign routing | `tests/start_screen_flow_test.gd`, `tests/campaign_back_navigation_test.gd` |
 | Save/result/campaign | `tests/campaign_save_fast_path_test.gd`, `tests/terminal_result_flow_test.gd`, `tests/no_permadeath_test.gd` |
-| Stage/path/elevation | `test/stage_redesign_smoke.gd`, `test/stage_orientation_smoke.gd`, `tests/elevated_platform_accessibility_test.gd` |
-| Combat/targeting/facing | Relevant deterministic test plus `tests/operator_auto_facing_test.gd` |
-| Pause/speed/input | `tests/battle_pause_menu_test.gd`, `tests/controller_accessibility_test.gd` |
-| Tutorial | `tests/first_mission_tutorial_replay_test.gd` |
-| UI/responsive style | Relevant UI test plus one representative visual capture when pixels changed |
-| Localization/font | `tests/localization_ui_parity_test.gd`, `tests/chinese_primary_flow_ui_test.gd`, text-scale tests |
-| Art/manifests/terrain | `tests/advanced_operator_schema_test.gd`, `tests/enemy_static_sprite_test.gd`, `test/agent4_isometric_renderer_smoke.gd` as applicable |
+| Stage/path/elevation | `test/stage_redesign_smoke.gd`, `test/stage_orientation_smoke.gd`, `test/map_navigator_orientation_smoke.gd`, `tests/elevated_platform_accessibility_test.gd`, `tests/restoration_lattice_test.gd` |
+| Combat/targeting/facing | Relevant deterministic test plus `tests/operator_auto_facing_test.gd` and `tests/battle_health_and_depth_test.gd` as applicable |
+| Pause/speed/input | `tests/battle_pause_menu_test.gd`; use `tests/controller_accessibility_test.gd` only for GUI mappings, not controller-complete tactics |
+| Tutorial/warnings | `tests/first_mission_tutorial_replay_test.gd`, `tests/high_threat_wave_warning_test.gd` |
+| UI/responsive style | Relevant layout/focus/dialog/cursor test plus one representative visual capture when pixels changed |
+| Localization/font | `tests/localization_ui_parity_test.gd`, `tests/chinese_primary_flow_ui_test.gd`, and affected text-scale tests |
+| Art/manifests/terrain/packs | `tests/advanced_operator_schema_test.gd`, `tests/enemy_static_sprite_test.gd`, `tests/web_content_pack_test.gd`, `test/agent4_isometric_renderer_smoke.gd` as applicable |
 | Music/SFX/Web audio | `tests/music_redesign_test.gd`, `tests/ui_audio_direction_test.gd`, `tests/web_audio_unlock_test.gd` as applicable |
 | Runtime tweaks | `tests/runtime_tweak_controls_test.gd`, `tests/runtime_tweak_battle_integration_test.gd` |
 | Leaderboard | `tests/leaderboard_service_test.gd`, `tests/leaderboard_ui_test.gd`, `npm run test:leaderboard` |
@@ -440,14 +518,17 @@ npm run test:leaderboard
 
 ### Audit baseline caveats
 
-At audited commit `b2b0eb6b`, targeted domain checks largely passed, but the tree was **not release-clean**. Known review items included localization scanner/key drift, Chinese Campaign-flow key consumption, a title-settings font-scale policy mismatch, missing SFX aliases expected by the Web-audio test, and a battle UI-layout regression path. No tracked CI workflow runs the Godot suite. Re-run affected checks against the current revision and fix causes rather than deleting assertions. Web export also requires matching Godot 4.7.2 Web templates in the actual export environment.
+At audited commit `941693f6`, focused domain checks found two confirmed release-readiness defects: optional pack staging fails on a 16-expected/8-found resource-count mismatch, and `tests/web_audio_unlock_test.gd` expects eight unshipped/legacy skill aliases absent from the current SFX catalog. A static mismatch also remains between `tests/global_font_scale_test.gd` (`TITLE_FONT_SCALE = 3.0`) and implementation (`1.5`). Treat these as current defects/contracts to reconcile—not evidence that the corresponding dormant skills are live.
+
+No tracked CI/workflow exists. This matrix is manual guidance; no automation currently runs Godot/Node gates, Web export, pack staging/mounting, browser smoke, or publication. Web export requires matching Godot 4.7.2 templates in the actual environment.
 
 ## Common failure modes
 
 - **Changing view code to fix gameplay.** Put outcome logic in `BattleModel`; project it afterward.
 - **Editing only `grid_rows`.** Move paths, restoration cells, stage themes, and tests with map topology.
 - **Treating `X` as void.** It is a legacy raised/elevated placement cell in current behavior.
-- **Reordering equal-tick waves or tick phases.** This changes deterministic IDs, targeting, and outcomes.
+- **Assuming equal-tick wave source order is guaranteed.** It affects IDs/ties, but the current timeline has no explicit source-index secondary key.
+- **Reordering tick phases.** This changes movement, traps, restoration, attack prevention, spawn delay, and outcomes.
 - **Using screen coordinates for paths or rules.** Author integer grid cells; isometric projection is visual only.
 - **Changing campaign content without environment/save review.** Existing/pending saves and tickets may become invalid.
 - **Deleting later stages to make a two-stage game.** Hide first; migrate codecs, rewards, hashes, leaderboard, and tests before deleting.
@@ -458,14 +539,19 @@ At audited commit `b2b0eb6b`, targeted domain checks largely passed, but the tre
 - **Adding scene-local audio players.** Use `Music` and `Sfx` services.
 - **Hard-coding English.** Update both catalogs and accessibility copy through `UiCopy`.
 - **Running tests directly.** Use the isolated wrapper or risk playable data.
+- **Calling tickets/outcomes signed or combat-certified.** They are local canonical self-hashes without replay/server verification.
 - **Calling the leaderboard secure.** It is local-first and server-recomputed, not replay-authenticated.
+- **Treating `[TWEAKED]` as an eligibility gate.** Tweaked runs currently earn progression and leaderboard records.
+- **Treating a pending ticket as a mid-battle save.** Restart launches a fresh battle from the ticket.
+- **Trusting UI-only trap unlocks as model authorization.** Programmatic placement currently bypasses campaign entitlement filtering.
 - **Claiming tweak sync exists.** Native config can be copied; browser export/import is not implemented.
+- **Claiming optional packs deploy automatically.** Staging is currently broken and no manifest-to-launch-argument integration exists.
 
 ## Key path index
 
 | Concern | Primary paths |
 |---|---|
-| Project/boot/input | `project.godot`, `scenes/loading.tscn` |
+| Project/boot/input/autoloads | `project.godot`, `scenes/loading.tscn`, `scripts/ui/loading.gd`, `autoloads/test_run_guard.gd` |
 | Routes/session | `autoloads/game.gd` |
 | Campaign authority/save | `sim/campaign_state_v3.gd`, `sim/campaign_runtime_authority.gd`, `sim/campaign_save_store.gd` |
 | Tactical model | `sim/battle_model.gd`, `sim/pathing.gd`, `sim/targeting.gd`, `sim/battle_hash.gd` |
@@ -483,6 +569,17 @@ At audited commit `b2b0eb6b`, targeted domain checks largely passed, but the tre
 | Leaderboard | `autoloads/leaderboard.gd`, `scripts/ui/components/leaderboard_dialog.gd`, `server/leaderboard_server.mjs` |
 | Safe tests | `tools/run_godot_test.sh`, `tools/run_godot_isolated.sh` |
 | Web export/packs | `export_presets.cfg`, `tools/stage_web_content_packs.sh`, `autoloads/content_pack_loader.gd` |
+
+## Implementation references
+
+[1]: https://github.com/junnyboi/proto-td-simple/blob/master/autoloads/game.gd "Game route and result lifecycle"
+[2]: https://github.com/junnyboi/proto-td-simple/blob/master/sim/battle_model.gd "Deterministic battle authority"
+[3]: https://github.com/junnyboi/proto-td-simple/blob/master/sim/campaign_v3_attempts.gd "Campaign attempts, progression, and rewards"
+[4]: https://github.com/junnyboi/proto-td-simple/blob/master/data/stage_def.gd "Stage data contract"
+[5]: https://github.com/junnyboi/proto-td-simple/blob/master/autoloads/content_pack_loader.gd "Optional content-pack runtime"
+[6]: https://github.com/junnyboi/proto-td-simple/blob/master/server/leaderboard_server.mjs "Leaderboard and static Web server"
+[7]: https://github.com/junnyboi/proto-td-simple/blob/master/scripts/view/view_preferences.gd "Preferences and atomic batch persistence"
+[8]: https://github.com/junnyboi/proto-td-simple/blob/master/scripts/ui/battle_controls.gd "Battle input, pause, speed, and resign controls"
 
 ## Contribution discipline
 
