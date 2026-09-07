@@ -8,14 +8,10 @@ const AetheriaButtonType := preload("res://scripts/ui/components/aetheria_button
 const AetheriaLabelType := preload("res://scripts/ui/components/aetheria_label.gd")
 const AetheriaScreenShellType := preload("res://scripts/ui/components/aetheria_screen_shell.gd")
 const GameTypographyType := preload("res://scripts/ui/game_typography.gd")
-const FactionHeraldryType := preload("res://scripts/ui/components/faction_heraldry.gd")
 const UiCopyType := preload("res://scripts/ui/components/ui_copy.gd")
 const CampaignStarType := preload("res://scripts/ui/components/campaign_star.gd")
-const StagingSkinType := preload("res://scripts/ui/components/staging_skin.gd")
 const Style := preload("res://scripts/ui/components/lunaris_ops_style.gd")
-const CampaignNextSparklesType := preload("res://scripts/ui/components/campaign_next_sparkles.gd")
 const ViewPreferencesType := preload("res://scripts/view/view_preferences.gd")
-const COMMAND_BACKDROP := preload("res://assets/loading/command_backdrop.png")
 const ROUTE_CONTENT_INSET := 36
 const MISSION_CARD_SIZE := Vector2(288.0, 192.0)
 const MISSION_CARD_GAP := 12
@@ -23,9 +19,16 @@ const MISSION_CARD_PADDING := 30.0
 const MISSION_CARD_FONT_SIZE := 45
 const MISSION_CARD_STAR_SIZE := 60.0
 const MISSION_CARD_STAR_SEPARATION := 12
+const MISSION_CARD_CORNER_RADIUS := 16
+const MISSION_CARD_BORDER_WIDTH := 3
 const UTILITY_BUTTON_CORNER_RADIUS := 12
-const ROUTE_HOVER_BACKGROUND := Color("2f7f9188")
-const ROUTE_FOCUS_BACKGROUND := Color("22455355")
+const MISSION_AVAILABLE_FILL := Color("173149")
+const MISSION_AVAILABLE_HOVER_FILL := Color("24506e")
+const MISSION_AVAILABLE_PRESSED_FILL := Color("10283c")
+const MISSION_NEXT_FILL := Color("3a2d13")
+const MISSION_NEXT_HOVER_FILL := Color("59451c")
+const MISSION_NEXT_PRESSED_FILL := Color("241b0c")
+const MISSION_LOCKED_FILL := Color("111923")
 const ROUTE_HOVER_SCALE := Vector2(1.025, 1.025)
 const ROUTE_FOCUS_SCALE := Vector2(1.01, 1.01)
 const ROUTE_HOVER_SECONDS := 0.16
@@ -75,7 +78,7 @@ func _ready() -> void:
 	_apply_background_download_policy()
 	Music.set_enabled(_music_enabled)
 	Game.content = self
-	Style.add_backdrop(self, COMMAND_BACKDROP)
+	Style.add_backdrop(self)
 	_shell = SHELL_SCENE.instantiate() as AetheriaScreenShellType
 	_shell.name = "CampaignShell"
 	_shell.full_safe_area = true
@@ -123,7 +126,6 @@ func _build_header(column: VBoxContainer) -> void:
 	identity.name = "CampaignIdentity"
 	identity.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	identity.add_theme_constant_override(&"separation", 12)
-	identity.add_child(FactionHeraldryType.make_symbol(FactionHeraldryType.ACTIVE_FACTION, 48.0))
 	var headings := VBoxContainer.new()
 	headings.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_eyebrow = AetheriaLabelType.new()
@@ -279,11 +281,6 @@ func _populate_route() -> void:
 		row.apply_role(&"selected" if is_next else (&"secondary" if selectable else &"disabled"))
 		_apply_mission_card_button_style(row, selectable, is_next)
 		_apply_route_row_presentation(row, stage, unlocked, is_next)
-		if is_next:
-			var sparkles := CampaignNextSparklesType.new()
-			sparkles.name = "NextOperationSparkles"
-			row.add_child(sparkles)
-			sparkles.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		row.tooltip_text = row.text
 		row.accessibility_name = row.text
 		if is_next:
@@ -304,28 +301,43 @@ func _populate_route() -> void:
 
 
 func _apply_mission_card_button_style(row: Button, unlocked: bool, selected: bool) -> void:
-	var normal_tint := Color("b9f8fb") if selected else Color.WHITE
-	var hover_tint := Color.WHITE if selected else Color("b9f8fb")
-	var pressed_tint := Style.CYAN
+	var normal_fill := MISSION_NEXT_FILL if selected else MISSION_AVAILABLE_FILL
+	var hover_fill := MISSION_NEXT_HOVER_FILL if selected else MISSION_AVAILABLE_HOVER_FILL
+	var pressed_fill := MISSION_NEXT_PRESSED_FILL if selected else MISSION_AVAILABLE_PRESSED_FILL
+	var border := Style.GOLD if selected else Style.CYAN
 	if not unlocked:
-		normal_tint = Color(0.42, 0.48, 0.55, 0.56)
-		hover_tint = normal_tint
-		pressed_tint = normal_tint
+		normal_fill = MISSION_LOCKED_FILL
+		hover_fill = MISSION_LOCKED_FILL
+		pressed_fill = MISSION_LOCKED_FILL
+		border = Style.GOLD_DIM
 	row.add_theme_stylebox_override(
-		&"normal", StagingSkinType.operation_tile_style(normal_tint),
+		&"normal", _mission_card_surface(normal_fill, border, MISSION_CARD_BORDER_WIDTH),
 	)
 	row.add_theme_stylebox_override(
-		&"hover", StagingSkinType.operation_tile_style(hover_tint),
+		&"hover", _mission_card_surface(hover_fill, border, MISSION_CARD_BORDER_WIDTH + 1),
 	)
-	var pressed := StagingSkinType.operation_tile_style(pressed_tint)
+	var pressed := _mission_card_surface(
+		pressed_fill, border, MISSION_CARD_BORDER_WIDTH + 1,
+	)
 	row.add_theme_stylebox_override(&"pressed", pressed)
 	row.add_theme_stylebox_override(&"hover_pressed", pressed.duplicate())
 	row.add_theme_stylebox_override(
-		&"disabled", StagingSkinType.operation_tile_style(Color(0.42, 0.48, 0.55, 0.56)),
+		&"disabled",
+		_mission_card_surface(MISSION_LOCKED_FILL, Style.GOLD_DIM, MISSION_CARD_BORDER_WIDTH),
 	)
-	row.add_theme_stylebox_override(
-		&"focus", StagingSkinType.golden_focus_tint_style(12),
-	)
+	var focus := _mission_card_surface(Color.TRANSPARENT, Style.GOLD, MISSION_CARD_BORDER_WIDTH + 1)
+	focus.draw_center = false
+	focus.set_expand_margin_all(2.0)
+	row.add_theme_stylebox_override(&"focus", focus)
+
+
+func _mission_card_surface(fill: Color, border: Color, border_width: int) -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = fill
+	style.border_color = border
+	style.set_border_width_all(border_width)
+	style.set_corner_radius_all(MISSION_CARD_CORNER_RADIUS)
+	return style
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -725,24 +737,13 @@ func _refresh_header_copy() -> void:
 
 
 func _wire_route_card_feedback(row: Button) -> void:
-	var background := ColorRect.new()
-	background.name = "RouteHoverBackground"
-	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	background.offset_left = 10.0
-	background.offset_top = 7.0
-	background.offset_right = -10.0
-	background.offset_bottom = -7.0
-	background.color = Color.TRANSPARENT
-	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	row.add_child(background)
-	row.move_child(background, 0)
 	row.set_meta(&"route_hovered", false)
 	row.set_meta(&"route_focused", row.has_focus())
 	row.resized.connect(_center_route_card_pivot.bind(row))
-	row.mouse_entered.connect(_set_route_card_hovered.bind(row, background, true))
-	row.mouse_exited.connect(_set_route_card_hovered.bind(row, background, false))
-	row.focus_entered.connect(_set_route_card_focused.bind(row, background, true))
-	row.focus_exited.connect(_set_route_card_focused.bind(row, background, false))
+	row.mouse_entered.connect(_set_route_card_hovered.bind(row, true))
+	row.mouse_exited.connect(_set_route_card_hovered.bind(row, false))
+	row.focus_entered.connect(_set_route_card_focused.bind(row, true))
+	row.focus_exited.connect(_set_route_card_focused.bind(row, false))
 	_center_route_card_pivot.call_deferred(row)
 
 
@@ -751,27 +752,26 @@ func _center_route_card_pivot(row: Button) -> void:
 		row.pivot_offset = row.size * 0.5
 
 
-func _set_route_card_hovered(row: Button, background: ColorRect, highlighted: bool) -> void:
+func _set_route_card_hovered(row: Button, highlighted: bool) -> void:
 	if row == null or not is_instance_valid(row):
 		return
 	row.set_meta(&"route_hovered", highlighted)
-	_refresh_route_card_feedback(row, background)
+	_refresh_route_card_feedback(row)
 
 
-func _set_route_card_focused(row: Button, background: ColorRect, highlighted: bool) -> void:
+func _set_route_card_focused(row: Button, highlighted: bool) -> void:
 	if row == null or not is_instance_valid(row):
 		return
 	row.set_meta(&"route_focused", highlighted)
-	_refresh_route_card_feedback(row, background)
+	_refresh_route_card_feedback(row)
 
 
-func _refresh_route_card_feedback(row: Button, background: ColorRect) -> void:
-	if row == null or background == null or not is_instance_valid(row) or not is_instance_valid(background):
+func _refresh_route_card_feedback(row: Button) -> void:
+	if row == null or not is_instance_valid(row):
 		return
 	var hovered := bool(row.get_meta(&"route_hovered", false))
 	var focused := bool(row.get_meta(&"route_focused", false))
 	var target_scale := ROUTE_HOVER_SCALE if hovered else (ROUTE_FOCUS_SCALE if focused else Vector2.ONE)
-	var target_color := ROUTE_HOVER_BACKGROUND if hovered else (ROUTE_FOCUS_BACKGROUND if focused else Color.TRANSPARENT)
 	if bool(ProjectSettings.get_setting("accessibility/reduced_motion", false)):
 		target_scale = Vector2.ONE
 	if row.has_meta(&"route_hover_tween"):
@@ -781,12 +781,10 @@ func _refresh_route_card_feedback(row: Button, background: ColorRect) -> void:
 		row.remove_meta(&"route_hover_tween")
 	if not row.is_inside_tree() or bool(ProjectSettings.get_setting("accessibility/reduced_motion", false)):
 		row.scale = target_scale
-		background.color = target_color
 		return
 	var tween := create_tween().set_parallel(true)
 	tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tween.tween_property(row, "scale", target_scale, ROUTE_HOVER_SECONDS)
-	tween.tween_property(background, "color", target_color, ROUTE_HOVER_SECONDS)
 	row.set_meta(&"route_hover_tween", tween)
 
 

@@ -1,7 +1,7 @@
 extends SceneTree
 
 const EXPORT_PRESETS_PATH := "res://export_presets.cfg"
-const SFX_CATALOG_PATH := "res://assets/sfx/catalog.tres"
+const SFX_CATALOG_PATH := "res://bundled/sfx/catalog.tres"
 const OPERATOR_DIRECTORY := "res://data/operators"
 const REQUIRED_UNLOCK_TOKENS := [
 	"window.AudioContext=Wrapped",

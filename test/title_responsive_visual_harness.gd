@@ -47,7 +47,29 @@ func _run() -> void:
 			else:
 				scroll.scroll_vertical = 0
 			await get_tree().process_frame
-	var image := get_viewport().get_texture().get_image()
+		if title.call("screen_state") != &"SETTINGS":
+			push_error("settings visual state did not open")
+			get_tree().quit(1)
+			return
+	# Viewport texture reads can otherwise race the render thread and capture a
+	# stale title frame (or a cleared buffer) while a clean cache prepares shaders.
+	await get_tree().create_timer(1.0).timeout
+	var image: Image = null
+	var visible_frames := 0
+	for _capture_attempt: int in range(100):
+		RenderingServer.force_draw()
+		image = get_viewport().get_texture().get_image()
+		if _has_visible_content(image):
+			visible_frames += 1
+			if visible_frames >= 2:
+				break
+		else:
+			visible_frames = 0
+		await get_tree().create_timer(0.1).timeout
+	if visible_frames < 2:
+		push_error("visual capture remained blank after render synchronization")
+		get_tree().quit(1)
+		return
 	var save_error := image.save_png(output_path)
 	if save_error != OK:
 		push_error("visual capture failed: %s" % error_string(save_error))
@@ -86,3 +108,19 @@ func _parse_user_args() -> Dictionary:
 func _remove_preferences() -> void:
 	if FileAccess.file_exists(PREFERENCES_PATH):
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(PREFERENCES_PATH))
+
+
+func _has_visible_content(image: Image) -> bool:
+	if image == null or image.is_empty():
+		return false
+	var step_x := maxi(1, image.get_width() / 96)
+	var step_y := maxi(1, image.get_height() / 54)
+	var bright_samples := 0
+	for y: int in range(0, image.get_height(), step_y):
+		for x: int in range(0, image.get_width(), step_x):
+			var pixel := image.get_pixel(x, y)
+			if maxf(pixel.r, maxf(pixel.g, pixel.b)) >= 0.2:
+				bright_samples += 1
+				if bright_samples >= 8:
+					return true
+	return false

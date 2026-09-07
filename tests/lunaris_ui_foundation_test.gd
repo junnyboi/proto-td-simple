@@ -40,7 +40,7 @@ func _run() -> void:
 				audited_button.get_theme_stylebox(state), "shared %s %s" % [role, state],
 			)
 		audited_button.free()
-	_check(theme.get_stylebox(&"panel", &"AuiReadingPanel") is StyleBoxTexture, "reading panel does not use the command-deck frame")
+	_check(theme.get_stylebox(&"panel", &"AuiReadingPanel") is StyleBoxFlat, "reading panel is not a plain solid surface")
 	_check(theme.get_font(&"font", &"AuiTitleLabel") != null, "display typography is missing")
 
 	var shell := ShellScene.instantiate()
@@ -276,9 +276,9 @@ func _check_simple_gold_button_style(style: StyleBox, context: String) -> void:
 	_check(flat != null, "%s still uses a stylized background" % context)
 	if flat == null:
 		return
-	_check(flat.bg_color.a > 0.0 and flat.bg_color.a < 1.0, "%s fill is not translucent" % context)
+	_check(is_equal_approx(flat.bg_color.a, 1.0), "%s fill is not opaque" % context)
 	_check(flat.border_color.is_equal_approx(LunarisStyleType.GOLD), "%s border is not gold" % context)
-	_check(flat.border_width_left > 0, "%s gold border is missing" % context)
+	_check(flat.border_width_left >= 3, "%s border is not thick" % context)
 	_check(flat.corner_radius_top_left >= 12, "%s border is not sufficiently rounded" % context)
 	_check(flat.content_margin_left >= 12.0, "%s content padding is below 12px" % context)
 

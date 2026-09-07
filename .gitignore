@@ -1,4 +1,5 @@
 .godot/
+dist/
 build/*
 !build/.gdignore
 .DS_Store

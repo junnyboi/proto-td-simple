@@ -59,16 +59,16 @@ func _check_results_screen(game: Node, outcome: int, label: String) -> void:
 		var style := header.get_theme_stylebox(&"panel") as StyleBoxFlat
 		_check(style != null, "%s results header is not a simple solid-fill panel" % label)
 		if style != null:
-			_check(style.bg_color.a > 0.0 and style.bg_color.a < 1.0, "%s results header fill is not translucent" % label)
+			_check(is_equal_approx(style.bg_color.a, 1.0), "%s results header fill is not opaque" % label)
 			_check(
-				style.border_color.is_equal_approx(Color("d9b96ee8")),
+				style.border_color.is_equal_approx(Color("d9b96e")),
 				"%s results header border is not gold" % label,
 			)
 			_check(
-				style.border_width_left == 2
-				and style.border_width_top == 2
-				and style.border_width_right == 2
-				and style.border_width_bottom == 2,
+				style.border_width_left == 3
+				and style.border_width_top == 3
+				and style.border_width_right == 3
+				and style.border_width_bottom == 3,
 				"%s results header does not have a uniform gold border" % label,
 			)
 			_check(

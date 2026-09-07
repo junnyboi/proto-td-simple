@@ -1,6 +1,6 @@
 extends SceneTree
 
-const AssetManifestType := preload("res://assets/asset_manifest.gd")
+const AssetManifestType := preload("res://assets/template/asset_manifest.gd")
 const OperatorAnimationDefType := preload("res://data/presentation/operator_animation_def.gd")
 const OperatorAnimatorType := preload("res://scripts/view/operator_animator.gd")
 const OperatorVisualCatalogType := preload("res://data/presentation/operator_visual_catalog.gd")
@@ -68,8 +68,8 @@ func _test_manifest_profiles() -> void:
 	)
 
 	for path: String in [
-		"res://assets/manifest.tres",
-		"res://assets/act1_shared_manifest.tres",
+		"res://assets/template/manifest.tres",
+		"res://assets/template/act1_shared_manifest.tres",
 	]:
 		var existing := load(path) as AssetManifestType
 		_check(existing != null, "%s failed to load" % path)

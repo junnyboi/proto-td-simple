@@ -15,13 +15,13 @@ const EXPECTED_BIOMES := {
 }
 
 const LEGACY_TILE_PATHS := [
-	"res://assets/sprites/tile_ground.png",
-	"res://assets/sprites/tile_road.png",
-	"res://assets/sprites/tile_elevated.png",
-	"res://assets/world/act1/ground.png",
-	"res://assets/world/act1/route.png",
-	"res://assets/world/act1/raised.png",
-	"res://assets/world/s1/s1-elevated.png",
+	"res://assets/template/sprites/tile_ground.png",
+	"res://assets/template/sprites/tile_road.png",
+	"res://assets/template/sprites/tile_elevated.png",
+	"res://assets/template/world/act1/ground.png",
+	"res://assets/template/world/act1/route.png",
+	"res://assets/template/world/act1/raised.png",
+	"res://assets/template/world/s1/s1-elevated.png",
 ]
 
 
@@ -65,6 +65,26 @@ func _run() -> void:
 			for child: Node in root_node.get_children():
 				if child is BattleEndpointLandmark:
 					endpoint_count += 1
+					var landmark := child as BattleEndpointLandmark
+					var parts := String(child.name).split("_")
+					var cell := Vector2i(int(parts[1]), int(parts[2]))
+					var expected := IsoProjection.cell_polygon(cell, stage.is_elevated_platform(cell))[2]
+					var native := Vector2(Art.size(landmark.art_id()))
+					var contact := Vector2(291, 591) if landmark.art_id() == &"world.act1.spawn" else Vector2(201, 590)
+					var fit := minf(landmark.size.x / native.x, landmark.size.y / native.y)
+					var drawn_contact := (landmark.size - native * fit) * 0.5 + contact * fit
+					if not (landmark.position + drawn_contact).is_equal_approx(expected):
+						failures.append("endpoint base misses tile bottom: %s %s" % [stage_id, child.name])
+					if not landmark.pivot_offset.is_equal_approx(drawn_contact):
+						failures.append("endpoint transform pivot misses base: %s" % child.name)
+					if not IsoProjection.visual_box(stage).encloses(Rect2(landmark.position, landmark.size)):
+						failures.append("camera bounds clip endpoint: %s" % child.name)
+					for zoom: float in [0.5, 1.0, 3.0]:
+						root_node.scale = Vector2.ONE * zoom
+						root_node.position = Vector2(71, -39)
+						if not (landmark.get_global_transform() * drawn_contact).is_equal_approx(root_node.to_global(expected)):
+							failures.append("endpoint contact drifts with map transform: %s" % child.name)
+
 					if (child as BattleEndpointLandmark).frame_count() <= 1:
 						failures.append("endpoint is not animated: %s %s" % [stage_id, child.name])
 				elif child.name.begins_with("EnvProp_") or child.name.begins_with("ProceduralFallback_"):

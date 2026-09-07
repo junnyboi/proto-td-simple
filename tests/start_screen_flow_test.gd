@@ -1,6 +1,6 @@
 extends SceneTree
 
-const STATIC_ART := preload("res://assets/loading/lunaris_reliquary_loading.png")
+const STATIC_ART := preload("res://assets/template/loading/lunaris_reliquary_loading.png")
 const TRANSITION_FRAMES := 180
 
 var _failures: Array[String] = []

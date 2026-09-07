@@ -39,12 +39,11 @@ func _check_focus(raw_style: StyleBox, context: String) -> void:
 	_check(style != null, "%s focus style is not inspectable" % context)
 	if style == null:
 		return
-	_check(style.bg_color.a >= 0.08 and style.bg_color.a <= 0.18, "%s focus tint is not slight" % context)
-	_check(style.bg_color.r > style.bg_color.b and style.bg_color.g > style.bg_color.b, "%s focus tint is not warm gold" % context)
+	_check(style.bg_color.a <= 0.01, "%s focus ring paints another background" % context)
 	for side: int in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]:
-		_check(style.get_border_width(side) == 0, "%s focus retained a border" % context)
-		_check(is_zero_approx(style.get_expand_margin(side)), "%s focus retained expanded outline geometry" % context)
-	_check(style.border_color.a <= 0.01, "%s focus retained a visible border color" % context)
+		_check(style.get_border_width(side) == 4, "%s focus outline is not thick" % context)
+		_check(is_equal_approx(style.get_expand_margin(side), 2.0), "%s focus outline expansion changed" % context)
+	_check(style.border_color.r > style.border_color.b and style.border_color.g > style.border_color.b, "%s focus outline is not warm gold" % context)
 
 
 func _check_non_button_focus(raw_style: StyleBox, context: String) -> void:
@@ -54,7 +53,7 @@ func _check_non_button_focus(raw_style: StyleBox, context: String) -> void:
 		return
 	_check(style.bg_color.a <= 0.01, "%s non-Button focus unexpectedly inherited the Button tint" % context)
 	for side: int in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]:
-		_check(style.get_border_width(side) == 2, "%s non-Button focus border changed" % context)
+		_check(style.get_border_width(side) >= 3, "%s non-Button focus border is not thick" % context)
 		_check(is_equal_approx(style.get_expand_margin(side), 3.0), "%s non-Button focus expansion changed" % context)
 
 

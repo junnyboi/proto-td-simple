@@ -31,7 +31,7 @@ func _run() -> void:
 
 
 func _validate_manifest() -> void:
-	var manifest := load("res://assets/enemy_static_manifest.tres") as AssetManifest
+	var manifest := load("res://assets/template/enemy_static_manifest.tres") as AssetManifest
 	_check(manifest != null, "static enemy manifest must load")
 	if manifest == null:
 		return
@@ -53,7 +53,7 @@ func _validate_asset_contract() -> void:
 		_check(not bool(metadata.get("placeholder", true)), "%s must be production art" % asset_id)
 		_check(Art.size(asset_id) == Vector2i(640, 640), "%s source canvas must be 640x640" % asset_id)
 		var pattern := String(metadata.get("pattern", ""))
-		_check(pattern == "res://assets/sprites/enemies/static/%s.png" % enemy_id, "%s must resolve from the core static directory" % asset_id)
+		_check(pattern == "res://assets/template/sprites/enemies/static/%s.png" % enemy_id, "%s must resolve from the core static directory" % asset_id)
 		_check(FileAccess.file_exists(pattern), "%s source PNG must be core-resident" % asset_id)
 		var import_text := FileAccess.get_file_as_string(pattern + ".import")
 		_check(import_text.contains("compress/mode=0"), "%s must preserve lossless imported storage" % asset_id)

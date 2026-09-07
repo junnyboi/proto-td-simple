@@ -26,8 +26,10 @@ project_root="$run_root/project"
 xdg_data_root="$run_root/xdg-data"
 artifact_root=${PROTO_TD_TEST_ARTIFACT_DIR:-"$ROOT/build/test-runs/$run_id"}
 log_file=${PROTO_TD_TEST_LOG_FILE:-"$artifact_root/godot.log"}
+import_log_file="$artifact_root/import.log"
+import_console_file="$artifact_root/import-console.log"
 
-mkdir -p "$project_root" "$xdg_data_root" "$artifact_root" "$project_root/build"
+mkdir -p "$project_root" "$xdg_data_root" "$artifact_root" "$project_root/build/web"
 
 while IFS= read -r entry; do
   base=${entry##*/}
@@ -91,4 +93,6 @@ export PROTO_TD_TEST_ISOLATED=1
 export PROTO_TD_TEST_RUN_ID="$run_id"
 export XDG_DATA_HOME="$xdg_data_root"
 
+"$GODOT_BIN" --headless --path "$project_root" --log-file "$import_log_file" --import \
+  >"$import_console_file" 2>&1
 "$GODOT_BIN" --path "$project_root" --log-file "$log_file" "$@"

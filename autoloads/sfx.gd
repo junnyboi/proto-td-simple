@@ -3,8 +3,8 @@ extends Node
 ## Sole runtime SFX owner. Playback is alias-resolved, deduplicated per render
 ## frame, and remains presentation-only.
 
-const CATALOG_PATH := "res://assets/sfx/catalog.tres"
-const SFX_CATALOG_SCRIPT: GDScript = preload("res://assets/sfx/sfx_catalog.gd")
+const CATALOG_PATH := "res://bundled/sfx/catalog.tres"
+const SFX_CATALOG_SCRIPT: GDScript = preload("res://bundled/sfx/sfx_catalog.gd")
 const VOICE_COUNT := 8
 const PLAYER_PREFIX := "Voice"
 const BUS_NAME := &"SFX"

@@ -3,8 +3,8 @@ set -euo pipefail
 
 prod="${PRODUCTION_ROOT:-/home/ubuntu/projects/proto-td-1515240c/audio-production-2026-08-25}"
 repo="${REPOSITORY_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
-music_out="$repo/assets/music/lunaris"
-sfx_out="$repo/assets/sfx/ui"
+music_out="$repo/assets/template/bundled/music/lunaris"
+sfx_out="$repo/assets/template/bundled/sfx/ui"
 mkdir -p "$music_out" "$sfx_out"
 
 loopify() {

@@ -1,5 +1,6 @@
 extends Node2D
 
+const WEB_MAP_ZOOM_SCRIPT := preload("res://scripts/view/web_map_zoom.gd")
 const MAP_NAVIGATOR_SCRIPT: GDScript = preload("res://scripts/view/map_navigator.gd")
 const BATTLE_HUD_PRESENTER := preload("res://scripts/view/battle_hud_presenter.gd")
 const BattlePalette := preload("res://scripts/view/battle_palette.gd")
@@ -221,6 +222,7 @@ func _ready() -> void:
 	_controls.z_index = UI_OVERLAY_Z
 	add_child(_controls)
 	_controls.setup(candidate_model, self)
+	add_child(WEB_MAP_ZOOM_SCRIPT.new())
 	_map_navigation_overlay = MAP_NAVIGATION_OVERLAY_SCRIPT.new()
 	_map_navigation_overlay.name = "MapNavigationOverlay"
 	add_child(_map_navigation_overlay)
@@ -403,12 +405,35 @@ func _unhandled_input(event: InputEvent) -> void:
 	if _grid_root == null or _map_navigation_blocked():
 		_refresh_map_cursor()
 		return
+	# Magnify gestures and scroll events may pass through otherwise blocking GUI.
+	# Hit-test their own position, not the last mouse-motion hover position.
+	if event is InputEventGesture or (
+		event is InputEventMouseButton
+		and event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]
+	):
+		if _map_gesture_hits_ui(self, event.position):
+			return
 	if _map_nav.handle_input(event):
 		if _map_navigation_overlay != null and _map_nav.is_dragging():
 			_map_navigation_overlay.notify_pan_used()
 		_apply_map_transform()
 		_refresh_map_cursor()
 		get_viewport().set_input_as_handled()
+
+
+func _map_gesture_hits_ui(node: Node, position: Vector2) -> bool:
+	if node == _grid_root:
+		return false
+	if node is Control:
+		var control := node as Control
+		if not control.is_visible_in_tree():
+			return false
+		if control.mouse_filter != Control.MOUSE_FILTER_IGNORE and control.get_global_rect().has_point(position):
+			return true
+	for child: Node in node.get_children():
+		if _map_gesture_hits_ui(child, position):
+			return true
+	return false
 
 
 func _map_navigation_blocked() -> bool:

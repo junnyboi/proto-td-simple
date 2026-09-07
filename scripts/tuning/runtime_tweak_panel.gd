@@ -167,7 +167,7 @@ func _build_row(descriptor: Dictionary) -> Control:
 	panel.name = "Row_%s" % String(descriptor[&"id"]).replace(".", "_")
 	panel.custom_minimum_size.y = ROW_HEIGHT
 	panel.tooltip_text = "%s\n%s" % [descriptor[&"description"], descriptor[&"id"]]
-	panel.add_theme_stylebox_override(&"panel", _flat_style(Color(ROW_COLOR, 0.88), 6.0))
+	panel.add_theme_stylebox_override(&"panel", _flat_style(ROW_COLOR, 14.0))
 	var margin := MarginContainer.new()
 	margin.add_theme_constant_override(&"margin_left", 10)
 	margin.add_theme_constant_override(&"margin_top", 6)
@@ -332,7 +332,7 @@ func _refresh_panel_style() -> void:
 	var opacity := 0.96
 	if service != null:
 		opacity = float(service.call("value", &"ui.panel_opacity", opacity))
-	frame.add_theme_stylebox_override(&"panel", _flat_style(Color(PANEL_COLOR, opacity), 10.0))
+	frame.add_theme_stylebox_override(&"panel", _flat_style(Color(PANEL_COLOR, opacity), 14.0))
 
 
 func _flat_style(color: Color, radius: float) -> StyleBoxFlat:
@@ -342,11 +342,11 @@ func _flat_style(color: Color, radius: float) -> StyleBoxFlat:
 	style.corner_radius_top_right = roundi(radius)
 	style.corner_radius_bottom_left = roundi(radius)
 	style.corner_radius_bottom_right = roundi(radius)
-	style.border_width_left = 1
-	style.border_width_top = 1
-	style.border_width_right = 1
-	style.border_width_bottom = 1
-	style.border_color = Color(ACCENT, 0.28)
+	style.border_width_left = 3
+	style.border_width_top = 3
+	style.border_width_right = 3
+	style.border_width_bottom = 3
+	style.border_color = ACCENT
 	return style
 
 

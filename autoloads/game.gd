@@ -536,9 +536,7 @@ func pending_campaign_stage_id() -> StringName:
 	return selected_stage_id
 
 
-## Resume the matching pending mission, or commit a new campaign attempt and
-## enter it. The ticket keeps one stable campaign-personnel witness for
-## save/replay integrity; tactical deployment uses the fixed repeatable roster.
+## Resume the matching pending mission or commit a new campaign attempt.
 func start_campaign_stage(stage_id: StringName, open_battle: bool = true) -> bool:
 	if not campaign_active or campaign == null or stage_id.is_empty():
 		return false

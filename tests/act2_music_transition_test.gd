@@ -36,7 +36,7 @@ func _run() -> void:
 
 func _test_profile_and_stage_routes() -> void:
 	var profile := load(PROFILE_PATH) as MusicProfile
-	var catalog := load("res://assets/music/catalog.tres") as MusicCatalog
+	var catalog := load("res://bundled/music/catalog.tres") as MusicCatalog
 	_check(profile != null and profile.is_valid(), "Act II music profile is invalid")
 	_check(catalog != null, "music catalog did not load")
 	var cue_ids: Dictionary = {}

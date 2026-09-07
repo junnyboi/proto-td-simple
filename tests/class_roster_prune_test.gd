@@ -87,17 +87,17 @@ func _test_presentation_catalogs() -> void:
 func _test_removed_assets_absent() -> void:
 	for class_id: String in REMOVED_CLASSES:
 		_check(not FileAccess.file_exists("res://data/classes/%s.tres" % class_id), "removed class resource remains: %s" % class_id)
-		_check(not _directory_exists("res://assets/sprites/operators/animated/%s" % class_id), "removed class sprite directory remains: %s" % class_id)
+		_check(not _directory_exists("res://assets/template/sprites/operators/animated/%s" % class_id), "removed class sprite directory remains: %s" % class_id)
 		for variant: String in ["female", "male"]:
-			_check(not FileAccess.file_exists("res://assets/portraits/specializations/%s_%s.png" % [class_id, variant]), "removed specialization portrait remains: %s/%s" % [class_id, variant])
+			_check(not FileAccess.file_exists("res://assets/template/portraits/specializations/%s_%s.png" % [class_id, variant]), "removed specialization portrait remains: %s/%s" % [class_id, variant])
 	for operator_id: String in REMOVED_OPERATORS:
 		_check(not FileAccess.file_exists("res://data/operators/%s.tres" % operator_id), "removed operator resource remains: %s" % operator_id)
-		_check(not FileAccess.file_exists("res://assets/portraits/%s.png" % operator_id), "removed operator portrait remains: %s" % operator_id)
-		_check(not _directory_exists("res://assets/sprites/operators/animated/%s" % operator_id), "removed operator sprite directory remains: %s" % operator_id)
+		_check(not FileAccess.file_exists("res://assets/template/portraits/%s.png" % operator_id), "removed operator portrait remains: %s" % operator_id)
+		_check(not _directory_exists("res://assets/template/sprites/operators/animated/%s" % operator_id), "removed operator sprite directory remains: %s" % operator_id)
 
 
 func _test_manifest_integrity() -> void:
-	var manifest = load("res://assets/manifest.tres")
+	var manifest = load("res://assets/template/manifest.tres")
 	_check(manifest != null, "asset manifest failed to load")
 	if manifest == null:
 		return

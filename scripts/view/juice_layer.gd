@@ -397,10 +397,10 @@ func _build_high_threat_panel(warning_id: StringName, heading: String, detail: S
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	panel.z_index = 80
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.025, 0.035, 0.055, 0.95)
+	style.bg_color = Color("06090e")
 	style.border_color = HIGH_THREAT_COLORS[warning_id]
-	style.set_border_width_all(2)
-	style.set_corner_radius_all(10)
+	style.set_border_width_all(3)
+	style.set_corner_radius_all(14)
 	style.content_margin_left = 24.0
 	style.content_margin_right = 24.0
 	style.content_margin_top = 24.0

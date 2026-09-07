@@ -4,7 +4,7 @@ set -euo pipefail
 production_root="${PRODUCTION_ROOT:-/home/ubuntu/webdev-static-assets/proto-td-act2}"
 repository_root="${REPOSITORY_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
 master_root="$production_root/music-masters"
-out_root="$repository_root/assets/music/lunaris/act2"
+out_root="$repository_root/assets/template/bundled/music/lunaris/act2"
 mkdir -p "$out_root"
 
 loopify() {

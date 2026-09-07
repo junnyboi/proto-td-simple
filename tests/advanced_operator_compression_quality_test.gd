@@ -39,10 +39,10 @@ func _run() -> void:
 			for gender: String in GENDERS:
 				for action: String in ACTIONS:
 					for direction: String in DIRECTIONS:
-						_measure("res://assets/sprites/operators/animated/%s/%s/%s_%s.webp" % [class_id, gender, action, direction])
+						_measure("res://assets/template/sprites/operators/animated/%s/%s/%s_%s.webp" % [class_id, gender, action, direction])
 	else:
 		for relative_path: String in QUICK_CASES:
-			_measure("res://assets/sprites/operators/animated/%s.webp" % relative_path)
+			_measure("res://assets/template/sprites/operators/animated/%s.webp" % relative_path)
 	var by_psnr := _rows.duplicate()
 	by_psnr.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return float(a.psnr_db) < float(b.psnr_db))
 	var by_mae := _rows.duplicate()

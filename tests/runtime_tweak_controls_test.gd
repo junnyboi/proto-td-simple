@@ -250,9 +250,10 @@ func _check_simple_gold_button(button: BaseButton, context: String) -> void:
 		_check(style != null, "%s %s still uses a stylized background" % [context, state])
 		if style == null:
 			continue
-		_check(style.bg_color.a > 0.0 and style.bg_color.a < 1.0, "%s %s is not translucent" % [context, state])
+		_check(is_equal_approx(style.bg_color.a, 1.0), "%s %s is not opaque" % [context, state])
 		_check(style.border_color.is_equal_approx(Style.GOLD), "%s %s border is not gold" % [context, state])
 		_check(style.corner_radius_top_left >= 12, "%s %s border is not rounded" % [context, state])
+		_check(style.border_width_left >= 3, "%s %s border is not thick" % [context, state])
 
 
 func _check(condition: bool, message: String) -> void:

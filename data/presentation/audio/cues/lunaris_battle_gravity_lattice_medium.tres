@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1")
 id = &"lunaris_battle_gravity_lattice_medium"
-stream_path = "res://assets/music/lunaris/lunaris_battle_gravity_lattice_medium.ogg"
+stream_path = "res://assets/template/bundled/music/lunaris/lunaris_battle_gravity_lattice_medium.ogg"
 bpm = 124.0
 beats_per_bar = 4
 loop = true

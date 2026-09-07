@@ -1,7 +1,7 @@
 class_name MarksCurrencyDisplay
 extends HBoxContainer
 
-const ICON_TEXTURE := preload("res://assets/ui/staging/icons/resource_sigil.png")
+const ICON_TEXTURE := preload("res://assets/template/ui/staging/icons/resource_sigil.png")
 const UiCopyType := preload("res://scripts/ui/components/ui_copy.gd")
 const GOLD := Color("d9bd79")
 

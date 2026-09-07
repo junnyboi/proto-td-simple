@@ -32,7 +32,7 @@ func _validate_identity(identity: StringName) -> void:
 	var rect_origin_y: float = IsoProjection.FEET_OFFSET - body_size.y * float(animation.pivot.y)
 	var rendered_ground_y: float = rect_origin_y + body_size.y * EXPECTED_PIVOT_Y
 	_check(absf(rendered_ground_y - IsoProjection.FEET_OFFSET) <= 0.001, "%s feet do not land on the tile face" % identity)
-	var root := "res://assets/sprites/operators/animated/%s/" % identity
+	var root := "res://assets/template/sprites/operators/animated/%s/" % identity
 	for direction: String in ["ne", "nw"]:
 		_validate_strip(identity, root, "idle", direction, 24, 148, 148)
 		# Attack poses lunge/crouch by at most six source pixels (3.4 runtime px)

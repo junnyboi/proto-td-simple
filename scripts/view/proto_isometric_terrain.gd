@@ -5,7 +5,7 @@ extends Node2D
 ## model and IsoProjection remain authoritative; this node only renders stage
 ## cells with the source project's textured, multi-pass isometric treatment.
 
-const TEXTURE_ROOT := "res://assets/terrain/proto_isometric/"
+const TEXTURE_ROOT := "res://assets/template/terrain/proto_isometric/"
 const ELEVATED_PLATFORM_OCCLUDER_SCRIPT := preload(
 	"res://scripts/view/elevated_platform_occluder.gd"
 )

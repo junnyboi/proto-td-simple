@@ -80,6 +80,7 @@ func _run() -> void:
 				"%s %s" % [button_name, style_name],
 				8,
 				style_name != &"focus",
+				style_name == &"focus",
 			)
 		_check(
 			button.get_theme_color(&"font_color").is_equal_approx(Color("f5efe1")),
@@ -96,15 +97,22 @@ func _check_surface(
 	context: String,
 	minimum_radius: int,
 	require_gold_border: bool = true,
+	outline_only: bool = false,
 ) -> void:
 	var surface := raw_style as StyleBoxFlat
 	_check(surface != null, "%s still uses a stylized frame" % context)
 	if surface == null:
 		return
-	_check(
-		surface.bg_color.a > 0.0 and surface.bg_color.a < 1.0,
-		"%s background is not translucent" % context,
-	)
+	if outline_only:
+		_check(
+			surface.bg_color.a <= 0.01,
+			"%s focus outline still fills the button" % context,
+		)
+	else:
+		_check(
+			is_equal_approx(surface.bg_color.a, 1.0),
+			"%s background is not opaque" % context,
+		)
 	if require_gold_border:
 		_check(
 			surface.border_color.r > surface.border_color.b
@@ -115,6 +123,7 @@ func _check_surface(
 		surface.get_corner_radius(CORNER_TOP_LEFT) >= minimum_radius,
 		"%s border is not rounded" % context,
 	)
+	_check(surface.get_border_width(SIDE_LEFT) >= 3, "%s border is not thick" % context)
 
 
 func _check(condition: bool, message: String) -> void:

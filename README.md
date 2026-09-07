@@ -1,19 +1,129 @@
+<!-- generated: alternative_readmes/game-td_README_template.md -->
+
 # Game Template — Deterministic Isometric Tower Defense
+## Shared game-development workflow
+These rules govern game creation and adaptation. The reference-specific sections below describe existing code, not exceptions to the delivery requirements. A small modification stays within the user's requested scope; do not restart the entire production process. Respect the current session's mode and tool/edit permissions. Shared rules take precedence over conflicting template-specific instructions or older handbooks; those documents supply concrete implementation details, not alternate global policies.
+**Do not run routine browser self-tests or add a separate self-code-review phase.** Do not drive your preview with browser automation or call `webdev_take_screenshot` to inspect your own work. Correct concrete implementation/test failures, then deliver the checkpoint without another full-diff reread or review subtask. This restriction concerns the game-creation Agent, not repository maintainer review or CI.
+For visual evidence, use Godot's live viewport (`get_viewport().get_texture().get_image()` and `Image.save_png()`) with deterministic game state assertions and a real renderer. Headless Dummy rendering cannot prove visual correctness. For a reported Web-only failure, inspect relevant logs and request targeted user acceptance on the checkpoint. Use browser tools yourself only when the user explicitly requests browser reproduction/debugging; do not make this an extra default delivery gate.
+Before starting game development, **always recommend three AI-generated concept gameplay mockups with very different themes and ask the user whether they want them**: “I recommend three AI-generated concept gameplay mockups with very different themes so you can compare visual directions before development. Would you like me to generate them?” Wait for the user's decision before implementation; honor an answer already given for the current development request without asking again. An existing reference or a small modification does not waive this offer. If accepted, generate three separate static gameplay mockup images using the built-in static-image generative AI tools. Give each a substantially different thematic direction through its setting, player/unit and enemy designs, environment, palette and mood; three recolors or minor variations of the same theme are insufficient. Keep the requested gameplay and user-specified constraints consistent across all three; when a theme is already fixed, explore clearly different interpretations within it. Each mockup must show the intended player/units, enemies or hazards, environment, gameplay composition and HUD in a coherent visual direction. Present the three options together so the user can compare and choose a direction. Clearly label each as a concept gameplay mockup, not an actual gameplay screenshot. Consent covers these mockups' generation method only, not approval to build or the production method for later game assets or audio. **After generating the concept mockups, present the images in a structured question with clickable Approve and build / Revise concept options and wait for the user's decision before GameDev initialization or implementation.** When no direction has been selected, label each approval option **Approve and build — [direction]** so choosing it also identifies the approved mockup; always include **Revise concept**. Use the available user-question tool (such as `ask`), not a final-answer-only image delivery or generic follow-up suggestions. Concept generation is a substep of the game request: an image-generation skill's instruction to stop after image delivery does not replace this approval step. On revision, update the requested concept and present the approval question again; on approval, proceed with the selected game template. Honor explicit approval already given for the current concept without asking again. If the concept offer is declined, proceed with game development without generating the mockups.
+### Preserve the selected template
+For a matching genre, extend the initialized template as the gameplay foundation. Before editing, inspect its entry scene and core owners and identify which existing systems each requested change will extend. A new theme, art direction or faction roster is not a reason to replace the simulation or scene architecture. Keep required template systems connected to the active gameplay scene; unused copies do not count. If a guide is missing, use the compatible guidance returned by initialization and report the mismatch instead of inventing a replacement engine. An explicitly selected fallback genre follows that fallback contract.
+### First-checkpoint completion contract
+A complete game is more than a booting scene or an isolated mechanic. Unless the user explicitly excludes a part, the first user-facing checkpoint must provide:
+| Part | Required outcome |
+|---|---|
+| Play loop | Understandable goal, usable controls, substantive gameplay content, failure/recovery, clear completion and replay. Use stages, waves or missions appropriate to the type. |
+| UI and navigation | Readable game-specific title/start screen, instructions, HUD, pause/resume and return-to-menu, plus clear end-state feedback. Preserve touch controls unless desktop-only was requested. |
+| Finished presentation | Coherent game-specific environment, characters/units, props and important effects; complete audio and typography as described below. No finished protagonist surrounded by placeholder scenery. |
+| Gameplay feedback | Immediate visual/audio feedback for actual attacks, damage, collection, progress and completion. Use appropriate particles or filters, not unrelated effects. |
+| Tuning and persistence | Working development Tweak controls and an honest save workflow. Preserve progress/scores where required; distinguish local records from an online leaderboard. |
+| Current-source delivery | Necessary resource/import, targeted gameplay, native visual and exported-pack checks pass; all runtime assets are present. Save a normal checkpoint and give it to the user for browser acceptance. |
+Start by running and understanding the working reference. Preserve its functioning navigation, input, audio, tuning, assets and artifact plumbing while adapting the requested gameplay. State exclusions and unfinished requirements instead of claiming completion. A reference capability missing below must be implemented when required for the requested game; prose is not an implementation.
+Use the template's documented commands and actual test entry points. The normal sequence is **implement → focused Godot checks/native captures → current exported-pack verification → `webdev_save_checkpoint` → user acceptance**. Documentation-only edits do not require an engine boot. Do not invent tests, run unrelated suites, or delay a valid checkpoint for speculative checks.
+### Supplied repository and preview identity gate
+For repository-based work, identify the supplied game and the registered delivery project. Integrate the requested main scene, mechanics, camera, controls, HUD, content, assets and dependencies into that active project; edits in a separate clone, renamed scaffolds and unused copied files are insufficient. Preserve Game Dev serving/export/storage/checkpoint integration. Import/export, restart the managed preview, and verify its project root, title/loading identity and served artifacts match the current game. Use targeted gameplay/export checks and native title/gameplay captures from that same project. Never checkpoint an untouched or unrelated scaffold, including as the first preview; fix unverified integration or report the blocker. The maze-game exception does not waive this gate.
+### Game-generic gameplay and UI exception
+Unless explicitly asked for a Pac-Man-like maze game, replace game-generic's maze rules and in-game UI with objectives, actions, world/camera, progression, scoring, win/loss rules, HUD, controls and screen composition designed for the requested game. Reuse genre-independent export, input, pause/settings, audio, saves, local standings, localization, tutorial plumbing, feedback, tuning and responsive-layout infrastructure. A maze request permits adapting the reference mechanics/UI, but never waives the shared presentation, originality, audio or delivery requirements.
+### Ownership boundaries
+Map responsibilities to this template's actual owners: the session coordinator owns flow/progression/pause/terminal transitions; the authoritative model owns legal actions, simulation/combat/scoring/outcomes; controllers translate input; entity/resource modules own reusable content; tuning owns validated values and application boundaries; art/HUD/animation/effects/audio present state and semantic events, never collision/legality/rewards; save/leaderboard services own storage and once-only recording. Keep Godot/GDScript gameplay authority separate from Node serving/tooling or optional services, and keep scenes and responsibilities inspectable. **WASD is reserved for movement in every game.** Bind W/A/S/D only to player movement, or camera/map panning in RTS and similar games. Never assign these keys to skills, abilities, attacks, interactions, unit commands, menu actions or other hotkeys, and never trigger a non-movement action from the same key press. If the game has no applicable player or map movement, leave WASD unassigned. Use other keys for shortcuts, rebind any conflicting reference controls when adapting the game, and keep input maps, remapping validation, tutorials and displayed hints consistent. Verify that WASD moves only the intended player/camera and does not activate another action.
+### Mandatory game juice and HUD adaptation
+For new games and full adaptations, inventory and adapt all applicable hover/focus/press/selection/disabled feedback, HUD updates, particles/glow/pulse, impact cues, transitions and camera feedback. Reuse plumbing with original theme-matched art, timing and intensity; replace removed mechanics with appropriate equivalent cues instead of dropping feedback. Retheme all relevant HUD indicators, controls, tooltips, prompts and notifications; remove only deliberately irrelevant mechanics. Respect template-specific plain-UI/static-art restrictions. Keep presentation bounded, pooled/cleaned up and simulation-independent; preserve responsive/localized layouts, input-state coverage, reduced motion and meaningful muted feedback. Verify affected reachable screens/events and pause/retry at supported sizes and inputs.
+### Tutorial content boundary
+Teach goals, controls, rules and gameplay actions only. Never mention, highlight, require, wait for or route onboarding through Tweak Controls, F10, developer tuning or individual tuning values. Preserve that separation in localization, tutorial events, persistence and tests.
+Every tutorial/onboarding flow must provide a visible, clearly labeled, localized **Skip tutorial** button from its first screen and throughout every step, including steps waiting for gameplay actions. Support the game's pointer/touch, keyboard and gamepad inputs as applicable. Skipping must immediately dismiss tutorial prompts/highlights, release tutorial input locks, restore the intended gameplay pause/focus state and record dismissal consistently. Verify skipping at every step; players must never have to complete a tutorial to reach playable gameplay.
+### Local leaderboard by default
+Persist a bounded offline local top-N, record each eligible terminal run once, sort ties deterministically and expose standings in UI. Global rankings may be suggested but must remain disabled and unreachable unless explicitly requested; do not scaffold remote storage/APIs, queues, adapters or global UI by default. On opt-in, implement the complete Manus WebDev database, submit/query API and loading/empty/error/ranked UI path, keeping local fallback and verifying ordering, deduplication, persistence and unavailable-service behavior. Existing template networking is optional reference material.
+### Balance and complete adaptation
+For a new complete game, preserve deterministic gameplay, progression, settings, tutorials and complete English/Simplified-Chinese support. Keep presentation randomness out of scoring and simulation. Aim for replayable 10–15 minute runs with meaningful decisions, pacing variation and recovery unless the requested design calls for another duration; validate representative successful, failed and replayed runs. Check the actual start/tutorial/play/pause/settings/progression/results/retry/menu/local-standings flow in both languages and supported landscape/portrait/input modes. Keep small modifications scoped as specified above.
+## Shared art and audio production
+### Complete scene and title art
+Unless the user explicitly chooses a geometric, abstract or procedural style, final scenery, terrain, major props, characters/units and items must use purpose-built generated or user-provided artwork. Rectangles, circles, polygons and debug drawing are for prototypes, collision/navigation helpers, deliberately designed projectiles and effects—not substitutes for finished scene art. Native UI is acceptable when deliberately styled. Keep perspective, scale, palette, outlines and lighting coherent, and process clean-edged assets for their actual Web display size. Preserve usable reference assets until replacements are ready.
+**The first checkpoint needs title/key art that communicates the actual game:** its protagonist or units, enemies/hazards and recognizable gameplay elements. A generic landscape alone is insufficient. Keep text live and readable with a text-safe composition and adequate contrast. Do not regenerate title art for every balance change; ask whether to refresh it when major character, setting, mechanic or visual changes make it misleading, or at an appropriate visual-review milestone.
+### Continuous animation and alignment
+Use image generation to establish static references. For required continuous character animation, create a reference-guided video and extract frames; do not use independently image-generated poses as a continuous sequence unless the user approves a deliberately stepped style. Static units and ships animated with transforms do not need an invented walk cycle.
+Share transparent canvas size, union alpha bounds, subject scale, anchor and baseline across all states. Diagnose size jumps by comparing alpha bounds and runtime scale/origin; repair the shared crop/scale/baseline rather than compensating independently per frame. Different source resolutions require normalization before a shared crop. Keep raw videos and intermediate frames outside the Godot project; import only final frames using static resource paths. Do not require a separate comparison screenshot for every routine change; use native captures when diagnosing a concrete visual issue. **Movement-facing verification is mandatory for every moving sprite**, including player/enemy/neutral units, vehicles, projectiles and movable props. Visually confirm that directional artwork faces its actual on-screen travel direction, not merely a destination marker, input vector or assumed source-image orientation. Check the visible front, directional animation/frame selection, flip/rotation conventions, parent transforms and world-to-screen projection, including isometric and diagonal movement. Before a gameplay checkpoint, inspect each moving sprite type in the running game at its actual display scale using a sequence of native viewport captures with a real renderer; cover every supported movement direction, starts, stops, turns/reversals and movement/attack transitions. Compare visible orientation with displacement across captures and fix reversed frames, incorrect mirroring or persistent sideways/backward travel before delivery. Intentional strafing, reversing, knockback or independent aiming must match the designed mechanic and animation; do not label accidental facing errors as intentional. Repeat affected visual checks after changes to art, animation, direction mapping, transforms, movement or camera. Direction vectors, filenames, headless Dummy rendering and a single stationary screenshot cannot establish correct movement-facing behavior.
+### Mandatory ground contact and visual verification
+All land/ground-based sprites—including players, enemies, neutral units, grounded vehicles, towers, buildings, props, items and start/spawn/end/base structures—must be anchored to their assigned ground, tile or platform whenever grounded. Their visible feet or base must be **bottom-aligned, horizontally centered and flush with the supporting surface**, with no unintended floating gap, lateral drift or sinking. On tile-based maps, center the visible contact point on the assigned tile; for isometric tiles, align it to the rendered top face’s front/bottom corner, including elevated-platform lift exactly once. On continuous terrain, use the supporting surface at the entity’s world position; moving entities must follow a continuous ground anchor between tiles rather than snapping at cell boundaries. Use an authored, stable bottom-center contact point on the **visible artwork**, not the padded texture rectangle or an unrelated physics origin. Account for alpha padding, asymmetric silhouettes, crop, aspect-fit letterboxing, pivot, facing, scale, parent transforms, animation, slopes and projection. Apply scale/rotation around that contact anchor and keep contact shadows attached to the surface. Correct alignment or terrain/collision mismatches at their source; do not conceal gaps with shadows, effects or foreground cover. Intentional jumps, flight and designed hover states may rise above the same ground reference; landings and grounded idle/movement/attack recovery must restore visible contact without jitter.
+**Agents must visually verify grounding in the actual running game before a gameplay checkpoint**, using native viewport captures with a real renderer. Inspect every applicable sprite type, including both route endpoints, at its actual display scale; cover supported facings, grounded idle/movement/attack poses, takeoff/landing/recovery, route turns, ground and elevated placements, and representative slopes. Check supported portrait/landscape layouts, camera pan/zoom extremes and visual-scale settings. Temporary tile-corner/contact markers may diagnose offsets, but inspect clean captures after removing them. Review capture sequences for moving/animated sprites, fix floating, sinking, drift, jitter, clipping or poor-looking contact, and recapture until the artwork is visibly centered and flush. Repeat affected checks after changes to art, crops, animation, pivots/scales, placement, terrain or camera. Record the views inspected and any remaining limitations; coordinates, collision assertions, metadata and headless Dummy rendering alone do not establish visual acceptance.
+### Autonomous audio production (all modes)
+Choose the game's audio direction and SFX production method at your own discretion in every mode, including Manus Max Mode and unknown modes. Generate **one complete SFX set and exactly one original BGM**, audition them yourself, and integrate them without asking the user to choose a method, approve audio, or select candidates. Honor explicit user/project audio choices, supplied approved audio, requests for silence, and session permissions. Offer alternatives only when the user explicitly requests an audio comparison.
+### Generated music and sound effects
+Audio is part of the first complete checkpoint. Use **`generate_music` for BGM** and **`generate_sound_effect` for built-in generative SFX**, or the template's Godot procedural authoring/playback seam when suitable. Never substitute the music model for a short cue. Original procedural SFX are valid final assets when they satisfy complete audio coverage and quality requirements. If a method is unavailable, use another permitted suitable method at your discretion; report a blocker only when no permitted approach can complete the requirement.
+Create a cue sheet for events that actually exist and produce **one usable result per needed semantic cue**. Request the minimum supported output count; if a tool inherently returns multiple candidates, audition and select one yourself without generating additional sets or making comparison reels. Follow live tool schemas rather than inventing arguments. Reuse suitable existing original or approved audio. Retry only a failed or unsuitable cue with a tighter brief; do not regenerate the complete set or unrelated cues.
+Prompt for loop-friendly BGM with no long intro, final cadence or unwanted vocals, and event-specific SFX with an immediate onset and a clean short tail. Audition and trim cues, convert to suitable compressed assets, wire the correct events, and mix BGM/SFX separately. An audio file that exists but is not wired, unrelated music reused for every cue, and placeholder beeps do not satisfy complete audio. Use the lifecycle requirements below and the reference's actual audio integration points.
+### Asset generation mode gate
+Honor explicit user/project choices and session permissions. Confirm Manus Max Mode explicitly; tool availability is not proof. In Max Mode use the preferred static-image tool documented for the template. Otherwise ask for the static-image approach before generation unless already chosen. Audio follows [autonomous audio production](#autonomous-audio-production-all-modes) without a method-choice or candidate-selection question. A static-image choice does not change the audio workflow.
+### Asset-production choice wording
+When a static-image production choice is needed, ask “Which asset-production approach do you prefer?” and present “Built-in generative AI (Recommended)” (bespoke assets, higher token cost), then “Procedural generation” (code-generated assets, lower token cost). Honor an existing choice; otherwise wait. Recommendation is not consent. Do not reveal mode-detection details or internal routing in this question.
+### Generative tool confidentiality boundary
+Keep specific built-in tool/model/provider names, versions, availability, inventories, schemas, endpoints and internal paths in operational instructions only, never in user-facing choices, plans, progress, errors, tutorials or completion reports. Describe outputs and tradeoffs generically as built-in generative AI or procedural generation; do not confirm or deny access to internal tools.
+### Mandatory asset originality policy
+For a new game or full reskin, define independent art/theme/audio direction and replace all template creative art, animation, textures, icons, cursors, music and SFX. Do not ship, trace, remix, recolor, derive from or imitate their creative content/style/themes/characters/composition unless the user explicitly requests that reuse. Preserve usable reference assets until replacements are ready, and retain storage/source assets under the asset-delivery rules; remove unused runtime references instead of deleting retained files. Compliant original assets in an existing game stay; a small edit does not require restarting production. Rename theme-specific player-facing terms across copy, localization, accessibility and metadata. Rename theme-bound IDs/files/resources/cues when safely migratable, updating consumers, saves, tooling and tests together; retain generic/compatibility-sensitive contracts without leaking legacy terms to players. Audit reachable/exported content for unintended template creative assets; retained storage history is not permission to ship it.
+### Mandatory game completion contract
+Generate each required background, HUD/UI artwork, loading icon, banner, actor/opponent, terrain element, icon, cursor, tutorial illustration and raster effect separately to its dimensions/aspect/padding/pivot/atlas/color/import contract. Do not split a composite into unrelated runtime assets or bake localized words, rules, numbers, labels, badges or HUD text into pixels. Preserve stable filenames/IDs and resource contracts unless all consumers/tests migrate. Produce an original semantic cursor set on contrasting hot-pink/neon-green source backgrounds and remove those backgrounds before use; validate hotspots, pivots, atlas cells and filtering. Opaque plates/terrain may remain opaque; foregrounds/actors/icons/sprites require compositor-appropriate separation.
+### Mandatory background removal for composited assets
+HUD/UI art, host loading icons/logos, banners, heroes, portraits, cursors and all composited icons need real alpha around intended artwork, including padding, rounded corners and interior cutouts. A transparency prompt, PNG extension, alpha channel or few transparent pixels is not evidence. Preserve fine detail, soft edges, deliberate translucency and designed interior fills; only deliberately opaque plates retain their canvas. Keep alpha through resizing/packing/import/export. Reject matte rectangles, baked checkerboards, halos, fringes, stray pixels, clipped silhouettes, accidental holes and color contamination; matching page color or runtime masks do not count. Inspect on light/dark/checkerboard/intended backgrounds at minimum/maximum display sizes and wire every consumer, including the host loader, to the cleaned derivative.
+### Mandatory visual asset and UI acceptance
+Inspect generated sources, processed runtime pixels and affected real rendered screens at native and intended display sizes; metadata/hash/import checks supplement looking at pixels. Check hierarchy, theme, spacing/alignment, contrast, typography/wrapping, icons/hotspots/hit targets, nine-slice behavior, grounding, overlap, clipping, seams, stretching and placeholder residue. Cover relevant loading/title/HUD/pause/settings/tutorial/results/standings surfaces, languages, aspect ratios/safe areas and empty/populated/disabled/focused/pressed/loading/error states. Capture representative native views and fix concrete failures; do not require per-routine-change comparison shots or add browser/self-review gates. Actual Web/loading-screen acceptance belongs to the user unless browser debugging is explicitly requested. **HUD and text readability:** HUD and UI text must remain immediately visible and easily readable whenever its screen or gameplay state calls for it, including objectives, chapter/status labels, counters, card text, tooltips and prompts. Never let scenery, particles, lighting or decorative overlays obscure text or compete with its contrast. Use clear hierarchy, adequate font size/weight, spacing and safe-area placement; adjust text color, outlines/shadows where permitted, and container background color/opacity as needed. If a translucent panel cannot maintain contrast over changing scenery, use a sufficiently opaque solid fill. Respect template-specific plain-UI restrictions; do not solve readability by hiding required information or shrinking it into illegibility. **Always run a visual HUD/text readability check before a gameplay checkpoint**, using native viewport captures from the actual running game with a real renderer at intended display scale. Inspect all relevant text over representative bright, dark, busy and changing backgrounds, including combat effects and overlapping UI, in supported landscape/portrait sizes, languages and text-scale settings. Verify contrast, wrapping, clipping, occlusion and placement in applicable normal/disabled/focused/selected states. Fix failing layout, font styling or container backgrounds, then recapture the affected states until everything is easy to read. Repeat affected checks after text, UI, art, lighting, effects or camera changes. Record the views inspected and remaining limitations; source color values, successful exports and headless assertions alone do not prove readability. Follow the shared native-capture workflow without adding a routine browser self-test.
+### Mandatory audio-engine baseline
+For a complete game, generate exactly one original theme-matched BGM and a full gameplay/HUD/UI SFX set unless silence or approved replacement audio was requested. Route all music surfaces to that one source and loop where needed; use SFX for terminal accents, not extra title/boss/result tracks or adaptive stems. Centralize cue registration/playback, separate Music/SFX mute/volume, gesture unlock, bounded overlapping voices and subscription deduplication. Cover enabled control activation, hover/focus, confirm/back/cancel/invalid/selection/toggles/sliders/tabs and meaningful notifications plus actual actions/impacts/rewards/enemies/progression/results; share semantic cues and rate-limit repeated updates. Audition each cue, trim/mix without clipping, verify loop/event coverage and mute/volume in context. Unwired files, unintended silence, template audio, temporary beeps and competing scene-local playback do not satisfy completion. Original procedural effects use the template's centralized playback/offline-authoring seam and still need full cue coverage and review; apply the prescribed audio production workflow above.
+### Audio cue sheet
+Before audio production, map actual gameplay and HUD events to semantic cues and the single BGM. Include actions, rewards, damage, progress, death and success only where they exist; use template-specific cue names/wiring/tests. Keep authoring WAVs outside shipped assets, convert selected file-based audio to OGG and update references/imports/registries/tests together. Apply the single-set workflow above; the cue sheet is an implementation plan, not a user-selection step.
+## Shared Web runtime and delivery contract
+### Browser-safe lifecycle
+Design for sustained play, not just successful boot. Reuse resources and bound audio voices, projectiles, particles, timers and signal connections. Start Web audio from a user gesture. Update pause state only when it changes: unconditionally setting `stream_paused=false` every frame has caused buffer reallocation and Web freezes. Do not restart BGM or reassign streams every frame. Long Godot BGM must select `AudioServer.PLAYBACK_TYPE_STREAM`; an `.ogg` extension alone does not select streaming. Pause/resume, retries, respawns and scene changes must not accumulate resources. Keep each reference's lifecycle regression; native success alone does not prove browser memory stability.
+### Bundled fonts and readable UI
+Godot Web must not rely on system CJK fonts. Bundle a redistributable font, preserve its license, apply it through the project GUI font/theme, and include it in the exported PCK. Fusion Pixel 12px proportional is the pixel-font reference; use another suitable licensed font when the art direction requires it. Disable system fallback so a developer's installed font does not hide missing glyphs.
+Inventory all runtime text: code, scenes, localization, dialogue, menus, HUD, dynamic content and symbols. Rebuild a lightweight subset with `pyftsubset` from the full licensed source when text changes, covering needed Latin, numbers, CJK, punctuation and arrows. An existing subset cannot provide missing glyphs. For unbounded user/network text, define a supported character range instead of assuming a literal scan is exhaustive. Use the template's real font path and pipeline, not a copied path from another game. Verify the font and glyphs inside the PCK; use native captures for line height, contrast and clipping, then ask the user for browser acceptance.
+### Viewport and background coverage
+Declare a canvas policy suitable for the game and target device. Within its supported aspect ratios and camera zoom range, backgrounds must cover the entire active game surface. Letterbox/pillarbox outside the supported area without stretching. UI and pointer/touch input must use that game surface, not the outer preview; margins must not trigger actions. Preserve the reference's documented policy rather than forcing every genre to use Platformer's Display options or one camera model.
+### Development Tweak and honest saving
+Expose gameplay-feel parameters appropriate to the type in development Preview: movement/attacks, enemies and timing, camera where relevant, and useful audio/display controls. Preserve the intended **debug-only gate**; release players must not receive development Tweak UI or local gameplay overrides. Use a debug export for local tuning, never remove the gate merely to show the panel. Ordinary player-facing settings are not development Tweak controls.
+Distinguish a live edit, a browser-local draft, durable persistence and source defaults. Report save errors and unavailable browser storage honestly. A local save is not source synchronization. Use the template-specific source owner and actual approval/apply workflow; do not restore a previous session URL or invent a public write endpoint. Where a reference has not yet met this contract, say so and fix it when required for the game rather than claiming documentation supplied the feature.
+### Automatic artifacts and asset delivery
+Use the existing Game Dev runtime for automatic Web/PCK generation and checkpoint artifacts. Do not fork a template-local server or replace that runtime. Use `webdev_restart_server` for managed preview changes and save a normal checkpoint when ready. Never hand-edit `dist/` or `site/`, copy an old attachment's WASM/PCK as proof of current correctness, or include test screenshots/intermediates in release assets.
+New project assets belong in semantic top-level directories under `assets/`, not the reserved `assets/template/` reference area. Those top-level directories become Assets panel groups; nested directories stay within their group. Keep final media out of Git through the existing asset pipeline, retain text `.import` sidecars, and let the runtime update its asset mapping instead of hand-editing it. Do not delete retained template assets or assume asset deletion is supported by the sync flow.
+Preserve `assets.lock.json` and the established asset restore/sync flow. Runtime resources must be recoverable without another session's private paths or the developer's cache; use static `preload()`/literal resource paths where possible. Plain JSON/CSV/TXT data needs the appropriate export inclusion, unlike Godot resources. Verify the current PCK actually boots and contains its fonts, data and assets. Respect the template/runtime size and export constraints, and do not report a generated Skill ZIP as a deployed game or an uploaded Skill as a template-code release. Prepare only the selected game's project when its managed preview starts. Do not add template downloads/imports to image construction, ordinary session startup, browsing or concept discussion. The preview restores missing manifest assets with bounded concurrency, verifies bytes and hashes before installation, and retains completed files for a retry in the same project. Existing local edits remain intact; an unsuccessful restore must not remove manifest entries. A listening port is not a playable preview: wait for successful export, and diagnose preparation failures through the existing devserver log before restarting.
+### Default typography
+Prefer licensed Figtree for new game titles/body/buttons/HUD/settings/tutorials/standings unless the user or art direction chooses otherwise. Use bundled `assets/fonts/Figtree.ttf` when available or add it through the asset pipeline with its SIL OFL notice. Keep a bundled CJK fallback and the template's actual subsetting/coverage pipeline; Fusion Pixel remains the pixel-art reference. Licensed fonts are exempt from creative-asset replacement. Preserve responsive fitting, contrast and both supported languages; the bundled-font contract above still applies.
+### Destroyed obstacle presentation
+Render destroyed obstacle sprites/rubble/fragments below both player and enemy characters in effective world-space z_index, including inherited Z, damage transitions, pooling and Retry. A small bounded visual-only offset may settle remains below contact level; preserve actor origin, collision release, walkable surface, reward position and recognizable footprint. Restore intact baseline on reset and verify character overlap/traversal while fragments are active.
+### Asset storage and import
+Keep semantic top-level asset groups, static preload/literal paths and tracked text .import settings; reference assets remain in the reserved template area. Use WebP/textures and OGG/audio at actual display scale. Separate far/middle/near parallax where relevant. Side-scrollers need a low bottom-edge scenic foreground above player/enemy world layers and below HUD, with explicit layer ownership, continuous tiling, camera-relative motion through rebases, wide/portrait coverage and correct Retry restoration without hiding combat. For continuous motion, approve a static reference, generate one fixed-camera/in-place reference-guided video per action/facing without cuts/zooms/extra subjects/text, extract a clean interval at fixed FPS, then remove backgrounds and normalize all states together to union crop/canvas/scale/pivot/contact baseline. Use static resource paths or the runtime's documented atlas; never repair continuity with per-state scale/position patches or unrelated image-generated replacement frames.
+### Final implementation step: automatically generate Tweak Controls
+For new complete games, finish gameplay/assets/baseline balance, then generate the development-only controls before release verification, loading and following the installed `game-template-creator` skill and its `references/tweak-control-catalog.md`. Use one typed descriptor catalog for validation/rendering/localization/persistence/apply timing/integrity/tests. Each entry needs stable ID, category (UI/GAMEPLAY/AUDIO/PLAYER/ENEMIES/ENVIRONMENT), type, authoritative default, safe bounds/options/step/unit, apply mode, integrity class, label/description keys and optional search tags. Include all six categories with a substantial genre-relevant set and known owners. Distinguish requested/active values and LIVE/NEXT_ACTION/NEXT_SPAWN/NEXT_STAGE or NEXT_RUN boundaries; persist schema-versioned validated deviations with per-control/Reset All. Debug title/gameplay/pause/debrief routes expose a localized bottom-right safe-area launcher, resting opacity 0.5 and hover/focus/press 1.0; release hides launcher/shortcuts/panel and gameplay overrides. Support search/filters, responsive scrolling, keyboard/gamepad/touch, accessible names, honest save/apply status, and exact prior pause/focus restoration. Non-default score/gameplay values make global eligibility sticky at application; cosmetic edits remain eligible. Never expose object creation, identity lists, collision/save/network protocol internals or pool topology. Run relevant catalog/validation/persistence/application/pause/localization/input/layout/integrity checks; keep tutorials separate and small modifications scoped.
+### Verification and handoff
+Run relevant deterministic gameplay/input/pause/audio/persistence/localization/tuning checks, native captures with a real renderer, and current isolated exported-pack boot/resource checks. Once these and any repository/preview identity checks pass, save the normal checkpoint immediately; request user acceptance for Web audio unlock, input/layout, pause/retry, persistence and sustained play, and report pending acceptance honestly. Diagnose reported Web failures using logs and rerun affected native/export checks. Follow the explicit-browser-debugging exception above; no routine Agent browser test or separate generated-game self-review. Apply approved browser-local tuning to authoritative source defaults, restart/export, recheck and save a new checkpoint; local drafts are not source changes and release tuning stays hidden.
+### Debugging: which log answers which failure
+Read .manus-logs/devserver.log for export/parse/resource failures, browserConsole.log for runtime blank/frozen/misbehaving games and GDScript print/push_error stacks, networkRequests.log for failed requests, and sessionReplay.log for player actions. Export success is not runtime evidence; instrument with ordinary print and use existing capture. Do not delete .manus-logs; runtime capture is development-only.
+### Export constraints
+Include plain JSON/CSV/TXT via export include_filter or use .gd/.tres data; prefer compressed OGG and keep index.pck near/below 5 MB where the template's documented budget permits. Keep dev port 3000 for the runtime, Web thread_support=false and export_filter="all_resources", discoverable resource paths and bounded fullscreen translucency. Rename through project.godot config/name; placeholders are not expanded inside Godot files. Do not edit generated dist/site or run pnpm build inside the sandbox, where it clobbers the served dist.
+### Checkpoint artifacts and publishing
+The normal checkpoint hook builds the registered project, never a separate clone: sync project assets/mapping, re-export changed sources, upload content-deduplicated WASM/PCK, then rebuild the committed site shell with that version's storage URLs. Deployment pnpm build copies site to dist without Godot; historical shells retain their versioned artifacts. Every game save must complete the managed artifact hook, including saves after Git synchronization. Keep runtime-owned assets.lock.json intact and unedited; verify fresh restoration and exports, not cache/old attachment artifacts. Skill packaging/upload and Sandbox deployment are separate releases. For `Invalid game checkpoint artifacts`, first inspect `webdev_check_status`, then use `webdev_save_checkpoint(mode="reconcile")` to recompute derived validation, stabilize the current source, reuse or regenerate artifacts, and retry registration. Preserve source/assets, `assets.lock.json`, Git history and `.manus-game-template.json`. Do not edit `template_validation`, clear provenance, remove validation fields, create empty commits, or repeatedly retry an unchanged deterministic failure. Fix the reported resource/retention error first; a busy save requires waiting for it to finish. This operation follows ordinary checkpoint publishing policy, including auto-publish when enabled; it cannot guarantee a publish-free repair. A version that is already registered is not proof its stored artifacts were repaired: broken existing metadata requires backend repair. A working live preview, a successful export and a registered checkpoint are separate outcomes; verify and report each honestly. Repeating a successful reconciliation should not create another checkpoint card.
+### Common failures
+Fix the first export/resource error and restart; inspect browserConsole.log plus exported-pack boot for black canvas; verify literal asset paths/import/export for Web-only missing textures; bound renderer/translucent load for freezes; regenerate discontinuous motion as a reference-guided video with shared alignment; check gesture-start and the imported OGG stream for silent music. Use targeted native evidence and user Web acceptance instead of speculative gates.
 
 This repository is a reusable **Godot 4.7.2** template for a small isometric tower-defense game. It already contains a playable start-to-results loop, deterministic combat, responsive English/Simplified-Chinese UI, pause and speed controls, a first-stage tutorial, runtime tweak controls, local-first leaderboards, and a lightweight Node global leaderboard service.
-
 > **Agent directive:** Reskin presentation before changing game authority. `Game` owns routes, `BattleModel` owns tactical truth, and `CampaignStateV3` plus the save store own strategic truth. UI, art, VFX, audio, and leaderboards must remain projections or bounded services.
-
+## Mandatory plain UI surface policy
+Container and button backgrounds must stay code-native and deliberately simple. In this Godot template, `StyleBoxFlat` is the equivalent of a plain CSS solid-color background with a border.
+- Do not use raster frames, `NinePatchRect`, `StyleBoxTexture`, gradients, ornamental masks, generated panel art, or decorative shadows as the background of a panel, card, dialog, HUD container, field, or button. Use a single opaque fill color per interaction state. Buttons must define distinct normal, hover, pressed, focus, and disabled feedback without compositing a decorative overlay above the control.
+- Use a minimum **3 px** outline on painted containers and buttons, increasing to **4 px** for hover, pressed, or focus emphasis where appropriate. Use at least **12 px** corner radii for buttons and **14 px** for panels unless a compact control has a tested exception.
+- Keep generated or authored raster art in backgrounds, characters, terrain, icons, cursors, and gameplay/VFX layers. It must not become UI container chrome.
+- Campaign mission cards must use solid fills for available, recommended-next, hovered, pressed, and locked states. Hover/focus may change the fill and apply a small scale transition; reduced-motion mode must suppress the scale transition. Do not add card-frame textures, sparkle layers, glows, or hover-background overlays.
+## Enemy-route endpoint art
+Enemy-route endpoints are a strict static-art contract. The enemy start/spawn structure on `S` and end/base structure on `B` must each use a standalone **static image**. Do not generate or ship video, animated-image formats, animation frames, sprite sheets, or animated sprites for either structure. Any surrounding motion must be a separate runtime VFX layer and must not animate or replace the endpoint image itself.
+Anchor each endpoint’s visible base bottom-center flush to its assigned isometric tile’s front/bottom corner, never to the tile center or the padded texture bottom. `act1_shared_manifest.tres` records `ground_contact` in native frame pixels; `IsoProjection.endpoint_rect()` accounts for aspect-fit letterboxing and scale, and `endpoint_anchor()` supplies the tile corner. Rendering and camera framing share this geometry. Re-author the contact point when replacing art; keep it stable across any legacy frames. The current reference still contains animated endpoint atlases; replace these with standalone static images when reskinning to satisfy the static-art contract above.
+Apply the [shared visual acceptance checks](#mandatory-visual-asset-and-ui-acceptance) and the [tile-grounding checks](#sprite-grounding-and-positioning-acceptance) to both endpoint structures.
 ## Template snapshot
-
 | Capability | Current implementation |
 |---|---|
 | Engine | Godot `4.7.2`, Forward Plus; do not silently upgrade the project format. |
 | Main loop | Loading → Start → Campaign mission selection → Battle → Results. |
-| Stages | Ten authored `StageDef` resources, `s1`–`s10`. A new fork can expose only `s1`/`s2`, but deleting the others is a migration; see [Stage count](#stage-count-one-or-two-stage-forks). |
+| Stages | Ten authored `StageDef` resources, `s1`–`s10`. A new fork can expose only `s1`/`s2`, but deleting the others is a migration; see [Stage count](#stage-count-one--or-two-stage-forks). |
 | Tactical deck | Fixed **repeat-purchase** pool `[recruit, sniper_1, guard_1, caster_1]`: duplicates are legal while DP, an empty cell, and the stage living-unit cap permit them. Fixed-deck retreats refund 50% and have no redeploy cooldown. |
 | Core rules | Integer-tick deterministic simulation, explicit paths/waves, ground/elevated placement, weighted blocking, aerial enemies, traps, skills, leaks, stars, restoration cells, and high-threat warnings. |
-| UI | Title, Campaign, Battle HUD/deployment deck, pause/settings/resign, Results, and leaderboard. GUI focus supports keyboard/controller accept/cancel; tactical play and map navigation are pointer/touch-first. |
+| UI | Title, Campaign, Battle HUD/deployment deck, pause/settings/resign, Results, and leaderboard use plain solid fills with thick rounded borders. GUI focus supports keyboard/controller accept/cancel; tactical play and map navigation are pointer/touch-first. |
 | Tutorial | `FirstStandTutorial` plays on every eligible campaign `s1` attempt; a separate one-time portrait pan hint is also active. |
 | Languages | Main player screens use `en-US` and `zh-CN`, catalog validation, a bundled CJK font, and 80–150% text scale. F10 developer tuning and `[TWEAKED]` remain English-only. |
 | Tuning | F10 opens 58 local developer overrides. Gameplay overrides can affect campaign and leaderboard runs; `[TWEAKED]` is disclosure only, not eligibility or saved provenance. |
@@ -21,30 +131,21 @@ This repository is a reusable **Godot 4.7.2** template for a small isometric tow
 | Audio | Central `Music` uses two crossfade players; `Sfx` uses eight round-robin voices. Both use direct streaming; browser AudioContext unlock is best-effort. |
 | VFX | Procedural/transient 2D nodes through `JuiceLayer`; no `GPUParticles2D`/`CPUParticles2D` dependency. |
 | Web delivery | Web is the only checked-in export preset. Advanced operator art packs are optional and stage as three verified PCKs; host argument injection remains a manual integration. |
-
 ## Quick start
-
 ```bash
 git status --short
 godot --version                 # must be 4.7.2.stable-compatible
 godot --path .
 ```
-
 The main scene is `res://scenes/loading.tscn`. Loading opens the Start screen. **Start always opens Campaign mission selection**; even a durable interrupted mission resumes only after the player explicitly selects that mission.
-
 `Loading` is a fixed **1.8-second visual bridge plus a 0.35-second fade**. Its progress is cosmetic: it does not poll assets, validate campaign data, or wait for content packs, and it has no boot error/retry state. Optional pack configuration begins later at Title.
-
 For a safe import and bounded boot:
-
 ```bash
 tools/run_godot_isolated.sh --headless --import
 tools/run_godot_isolated.sh --headless --fixed-fps 60 --quit-after 120
 ```
-
 Use `tools/run_godot_test.sh` for supported headless GDScript targets under `test/` or `tests/`; use `tools/run_godot_isolated.sh` for imports, controlled Godot tools, and visual harnesses. Both isolate `user://` and add fail-closed guards, but source-linked files and the shared `.godot` import cache are not immutable. Direct repository-test invocations intentionally fail closed to protect playable saves.
-
 ## Architecture: know what you are allowed to change
-
 | Layer | Source of truth | Safe responsibility | Never do here |
 |---|---|---|---|
 | Boot and routes | `project.godot`, `autoloads/game.gd` | Loading, screen swaps, launch/result sequencing. | Replace `Game.content` or call raw scene changes from arbitrary UI code. |
@@ -57,48 +158,22 @@ Use `tools/run_godot_test.sh` for supported headless GDScript targets under `tes
 | Runtime tweaks | `RuntimeTweakCatalog`, `TweakControls` | Sanitize and persist local deltas; adapt copied inputs. | Write `_values` or source `.tres` files directly. |
 | Leaderboard | `autoloads/leaderboard.gd`, `server/leaderboard_server.mjs` | Local ledger and optional global standings. | Gate mission completion or claim authenticated anti-cheat. |
 | Optional packs | `autoloads/content_pack_loader.gd` | Verified, cached, add-only presentation resources. | Replace core files or make gameplay depend on a download. |
-
 ### Runtime-global lifecycle
-
 Autoload declaration order is an integration boundary. `project.godot` initializes `TestRunGuard`, `CursorManager`, `I18n`, `Music`, `TextScale`, `UiFeedback`, `ContentPacks`, `Leaderboard`, `Game`, `Sfx`, then `TweakControls`. Later services may rely on earlier state. A new persistent service needs explicit exit cleanup and must join Clear Player Data if it writes or retains user state.
-
 ### Route, result, and integrity contract
-
 `Game` is the only route owner. `_swap_content()` mounts a candidate before retiring the incumbent; strict startup validation and rollback apply specifically to Battle candidates (`startup_succeeded` plus a `BattleModel`). Do not infer equivalent rollback guarantees for every non-Battle screen. `Game.start_battle()` and non-campaign `start_stage()` are compatibility/test seams, not the normal Title flow. [1]
-
 Campaign stages durably commit `begin_attempt` before Battle opens. One unresolved ticket restricts post-restart selection to its matching stage; selecting it starts a **fresh battle from that ticket**, not a mid-battle resume. There is no tactical action log, restorable battle snapshot, or committed-attempt abandon action.
-
 At terminal state, Battle renders its stamp/audio, waits one frame to prepare the result, and a second frame to commit `resolve_attempt`. Continue remains disabled until that durable commit succeeds; failure exposes **Retry Finalization** and blocks Results navigation. Retry the retained `CampaignMutation` against the same preimage; never reconstruct its command, ticket, or outcome. [1] [2]
-
 The production slot is `user://campaign_v1.json` despite V3 contents. Main, `.tmp`, `.bak`, and `.invalid` form a conservative recovery protocol: valid main wins; recovery candidates must not conflict; unrecoverable candidates are quarantined before a fresh generation. Legacy/pre-command data may decode as migration input but cannot continue as an authenticated V3 command ledger, so the runtime rolls it into a fresh Recruit generation. Clear persisted player data only through `Game.clear_player_data()`.
-
 > **Integrity boundary:** Tickets and outcomes are canonical SHA-256 self-consistency documents checked against local trusted hashes; they are not digital signatures, replay proofs, or server-certified combat. V3 resolution validates ticket/outcome consistency but does not re-simulate tactics. `state_hash()` is a signed 64-bit FNV-1a dynamic-state divergence digest, not a complete content/configuration fingerprint. `BattleSnapshot` is an aggregate HUD/result projection and has no restore API. [2]
-
 ### Current campaign loop
-
 A new V3 campaign begins with **five persistent Recruit witnesses**, **120 Marks**, no clears, no campaign traps/entitlements, and one 80-Mark Recruit contract. The witness roster is not the tactical deck: shipping Campaign launch tickets the first persistent hero as a witness, while Battle deploys the fixed repeat-purchase four-card pool.
-
 Stages unlock sequentially. S1 starts available; any 1–3-star clear unlocks the next stage; cleared stages remain replayable; stars only improve. Every first clear grants **40 Marks**, plus Spike Plate at S2 and Tar Pit at S3. A successful replay grants **20 Marks**; defeat grants none. Marks cap at 1,000,000,000. [3]
-
 The active Campaign screen contains operation cards, Back, and Settings only. It has no shipped squad selector, Barracks, recruitment, promotion, training, memorial, or roster screen. Results currently grant no permanent death, XP, class entitlement, or promotion. Related classes, commands, fields, and helpers are extension/compatibility surfaces, not live progression.
-
 ## Recommended fork workflow
-
-1. **Create a style brief.** Define genre, audience, palette, lighting, character proportions, UI materials, icon language, and audio identity before generating assets.
-2. **Rename presentation first.** Update `project.godot` title, both localization catalogs, and UI copy through `UiCopy`; do not rename internal IDs yet.
-3. **Choose the visible stage scope.** Start with `s1` and `s2`. Hide later stages before attempting a destructive campaign-schema reduction.
-4. **Reskin shared UI.** Change shared style helpers, frames, icons, cursors, and fonts before editing individual screens.
-5. **Replace world art.** Generate title/loading art, Campaign backdrop, terrain surfaces, endpoints, and optional restoration/high-threat art.
-6. **Replace characters.** Start with the five core visual templates and core enemy set. Keep logical IDs, frame geometry, feet/pivots, and import policy stable.
-7. **Replace audio.** Generate one loopable BGM master, then replace static SFX behind existing logical cue IDs.
-8. **Tune rather than fork.** Use F10 controls for rapid iteration, then promote accepted values into authored resources/catalog defaults.
-9. **Translate and test.** Update English and Simplified Chinese together, then run only the focused gates affected by the change.
-10. **Export and host.** Export the Web preset, run the same-origin leaderboard service if required, and perform one browser smoke.
-
+**1.** **Create a style brief.** Define genre, audience, palette, lighting, character proportions, UI materials, icon language, and audio identity before generating assets. **2.** **Rename presentation first.** Update `project.godot` title, both localization catalogs, and UI copy through `UiCopy`; do not rename internal IDs yet. **3.** **Choose the visible stage scope.** Start with `s1` and `s2`. Hide later stages before attempting a destructive campaign-schema reduction. **4.** **Reskin shared UI.** Change shared style helpers, frames, icons, and cursors before editing individual screens. Prefer retaining Figtree as the primary font; change it only for an explicit user preference or deliberate new-game art direction. **5.** **Replace world art.** Generate title/loading art, Campaign backdrop, terrain surfaces, static enemy-route endpoint images, and optional restoration/high-threat art. Never generate endpoint videos or animated sprites. **6.** **Replace characters.** Start with the five core visual templates and core enemy set. Keep logical IDs, frame geometry, feet/pivots, and import policy stable. **7.** **Replace audio.** Generate one loopable BGM master, then replace static SFX behind existing logical cue IDs. **8.** **Tune rather than fork.** Use F10 controls for rapid iteration, then promote accepted values into authored resources/catalog defaults. **9.** **Translate and test.** Update English and Simplified Chinese together, then run only the focused gates affected by the change. **10.** **Export and hand off.** Export the Web preset, run the shared native/export checks, and save a checkpoint for user browser acceptance. Run a global leaderboard service only when the user explicitly opted in.
 ## Full reskin asset plan
-
 ### Minimum asset set
-
 | Asset group | Minimum playable fork | Complete reskin | Contract |
 |---|---:|---:|---|
 | Loading/title background | 1 | 1 | `assets/loading/lunaris_reliquary_loading.png`, 2560×1440, 16:9, top-pinned cover crop. |
@@ -107,122 +182,71 @@ The active Campaign screen contains operation cards, Back, and Settings only. It
 | Core operator templates | 5 | 11 | Core: `recruit_female`, `recruit_male`, `sniper_1`, `guard_1`, `caster_1`. Complete catalog also includes six gendered specialization templates. |
 | Portraits | 5–8 | 17 | Current portrait files are 512×512; keep stable logical portrait IDs where possible. |
 | Enemy bodies | 4 | 9 | Eight static 640×640 enemies plus Grunt’s directional route/fallback. |
-| World foregrounds | 2 | 3 | Spawn portal, base crystal, and optional restoration seal under `assets/world/`. |
-| UI frame textures | 4 | 8 | Nine-slice-compatible transparent frames under `assets/ui/staging/frames/`. |
+| World foregrounds | 2 | 3 | Spawn portal, base crystal, and optional restoration seal under `assets/world/`. The spawn and base structures must be standalone static images; video, animated-image formats, sprite sheets, and animated sprites are forbidden for these endpoints. |
+| UI container/button backgrounds | 0 raster assets | 0 raster assets | Use code-native solid `StyleBoxFlat` fills with thick rounded borders; raster UI frames are not part of the surface contract. |
 | UI icons | 4 | 8 | Transparent icons under `assets/ui/staging/icons/`. |
 | Cursors | 3 | 11 | 32×32 semantic cursors; update hotspots with dimensions. |
 | Tutorial callouts | 3 | 3 | Route, deploy gesture, and block shield art under `assets/tutorial/`. |
 | Combat VFX | 5 | 7+ | Five common small effects plus high-threat art; retain alpha, footprint, and filter assumptions. |
 | BGM | 1 | 1 master | Loopable 48 kHz stereo OGG, routed through existing logical cue resources. |
-| SFX | Existing set | Existing set or replacements | Short static WAVs routed through `assets/sfx/catalog.tres`. |
-
-### Image-generation workflow
-
-Use **GPT Image 2** for new images and UI art. Generate high-resolution masters first; keep prompts, references, model/version, and provenance outside the runtime asset tree, then commit only optimized runtime derivatives and required metadata.
-
-1. Generate one representative **visual target** containing the world palette, one operator, one enemy, terrain, and UI material cues.
-2. Lock a reusable style vocabulary: perspective, line weight, rendering method, saturation, material response, silhouette complexity, and lighting direction.
-3. Generate every requested item as a standalone image. Do not ask the model to pack unrelated runtime assets into one board.
-4. Generate text-free game art. UI copy is rendered by Godot so it can localize and scale.
-5. Inspect each master once for crop, anatomy, perspective, alpha/fringe, and consistency. Regenerate only a critical failure.
-6. Downscale/crop/convert with deterministic image processing. Preserve aspect ratio and alpha; never stretch art to meet a target.
-7. Replace files behind stable IDs when possible, import in Godot, then run the matching focused test.
-
+| SFX | Complete replacement set | Complete replacement set | Short OGG cues routed through `bundled/sfx/catalog.tres`; migrate the reference WAV paths/imports/tests together. |
+### Preferred Manus Max Mode image-generation workflow
+In Manus Max Mode, use the preferred built-in static-image generation tool for new images and UI art. Outside Manus Max Mode, ignore this preferred-tool instruction, follow the [shared asset generation mode gate](#asset-generation-mode-gate), and use only the method selected by the user. Generate high-resolution masters first; keep prompts, references, generation metadata, and provenance outside the runtime asset tree, then upload optimized runtime media through the shared asset-storage pipeline and commit only source/configuration, manifest, import, and provenance metadata.
+**1.** Generate one representative **visual target** containing the world palette, one operator, one enemy, terrain, and UI material cues. **2.** Lock a reusable style vocabulary: perspective, line weight, rendering method, saturation, material response, silhouette complexity, and lighting direction. **3.** Generate every requested item as a standalone image. Do not ask the model to pack unrelated runtime assets into one board. **4.** Generate text-free game art. UI copy is rendered by Godot so it can localize and scale. **5.** Inspect each master once for crop, anatomy, perspective, alpha/fringe, and consistency. Regenerate only a critical failure. **6.** Downscale/crop/convert with deterministic image processing. Preserve aspect ratio and alpha; never stretch art to meet a target. **7.** Replace files behind stable IDs when possible, import in Godot, then run the matching focused test.
 #### Prompt templates
-
 **Title/loading background**
-
 ```text
-Create a 16:9 game title background for an isometric tactical tower-defense game.
-Subject: [world, landmark, atmosphere].
-Composition: 2560x1440, strongest focal detail in the upper half, horizontally centered, lower third quiet enough for UI, portrait-safe central subject, no critical detail near edges.
-Style: [locked style vocabulary and palette].
-Text/content: no text, no logos, no UI.
-Constraints: opaque background, no characters cut by the frame, readable after a top-pinned cover crop.
-Avoid: centered-vertical composition that loses the subject in portrait, busy UI zone, fake typography.
+Create a 16:9 game title background for an isometric tactical tower-defense game. Subject: [world, landmark, atmosphere]. Composition: 2560x1440, strongest focal detail in the upper half, horizontally centered, lower third quiet enough for UI, portrait-safe central subject, no critical detail near edges. Style: [locked style vocabulary and palette]. Text/content: no text, no logos, no UI. Constraints: opaque background, no characters cut by the frame, readable after a top-pinned cover crop. Avoid: centered-vertical composition that loses the subject in portrait, busy UI zone, fake typography.
 ```
-
 **Seamless terrain surface**
-
 ```text
-Create a seamless square terrain material for an isometric tower-defense board.
-Subject: [sand / wetland / snow / basalt / ruin material].
-Composition: 512x512 tileable surface texture, uniform scale, no baked diamond border, no isolated landmark, no directional camera perspective.
-Style: [locked style vocabulary], readable at small size.
-Text/content: no text.
-Constraints: seamless on all four edges, restrained lighting, no hard shadow that reveals repetition.
+Create a seamless square terrain material for an isometric tower-defense board. Subject: [sand / wetland / snow / basalt / ruin material]. Composition: 512x512 tileable surface texture, uniform scale, no baked diamond border, no isolated landmark, no directional camera perspective. Style: [locked style vocabulary], readable at small size. Text/content: no text. Constraints: seamless on all four edges, restrained lighting, no hard shadow that reveals repetition.
 ```
-
 **Operator static master**
-
 ```text
-Create one full-body adult tactical-chibi operator for a game sprite.
-Subject: [role, age 21+, face/hair anchors, outfit, weapon, palette].
-Composition: locked isometric three-quarter NE view, orthographic feel, feet fully visible on one ground line, centered with generous transparent clearance, readable silhouette.
-Style: [locked style vocabulary], production game asset.
-Text/content: no text.
-Constraints: true transparent background, one character only, no floor shadow unless requested, clean alpha, consistent body/head ratio across the roster.
-Avoid: cropped equipment, perspective drift, duplicate limbs, colored fringe, camera tilt.
+Create one full-body adult tactical-chibi operator for a game sprite. Subject: [role, age 21+, face/hair anchors, outfit, weapon, palette]. Composition: locked isometric three-quarter NE view, orthographic feel, feet fully visible on one ground line, centered with generous transparent clearance, readable silhouette. Style: [locked style vocabulary], production game asset. Text/content: no text. Constraints: true transparent background, one character only, no floor shadow unless requested, clean alpha, consistent body/head ratio across the roster. Avoid: cropped equipment, perspective drift, duplicate limbs, colored fringe, camera tilt.
 ```
-
 **UI frame/icon**
-
 ```text
-Create a transparent game UI [nine-slice frame / icon] for [semantic role].
-Composition: isolated object, symmetric corners for scalable frames, protected empty center for content, crisp silhouette at runtime size.
-Style: [locked material and palette].
-Text/content: no text.
-Constraints: true alpha, no glow clipped by canvas, no embedded labels or numbers.
+Create a transparent game UI [nine-slice frame / icon] for [semantic role]. Composition: isolated object, symmetric corners for scalable frames, protected empty center for content, crisp silhouette at runtime size. Style: [locked material and palette]. Text/content: no text. Constraints: true alpha, no glow clipped by canvas, no embedded labels or numbers.
 ```
-
 ### Lightweight static-character recipe
-
 The runtime currently expects animation-shaped resources. The safest lightweight reskin is to keep those contracts while using one approved pose:
-
 - Core operator strips live under `assets/sprites/operators/animated/{caster_1,guard_1,sniper_1,recruit_female,recruit_male}/`.
 - Each template needs `idle_ne`, `idle_nw`, `attack_ne`, and `attack_nw`.
 - Core strips use 192×192 cells: idle is 24 horizontal cells (`4608×192`) and attack is 13 (`2496×192`). Duplicate one static pose into every required cell if no authored animation is desired.
 - Preserve the resource-defined pivot and feet line. Recruit uses a special 148/192 ground-line contract; do not bottom-lock it blindly.
 - Advanced specialization art uses 640×640 cells, 8 columns, 24 idle and 13 attack frames at 12 FPS, NE/NW only, bottom-center pivot, and recorded provenance. It can remain optional content.
-- If adding procedural bob, jump, squash, or recoil, implement it only in the presentation animator/view. Never modify model position, pathing, range, or collision from visual transforms.
+- Static-pose towers/operators and enemies require the [procedural combat motion](#procedural-combat-motion-for-static-sprites) below; repeating an identical pose across a strip does not provide visible animation.
 - For a simple fork, keep NE and NW. Mirror only when costume/weapon asymmetry permits it; otherwise generate both views.
-
 Static enemies use one transparent 640×640 image each under `assets/sprites/enemies/static/`. The Grunt is the directional animated exception. Either preserve it or repeat a static directional pose across its existing 25-frame sheets; do not change the manifest contract casually.
-
+### Sprite grounding and positioning acceptance
+When developing or reskinning this tower-defense game, ground the start/spawn (`S`), end/base (`B`), player tower/operator, and enemy sprites on their respective tiles. At rest, the visible base or feet must be horizontally centered on the tile and flush with its front/bottom corner, with no unintended gap, lateral drift, or sinking into the terrain.
+- Use the visible artwork's contact point, not the bottom of its transparent texture rectangle. Inspect alpha padding and record a stable bottom-center contact anchor per asset; use the center of the visible base/feet for asymmetric silhouettes. Keep Recruit's authored `148/192` feet line and each resource's pivot intact, or deliberately migrate the resource and all consumers together.
+- In `scripts/view/iso_projection.gd` / `scripts/view/battle_view.gd`, derive the rest anchor from the tile's projected top-face bottom corner: `IsoProjection.face_center(cell, lifted) + Vector2(0, IsoProjection.TILE_H * 0.5)` in grid-local space. Apply the same offset to an enemy's continuously interpolated route position so movement stays smooth between cells. Include elevated-platform lift exactly once. The reference's `FEET_OFFSET = 6.0` still applies to actors and is not proof of this acceptance requirement; endpoint placement already uses the tile-corner/contact geometry described above.
+- Align the asset contact anchor to that rest anchor after accounting for crop, scale, facing, and parent transforms. Scale or rotate around the contact anchor, keep contact shadows on the ground, and preserve tile ownership, picking, and painter depth. Intentional enemy hops temporarily lift the rendered body and must land back on this baseline; intentionally aerial enemies retain their designed hover height above the same route anchor.
+- **Visually verify positioning during development**, following the [shared native-capture workflow](#verification-and-handoff). Capture and inspect actual gameplay showing both endpoints, every tower/operator silhouette and facing, ground and elevated placements, and representative enemy sizes at rest and along route turns. Recheck at supported portrait/landscape sizes, zoom extremes, and visual-scale settings. Inspect motion at takeoff, landing, hit reaction, and attack recovery, then fix and recapture any gap, drift, or clipping. Temporary tile-corner/contact markers can diagnose offsets; inspect a clean capture after removing them. Coordinate assertions alone do not establish correct visual grounding.
 ### Art routing and filter rules
-
 Battle-facing assets resolve through `scripts/view/art.gd` and three manifests:
-
 - `assets/manifest.tres`
 - `assets/act1_shared_manifest.tres`
 - `assets/enemy_static_manifest.tres`
-
 `Art` serves only those three merged manifests. Terrain, restoration, loading/UI/cursor assets, and several world assets are direct preloads. A duplicate logical ID anywhere makes aggregate lookup fail closed rather than override; an individually missing advanced atlas requests its optional pack while retaining core/`ColorRect` fallback. Prefer replacing source files behind stable IDs.
-
 Visible terrain does not route through manifest or `StageArtTheme` tile IDs. It is directly preloaded by `scripts/view/proto_isometric_terrain.gd`; change its textures and `BIOME_PROFILES`. Keep painter depth stable: terrain/platform is `3*(x+y)`, enemies `+1`, operators `+2`; traps, restoration, and endpoints use `+1`. `E`/`X` platforms occlude actors behind them but not occupants. StageArtTheme is required for S1–S3 preflight, although most of its terrain/backdrop/prop selection fields are not consumed by the renderer.
-
 Keep filtering intentional:
-
-| Surface | Policy |
-|---|---|
-| Legacy pixel sprites, traps, common tiny VFX | Nearest. |
-| Terrain textures | Linear and repeating. |
-| Static 640×640 enemies, endpoints, restoration/high-threat art | Linear with mipmaps. |
-| Generated advanced WebP operators | Lossy import quality `.92`, generated mipmaps, and `compress/high_quality=false`; current operator `TextureRect`s inherit project nearest filtering unless overridden. |
-
+- **Legacy pixel sprites, traps, and common tiny VFX:** nearest; **terrain textures:** linear and repeating.
+- **Static 640×640 enemies, endpoints, and restoration/high-threat art:** linear with mipmaps.
+- **Generated advanced WebP operators:** lossy import quality `.92`, generated mipmaps, and `compress/high_quality=false`; current operator `TextureRect`s inherit project nearest filtering unless overridden.
 There is no current full-screen post-processing filter. `threshold_material.tres` is UI-tier data, not a shader. Add a color-grade/filter only as a presentation `CanvasLayer`/shader layer, keep it out of model state, place it so HUD readability is intentional, expose an accessibility-safe disable path, and classify any tweak as cosmetic.
-
 ## UI, HUD, and alignment rules
-
 Most UI is built in GDScript even when a `.tscn` root exists. Preserve runtime-created node names used by tests, focus graphs, and integrations.
-
 | Surface | Layout rule | Input/authority rule |
 |---|---|---|
 | Screen routes | Full-rect roots; route through `Game._swap_content()`. | Screens project state; never replace/free `Game.content` directly. |
 | Shared screens | Use `AetheriaScreenShell`; Campaign/Results use `full_safe_area=true`. | Prefer flow/grid/scroll composition over fixed desktop coordinates. |
 | Dialogs | Use `LunarisDialogSheet`; body-only scrolling, responsive stacked actions. | Full-viewport input barrier, focus trap/return, consume Cancel. |
 | Title | Keep `EntryScroll`, fixed footer dock, responsive wordmark, and top-aligned cover. | Start disables during initialization and opens Campaign, never Battle directly. |
-| Campaign | Header becomes one column in portrait; mission cards remain in `CampaignScroll`. | Locked cards are disabled; a pending attempt makes only its stage selectable. |
+| Campaign | Header becomes one column in portrait; mission cards remain in `CampaignScroll` and use solid available/next/hover/pressed/locked fills. | Locked cards are disabled; a pending attempt makes only its stage selectable. |
 | Battle relayout | `BattleView._relayout()` must fit the map before relaying out every grid-coupled overlay. | Do not add competing resize handlers that read stale grid scale/pan. |
 | Battle HUD | Wide `(16,8)`, viewport width minus 32, height 100. Compact/portrait `(12,8)`, half-width, height 164. | Snapshot projection only; no tactical writes. |
 | Deploy deck | Bottom-left, local vertical scroll, 16 safe margin, 24/32 panel padding, 12 gap, 288×76 slots. | Highlights and actions use `BattleModel.can_*` and `apply_action()`. |
@@ -230,44 +254,27 @@ Most UI is built in GDScript even when a `.tscn` root exists. Preserve runtime-c
 | Pause | Full-viewport input stop; two actions in a centered responsive panel. | Snapshot exact tactical speed, set it to zero, and restore only after exit. |
 | Tutorial | Left-aligned card in landscape, above deployment controls; responsive portrait stack. | Preserve `ROUTE → DEPLOY → BLOCK → LIVE` and signal-driven gates. |
 | Leaderboard | Shared title/results dialog, local vertical scroll, responsive identity/actions. | Projection over `/root/Leaderboard`; preserve stable runtime node names. |
-
 ### Cross-cutting UI rules
-
-- Use shared styles in `scripts/ui/components/lunaris_ops_style.gd`, `aetheria_theme.gd`, and `staging_skin.gd`; preserve normal, hover, pressed, focus, and disabled states.
+- Use shared styles in `scripts/ui/components/lunaris_ops_style.gd`, `aetheria_theme.gd`, and `staging_skin.gd`; every painted container/button surface must resolve to `StyleBoxFlat`, with normal, hover, pressed, focus, and disabled states preserved.
+- Keep container and button fills opaque, outlines at least 3 px, and corners at least 12 px for buttons or 14 px for panels. Focus may use a transparent-center outline because it is an indicator, not a replacement background.
 - Keep a **24 px minimum panel content inset** unless a tested compact component has a documented exception.
 - Use wrapping, responsive reflow, and local vertical scrolling. Do not shrink or clip text to force a desktop layout into portrait or Chinese.
 - Keep dynamic controls `FOCUS_ALL`, preserve visible focus styling, restore focus after modals/reflow, and keep accessible names/descriptions synchronized with visible copy.
 - `TextScale` is the only global font scaler. Test important layouts at 80%, 100%, 120%, and 150%.
 - Background art must ignore mouse input. Modal veils must stop it.
 - Space is both UI Accept and Battle Pause. `BattleControls._input()` must continue to claim Space/Q/E before GUI dispatch.
-
 ### Active input and interaction contract
-
-| Interaction | Current behavior |
-|---|---|
-| GUI focus | Enter, keypad Enter, Space, or Joypad A accepts; Escape or Joypad B cancels. Normal directional focus uses Godot's built-in UI mappings. |
-| Battle pause/speed | Space toggles pause; Q/E step `0×/1×/2×/4×`. There is no explicit controller binding for battle pause or speed. |
-| Tactical play | Deployment, trap placement, unit selection, recall, and healing-target selection are pointer/touch-first; no gamepad tactical cursor exists. UI legality and overlays must query `BattleModel`. |
-| Map navigation | Landscape uses middle drag and wheel/Shift-wheel. Portrait uses primary/touch drag after a 10 px threshold, with view-only rubber-band/inertia. There is no keyboard/controller pan route. |
-| Pause menu | Escape snapshots the exact tactical speed, sets tick delivery to zero, blocks world/deploy input, and exposes Settings plus confirmed Resign. Closing restores the prior speed. |
-| Escape caveat | `DeployBar` cancels selection/placement/heal intent but does not consume Escape, so the same press can also open Battle pause. Right-click cancels intent without that fallthrough. |
-
+- **GUI focus:** Enter, keypad Enter, Space, or Joypad A accepts; Escape or Joypad B cancels. Normal directional focus uses Godot's built-in UI mappings.
+- **Tactical play and map navigation:** deployment, trap placement, unit selection, recall, and healing-target selection are pointer/touch-first; no gamepad tactical cursor exists. UI legality and overlays must query `BattleModel`. In both orientations, ordinary wheel/trackpad scrolling and trackpad spread/pinch zoom only the playable battlefield through `MapNavigator`, anchored at the pointer and bounded to 0.5–2.5× the responsive initial framing. Preserve the zoom ratio on resize, recompute pan bounds, and keep inverse picking and world effects aligned. HUD, deployment deck, menus, text, and page zoom remain unchanged; UI-consumed input and blocked tactical/modal states must not zoom the map. Middle drag and Shift-wheel remain pan routes. Portrait uses primary/touch drag after a 10 px threshold, with view-only rubber-band/inertia. There is no keyboard/controller pan route.
+- **Battle pause/speed and Escape:** Space toggles pause; Q/E step `0×/1×/2×/4×`. There is no explicit controller binding for battle pause or speed. Escape snapshots the exact tactical speed, sets tick delivery to zero, blocks world/deploy input, and exposes Settings plus confirmed Resign. Closing restores the prior speed. `DeployBar` cancels selection/placement/heal intent but does not consume Escape, so the same press can also open Battle pause. Right-click cancels intent without that fallthrough.
 GUI/controller support therefore does **not** mean controller-complete tactical play. New controls need explicit InputMap actions, focus behavior, cursor/touch equivalents, modal gating, and focused tests. [8]
-
 ### Preferences, accessibility, and reset
-
 `user://view_preferences.cfg` stores one validated presentation batch: locale (`en-US`/`zh-CN`), global Music enabled, Master/Music/SFX volumes, Master mute, background downloads, reduced motion, frame limit (`0/30/60/120`), and text scale (`0.80`–`1.50` in `0.05` steps). Settings previews a snapshot live; Apply atomically writes the complete valid batch; Back/Escape restores the snapshot. The Title quick-language control intentionally persists immediately. Despite its historical name, `title_music_enabled` controls the global Music service beyond Title. [7]
-
 Dialogs are functional input/focus barriers. They suppress background focus, begin destructive confirmations on a safe Cancel action, announce status, keep overflow copy scrollable/focusable, and restore a valid invoking target. `CursorManager` supplies semantic cursor roles, while `UiFeedback` supplies global enabled-button press feedback. Reduced motion remains presentation-only and is not exhaustive: First Stand and the portrait pan hint still pulse.
-
 **Clear Player Data** requires explicit confirmation and recursively deletes persisted `user://` contents, including campaign artifacts, preferences, local leaderboard data, cached packs, and tweak deltas. It is non-transactional: a removal failure can leave surviving artifacts and reports an error rather than routing to Title. A successful clear resets campaign/leaderboard authority, but currently loaded F10 values/pending writes and mounted content packs can survive in the running process; do not promise a fully fresh runtime without restart.
-
 ## Stage authoring and isometric mechanics
-
 Each stage is a `data/stages/<id>.tres` `StageDef`. The map, paths, waves, capacity, leak allowance, and special mechanics are data; the battle scene projects them.
-
 ### Grid and placement
-
 | Glyph | Meaning | Enemy path | Operator placement | Trap placement |
 |---|---|---|---|---|
 | `.` | Void | No | No | No |
@@ -276,37 +283,20 @@ Each stage is a `data/stages/<id>.tres` `StageDef`. The map, paths, waves, capac
 | `S` | Spawn | Yes | No | No |
 | `B` | Base | Yes | No | No |
 | `X` | Legacy blocked/raised platform | No | Elevated operators | No |
-
 Rules:
-
-1. Keep every `grid_rows` row the same width and use only `. G E S B X`.
-2. Paths are explicit ordered integer grid coordinates, not pixels. Start on `S`, end on `B`, move one cardinal cell per step, and traverse only `G/S/B`.
-3. Waves are chronological dictionaries `{ "enemy_id", "path_idx", "tick" }`. Same-tick order affects IDs and ties, but `WaveTimeline` currently sorts only by tick and has no explicit source-index tie-breaker. Do not rely on preserved source order until code and tests guarantee it.
-4. `wave_starts` defines UI wave windows, not spawns. It must start at `0` and strictly increase.
-5. UI must call `BattleModel.can_deploy_at()` and `can_place_trap_at()` rather than duplicate cell rules.
-6. Portrait mode chooses a rotated runtime copy at Battle startup. It rotates grid, paths, and cell-indexed metadata together; it does not live-rotate an active Battle when the viewport changes.
-7. Isometric projection uses 64×32 diamonds and a 16 px elevation lift. Grid cells remain authority; screen position is presentation.
-8. Defeat is `leaked > leak_limit` or `base_hp <= 0`. A leak limit of 3 allows exactly three leaks; the fourth loses.
-
+**1.** Keep every `grid_rows` row the same width and use only `. G E S B X`. **2.** Paths are explicit ordered integer grid coordinates, not pixels. Start on `S`, end on `B`, move one cardinal cell per step, and traverse only `G/S/B`. **3.** Waves are chronological dictionaries `{ "enemy_id", "path_idx", "tick" }`. Same-tick order affects IDs and ties, but `WaveTimeline` currently sorts only by tick and has no explicit source-index tie-breaker. Do not rely on preserved source order until code and tests guarantee it. **4.** `wave_starts` defines UI wave windows, not spawns. It must start at `0` and strictly increase. **5.** UI must call `BattleModel.can_deploy_at()` and `can_place_trap_at()` rather than duplicate cell rules. **6.** Portrait mode chooses a rotated runtime copy at Battle startup. It rotates grid, paths, and cell-indexed metadata together; it does not live-rotate an active Battle when the viewport changes. **7.** Isometric projection uses 64×32 diamonds and a 16 px elevation lift. Grid cells remain authority; screen position is presentation. **8.** Defeat is `leaked > leak_limit` or `base_hp <= 0`. A leak limit of 3 allows exactly three leaks; the fourth loses.
 > **Validation boundary:** these are authoring requirements, not a complete production preflight. `test/stage_redesign_smoke.gd` is the practical gate for grids, glyphs, paths, waves, starts, and enemy references. Malformed resources can otherwise fail late or behave inertly.
-
 ### Stage count: one- or two-stage forks
-
 The fastest fork can **present only `s1` and `s2`** while retaining compatibility resources. Do not simply delete `s3`–`s10`: current campaign normalization, rewards, environment identity, save compatibility, and leaderboard validation assume contiguous `s1`–`s10`.
-
 A true one/two-stage reduction must update together:
-
 - stage resources and contiguous `campaign_index` values;
 - `data/campaigns/p16_v3.tres` reward rows;
 - `CampaignDef.P16_V3_ENVIRONMENT_SHA256` and the matching resource hash;
 - campaign codecs/context and old/pending save policy;
 - leaderboard stage validators in both GDScript and Node;
 - localization, tests, and any stage-specific art/audio routing.
-
 For a new game built quickly, keep the compatibility shell, edit `s1`/`s2`, hide later cards, and perform destructive pruning only after the new loop is approved. `campaign_index` and contiguous `s1`–`s10` content govern current progression; `StageDef.requires` is unconsumed metadata, and `recovery_roster` is legacy compatibility data rather than deck authority.
-
 ### Unique tactical mechanics
-
 - **Deterministic ticks:** `BattleModel` uses fixed phase order and integer state. One tile equals `1,000,000` path units; per-tick speed is floored once at spawn.
 - **Phase order:** expire effects → regenerate DP/SP → move/block/leak existing enemies → trigger traps → restoration → unit then enemy combat → spawn → terminal check → increment tick.
 - **Blocking:** ground enemies consume weighted block capacity; overflow continues walking rather than queueing. Block links are bidirectional and release atomically on kill, retreat, enemy death, or capacity-effect expiry.
@@ -319,7 +309,6 @@ For a new game built quickly, keep the compatibility shell, edit `s1`/`s2`, hide
 - **High-threat warnings:** stage-authorized presentation is keyed to wave-window indexes. Only the S9 `green_cage` route is active; unknown IDs silently produce no warning.
 - **Speed:** button cycle is `1× → 2× → 4× → Pause`; Q decreases, E increases, Space toggles pause. Speed changes tick delivery, never phase order.
 - **Presentation slowdowns:** deploy/tutorial/selection effects use view-time tags. Do not confuse `Engine.time_scale` with tactical `ticks_per_frame_scale`.
-
 | Mechanism | Current contract |
 |---|---|
 | Simulation | Default is 30 ticks/s with uncapped catch-up in `BattleView`; newly spawned enemies first act on a later tick because spawn occurs after combat. |
@@ -327,171 +316,104 @@ For a new game built quickly, keep the compatibility shell, edit `s1`/`s2`, hide
 | Presentation holds | `BattleView` owns `Engine.time_scale` through minimum-valued tags: tutorial `0`, deploy drag `0.3`, selected-unit panel `0.75`. Use `juice_time_push/pop`, not competing global writes. |
 | F10 panel | Pauses the whole SceneTree while its always-processing UI remains active, then restores the prior paused state. |
 | Default economy | Base HP 10; start DP 10; DP cap 99; passive DP and skilled-unit SP each advance every 30 ticks; retreat refund 50%; enemy damage stagger 8 ticks. |
-
 A clear requires an exhausted timeline and no living enemy. Defeat is `leaked > leak_limit` **or** `base_hp <= 0`. Stars are 3 at zero leaks, 2 at one or two leaks, and 1 for another clear within the leak limit. S8 has leak limit 2, so it has no one-star clear. Shipped leak hit-stop is disabled (`0` frames). Tactical code currently makes no random draw; `run_seed` is identity/future-extension data rather than active combat variance.
-
 Actions reject invalid/wrong-arity/post-terminal requests without tactical mutation. Units and enemies remain append-only after death, leak, or retreat so IDs/history stay stable; only exhausted ON_ENTER traps are erased. When adding outcome-affecting state, update `BattleHash`, snapshots, tickets, outcomes, codecs, and deterministic tests in the same change. Serialized enum values are append-only; never reorder them.
-
 ## Operators, enemies, and balance
-
 Balance sources are `data/config/game.tres`, `data/operators/`, `data/skills/`, `data/target_policies/`, `data/enemies/`, `data/traps/`, and `data/stages/`. The nine active enemy IDs are `grunt`, `runner`, `shieldbearer`, `breacher`, `drone`, `interceptor`, `spellcaster`, `heavy`, and `mini_boss`. Keep full encounter/stat matrices in a versioned content reference rather than hard-coding them into this field manual.
-
 The fixed deck is an unlimited repeat-purchase pool bounded by current DP, one-unit-per-cell occupancy, and stage living-unit capacity (`s1` 3; `s2`–`s3` 4; `s4`–`s5` 5; `s6`–`s10` 6). Fixed-roster retreat refunds `floor(cost × 50%)` subject to the DP cap and creates no cooldown. The hard-coded 10-second standard and 3-second Vanguard cooldowns apply only to non-fixed compatibility modes.
-
 Shipping manual full-SP skills are Gunner **Deadeye** (2× ATK, 15 SP, 150 ticks), Swordmaster **Flurry** (0.5× interval, 15 SP, 150 ticks), and Mage Apprentice **Conflagration** (3×3 to 5×5 ground-only splash, 25 SP, 150 ticks). Recruit has no skill. `mend`/`HEAL_TARGET`, DP burst, block bonus, stun, healer/Defender/Vanguard classes, and `no_automatic_target` are implemented extension or compatibility seams, not shipped deck mechanics. No current operator heals allies; restoration heals enemies only.
-
 Ground operators may use any `G` cell; traps require a routed `G`; elevated operators use `E` or legacy `X`; one living unit occupies a cell. Deployment facing is validated then normalized to NW, while target-driven NW/NE facing remains visual only.
-
 `BattleView` duplicates authored stage/config/operator/enemy inputs at battle startup; units and enemies then copy required data at deploy/spawn. Do not mutate source `.tres` resources or retroactively retune materialized state. Content changes that affect campaign context require environment-hash, save, and migration review. Campaign witness/ticket identity remains separate from the fixed deploy deck; current witness participation counters are not reliable evidence of fixed-deck tactical use.
-
 The result path deliberately grants **no permanent death, memorial, XP, or class unlocks**. Restoring persistent person progression is a campaign-schema, UI, ticket, migration, and balance redesign—not a cosmetic toggle.
-
 ## VFX and particle effects
-
 `BattleView` detects authoritative model edges; `scripts/view/juice_layer.gd` renders and ages transient visuals. `data/juice_config.tres` is the principal, not exhaustive, juice source: some counts/geometry remain in `JuiceLayer`, static-enemy death profiles live in `EnemyAnimator`, and Act II/defeat overlays own separate constants. Most JuiceLayer state is render-frame based, while static-enemy deaths are second-based.
-
 This template draws “particles” with `TextureRect`, `Line2D`, `Polygon2D`, and procedural `_draw()` nodes rather than Particle2D systems. Keep them presentation-only and preserve:
-
 - map transform compensation during pan/zoom/resize;
 - tile/entity z-order and raised-platform occlusion;
 - transparent sprite-backed trap parents;
 - reduced-motion static alternatives;
 - no use of gameplay RNG for visual scatter.
-
 To add `GPUParticles2D`, keep emission event detection in `BattleView`, pool the visual emitter, seed only presentation randomness, provide a reduced-motion fallback, and never write model state from the emitter.
-
+### Procedural combat motion for static sprites
+When a tower/operator or enemy uses a static pose instead of authored animation, add small runtime movements through `scripts/view/operator_animator.gd`, `scripts/view/enemy_animator.gd`, and `scripts/view/battle_view.gd`:
+- **Enemy locomotion:** use a subtle repeating hop while the enemy actually walks, returning to the grounded rest anchor on every landing. Stop hopping when blocked, idle, dead, or paused; retain the intended hover treatment for aerial units. Keep the contact shadow attached to the route surface.
+- **Damage reactions:** give static towers/operators and enemies a brief, decaying shake on an actual damage event. Bound overlapping reactions and restore the exact rest transform afterward so repeated hits cannot accumulate positional drift.
+- **Tower attacks:** give static towers/operators a small wind-up, recoil, lean, or squash-and-return movement for each attack. Trigger once per authoritative attack event, align the release with the projectile/impact cue, and return cleanly to the contact anchor. Do not animate the static `S`/`B` endpoint structures under this rule.
+Compose these offsets on the rendered sprite above its stable ground anchor. They must not change `BattleModel` position, path progress, blocking, range, collision, damage timing, or gameplay RNG. Use elapsed presentation time with the active battle speed, freeze on pause, and reset on removal/retry. Reuse existing animator motion where it satisfies these requirements; avoid doubling motion on authored animations. Honor reduced motion with restrained or non-moving hit/attack feedback. Review short native capture sequences in combat; one still screenshot cannot verify hopping, shake decay, or attack recovery.
+### Tower-to-enemy attack anchors
+Tower attack telegraphs, tracers, and projectiles must start at the **center of the visible tower/operator sprite** and end at the **center of the visible targeted enemy sprite**. Tile centers, feet anchors, health bars, and padded texture-rectangle centers are not valid substitutes.
+Resolve both centers from visible-art bounds or authored visual-center metadata, including the current frame, crop, facing, scale, elevation, and procedural hop/shake/recoil. Convert them into the effect layer's coordinate space through the actual node transforms. Share these anchor calculations between telegraphs and projectile launch/impact cues in `BattleView` and `JuiceLayer`; the reference `_project_tracers()` currently uses tile-face centers and must be adapted to meet this rule.
+Keep attached telegraphs synchronized with both rendered centers. Launch each projectile from the tower's center at release and track the intended enemy's rendered center while it exists; retain that target's identity so an effect cannot jump to another occupant of the same cell. If the target dies or is removed before the visual finishes, finish at its last valid visual center or cancel the effect, without changing authoritative damage or retargeting gameplay.
+During the grounding capture pass, inspect wind-up, release, flight, and impact for short/tall sprites, both tower facings, raised towers, moving/hopping or hit-shaken enemies, and pan/zoom/resize. Telegraph and projectile endpoints must visibly meet the rendered centers throughout the relevant effect, including after presentation transforms.
 ## Audio generation and integration
-
 ### One-BGM template workflow
-
-Use Manus built-in **`manus-tools/generate_music`**—backed by the preferred latest available music model—to generate one original loop. Use one call for tracks up to 180 seconds. The prompt must begin with total duration, BPM, and vocal policy; describe genre, key, mood, instrumentation, density, structure, space, and production; do not reference artists or existing songs.
-
+Generate exactly one original BGM loop. In Manus Max Mode, use the preferred built-in music-generation workflow; outside Manus Max Mode, follow the [shared asset generation mode gate](#asset-generation-mode-gate). For the preferred workflow, use one call for tracks up to 180 seconds. The prompt must begin with total duration, BPM, and vocal policy; describe genre, key, mood, instrumentation, density, structure, space, and production; do not reference artists or existing songs.
 Example:
-
 ```text
 Instrumental only, no vocals. Create a 120-second seamless-loop tactical fantasy-electronic score at 112 BPM in D minor. Focused, mysterious, and resilient rather than bombastic; hybrid frame drums, muted taiko, low strings, glassy synth arpeggios, restrained brass swells, warm sub bass, sparse high chimes, medium-low density, dark-neutral brightness, wide but clean game mix with controlled transients and no sudden loudness jumps. [0:00-0:20] establish a calm deploy-planning pulse, intensity 3/10. [0:20-0:55] add rhythmic motion for early waves, intensity 5/10. [0:55-1:30] broaden harmony and percussion for pressure without a melodic reset, intensity 6/10. [1:30-2:00] return smoothly to the opening harmonic and rhythmic state so the final bar loops into the first bar without a click or cadence. Instrumental only, no vocals.
 ```
-
 Then:
-
-1. Save the high-resolution generated master outside the runtime asset tree.
-2. Trim only if necessary, verify a clean musical loop, and convert to 48 kHz stereo Vorbis OGG.
-3. Point existing `AudioCue.stream_path` values to the one runtime OGG while retaining logical cue IDs used by Title, Campaign, Battle, and Results.
-4. Keep cue BPM, meter, loop flag, approved surfaces, and catalog/profile mapping truthful.
-5. A one-master reskin is supported by deliberately mapping all logical routes to one source; it is not the shipped topology. Preserve truthful BPM, meter, and loop metadata because adaptive scheduling consumes them.
-6. Current terminal behavior plays victory/defeat SFX **and** crossfades to an eight-second non-looping Music result cue before persistence. Results does not restart a background cue after that result track ends.
-
-Direct `Music.play_cue()` and Act II identical-cue state changes no-op. Ordinary high/critical and boss/boss-critical adaptive transitions can restart an identical mapped cue at a scheduled boundary; do not generalize no-restart behavior without preserving and testing route-specific policy.
-
+**1.** Save the high-resolution generated master outside the runtime asset tree. **2.** Trim only if necessary, verify a clean musical loop, and convert to 48 kHz stereo Vorbis OGG. **3.** Point existing `AudioCue.stream_path` values to the one runtime OGG while retaining logical cue IDs used by Title, Campaign, Battle, and Results. **4.** Every new game must map all BGM routes to this single source. Keep cue BPM, meter, loop flag, approved surfaces, and catalog/profile mapping truthful; scheduling consumes the BPM, meter, and loop metadata. **5.** The current template also uses an eight-second non-looping Music result cue. Remove that extra music asset when scaffolding a new game and keep victory/defeat feedback in SFX so the single-BGM requirement remains true.
+Direct `Music.play_cue()` and Act II identical-cue state changes no-op. Ordinary high/critical and boss/boss-critical adaptive transitions can restart an identical mapped cue at a scheduled boundary. These are current-template behaviors; new games must simplify their mappings to the single BGM track and must not introduce additional BGM assets.
 Battle's adaptive director is presentation-only: it derives routine/high/critical/boss states from projected pressure, waits for stability (default hold 8 seconds; critical 0.15 seconds, ordinary escalation 0.75, de-escalation 3), and schedules cue changes to musical bar boundaries from profile BPM/meter. Its elapsed clock advances only while tactical tick delivery is positive and hit-stop is inactive; it never changes model state.
-
-All BGM must go through `autoloads/music.gd`; all effects through `autoloads/sfx.gd`. Do not add scene-local competing `AudioStreamPlayer`s. Preserve two BGM crossfade players, eight SFX voices, `Music`/`SFX` buses sending to `Master`, and direct-stream Web playback.
-
+All BGM must go through `autoloads/music.gd`; all effects through `autoloads/sfx.gd`. Do not add scene-local competing `AudioStreamPlayer`s. A new game may simplify the current two-player crossfade implementation, but it must load exactly one BGM asset. Preserve bounded SFX playback, `Music`/`SFX` buses sending to `Master`, and direct-stream Web playback.
 ### Small SFX
-
-The repository currently ships static WAVs and contains **no** Lyria integration, ElevenLabs integration, or Godot procedural SFX generator. The runtime seam is `assets/sfx/catalog.tres`.
-
-Preferred replacement flow:
-
-1. In Manus, inspect connector availability with `manus-config config load --search eleven` before assuming ElevenLabs is enabled.
-2. If an ElevenLabs SFX connector is enabled and authorized, generate short, dry, isolated one-shots: UI click 80–150 ms, reject 120–250 ms, deploy 300–900 ms, hit/trap 100–500 ms, victory/defeat 0.8–1.5 s. Request no voice, no music bed, no long reverb tail, and no leading silence.
-3. Export/convert to 48 kHz stereo WAV, normalize conservatively, trim silence, and replace the static file behind a stable direct cue ID.
-4. Add gameplay-specific semantic names as one-level aliases to direct catalog entries; do not create alias chains or put file paths in gameplay code.
-
-If ElevenLabs is unavailable, an agent may add an **offline authoring tool** using Godot `AudioStreamWAV`/PCM data and `save_to_wav()` to synthesize basic sine/noise/envelope cues. Keep it under `tools/audio/`, run it only during asset production, and commit the generated WAVs. Do not make runtime `AudioStreamGenerator` a game dependency merely to create clicks and impacts.
-
-`UiFeedback` is the global enabled-button `ui_click` requester, but several handlers also request that cue. `Sfx` deduplicates the resolved direct ID once per process frame, so these usually produce one audible start. Routine hover/back/confirm/menu IDs are intentionally muted by policy.
-
+The repository currently ships static WAVs and contains **no** built-in generative audio integration or Godot procedural SFX generator. The runtime seam is `bundled/sfx/catalog.tres`. Music and SFX media are restored under `assets/template/bundled/`; the catalog scripts and logical cue IDs remain under `bundled/`.
+Follow the [shared autonomous audio workflow](#autonomous-audio-production-all-modes) in every mode. For built-in generative SFX:
+**1.** Follow the baseline's internal SFX routing and prepare a complete semantic cue list for gameplay and HUD/UI interactions and meaningful state changes. **2.** Generate short, dry, isolated one-shots: UI click 80–150 ms, reject 120–250 ms, deploy 300–900 ms, hit/trap 100–500 ms, victory/defeat 0.8–1.5 s. Request no voice, no music bed, no long reverb tail, and no leading silence. **3.** Export/convert to 48 kHz stereo OGG, normalize conservatively, trim silence, and update the static file path/import and tests behind the stable direct cue ID. **4.** Add gameplay-specific semantic names as one-level aliases to direct catalog entries; do not create alias chains or put file paths in gameplay code.
+When using procedural SFX, add an **offline authoring tool** using Godot `AudioStreamWAV`/PCM data and `save_to_wav()` to synthesize original sine/noise/envelope cues. Keep procedural authoring tools under `tools/audio/`, run them only during asset production, and keep generated authoring WAVs outside the runtime asset tree. Convert the chosen results to 48 kHz stereo OGG, upload them through the shared asset pipeline, and migrate catalog paths/imports/tests while preserving routing, conservative normalization, trimming, and semantic coverage. Do not make runtime `AudioStreamGenerator` a game dependency merely to create clicks and impacts. Audition all gameplay and HUD/UI cues in context; original procedural SFX are valid final assets and must not be confused with reused or temporary placeholder sounds.
+`UiFeedback` is the global enabled-button `ui_click` requester, but several handlers also request that cue. `Sfx` deduplicates the resolved direct ID once per process frame, so these usually produce one audible start. The current template intentionally mutes several routine hover/back/confirm/menu IDs; a new game must replace that policy with audible semantic cues for all reachable HUD/UI interactions and meaningful state changes required by the mandatory audio-engine baseline.
 SFX aliases are one level and must resolve to a direct entry. Every newly authored active skill ID needs a direct SFX entry or alias because Battle requests its logical skill ID. The browser AudioContext hook is an inline export-preset, best-effort unlock wrapper; it does not guarantee autoplay or recovery from browser policy failure.
-
 ## Runtime tweak UI and sandbox handoff
-
 Press **F10** to open the schema-driven 58-control developer panel. Controls span UI, gameplay, audio, player, enemies, and environment; 26 are `GAMEPLAY` and 32 are `COSMETIC`. Each descriptor declares `LIVE`, `NEXT_BATTLE`, `NEXT_DEPLOY`, `NEXT_SPAWN`, `NEXT_CUE`, or `NEXT_TRANSITION`.
-
 > **Integrity limitation:** F10 is an unauthenticated local override layer. A non-default gameplay value can change direct and campaign battle inputs and still grant campaign rewards and local/global leaderboard records. `[TWEAKED]` is a live HUD suffix only: it is not latched, serialized in tickets/outcomes/saves/submissions, or used as an eligibility gate. Resetting controls can remove the marker after already-materialized units or enemies were tuned.
-
 To add a control:
-
-1. Add one descriptor in `scripts/tuning/runtime_tweak_catalog.gd` with a stable ID, type, default, range, step, unit, apply mode, and honest `GAMEPLAY`/`COSMETIC` classification.
-2. Read it at the advertised boundary through `TweakControls` or the appropriate view/audio consumer.
-3. Adapt deep-copied resources from immutable baselines; never modify loaded source resources or retroactively rewrite existing entities.
-4. Add a focused test. Preserve truthful `[TWEAKED]` disclosure, and decide explicitly whether durable progression/leaderboards should accept the changed run.
-
+**1.** Add one descriptor in `scripts/tuning/runtime_tweak_catalog.gd` with a stable ID, type, default, range, step, unit, apply mode, and honest `GAMEPLAY`/`COSMETIC` classification. **2.** Read it at the advertised boundary through `TweakControls` or the appropriate view/audio consumer. **3.** Adapt deep-copied resources from immutable baselines; never modify loaded source resources or retroactively rewrite existing entities. **4.** Add a focused test. Preserve truthful `[TWEAKED]` disclosure, and decide explicitly whether durable progression/leaderboards should accept the changed run.
 The panel is an always-available raw-F10 `CanvasLayer`. It pauses the SceneTree, stores only non-default deltas in `user://runtime_tweaks.cfg`, debounces writes by 0.35 seconds, flushes on close, then restores the prior paused state. Its schema version is written but not enforced/migrated; invalid loads are silent and failed saves have no retry.
-
 Local deltas are saved to `user://runtime_tweaks.cfg`. In a native/editor sandbox, locate and copy the file with:
-
 ```bash
 find "${XDG_DATA_HOME:-$HOME/.local/share}/godot/app_userdata" \
   -name runtime_tweaks.cfg -print
 # Then copy the chosen file to a review path, for example:
 # cp "/resolved/path/runtime_tweaks.cfg" /home/ubuntu/runtime_tweaks.cfg
 ```
-
 Treat that file as a tuning handoff, not source authority. Promote values according to their adapter. Absolute GameConfig values must change both `data/config/game.tres` and their matching catalog defaults because catalog defaults overwrite copied config fields at battle startup. Relative player/enemy multipliers, bonuses, spawn timing/count, and leak bonuses must be either retained as non-identity catalog defaults **or** baked into authored data with catalog defaults reset to identity; doing both double-applies the change. Existing entities do not retroactively adopt `NEXT_DEPLOY`/`NEXT_SPAWN` changes.
-
 Browser `user://` is browser storage. The project has no tweak server, export/import, cloud sync, or Web-to-sandbox synchronization; implement a versioned exchange format before claiming one exists.
-
 ## Tutorial and onboarding
-
 `scripts/ui/first_stand_tutorial.gd` is the live battle tutorial. It appears when the stage is `s1`, campaign mode is active, and `ui.tutorial_hints_enabled` is true. Current behavior intentionally replays on later eligible S1 attempts.
-
 Preserve the state machine:
-
-1. `ROUTE`: show route and explain spawn-to-base flow; battle held.
-2. `DEPLOY`: enable operator placement; advance only after a successful deployment signal.
-3. `BLOCK`: explain interception/blocking; battle held.
-4. `LIVE`: release the hold, re-enable normal controls, then auto-dismiss.
-
+**1.** `ROUTE`: show route and explain spawn-to-base flow; battle held. **2.** `DEPLOY`: enable operator placement; advance only after a successful deployment signal. **3.** `BLOCK`: explain interception/blocking; battle held. **4.** `LIVE`: release the hold, re-enable normal controls, then auto-dismiss.
 First Stand advances on any successful operator deployment, not specifically Recruit or a recommended cell, and stores no completion flag. LIVE releases its time hold and auto-dismisses after six seconds. A separate portrait map-pan hint appears only when pan range exists, lasts up to seven seconds, persists completion after a successful pan, and is independent of `ui.tutorial_hints_enabled`.
-
 The generic `CommandCenterTutorial`, command/post-mission request APIs, and their preference completion flags are not consumed by an active screen. Do not advertise them as live. If a fork wants one-time onboarding, create a deliberate consumed route and update replay, reset, localization, accessibility, and lifecycle tests.
-
 ## English and Simplified-Chinese support
-
 Main screens and ordinary player-facing copy must flow through `scripts/ui/components/ui_copy.gd` and `I18n`, not hard-coded strings. The active F10 launcher/panel/catalog and Battle `[TWEAKED]` suffix are current English-only developer-tool exceptions; localize and subscribe them to locale changes before claiming universal bilingual coverage.
-
 - Update `localization/en-US.json` and `localization/zh-CN.json` together.
 - Preserve canonical root order, sorted keys, LF line endings, final newline, nonempty strings, and exact placeholder-name parity.
 - Add typed placeholder schemas before calling `UiCopy.format_text()`.
 - Subscribe cached UI to `I18n.locale_changed` and refresh visible and accessible text together.
-- Preserve `assets/fonts/GameTemplateTDSansSC.otf` and display-to-body fallback for CJK glyphs.
+- Prefer Figtree from `assets/fonts/Figtree.ttf` for body and display type. Preserve `assets/template/fonts/GameTemplateTDSansSC.otf` and the display-to-body fallback for CJK glyphs.
 - Repair layout with wrapping, scrolling, and responsive composition, never by clipping Chinese or shrinking below the shared hierarchy.
-
-## Local and global leaderboards
-
+## Local leaderboard and optional global implementation reference
 The Title and Results screens share one dialog. After an accepted direct result or durable campaign resolution, every valid `s1`–`s10` **clear or defeat** creates a local record. Score version 1 is `max(0, clear*2,000,000 + stage*100,000 + stars*20,000 + kills*50 - leaks*500)`. The local ledger retains its best 50 rows, the UI shows 10, and the FIFO pending queue keeps only its newest 100 submissions.
-
+The local ledger and local UI are the default for new games. Do not carry forward the global tab, network synchronization, pending submission queue, or server when scaffolding unless the user explicitly requests a global leaderboard. The remaining global details in this section document the template's optional reference implementation only; an opted-in game must use a Manus WebDev database and complete the database, API, UI, and integration workflow defined above.
 Remote synchronization is best-effort, sequential, and trigger-driven: startup pending work, a new result, dialog open/tab/refresh. It has an eight-second timeout and no periodic retry/backoff. An error leaves the queue front pending and may leave stale global rows visible. Networking never blocks rewards, Results, or navigation. Native/headless defaults are offline (`leaderboard/api_base_url=""`; `leaderboard/enable_in_headless=false`); browser builds use an HTTP(S) page origin where available.
-
 The optional zero-dependency Node 22 service exposes `GET /api/health`, `GET /api/leaderboard?limit=`, and `POST /api/leaderboard`; it serves `build/web` on `127.0.0.1:3000` by default. It recomputes bounded client summaries and retains only the top 1,000 JSON records. Submission IDs are deduplicated **only while their records remain retained**: at capacity, a low score can receive `201` with no rank, be discarded, and later be accepted again under the same ID. There are no accounts, credentials, replay/hash/ticket verification, server simulation, or gameplay-plausibility checks. This is a community board, **not anti-cheat**. [6]
-
 ```bash
 npm run dev
 npm run test:leaderboard
 ```
-
 Production must configure a durable writable data path plus TLS, reverse proxy/firewall, process supervision, monitoring, backups, origin policy, and rate-limit review. The bundled service has no backup/migration/multiprocess coordination; corrupt top-level server JSON prevents normal boot.
-
 For a one/two-stage fork, update allowed stage IDs in both `autoloads/leaderboard.gd` and `server/leaderboard_server.mjs`, bump/migrate score policy deliberately, and update tests and localized formula copy.
-
 ## Web export and optional packs
-
 Web is the only checked-in export preset; `build/web` is generated and ignored. With matching Godot 4.7.2 Web templates installed:
-
 ```bash
 godot --headless --path . --export-release "Web" build/web/index.html
 npm run dev
 ```
-
 The core build remains playable without advanced specialization art. Optional pack specifications must be user arguments in the form `--content-pack=id|http(s)-url|bytes|sha256`; accepted IDs are `operator-gunner`, `operator-mage-apprentice`, and `operator-swordmaster`. Packs download serially, are capped at 64 MiB and 180 seconds, verify exact bytes/SHA-256, cache under `user://content-packs`, and mount add-only with `load_resource_pack(path, false)`. Missing, disabled, failed, or unconfigured packs retain core/placeholder art and never block gameplay. Background prefetch defaults on; foreground requests remain allowed when it is disabled. [5]
-
 `tools/stage_web_content_packs.sh` validates the exact eight-file female/male × idle/attack × NE/NW atlas contract for each retained class and emits three verified PCKs plus `manifest.tsv`. Its end-to-end regression checks every manifest row against the generated file's size and SHA-256. Export and `npm run dev` still do **not** translate that manifest into Godot user arguments; the host must provide immutable/cache-safe pack URLs and the matching `--content-pack` values. Do not claim fully automated advanced-pack deployment until host injection, cross-origin policy, actual browser mount/hash behavior, and a browser smoke pass exist. [5]
-
 ## Focused validation matrix
-
 Documentation-only edits need `git diff --check` and path/command validation. For source/assets, run the smallest relevant gate on the final candidate.
-
 | Change | Minimum focused checks |
 |---|---|
 | Start/Campaign routing | `tests/start_screen_flow_test.gd`, `tests/campaign_back_navigation_test.gd` |
@@ -503,27 +425,21 @@ Documentation-only edits need `git diff --check` and path/command validation. Fo
 | UI/responsive style | Relevant layout/focus/dialog/cursor test plus one representative visual capture when pixels changed |
 | Localization/font | `tests/localization_ui_parity_test.gd`, `tests/chinese_primary_flow_ui_test.gd`, and affected text-scale tests |
 | Art/manifests/terrain/packs | `tests/advanced_operator_schema_test.gd`, `tests/enemy_static_sprite_test.gd`, `tests/web_content_pack_test.gd`, `tests/web_content_pack_staging_test.sh`, `test/agent4_isometric_renderer_smoke.gd` as applicable |
+| Sprite grounding/static motion/attack VFX | Applicable art/depth tests plus the [grounding captures](#sprite-grounding-and-positioning-acceptance), [motion sequences](#procedural-combat-motion-for-static-sprites), and [center-to-center attack checks](#tower-to-enemy-attack-anchors); include pause/resume, speed changes, reduced motion, target removal, and retry |
 | Music/SFX/Web audio | `tests/music_redesign_test.gd`, `tests/ui_audio_direction_test.gd`, `tests/web_audio_unlock_test.gd` as applicable |
 | Runtime tweaks | `tests/runtime_tweak_controls_test.gd`, `tests/runtime_tweak_battle_integration_test.gd` |
 | Leaderboard | `tests/leaderboard_service_test.gd`, `tests/leaderboard_ui_test.gd`, `npm run test:leaderboard` |
 | Player-data reset | `tests/player_data_clear_test.gd` |
-
 Example:
-
 ```bash
 tools/run_godot_test.sh tests/start_screen_flow_test.gd
 tools/run_godot_test.sh tests/battle_pause_menu_test.gd
 npm run test:leaderboard
 ```
-
 ### Audit baseline caveats
-
 The readiness regressions follow current shipped contracts: pack staging enforces eight exact resources per retained class; Web-audio coverage derives active skill IDs from shipped operator resources instead of retired skills; and the global typography test reads the intentional Title Settings `TITLE_FONT_SCALE = 1.5` constant directly. Dormant skill names in compatibility tests or localization do not become shipped audio requirements merely by existing.
-
 No tracked CI/workflow exists. This matrix is manual guidance; no automation currently runs Godot/Node gates, Web export, pack staging/mounting, browser smoke, or publication. Web export requires matching Godot 4.7.2 templates in the actual environment.
-
 ## Common failure modes
-
 - **Changing view code to fix gameplay.** Put outcome logic in `BattleModel`; project it afterward.
 - **Editing only `grid_rows`.** Move paths, restoration cells, stage themes, and tests with map topology.
 - **Treating `X` as void.** It is a legacy raised/elevated placement cell in current behavior.
@@ -546,9 +462,7 @@ No tracked CI/workflow exists. This matrix is manual guidance; no automation cur
 - **Trusting UI-only trap unlocks as model authorization.** Programmatic placement currently bypasses campaign entitlement filtering.
 - **Claiming tweak sync exists.** Native config can be copied; browser export/import is not implemented.
 - **Claiming optional packs deploy automatically.** Staging is currently broken and no manifest-to-launch-argument integration exists.
-
 ## Key path index
-
 | Concern | Primary paths |
 |---|---|
 | Project/boot/input/autoloads | `project.godot`, `scenes/loading.tscn`, `scripts/ui/loading.gd`, `autoloads/test_run_guard.gd` |
@@ -563,15 +477,13 @@ No tracked CI/workflow exists. This matrix is manual guidance; no automation cur
 | Tutorial | `scripts/ui/first_stand_tutorial.gd`, `assets/tutorial/` |
 | Art | `scripts/view/art.gd`, `assets/*.tres`, `data/presentation/operator_visual_catalog.gd` |
 | VFX | `scripts/view/juice_layer.gd`, `data/juice_config.tres` |
-| Audio | `autoloads/music.gd`, `autoloads/sfx.gd`, `assets/music/catalog.tres`, `assets/sfx/catalog.tres`, `data/presentation/audio/` |
+| Audio | `autoloads/music.gd`, `autoloads/sfx.gd`, `bundled/music/catalog.tres`, `bundled/sfx/catalog.tres`, `data/presentation/audio/` |
 | Localization/fonts | `autoloads/i18n.gd`, `scripts/ui/components/ui_copy.gd`, `localization/`, `assets/fonts/` |
 | Tweaks | `scripts/tuning/runtime_tweak_catalog.gd`, `autoloads/tweak_controls.gd`, `scripts/tuning/runtime_tweak_panel.gd` |
 | Leaderboard | `autoloads/leaderboard.gd`, `scripts/ui/components/leaderboard_dialog.gd`, `server/leaderboard_server.mjs` |
 | Safe tests | `tools/run_godot_test.sh`, `tools/run_godot_isolated.sh` |
 | Web export/packs | `export_presets.cfg`, `tools/stage_web_content_packs.sh`, `autoloads/content_pack_loader.gd` |
-
 ## Implementation references
-
 [1]: https://github.com/junnyboi/proto-td-simple/blob/master/autoloads/game.gd "Game route and result lifecycle"
 [2]: https://github.com/junnyboi/proto-td-simple/blob/master/sim/battle_model.gd "Deterministic battle authority"
 [3]: https://github.com/junnyboi/proto-td-simple/blob/master/sim/campaign_v3_attempts.gd "Campaign attempts, progression, and rewards"
@@ -580,7 +492,5 @@ No tracked CI/workflow exists. This matrix is manual guidance; no automation cur
 [6]: https://github.com/junnyboi/proto-td-simple/blob/master/server/leaderboard_server.mjs "Leaderboard and static Web server"
 [7]: https://github.com/junnyboi/proto-td-simple/blob/master/scripts/view/view_preferences.gd "Preferences and atomic batch persistence"
 [8]: https://github.com/junnyboi/proto-td-simple/blob/master/scripts/ui/battle_controls.gd "Battle input, pause, speed, and resign controls"
-
 ## Contribution discipline
-
 Use ordinary branches and commits. Never rewrite shared `master`. Preserve compatible concurrent changes constructively. Run one proportional verification pass on the final candidate, then commit and push. Documentation-only changes do not require an engine release ritual—machinery appreciates restraint, even if it rarely receives any.

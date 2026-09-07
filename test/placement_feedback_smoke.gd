@@ -35,14 +35,14 @@ func _validate_audio(failures: PackedStringArray) -> void:
 		if sfx.resolved_id_for(cue_id) != cue_id:
 			failures.append("cue failed to resolve: %s" % cue_id)
 			continue
-		var path := "res://assets/sfx/combat/%s.wav" % cue_id
+		var path := "res://assets/template/bundled/sfx/combat/%s.wav" % cue_id
 		var stream := load(path) as AudioStream
 		if stream == null:
 			failures.append("cue failed to load: %s" % path)
 		elif stream.get_length() < 0.7 or stream.get_length() > 1.3:
 			failures.append("cue length out of placement range: %s %.3f" % [cue_id, stream.get_length()])
-	var ground := load("res://assets/sfx/combat/deploy_ground.wav") as AudioStream
-	var elevated := load("res://assets/sfx/combat/deploy_elevated.wav") as AudioStream
+	var ground := load("res://assets/template/bundled/sfx/combat/deploy_ground.wav") as AudioStream
+	var elevated := load("res://assets/template/bundled/sfx/combat/deploy_elevated.wav") as AudioStream
 	if ground != null and elevated != null and elevated.get_length() <= ground.get_length():
 		failures.append("elevated cue must retain a longer crystalline tail")
 	sfx.free()

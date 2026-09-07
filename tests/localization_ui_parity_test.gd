@@ -3,8 +3,9 @@ extends SceneTree
 const ThemeType := preload("res://scripts/ui/components/aetheria_theme.gd")
 const StagingSkinType := preload("res://scripts/ui/components/staging_skin.gd")
 const LunarisStyleType := preload("res://scripts/ui/components/lunaris_ops_style.gd")
+const RuntimeTweakCatalogType := preload("res://scripts/tuning/runtime_tweak_catalog.gd")
 const CHINESE_CATALOG_PATH := "res://localization/zh-CN.json"
-const BUNDLED_CHINESE_FONT_PATH := "res://assets/fonts/GameTemplateTDSansSC.otf"
+const BUNDLED_CHINESE_FONT_PATH := "res://assets/template/fonts/GameTemplateTDSansSC.otf"
 const GLOBAL_THEME_PATH := "res://data/presentation/ui/threshold_theme.tres"
 const BUNDLED_CHINESE_FONT: FontFile = preload(BUNDLED_CHINESE_FONT_PATH)
 const SOURCE_ROOTS := ["res://scripts/ui", "res://scripts/view"]
@@ -131,11 +132,52 @@ func _check_standalone_control_fonts() -> void:
 func _check_literal_source_keys(catalog_lookup: Dictionary) -> void:
 	var regex := RegEx.new()
 	regex.compile('[&]?"((?:ui|data)\\.[A-Za-z0-9_.]*[A-Za-z0-9_])"')
+	var tweak_regex := RegEx.new()
+	tweak_regex.compile(
+		'(?<![A-Za-z0-9_.])TweakControls\\s*\\.\\s*value\\s*\\(\\s*('
+		+ regex.get_pattern() + ')\\s*[,)]',
+	)
+	var tweak_ids := RuntimeTweakCatalogType.baseline_values()
+	_check_source_key_scanner(regex, tweak_regex, tweak_ids)
 	for source_root: String in SOURCE_ROOTS:
-		_scan_source_dir(source_root, regex, catalog_lookup)
+		_scan_source_dir(source_root, regex, tweak_regex, catalog_lookup, tweak_ids)
 
 
-func _scan_source_dir(path: String, regex: RegEx, catalog_lookup: Dictionary) -> void:
+func _literal_localization_keys(source: String, regex: RegEx, tweak_regex: RegEx, tweak_ids: Dictionary) -> Array[StringName]:
+	var tweak_arguments := {}
+	for result: RegExMatch in tweak_regex.search_all(source):
+		if tweak_ids.has(StringName(result.get_string(2))):
+			tweak_arguments[result.get_start(1)] = true
+	var keys: Array[StringName] = []
+	for result: RegExMatch in regex.search_all(source):
+		# Only the registered first-argument occurrence is a tuning ID.
+		# The same literal in UI copy or a nested fallback still needs translation.
+		if not tweak_arguments.has(result.get_start()):
+			keys.append(StringName(result.get_string(1)))
+	return keys
+
+
+func _check_source_key_scanner(regex: RegEx, tweak_regex: RegEx, tweak_ids: Dictionary) -> void:
+	var cases := [
+		['TweakControls.value(&"ui.hud_scale", 1.0)', []],
+		['TweakControls.value(\n\t&"ui.map_hint_opacity", 1.0,\n)', []],
+		['TweakControls.value("ui.hud_scale")', []],
+		['TweakControls.value(&"ui.unknown_tweak", 1.0)', [&"ui.unknown_tweak"]],
+		['UI_COPY.text(&"ui.hud_scale")', [&"ui.hud_scale"]],
+		['TweakControls.value(&"ui.hud_scale", UI_COPY.text(&"ui.missing_fallback"))', [&"ui.missing_fallback"]],
+		['TweakControls.value(&"ui.hud_scale", UI_COPY.text(&"ui.hud_scale"))', [&"ui.hud_scale"]],
+		['{&"title": &"ui.missing_title", &"body": &"data.missing_body"}', [&"ui.missing_title", &"data.missing_body"]],
+		['OtherTweakControls.value(&"ui.hud_scale", 1.0)', [&"ui.hud_scale"]],
+		['other.TweakControls.value(&"ui.hud_scale", 1.0)', [&"ui.hud_scale"]],
+		['TweakControls.value("ui.hud_scale" + suffix, 1.0)', [&"ui.hud_scale"]],
+	]
+	for test_case: Array in cases:
+		var source := String(test_case[0])
+		var actual := _literal_localization_keys(source, regex, tweak_regex, tweak_ids)
+		_check(actual == test_case[1], "localization source-key classification failed: %s (%s)" % [source, actual])
+
+
+func _scan_source_dir(path: String, regex: RegEx, tweak_regex: RegEx, catalog_lookup: Dictionary, tweak_ids: Dictionary) -> void:
 	var directory := DirAccess.open(path)
 	_check(directory != null, "localization source directory missing: %s" % path)
 	if directory == null:
@@ -146,11 +188,10 @@ func _scan_source_dir(path: String, regex: RegEx, catalog_lookup: Dictionary) ->
 		if not entry.begins_with("."):
 			var child := path.path_join(entry)
 			if directory.current_is_dir():
-				_scan_source_dir(child, regex, catalog_lookup)
+				_scan_source_dir(child, regex, tweak_regex, catalog_lookup, tweak_ids)
 			elif entry.ends_with(".gd"):
 				var source := FileAccess.get_file_as_string(child)
-				for result: RegExMatch in regex.search_all(source):
-					var key := StringName(result.get_string(1))
+				for key: StringName in _literal_localization_keys(source, regex, tweak_regex, tweak_ids):
 					_check(catalog_lookup.has(key), "literal production localization key is absent from catalogs: %s (%s)" % [key, child])
 		entry = directory.get_next()
 	directory.list_dir_end()

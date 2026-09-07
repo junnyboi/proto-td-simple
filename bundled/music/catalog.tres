@@ -1,0 +1,40 @@
+[gd_resource type="Resource" script_class="MusicCatalog" load_steps=18 format=3]
+
+[ext_resource type="Script" path="res://bundled/music/music_catalog.gd" id="1_music"]
+[ext_resource type="Resource" path="res://data/presentation/audio/cues/title_lunaris.tres" id="2_title"]
+[ext_resource type="Resource" path="res://data/presentation/audio/cues/lunaris_staging_archive_command.tres" id="3_stage"]
+[ext_resource type="Resource" path="res://data/presentation/audio/cues/lunaris_battle_orbit_early_low.tres" id="4_early_low"]
+[ext_resource type="Resource" path="res://data/presentation/audio/cues/lunaris_battle_orbit_early_medium.tres" id="5_early_mid"]
+[ext_resource type="Resource" path="res://data/presentation/audio/cues/lunaris_battle_orbit_early_high.tres" id="6_early_high"]
+[ext_resource type="Resource" path="res://data/presentation/audio/cues/lunaris_battle_air_raid_low.tres" id="7_air_low"]
+[ext_resource type="Resource" path="res://data/presentation/audio/cues/lunaris_battle_air_raid_medium.tres" id="8_air_mid"]
+[ext_resource type="Resource" path="res://data/presentation/audio/cues/lunaris_battle_air_raid_high.tres" id="9_air_high"]
+[ext_resource type="Resource" path="res://data/presentation/audio/cues/lunaris_battle_gravity_lattice_low.tres" id="10_late_low"]
+[ext_resource type="Resource" path="res://data/presentation/audio/cues/lunaris_battle_gravity_lattice_medium.tres" id="11_late_mid"]
+[ext_resource type="Resource" path="res://data/presentation/audio/cues/lunaris_battle_gravity_lattice_high.tres" id="12_late_high"]
+[ext_resource type="Resource" path="res://data/presentation/audio/cues/lunaris_boss_gatecrasher.tres" id="13_boss"]
+[ext_resource type="Resource" path="res://data/presentation/audio/cues/lunaris_result_victory.tres" id="14_win"]
+[ext_resource type="Resource" path="res://data/presentation/audio/cues/lunaris_result_defeat.tres" id="15_lose"]
+[ext_resource type="Resource" path="res://data/presentation/audio/cues/act2/lunaris_act2_s09_return_path.tres" id="16_act2_s09"]
+[ext_resource type="Resource" path="res://data/presentation/audio/cues/act2/lunaris_act2_s10_covenant_orchard.tres" id="17_act2_s10"]
+
+[resource]
+script = ExtResource("1_music")
+entries = {
+&"title_lunaris": ExtResource("2_title"),
+&"lunaris_staging_archive_command": ExtResource("3_stage"),
+&"lunaris_battle_orbit_early_low": ExtResource("4_early_low"),
+&"lunaris_battle_orbit_early_medium": ExtResource("5_early_mid"),
+&"lunaris_battle_orbit_early_high": ExtResource("6_early_high"),
+&"lunaris_battle_air_raid_low": ExtResource("7_air_low"),
+&"lunaris_battle_air_raid_medium": ExtResource("8_air_mid"),
+&"lunaris_battle_air_raid_high": ExtResource("9_air_high"),
+&"lunaris_battle_gravity_lattice_low": ExtResource("10_late_low"),
+&"lunaris_battle_gravity_lattice_medium": ExtResource("11_late_mid"),
+&"lunaris_battle_gravity_lattice_high": ExtResource("12_late_high"),
+&"lunaris_boss_gatecrasher": ExtResource("13_boss"),
+&"lunaris_result_victory": ExtResource("14_win"),
+&"lunaris_result_defeat": ExtResource("15_lose"),
+&"lunaris_act2_s09_return_path": ExtResource("16_act2_s09"),
+&"lunaris_act2_s10_covenant_orchard": ExtResource("17_act2_s10")
+}

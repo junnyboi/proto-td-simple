@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="AssetManifest" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://assets/template/asset_manifest.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+schema_version = 3
+entries = {
+&"world.act1.core": {
+"animations": {&"idle": {&"fps": 6.0, &"length": 6, &"loop": true, &"start": 0}},
+"columns": 6,
+"display_size": Vector2i(64, 80),
+"ground_contact": Vector2(201, 590),
+"frames": 6,
+"pattern": "res://assets/template/world/endpoints/holy_crystal_idle.webp",
+"pivot": Vector2(0.5, 1.0),
+"placeholder": false,
+"size": Vector2i(401, 600)
+},
+&"world.act1.spawn": {
+"animations": {&"idle": {&"fps": 12.0, &"length": 24, &"loop": true, &"start": 0}},
+"columns": 6,
+"display_size": Vector2i(64, 64),
+"ground_contact": Vector2(291, 591),
+"frames": 24,
+"pattern": "res://assets/template/world/endpoints/photon_portal_idle.webp",
+"pivot": Vector2(0.5, 1.0),
+"placeholder": false,
+"size": Vector2i(589, 600)
+}
+}

@@ -36,17 +36,17 @@ const ROLE_SHAPES := {
 }
 
 const ROLE_TEXTURES := {
-	ROLE_DEFAULT: preload("res://assets/ui/cursors/cursor_default.png"),
-	ROLE_ACTION: preload("res://assets/ui/cursors/cursor_action.png"),
-	ROLE_TEXT: preload("res://assets/ui/cursors/cursor_text.png"),
-	ROLE_SELECT: preload("res://assets/ui/cursors/cursor_select.png"),
-	ROLE_DEPLOY: preload("res://assets/ui/cursors/cursor_deploy.png"),
-	ROLE_TRAP: preload("res://assets/ui/cursors/cursor_trap.png"),
-	ROLE_HEAL: preload("res://assets/ui/cursors/cursor_heal.png"),
-	ROLE_INVALID: preload("res://assets/ui/cursors/cursor_invalid.png"),
-	ROLE_PAN: preload("res://assets/ui/cursors/cursor_pan.png"),
-	ROLE_PAN_GRAB: preload("res://assets/ui/cursors/cursor_pan_grab.png"),
-	ROLE_BUSY: preload("res://assets/ui/cursors/cursor_busy.png"),
+	ROLE_DEFAULT: preload("res://assets/template/ui/cursors/cursor_default.png"),
+	ROLE_ACTION: preload("res://assets/template/ui/cursors/cursor_action.png"),
+	ROLE_TEXT: preload("res://assets/template/ui/cursors/cursor_text.png"),
+	ROLE_SELECT: preload("res://assets/template/ui/cursors/cursor_select.png"),
+	ROLE_DEPLOY: preload("res://assets/template/ui/cursors/cursor_deploy.png"),
+	ROLE_TRAP: preload("res://assets/template/ui/cursors/cursor_trap.png"),
+	ROLE_HEAL: preload("res://assets/template/ui/cursors/cursor_heal.png"),
+	ROLE_INVALID: preload("res://assets/template/ui/cursors/cursor_invalid.png"),
+	ROLE_PAN: preload("res://assets/template/ui/cursors/cursor_pan.png"),
+	ROLE_PAN_GRAB: preload("res://assets/template/ui/cursors/cursor_pan_grab.png"),
+	ROLE_BUSY: preload("res://assets/template/ui/cursors/cursor_busy.png"),
 }
 
 const ROLE_HOTSPOTS := {

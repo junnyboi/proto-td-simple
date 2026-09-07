@@ -57,13 +57,13 @@ func _run() -> void:
 	var tutorial_body := battle.find_child("TutorialBody", true, false) as Label
 	var skip := battle.find_child("SkipTutorial", true, false) as Button
 	var tutorial_primary := battle.find_child("TutorialPrimary", true, false) as Button
-	_check(hud != null and hud.get_theme_stylebox(&"normal") is StyleBoxTexture, "battle HUD does not use the Lunaris command frame")
+	_check(hud != null and hud.get_theme_stylebox(&"normal") is StyleBoxFlat, "battle HUD is not a plain solid surface")
 	if hud != null:
 		var hud_style := hud.get_theme_stylebox(&"normal")
 		_check(hud.size.y >= 100.0, "battle HUD did not receive doubled container height")
 		_check(hud.horizontal_alignment == HORIZONTAL_ALIGNMENT_CENTER and hud.vertical_alignment == VERTICAL_ALIGNMENT_CENTER, "battle HUD text is not centered")
 		_check(hud_style.content_margin_left >= 48.0 and hud_style.content_margin_top >= 24.0 and hud_style.content_margin_right >= 24.0 and hud_style.content_margin_bottom >= 24.0, "battle HUD violates the 24px custom-frame padding floor")
-	_check(deployment_deck != null and deployment_deck.get_theme_stylebox(&"panel") is StyleBoxTexture, "deployment deck is not textured")
+	_check(deployment_deck != null and deployment_deck.get_theme_stylebox(&"panel") is StyleBoxFlat, "deployment deck is not a plain solid surface")
 	if deployment_deck != null:
 		var deployment_style := deployment_deck.get_theme_stylebox(&"panel")
 		_check(
@@ -87,7 +87,7 @@ func _run() -> void:
 			_check(deployment_deck.get_global_rect().encloses((child as Button).get_global_rect()), "deployment deck does not contain a Recruit control")
 		var first_slot := slot_box.get_child(0) as Button
 		_check(first_slot.get_theme_stylebox(&"normal").content_margin_left >= 24.0, "first Recruit lacks the requested left content inset")
-	_check(controls_deck != null and controls_deck.get_theme_stylebox(&"panel") is StyleBoxTexture, "battle command deck is not textured")
+	_check(controls_deck != null and controls_deck.get_theme_stylebox(&"panel") is StyleBoxFlat, "battle command deck is not a plain solid surface")
 	if controls_deck != null:
 		var controls_style := controls_deck.get_theme_stylebox(&"panel")
 		_check(
@@ -118,9 +118,10 @@ func _run() -> void:
 		_check(absf(tutorial_rect.position.x - 24.0) <= 2.0, "tutorial card is not left-aligned to the 24px viewport margin")
 		_check(tutorial_style.content_margin_top == 48.0 and tutorial_style.content_margin_bottom == 48.0, "tutorial card lacks exact 48px vertical content padding")
 		_check(tutorial_style.content_margin_left == 24.0 and tutorial_style.content_margin_right == 24.0, "tutorial card lacks exact 24px horizontal content padding")
-		_check(tutorial_style.bg_color.a > 0.0 and tutorial_style.bg_color.a < 1.0, "tutorial card background is not translucent")
+		_check(is_equal_approx(tutorial_style.bg_color.a, 1.0), "tutorial card background is not opaque")
 		_check(tutorial_style.border_color.is_equal_approx(Color("d9b96e")), "tutorial card border is not gold")
 		_check(tutorial_style.get_corner_radius(CORNER_TOP_LEFT) >= 12, "tutorial card border is not rounded")
+		_check(tutorial_style.get_border_width(SIDE_LEFT) >= 3, "tutorial card border is not thick")
 	_check(tutorial_title != null and tutorial_title.get_theme_font_size(&"font_size") == 54, "tutorial title did not receive the reduced 54px landscape typography")
 	_check(tutorial_body != null and tutorial_body.get_theme_font_size(&"font_size") == 38, "tutorial body did not receive the reduced 38px landscape typography")
 	_check(tutorial_body != null and tutorial_body.text == "Enemies start from the portal and follow the lit path to your base crystal. This mission allows 3 leaks, the 4th leak will end the mission.", "tutorial route copy does not match the approved wording")
@@ -131,19 +132,20 @@ func _run() -> void:
 			_check(button.get_theme_font_size(&"font_size") == 27, "%s tutorial copy is not 27px" % button.name)
 			_check(normal_style != null, "%s still uses a stylized frame" % button.name)
 			_check(normal_style != null and normal_style.content_margin_left >= 12.0 and normal_style.content_margin_top >= 12.0 and normal_style.content_margin_right >= 12.0 and normal_style.content_margin_bottom >= 12.0, "%s lacks 12px internal padding" % button.name)
-			_check(normal_style != null and normal_style.bg_color.a > 0.0 and normal_style.bg_color.a < 1.0, "%s background is not translucent" % button.name)
+			_check(normal_style != null and is_equal_approx(normal_style.bg_color.a, 1.0), "%s background is not opaque" % button.name)
 			_check(normal_style != null and normal_style.border_color.is_equal_approx(Color("d9b96e")), "%s border is not gold" % button.name)
 			_check(normal_style != null and normal_style.get_corner_radius(CORNER_TOP_LEFT) >= 8, "%s border is not rounded" % button.name)
+			_check(normal_style != null and normal_style.get_border_width(SIDE_LEFT) >= 3, "%s border is not thick" % button.name)
 			_check(tutorial_card.get_global_rect().encloses(button.get_global_rect()), "%s overflows the tutorial card" % button.name)
 		_check(skip.custom_minimum_size.is_equal_approx(Vector2(440.0, 64.0)), "Skip Tutorial did not double to a 440×64 action target")
 		_check(tutorial_primary.custom_minimum_size.is_equal_approx(Vector2(220.0, 64.0)), "NEXT did not retain its 220×64 action target")
-		_check(tutorial_primary.get_theme_color(&"font_color").is_equal_approx(Color("f5efe1")), "NEXT does not use readable ivory ink on the translucent surface")
+		_check(tutorial_primary.get_theme_color(&"font_color").is_equal_approx(Color("f5efe1")), "NEXT does not use readable ivory ink on the solid surface")
 		_check(tutorial_primary.text == "NEXT", "tutorial route action was not renamed to NEXT")
 	_check(bool(i18n.call("set_locale", &"zh-CN")), "Chinese locale activation failed")
 	await process_frame
 	_check(tutorial_body.text == "敌人从传送门出发，沿发光路径前往你的基地水晶。本任务最多允许3名敌人漏过；第4名敌人漏过时，任务失败。", "Chinese tutorial route copy does not match the approved meaning")
 	_check(tutorial_primary.text == "下一步", "Chinese tutorial route action was not renamed to 下一步")
-	_check(hud.text.contains("核心") and hud.text.contains("歼灭"), "battle HUD did not refresh to Chinese")
+	_check(hud.text.contains("漏敌") and hud.text.contains("歼灭"), "battle HUD did not refresh to Chinese")
 	_check(pause.text == "暂停" and resign.text == "撤出行动", "battle commands did not refresh to distinct Chinese actions")
 	_check(speed.tooltip_text.contains("Q：降低速度") and speed.tooltip_text.contains("E：提高速度"), "Chinese speed shortcut help did not refresh")
 	if slot_box != null:
@@ -422,11 +424,11 @@ func _run() -> void:
 		_check(not recall_action.disabled, "Recall is unavailable after skill use")
 		recall_action.pressed.emit()
 		deploy_bar.call("_process", 0.0)
-		var cooldown_slot := battle.find_child("Slot_%s" % deployment_id, true, false) as Button
+		var recalled_slot := battle.find_child("Slot_%s" % deployment_id, true, false) as Button
 		_check(deployed_unit != null and not deployed_unit.alive, "Recall action did not remove the selected operator")
-		_check(model.is_redeploy_cooling_down(deployment_id), "Recall did not start an authoritative redeploy cooldown")
-		_check(cooldown_slot != null and cooldown_slot.text.contains("COOLDOWN"), "deploy card does not expose the Recall cooldown")
-		_check(cooldown_slot != null and cooldown_slot.disabled, "cooling-down deploy card remains actionable")
+		_check(not model.is_redeploy_cooling_down(deployment_id), "fixed-deck Recall unexpectedly started a redeploy cooldown")
+		_check(recalled_slot != null and not recalled_slot.text.contains("COOLDOWN"), "fixed-deck deploy card exposes a nonexistent Recall cooldown")
+		_check(recalled_slot != null and not recalled_slot.disabled, "fixed-deck deploy card is unavailable after Recall")
 		_check(is_equal_approx(Engine.time_scale, 1.0), "Recall did not clear tactical selection slowdown")
 
 	bool(controls.call("request_resign_confirmation"))

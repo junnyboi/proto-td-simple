@@ -1,0 +1,11 @@
+{
+  "id": "game-td",
+  "kind": "game",
+  "game_genre": "tower-defense",
+  "status": "ready",
+  "name": "Tower Defense Game",
+  "description": "A playable Godot 4.7.2 tower-defense foundation with missions, placement, upgrades, effects, tuning controls, audio, and local leaderboards.",
+  "capabilities": [
+    "static"
+  ]
+}

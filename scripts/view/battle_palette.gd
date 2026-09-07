@@ -22,4 +22,5 @@ const OPERATOR_CLASS := {
 	OperatorDef.OpClass.SNIPER: Color("ffcd75"),
 	OperatorDef.OpClass.CASTER: Color("5d275d"),
 	OperatorDef.OpClass.HEALER: Color("a7f070"),
+	OperatorDef.OpClass.RECRUIT: Color("38b764"),
 }

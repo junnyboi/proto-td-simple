@@ -4,7 +4,7 @@ extends Control
 ## Settings is an explicit exclusive full-viewport child state.
 
 const TopAlignedCoverType := preload("res://scripts/ui/components/top_aligned_cover.gd")
-const TITLE_ART := preload("res://assets/loading/lunaris_reliquary_loading.png")
+const TITLE_ART := preload("res://assets/template/loading/lunaris_reliquary_loading.png")
 const StagingSkinType := preload("res://scripts/ui/components/staging_skin.gd")
 const Style := preload("res://scripts/ui/components/lunaris_ops_style.gd")
 const UiCopyType := preload("res://scripts/ui/components/ui_copy.gd")
@@ -19,9 +19,6 @@ const BRIGHT_GOLD := Color("f0d89a")
 const MOON_CYAN := Color("91eaf1")
 const IVORY := Color("f5efe1")
 const VOID := Color("071019")
-const FOCUS_PULSE_SECONDS := 2.8
-const FOCUS_PULSE_MIN_ALPHA := 0.10
-const FOCUS_PULSE_MAX_ALPHA := 0.16
 const TITLE_UI_SCALE := 1.15
 const TITLE_FONT_SCALE := 1.0
 const ENTRY_FADE_SECONDS := 0.56
@@ -68,9 +65,6 @@ var _frame_limit := 0
 var _text_scale := 1.0
 var _background_downloads_enabled := true
 var _preferences_path := ViewPreferencesType.DEFAULT_PATH
-var _focus_pulse_elapsed := 0.0
-var _focus_pulse_styles: Dictionary = {}
-var _focus_pulse_colors: Dictionary = {}
 var _entry_tween: Tween = null
 var _hover_tweens: Dictionary = {}
 var _highlighted_actions: Dictionary = {}
@@ -137,19 +131,6 @@ func _exit_tree() -> void:
 	for tween_value: Variant in _hover_tweens.values():
 		if tween_value is Tween and (tween_value as Tween).is_valid():
 			(tween_value as Tween).kill()
-
-
-func _process(delta: float) -> void:
-	_focus_pulse_elapsed = fmod(_focus_pulse_elapsed + delta, FOCUS_PULSE_SECONDS)
-	var pulse := StagingSkinType.FOCUS_TINT_ALPHA
-	if not _reduced_motion:
-		var wave := (sin((_focus_pulse_elapsed / FOCUS_PULSE_SECONDS) * TAU) + 1.0) * 0.5
-		pulse = lerpf(FOCUS_PULSE_MIN_ALPHA, FOCUS_PULSE_MAX_ALPHA, wave)
-	for button in _focus_pulse_styles:
-		var style: StyleBoxFlat = _focus_pulse_styles[button]
-		var accent: Color = _focus_pulse_colors[button]
-		style.bg_color = Color(accent, pulse)
-		(button as Button).queue_redraw()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -293,7 +274,7 @@ func _entry_button(node_name: String, primary: bool) -> Button:
 	Style.apply_simple_gold_button(
 		button, primary, 24.0, TITLE_BUTTON_CORNER_RADIUS, 10.0,
 	)
-	_register_focus_pulse(button, BRIGHT_GOLD)
+	_apply_focus_outline(button)
 	return button
 
 
@@ -309,16 +290,14 @@ func _footer_button(node_name: String, font_size: int) -> Button:
 	StagingSkinType.apply_display_type(button, _title_font_size(font_size), IVORY, 600)
 	button.add_theme_color_override(&"font_focus_color", BRIGHT_GOLD)
 	Style.apply_simple_gold_button(button, false, 10.0, 14, 6.0)
-	_register_focus_pulse(button, BRIGHT_GOLD)
+	_apply_focus_outline(button)
 	return button
 
 
-func _register_focus_pulse(button: Button, accent: Color) -> void:
+func _apply_focus_outline(button: Button) -> void:
 	var style := StagingSkinType.golden_focus_tint_style(TITLE_BUTTON_CORNER_RADIUS)
 	style.set_corner_radius_all(TITLE_BUTTON_CORNER_RADIUS)
 	button.add_theme_stylebox_override(&"focus", style)
-	_focus_pulse_styles[button] = style
-	_focus_pulse_colors[button] = accent
 
 
 func _wire_entry_focus() -> void:

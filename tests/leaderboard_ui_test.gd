@@ -129,7 +129,7 @@ func _check_simple_gold_style(control: Control, style_name: StringName, context:
 	_check(style != null, "%s does not use a simple solid fill" % context)
 	if style == null:
 		return
-	_check(style.bg_color.a > 0.0 and style.bg_color.a < 1.0, "%s fill is not translucent" % context)
+	_check(is_equal_approx(style.bg_color.a, 1.0), "%s fill is not opaque" % context)
 	_check(
 		is_equal_approx(style.border_color.r, Style.GOLD.r)
 		and is_equal_approx(style.border_color.g, Style.GOLD.g)
@@ -137,6 +137,7 @@ func _check_simple_gold_style(control: Control, style_name: StringName, context:
 		"%s border is not gold" % context,
 	)
 	_check(style.corner_radius_top_left >= 12, "%s border is not rounded" % context)
+	_check(style.border_width_left >= 3, "%s border is not thick" % context)
 
 
 func _finish() -> void:

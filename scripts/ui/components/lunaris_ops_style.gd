@@ -6,9 +6,9 @@ const GameTypographyType := preload("res://scripts/ui/game_typography.gd")
 
 const INK := Color("07111c")
 const INK_DEEP := Color("040a12")
-const GLASS := Color("0b1827e8")
-const GLASS_SOFT := Color("13263bd9")
-const GLASS_SELECTED := Color("173849eb")
+const GLASS := Color("0b1827")
+const GLASS_SOFT := Color("13263b")
+const GLASS_SELECTED := Color("173849")
 const IVORY := Color("f5efe1")
 const MUTED := Color("aebfd0")
 const CYAN := Color("91eaf1")
@@ -18,9 +18,12 @@ const GOLD_DIM := Color("79683f")
 const VIOLET := Color("66577f")
 const DANGER := Color("d16f78")
 const MIN_CONTENT_PANEL_INSET := 24.0
-const SIMPLE_GOLD_SURFACE := Color(0.025, 0.045, 0.07, 0.86)
-const SIMPLE_GOLD_SURFACE_HOVER := Color(0.08, 0.07, 0.04, 0.90)
-const SIMPLE_GOLD_SURFACE_SELECTED := Color(0.16, 0.12, 0.045, 0.90)
+const SIMPLE_GOLD_SURFACE := Color("07121f")
+const SIMPLE_GOLD_SURFACE_HOVER := Color("173044")
+const SIMPLE_GOLD_SURFACE_SELECTED := Color("3a2d13")
+const SURFACE_BORDER_WIDTH := 3
+const SURFACE_CORNER_RADIUS := 14
+const BUTTON_CORNER_RADIUS := 12
 
 
 static func add_backdrop(root: Control, texture: Texture2D = null) -> void:
@@ -66,21 +69,21 @@ static func ensure_content_panel_insets(
 
 static func panel_style(role: StringName) -> StyleBox:
 	if role == &"screen" or role == &"dialog":
-		return _texture_margin(StagingSkinType.command_deck_style(), MIN_CONTENT_PANEL_INSET)
+		return _flat_panel(INK, GOLD, SURFACE_BORDER_WIDTH, MIN_CONTENT_PANEL_INSET)
 	if role == &"hud":
-		return _texture_margin(StagingSkinType.command_deck_style(), MIN_CONTENT_PANEL_INSET)
+		return _flat_panel(INK, CYAN_DIM, SURFACE_BORDER_WIDTH, MIN_CONTENT_PANEL_INSET)
 	if role == &"workspace":
-		return _flat_panel(Color(0.035, 0.075, 0.12, 0.94), Color(CYAN.r, CYAN.g, CYAN.b, 0.34), 1, MIN_CONTENT_PANEL_INSET)
+		return _flat_panel(Color("091e2e"), CYAN_DIM, SURFACE_BORDER_WIDTH, MIN_CONTENT_PANEL_INSET)
 	if role == &"result" or role == &"memorial":
-		var tint := Color.WHITE if role == &"result" else Color(0.88, 0.78, 0.90, 1.0)
-		return _texture_margin(StagingSkinType.mission_card_style(tint), MIN_CONTENT_PANEL_INSET)
+		var fill := Color("101927") if role == &"result" else Color("251827")
+		return _flat_panel(fill, GOLD, SURFACE_BORDER_WIDTH, MIN_CONTENT_PANEL_INSET)
 	if role == &"selected":
-		return _flat_panel(GLASS_SELECTED, CYAN, 2, MIN_CONTENT_PANEL_INSET)
+		return _flat_panel(GLASS_SELECTED, CYAN, SURFACE_BORDER_WIDTH, MIN_CONTENT_PANEL_INSET)
 	if role == &"quiet":
-		return _texture_margin(StagingSkinType.operation_tile_style(Color(0.86, 0.93, 1.0, 0.92)), MIN_CONTENT_PANEL_INSET)
+		return _flat_panel(GLASS_SOFT, GOLD_DIM, SURFACE_BORDER_WIDTH, MIN_CONTENT_PANEL_INSET)
 	if role == &"danger":
-		return _flat_panel(Color(0.18, 0.06, 0.09, 0.94), DANGER, 2, MIN_CONTENT_PANEL_INSET)
-	return _flat_panel(GLASS, Color(GOLD.r, GOLD.g, GOLD.b, 0.46), 1, MIN_CONTENT_PANEL_INSET)
+		return _flat_panel(Color("2e0f17"), DANGER, SURFACE_BORDER_WIDTH, MIN_CONTENT_PANEL_INSET)
+	return _flat_panel(GLASS, GOLD_DIM, SURFACE_BORDER_WIDTH, MIN_CONTENT_PANEL_INSET)
 
 
 static func apply_button(button: Button, role: StringName) -> void:
@@ -130,8 +133,8 @@ static func apply_compact_rounded_button(
 	button.add_theme_color_override(&"font_disabled_color", Color(MUTED.r, MUTED.g, MUTED.b, 0.68))
 
 
-## Texture-free surface used by the leaderboard. The fill remains uniformly
-## translucent in every state and the rounded gold edge carries the hierarchy.
+## Plain solid button surface shared across staging screens. Interaction states
+## change opaque fill colors while the thick rounded edge carries hierarchy.
 static func apply_simple_gold_button(
 		button: BaseButton,
 		selected: bool = false,
@@ -142,19 +145,19 @@ static func apply_simple_gold_button(
 	var normal_fill := SIMPLE_GOLD_SURFACE_SELECTED if selected else SIMPLE_GOLD_SURFACE
 	button.add_theme_stylebox_override(
 		&"normal",
-		simple_gold_surface(normal_fill, content_padding, corner_radius, 1, vertical_padding),
+		simple_gold_surface(normal_fill, content_padding, corner_radius, SURFACE_BORDER_WIDTH, vertical_padding),
 	)
 	button.add_theme_stylebox_override(
 		&"hover",
-		simple_gold_surface(SIMPLE_GOLD_SURFACE_HOVER, content_padding, corner_radius, 2, vertical_padding),
+		simple_gold_surface(SIMPLE_GOLD_SURFACE_HOVER, content_padding, corner_radius, SURFACE_BORDER_WIDTH + 1, vertical_padding),
 	)
 	button.add_theme_stylebox_override(
 		&"pressed",
-		simple_gold_surface(SIMPLE_GOLD_SURFACE_SELECTED, content_padding, corner_radius, 2, vertical_padding),
+		simple_gold_surface(SIMPLE_GOLD_SURFACE_SELECTED, content_padding, corner_radius, SURFACE_BORDER_WIDTH + 1, vertical_padding),
 	)
 	button.add_theme_stylebox_override(
 		&"hover_pressed",
-		simple_gold_surface(SIMPLE_GOLD_SURFACE_SELECTED, content_padding, corner_radius, 2, vertical_padding),
+		simple_gold_surface(SIMPLE_GOLD_SURFACE_SELECTED, content_padding, corner_radius, SURFACE_BORDER_WIDTH + 1, vertical_padding),
 	)
 	button.add_theme_stylebox_override(
 		&"focus", StagingSkinType.golden_focus_tint_style(corner_radius),
@@ -162,27 +165,27 @@ static func apply_simple_gold_button(
 	button.add_theme_stylebox_override(
 		&"disabled",
 		simple_gold_surface(
-			Color(0.025, 0.035, 0.05, 0.64),
+			Color("111923"),
 			content_padding,
 			corner_radius,
-			1,
+			SURFACE_BORDER_WIDTH,
 			vertical_padding,
 		),
 	)
 
 
 static func simple_gold_surface(
-		background: Color = SIMPLE_GOLD_SURFACE,
-		content_padding: float = MIN_CONTENT_PANEL_INSET,
-		corner_radius: int = 14,
-		border_width: int = 1,
-		vertical_padding: float = -1.0,
-	) -> StyleBoxFlat:
+	background: Color = SIMPLE_GOLD_SURFACE,
+	content_padding: float = MIN_CONTENT_PANEL_INSET,
+	corner_radius: int = SURFACE_CORNER_RADIUS,
+	border_width: int = SURFACE_BORDER_WIDTH,
+	vertical_padding: float = -1.0,
+) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
-	style.bg_color = background
+	style.bg_color = Color(background.r, background.g, background.b, 1.0)
 	style.border_color = GOLD
-	style.set_border_width_all(border_width)
-	style.set_corner_radius_all(corner_radius)
+	style.set_border_width_all(maxi(border_width, SURFACE_BORDER_WIDTH))
+	style.set_corner_radius_all(maxi(corner_radius, BUTTON_CORNER_RADIUS))
 	style.content_margin_left = content_padding
 	style.content_margin_right = content_padding
 	style.content_margin_top = content_padding if vertical_padding < 0.0 else vertical_padding
@@ -228,10 +231,10 @@ static func apply_label(label: Label, role: StringName) -> void:
 
 
 static func apply_line_edit(field: LineEdit, invalid: bool = false) -> void:
-	var border := DANGER if invalid else Color(CYAN.r, CYAN.g, CYAN.b, 0.52)
-	field.add_theme_stylebox_override(&"normal", _button_box(GLASS_SOFT, border, 1))
-	field.add_theme_stylebox_override(&"focus", _button_box(Color(CYAN.r, CYAN.g, CYAN.b, 0.08), GOLD, 2))
-	field.add_theme_stylebox_override(&"read_only", _button_box(Color(0.12, 0.16, 0.2, 0.78), GOLD_DIM, 1))
+	var border := DANGER if invalid else CYAN_DIM
+	field.add_theme_stylebox_override(&"normal", _button_box(GLASS_SOFT, border, SURFACE_BORDER_WIDTH))
+	field.add_theme_stylebox_override(&"focus", _button_box(Color("102c3d"), GOLD, SURFACE_BORDER_WIDTH + 1))
+	field.add_theme_stylebox_override(&"read_only", _button_box(Color("1f2933"), GOLD_DIM, SURFACE_BORDER_WIDTH))
 	field.add_theme_color_override(&"font_color", IVORY)
 	field.add_theme_color_override(&"font_selected_color", INK_DEEP)
 	field.add_theme_color_override(&"font_uneditable_color", MUTED)
@@ -246,20 +249,12 @@ static func apply_progress(progress: ProgressBar) -> void:
 	progress.add_theme_stylebox_override(&"fill", _progress_box(CYAN))
 
 
-static func _texture_margin(style: StyleBox, margin: float) -> StyleBox:
-	style.content_margin_left = margin
-	style.content_margin_top = margin
-	style.content_margin_right = margin
-	style.content_margin_bottom = margin
-	return style
-
-
 static func _flat_panel(background: Color, border: Color, width: int, margin: float) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
 	style.bg_color = background
 	style.border_color = border
-	style.set_border_width_all(width)
-	style.set_corner_radius_all(3)
+	style.set_border_width_all(maxi(width, SURFACE_BORDER_WIDTH))
+	style.set_corner_radius_all(SURFACE_CORNER_RADIUS)
 	style.content_margin_left = margin
 	style.content_margin_top = margin
 	style.content_margin_right = margin
@@ -271,8 +266,8 @@ static func _button_box(background: Color, border: Color, width: int) -> StyleBo
 	var style := StyleBoxFlat.new()
 	style.bg_color = background
 	style.border_color = border
-	style.set_border_width_all(width)
-	style.set_corner_radius_all(3)
+	style.set_border_width_all(maxi(width, SURFACE_BORDER_WIDTH))
+	style.set_corner_radius_all(BUTTON_CORNER_RADIUS)
 	style.content_margin_left = 18.0
 	style.content_margin_top = 10.0
 	style.content_margin_right = 18.0

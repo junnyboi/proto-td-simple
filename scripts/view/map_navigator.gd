@@ -6,6 +6,9 @@ extends RefCounted
 ## writes the model.
 
 const WHEEL_STEP_PX := 96.0
+const WHEEL_ZOOM_STEP := 1.12
+const MIN_ZOOM := 0.5
+const MAX_ZOOM := 2.5
 ## Leave a narrow tactical margin around the endpoint-aware visual envelope.
 ## This is view-only and preserves exact projection, picking, and pan semantics.
 const BATTLE_SCALE_MULTIPLIER := 0.92
@@ -24,6 +27,8 @@ const INERTIA_SAMPLE_MAX_SECONDS := 0.08
 const INERTIA_RELEASE_MAX_IDLE_USEC := 120_000
 
 var scale := 1.0
+## Relative to the responsive initial framing; only the battlefield is scaled.
+var zoom := 1.0
 var origin := Vector2.ZERO
 var pan := Vector2.ZERO
 var bounds := Rect2()
@@ -55,7 +60,7 @@ func relayout(stage: StageDef, viewport: Vector2) -> void:
 		# Portrait stages are rotated clockwise by BattleView. Fill from the exact
 		# terrain + endpoint envelope, then unlock each content axis only when its
 		# sprite-aware envelope exceeds the viewport on that axis.
-		scale = IsoProjection.visual_height_fill_scale(stage, viewport) * BATTLE_SCALE_MULTIPLIER
+		scale = IsoProjection.visual_height_fill_scale(stage, viewport) * BATTLE_SCALE_MULTIPLIER * zoom
 		origin = IsoProjection.visual_origin_for(stage, viewport, scale)
 		bounds = _pan_bounds_for(content, _safe_rect)
 		_default_pan = Vector2(bounds.end.x, clampf(0.0, bounds.position.y, bounds.end.y))
@@ -67,7 +72,7 @@ func relayout(stage: StageDef, viewport: Vector2) -> void:
 		else:
 			pan = IsoProjection.clamp_pan(pan, bounds)
 		return
-	scale = IsoProjection.visual_height_fill_scale(stage, viewport) * BATTLE_SCALE_MULTIPLIER
+	scale = IsoProjection.visual_height_fill_scale(stage, viewport) * BATTLE_SCALE_MULTIPLIER * zoom
 	origin = IsoProjection.visual_origin_for(stage, viewport, scale)
 	bounds = _pan_bounds_for(_content_box(stage), _safe_rect)
 	_default_pan = Vector2(bounds.position.x, clampf(0.0, bounds.position.y, bounds.end.y))
@@ -82,6 +87,16 @@ func relayout(stage: StageDef, viewport: Vector2) -> void:
 
 func root_position() -> Vector2:
 	return origin + pan
+
+
+func zoom_at(position: Vector2, factor: float) -> void:
+	if _stage == null or not is_finite(factor) or factor <= 0.0:
+		return
+	var local_anchor := (position - root_position()) / scale
+	zoom = clampf(zoom * factor, MIN_ZOOM, MAX_ZOOM)
+	relayout(_stage, _viewport)
+	# Preserve the point beneath the pointer until a map boundary takes priority.
+	pan = IsoProjection.clamp_pan(position - origin - local_anchor * scale, bounds)
 
 
 func content_screen_rect() -> Rect2:
@@ -279,6 +294,16 @@ func recover_missed_release(event: InputEvent) -> void:
 ## Returns true only for a consumed map-navigation event. BattleView applies
 ## the resulting transform and marks the viewport event handled.
 func handle_input(event: InputEvent) -> bool:
+	if event is InputEventMagnifyGesture:
+		zoom_at(event.position, event.factor)
+		return true
+	if event is InputEventPanGesture:
+		if event.shift_pressed:
+			cancel_inertia()
+			pan = IsoProjection.clamp_pan(pan - event.delta * WHEEL_STEP_PX * pan_sensitivity, bounds)
+		else:
+			zoom_at(event.position, pow(WHEEL_ZOOM_STEP, clampf(-event.delta.y, -4.0, 4.0)))
+		return true
 	if event is InputEventMouseButton:
 		return _handle_button(event as InputEventMouseButton)
 	if event is InputEventScreenTouch:
@@ -307,6 +332,11 @@ func _handle_button(event: InputEventMouseButton) -> bool:
 		return _handle_primary_button(event)
 	if not event.pressed:
 		return false
+	if event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN] and not event.shift_pressed:
+		var amount := event.factor if event.factor > 0.0 else 1.0
+		var factor := pow(WHEEL_ZOOM_STEP, minf(amount, 4.0))
+		zoom_at(event.position, factor if event.button_index == MOUSE_BUTTON_WHEEL_UP else 1.0 / factor)
+		return true
 	cancel_inertia()
 	var delta := Vector2.ZERO
 	match event.button_index:

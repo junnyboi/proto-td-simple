@@ -20,15 +20,15 @@ const IVORY := Color("f5efe1")
 const GOLD := Color("d8b978")
 const MUTED := Color("aebfd0")
 const ERROR_RED := Color("ff9b93")
-const SETTINGS_PANEL_FILL := Color("07131fe0")
-const SETTINGS_SECTION_FILL := Color("091827d9")
-const SETTINGS_CONTROL_FILL := Color("050d16dc")
-const SETTINGS_CONTROL_HOVER_FILL := Color("1b2634e8")
-const SETTINGS_CONTROL_PRESSED_FILL := Color("302b24eb")
-const SETTINGS_DISABLED_FILL := Color("10172099")
-const SETTINGS_GOLD_BORDER := Color("d8b978d9")
-const SETTINGS_GOLD_BORDER_HOVER := Color("f0d28ff2")
-const SETTINGS_GOLD_BORDER_DISABLED := Color("8b795780")
+const SETTINGS_PANEL_FILL := Color("07131f")
+const SETTINGS_SECTION_FILL := Color("091827")
+const SETTINGS_CONTROL_FILL := Color("050d16")
+const SETTINGS_CONTROL_HOVER_FILL := Color("1b2634")
+const SETTINGS_CONTROL_PRESSED_FILL := Color("302b24")
+const SETTINGS_DISABLED_FILL := Color("101720")
+const SETTINGS_GOLD_BORDER := Color("d8b978")
+const SETTINGS_GOLD_BORDER_HOVER := Color("f0d28f")
+const SETTINGS_GOLD_BORDER_DISABLED := Color("8b7957")
 const TYPE_TITLE := 34
 const TYPE_TITLE_PORTRAIT := 30
 const TYPE_TITLE_COMPACT := 26
@@ -643,19 +643,19 @@ func _apply_simple_control_styles() -> void:
 
 func _apply_simple_button_style(button: BaseButton) -> void:
 	button.add_theme_stylebox_override(
-		&"normal", _simple_flat_style(SETTINGS_CONTROL_FILL, SETTINGS_GOLD_BORDER, 2, 12, 18.0, 8.0),
+		&"normal", _simple_flat_style(SETTINGS_CONTROL_FILL, SETTINGS_GOLD_BORDER, 3, 12, 18.0, 8.0),
 	)
 	button.add_theme_stylebox_override(
-		&"hover", _simple_flat_style(SETTINGS_CONTROL_HOVER_FILL, SETTINGS_GOLD_BORDER_HOVER, 2, 12, 18.0, 8.0),
+		&"hover", _simple_flat_style(SETTINGS_CONTROL_HOVER_FILL, SETTINGS_GOLD_BORDER_HOVER, 4, 12, 18.0, 8.0),
 	)
 	button.add_theme_stylebox_override(
-		&"pressed", _simple_flat_style(SETTINGS_CONTROL_PRESSED_FILL, SETTINGS_GOLD_BORDER_HOVER, 2, 12, 18.0, 8.0),
+		&"pressed", _simple_flat_style(SETTINGS_CONTROL_PRESSED_FILL, SETTINGS_GOLD_BORDER_HOVER, 4, 12, 18.0, 8.0),
 	)
 	button.add_theme_stylebox_override(
-		&"hover_pressed", _simple_flat_style(SETTINGS_CONTROL_PRESSED_FILL, SETTINGS_GOLD_BORDER_HOVER, 2, 12, 18.0, 8.0),
+		&"hover_pressed", _simple_flat_style(SETTINGS_CONTROL_PRESSED_FILL, SETTINGS_GOLD_BORDER_HOVER, 4, 12, 18.0, 8.0),
 	)
 	button.add_theme_stylebox_override(
-		&"disabled", _simple_flat_style(SETTINGS_DISABLED_FILL, SETTINGS_GOLD_BORDER_DISABLED, 1, 12, 18.0, 8.0),
+		&"disabled", _simple_flat_style(SETTINGS_DISABLED_FILL, SETTINGS_GOLD_BORDER_DISABLED, 3, 12, 18.0, 8.0),
 	)
 	button.add_theme_stylebox_override(
 		&"focus", _simple_outline_style(SETTINGS_GOLD_BORDER_HOVER, 3, 12),
@@ -815,7 +815,7 @@ func _apply_responsive_layout() -> void:
 	var frame_style := _simple_flat_style(
 		SETTINGS_PANEL_FILL,
 		SETTINGS_GOLD_BORDER,
-		2,
+		3,
 		18,
 		frame_content_margin,
 		frame_content_margin,
@@ -852,7 +852,7 @@ func _apply_responsive_layout() -> void:
 			var section_style := _simple_flat_style(
 				SETTINGS_SECTION_FILL,
 				SETTINGS_GOLD_BORDER,
-				2,
+				3,
 				16,
 				section_padding,
 				section_padding,

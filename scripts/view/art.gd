@@ -24,9 +24,9 @@ static func _load_manifests() -> void:
 		or _manifest_error
 	):
 		return
-	_manifest = load("res://assets/manifest.tres") as AssetManifest
-	_supplemental_manifest = load("res://assets/act1_shared_manifest.tres") as AssetManifest
-	_enemy_static_manifest = load("res://assets/enemy_static_manifest.tres") as AssetManifest
+	_manifest = load("res://assets/template/manifest.tres") as AssetManifest
+	_supplemental_manifest = load("res://assets/template/act1_shared_manifest.tres") as AssetManifest
+	_enemy_static_manifest = load("res://assets/template/enemy_static_manifest.tres") as AssetManifest
 	if (
 		_manifest == null
 			or _supplemental_manifest == null

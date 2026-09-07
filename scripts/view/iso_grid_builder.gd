@@ -10,7 +10,7 @@ const ProtoIsometricTerrainScript := preload("res://scripts/view/proto_isometric
 const EndpointLandmarkScript := preload("res://scripts/view/battle_endpoint_landmark.gd")
 const SPAWN_LANDMARK_ID := &"world.act1.spawn"
 const CORE_LANDMARK_ID := &"world.act1.core"
-const RESTORATION_SEAL := preload("res://assets/world/act2/restoration_lattice_seal.webp")
+const RESTORATION_SEAL := preload("res://assets/template/world/act2/restoration_lattice_seal.webp")
 const RESTORATION_DISPLAY_SIZE := Vector2(72.0, 40.0)
 
 
@@ -118,6 +118,7 @@ static func _add_endpoint_landmarks(
 				cell,
 				art_id,
 				"%s_%d_%d" % [prefix, x, y],
+				stage.is_elevated_platform(cell),
 			):
 				return false
 			count += 1
@@ -129,14 +130,15 @@ static func _add_landmark(
 	cell: Vector2i,
 	art_id: StringName,
 	node_name: String,
+	lifted: bool = false,
 ) -> bool:
 	var sprite := EndpointLandmarkScript.new() as BattleEndpointLandmark
 	sprite.name = node_name
 	if not sprite.setup(art_id):
 		sprite.free()
 		return false
-	var pivot := Vector2(sprite.size.x * 0.5, sprite.size.y)
-	sprite.position = IsoProjection.face_center(cell) - pivot
+	sprite.position = IsoProjection.endpoint_anchor(cell, lifted) + IsoProjection.endpoint_rect(art_id).position
+	sprite.pivot_offset = -IsoProjection.endpoint_rect(art_id).position
 	sprite.z_index = IsoProjection.tile_z(cell) + 1
 	grid_root.add_child(sprite)
 	return true

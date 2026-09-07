@@ -45,19 +45,19 @@ func _test_argument_contract() -> void:
 
 func _test_resource_routing() -> void:
 	_check(
-		LoaderType.pack_id_for_resource("res://assets/sprites/enemies/static/breacher.png").is_empty(),
+		LoaderType.pack_id_for_resource("res://assets/template/sprites/enemies/static/breacher.png").is_empty(),
 		"core static enemy path must not route to a runtime pack",
 	)
 	_check(
-		LoaderType.pack_id_for_resource("res://assets/sprites/operators/animated/swordmaster/female/idle_ne.webp") == "operator-swordmaster",
+		LoaderType.pack_id_for_resource("res://assets/template/sprites/operators/animated/swordmaster/female/idle_ne.webp") == "operator-swordmaster",
 		"retained operator path did not route to class pack",
 	)
 	_check(
-		LoaderType.pack_id_for_resource("res://assets/sprites/operators/animated/sword_saint/female/idle_ne.webp").is_empty(),
+		LoaderType.pack_id_for_resource("res://assets/template/sprites/operators/animated/sword_saint/female/idle_ne.webp").is_empty(),
 		"removed class atlas still routed to a content pack",
 	)
 	_check(
-		LoaderType.pack_id_for_resource("res://assets/sprites/operators/animated/recruit_female/idle_ne.webp").is_empty(),
+		LoaderType.pack_id_for_resource("res://assets/template/sprites/operators/animated/recruit_female/idle_ne.webp").is_empty(),
 		"Recruit atlas was incorrectly routed out of the core pack",
 	)
 	_check(
@@ -115,9 +115,9 @@ func _test_export_boundary() -> void:
 		return
 	var source := file.get_as_text()
 	file.close()
-	_check(not source.contains("assets/sprites/enemies/static"), "core static enemy sprites leaked into Web exclusions")
+	_check(not source.contains("assets/template/sprites/enemies/static"), "core static enemy sprites leaked into Web exclusions")
 	for class_id: String in LoaderType.ADVANCED_CLASSES:
-		var pattern := "assets/sprites/operators/animated/%s/*/*.webp" % class_id
+		var pattern := "assets/template/sprites/operators/animated/%s/*/*.webp" % class_id
 		_check(source.contains(pattern), "advanced core exclusion is missing: %s" % pattern)
 	_check(not source.contains("sword_saint/*/*.webp"), "removed class atlas leaked into exclusions")
 	_check(not source.contains("recruit_female/*/*.webp"), "Recruit atlas leaked into exclusions")

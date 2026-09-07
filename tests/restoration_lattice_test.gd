@@ -84,7 +84,7 @@ func _test_restoration_cycles() -> void:
 
 
 func _test_runtime_asset_and_projection() -> void:
-	var texture := load("res://assets/world/act2/restoration_lattice_seal.webp") as Texture2D
+	var texture := load("res://assets/template/world/act2/restoration_lattice_seal.webp") as Texture2D
 	_check(texture != null, "restoration lattice runtime texture failed to load")
 	if texture != null:
 		_check(

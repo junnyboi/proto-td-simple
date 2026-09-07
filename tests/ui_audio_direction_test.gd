@@ -32,7 +32,7 @@ func _run() -> void:
 		var previous_resolved_id: StringName = sfx.call("last_resolved_id")
 		for id: StringName in MUTED_UI_IDS:
 			_check(sfx.call("resolved_id_for", id) == id, "%s resolves directly" % id)
-			var stream := load("res://assets/sfx/ui/%s.wav" % id) as AudioStream
+			var stream := load("res://assets/template/bundled/sfx/ui/%s.wav" % id) as AudioStream
 			_check(stream != null, "%s stream loads" % id)
 			if stream != null:
 				_check(stream.get_length() >= 0.1, "%s retains its authored source" % id)
@@ -96,7 +96,7 @@ func _run() -> void:
 				bool(sfx.call("hover_is_bound", bound_control)),
 				"%s receives global hover binding" % bound_control.get_class(),
 			)
-		var click_stream := load("res://assets/sfx/ui/ui_click.wav") as AudioStream
+		var click_stream := load("res://assets/template/bundled/sfx/ui/ui_click.wav") as AudioStream
 		_check(click_stream != null, "global button click stream loads")
 		if click_stream != null:
 			_check(click_stream.get_length() >= 1.0, "global click retains its authored body")

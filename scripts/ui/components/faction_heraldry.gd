@@ -10,16 +10,16 @@ const ORDER: Array[StringName] = [
 const ACTIVE_FACTION: StringName = &"lunaris_reliquary"
 
 const SYMBOLS := {
-	&"solcrest_accord": preload("res://assets/ui/factions/solcrest_accord_symbol.webp"),
-	&"vesper_circuit": preload("res://assets/ui/factions/vesper_circuit_symbol.webp"),
-	&"lunaris_reliquary": preload("res://assets/ui/factions/lunaris_reliquary_symbol.png"),
-	&"crimson_aegis": preload("res://assets/ui/factions/crimson_aegis_symbol.webp"),
+	&"solcrest_accord": preload("res://assets/template/ui/factions/solcrest_accord_symbol.webp"),
+	&"vesper_circuit": preload("res://assets/template/ui/factions/vesper_circuit_symbol.webp"),
+	&"lunaris_reliquary": preload("res://assets/template/ui/factions/lunaris_reliquary_symbol.png"),
+	&"crimson_aegis": preload("res://assets/template/ui/factions/crimson_aegis_symbol.webp"),
 }
 const BANNERS := {
-	&"solcrest_accord": preload("res://assets/ui/factions/solcrest_accord_banner.webp"),
-	&"vesper_circuit": preload("res://assets/ui/factions/vesper_circuit_banner.webp"),
-	&"lunaris_reliquary": preload("res://assets/ui/factions/lunaris_reliquary_banner.webp"),
-	&"crimson_aegis": preload("res://assets/ui/factions/crimson_aegis_banner.webp"),
+	&"solcrest_accord": preload("res://assets/template/ui/factions/solcrest_accord_banner.webp"),
+	&"vesper_circuit": preload("res://assets/template/ui/factions/vesper_circuit_banner.webp"),
+	&"lunaris_reliquary": preload("res://assets/template/ui/factions/lunaris_reliquary_banner.webp"),
+	&"crimson_aegis": preload("res://assets/template/ui/factions/crimson_aegis_banner.webp"),
 }
 const NAMES := {
 	&"solcrest_accord": "SOLCREST ACCORD",

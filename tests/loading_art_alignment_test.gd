@@ -1,7 +1,7 @@
 extends SceneTree
 
 const COVER_SCRIPT := preload("res://scripts/ui/components/top_aligned_cover.gd")
-const LOADING_ART := preload("res://assets/loading/lunaris_reliquary_loading.png")
+const LOADING_ART := preload("res://assets/template/loading/lunaris_reliquary_loading.png")
 
 var _failures: Array[String] = []
 

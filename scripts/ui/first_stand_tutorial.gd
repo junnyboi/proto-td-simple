@@ -9,9 +9,9 @@ const AETHERIA_THEME := preload("res://scripts/ui/components/aetheria_theme.gd")
 const AETHERIA_PANEL := preload("res://scripts/ui/components/aetheria_panel.gd")
 const STYLE := preload("res://scripts/ui/components/lunaris_ops_style.gd")
 
-const ROUTE_TEXTURE := preload("res://assets/tutorial/tutorial_route_marker.png")
-const DEPLOY_TEXTURE := preload("res://assets/tutorial/tutorial_deploy_gesture.png")
-const BLOCK_TEXTURE := preload("res://assets/tutorial/tutorial_block_shield.png")
+const ROUTE_TEXTURE := preload("res://assets/template/tutorial/tutorial_route_marker.png")
+const DEPLOY_TEXTURE := preload("res://assets/template/tutorial/tutorial_deploy_gesture.png")
+const BLOCK_TEXTURE := preload("res://assets/template/tutorial/tutorial_block_shield.png")
 
 const RECOMMENDED_CELL := Vector2i(3, 2)
 const CARD_Z := 92

@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1")
 id = &"title_lunaris"
-stream_path = "res://assets/music/lunaris_astra_memoriam_title.ogg"
+stream_path = "res://assets/template/bundled/music/lunaris_astra_memoriam_title.ogg"
 bpm = 70.0
 beats_per_bar = 4
 loop = true

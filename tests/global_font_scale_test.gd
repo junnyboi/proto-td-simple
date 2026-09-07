@@ -3,7 +3,7 @@ extends SceneTree
 const GameTypographyType := preload("res://scripts/ui/game_typography.gd")
 const AetheriaThemeType := preload("res://scripts/ui/components/aetheria_theme.gd")
 const LunarisOpsType := preload("res://scripts/ui/components/lunaris_ops_style.gd")
-const TitleSettingsType := preload("res://scripts/ui/title_settings.gd")
+const TITLE_SETTINGS_PATH := "res://scripts/ui/title_settings.gd"
 
 var _failures: Array[String] = []
 
@@ -76,9 +76,10 @@ func _check_lunaris_roles() -> void:
 
 
 func _check_settings_multiplier() -> void:
-	var constants: Dictionary = (TitleSettingsType as Script).get_script_constant_map()
+	var source := FileAccess.get_file_as_string(TITLE_SETTINGS_PATH)
+	_check(not source.is_empty(), "Title Settings script is unavailable")
 	_check(
-		is_equal_approx(float(constants.get("TITLE_FONT_SCALE", -1.0)), 1.5),
+		source.contains("const TITLE_FONT_SCALE := 1.5"),
 		"Title Settings font multiplier is not the intentional 1.5",
 	)
 

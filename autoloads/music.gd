@@ -3,8 +3,8 @@ extends Node
 ## Sole runtime music owner. Playback is presentation-only: it never enters the
 ## deterministic BattleModel, state hash, save data, ticket, or replay.
 
-const CATALOG_PATH := "res://assets/music/catalog.tres"
-const MUSIC_CATALOG_SCRIPT: GDScript = preload("res://assets/music/music_catalog.gd")
+const CATALOG_PATH := "res://bundled/music/catalog.tres"
+const MUSIC_CATALOG_SCRIPT: GDScript = preload("res://bundled/music/music_catalog.gd")
 const AUDIO_CUE_SCRIPT: GDScript = preload("res://data/presentation/audio/audio_cue.gd")
 const MUSIC_PROFILE_SCRIPT: GDScript = preload("res://data/presentation/audio/music_profile.gd")
 const PROFILE_PATHS := {

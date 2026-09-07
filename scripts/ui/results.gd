@@ -25,7 +25,7 @@ const DefeatAmbientLayerType := preload(
 )
 const Style := preload("res://scripts/ui/components/lunaris_ops_style.gd")
 const StagingSkinType := preload("res://scripts/ui/components/staging_skin.gd")
-const COMMAND_BACKDROP := preload("res://assets/loading/command_backdrop.png")
+const COMMAND_BACKDROP := preload("res://assets/template/loading/command_backdrop.png")
 const RESULT_ACTION_WIDTH := 200.0
 const RESULT_COMMAND_ACTION_WIDTH := 350.0
 const RESULT_CLEAR_COMMAND_ACTION_WIDTH := RESULT_COMMAND_ACTION_WIDTH
@@ -43,9 +43,9 @@ const RESULT_CLEAR_VERTICAL_PADDING := 24.0
 const RESULT_YIELD_PADDING := 100.0
 const RESULT_STAR_SIZE := 58.0
 const RESULT_STAR_PORTRAIT_SIZE := 46.0
-const RESULT_HEADER_FILL := Color("09131ed9")
-const RESULT_HEADER_BORDER := Color("d9b96ee8")
-const RESULT_HEADER_BORDER_WIDTH := 2
+const RESULT_HEADER_FILL := Color("09131e")
+const RESULT_HEADER_BORDER := Color("d9b96e")
+const RESULT_HEADER_BORDER_WIDTH := 3
 const RESULT_HEADER_CORNER_RADIUS := 14
 const REWARD_REVEAL_STAGGER_SECONDS := 0.14
 const REWARD_REVEAL_DURATION_SECONDS := 0.56
@@ -903,14 +903,14 @@ func _fit_result_action_width(button: AetheriaButtonType, minimum_width: float) 
 
 
 func _apply_result_action_style(button: AetheriaButtonType, primary: bool) -> void:
-	var normal_fill := Color("30291af5") if primary else Color("09131ef2")
-	var hover_fill := Color("493a1dfa") if primary else Color("102735f7")
-	var pressed_fill := Color("1b160dfd") if primary else Color("061019fc")
-	var normal_edge := Color(Style.GOLD, 0.82) if primary else Color(Style.CYAN, 0.54)
-	button.add_theme_stylebox_override(&"normal", _result_action_box(normal_fill, normal_edge, 1))
-	button.add_theme_stylebox_override(&"hover", _result_action_box(hover_fill, Style.GOLD if primary else Style.CYAN, 2))
-	button.add_theme_stylebox_override(&"pressed", _result_action_box(pressed_fill, Style.GOLD, 2))
-	button.add_theme_stylebox_override(&"disabled", _result_action_box(Color("111923e6"), Color(Style.MUTED, 0.26), 1))
+	var normal_fill := Color("30291a") if primary else Color("09131e")
+	var hover_fill := Color("493a1d") if primary else Color("102735")
+	var pressed_fill := Color("1b160d") if primary else Color("061019")
+	var normal_edge := Style.GOLD if primary else Style.CYAN_DIM
+	button.add_theme_stylebox_override(&"normal", _result_action_box(normal_fill, normal_edge, 3))
+	button.add_theme_stylebox_override(&"hover", _result_action_box(hover_fill, Style.GOLD if primary else Style.CYAN, 4))
+	button.add_theme_stylebox_override(&"pressed", _result_action_box(pressed_fill, Style.GOLD, 4))
+	button.add_theme_stylebox_override(&"disabled", _result_action_box(Color("111923"), Style.MUTED, 3))
 	button.add_theme_stylebox_override(&"focus", StagingSkinType.transparent_focus_style(Style.CYAN))
 	button.add_theme_font_size_override(&"font_size", RESULT_ACTION_FONT_SIZE)
 	var presentation := button.get_node_or_null("PresentationLabel") as AetheriaLabelType
@@ -931,14 +931,11 @@ func _result_action_box(fill: Color, edge: Color, border_width: int) -> StyleBox
 	style.bg_color = fill
 	style.border_color = edge
 	style.set_border_width_all(border_width)
-	style.set_corner_radius_all(4)
+	style.set_corner_radius_all(12)
 	style.content_margin_left = RESULT_ACTION_HORIZONTAL_PADDING
 	style.content_margin_top = RESULT_ACTION_VERTICAL_PADDING
 	style.content_margin_right = RESULT_ACTION_HORIZONTAL_PADDING
 	style.content_margin_bottom = RESULT_ACTION_VERTICAL_PADDING
-	style.shadow_color = Color(0.0, 0.0, 0.0, 0.34)
-	style.shadow_size = 4
-	style.shadow_offset = Vector2(0.0, 2.0)
 	return style
 
 
@@ -972,10 +969,10 @@ func _set_panel_padding(
 
 func _apply_portrait_information_panel(panel: PanelContainer) -> void:
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color(Style.INK, 0.72)
-	style.border_color = Color(Style.GOLD, 0.28)
-	style.set_border_width_all(1)
-	style.set_corner_radius_all(3)
+	style.bg_color = Style.INK
+	style.border_color = Style.GOLD_DIM
+	style.set_border_width_all(3)
+	style.set_corner_radius_all(14)
 	style.content_margin_left = 24.0
 	style.content_margin_top = 24.0
 	style.content_margin_right = 24.0

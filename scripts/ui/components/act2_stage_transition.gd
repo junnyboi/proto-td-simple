@@ -4,7 +4,7 @@ extends CanvasLayer
 signal entry_finished
 signal exit_finished
 
-const SEAL_TEXTURE := preload("res://assets/world/act2/restoration_lattice_seal.webp")
+const SEAL_TEXTURE := preload("res://assets/template/world/act2/restoration_lattice_seal.webp")
 const CYAN := Color("88e8e4")
 const GOLD := Color("d6b96c")
 const INK := Color("070b16")

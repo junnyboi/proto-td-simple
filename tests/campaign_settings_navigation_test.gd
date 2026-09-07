@@ -46,10 +46,17 @@ func _run() -> void:
 	_check(mission_card != null, "Campaign mission card is missing")
 	if mission_card != null:
 		for state: StringName in [&"normal", &"hover", &"pressed", &"disabled"]:
-			_check(
-				mission_card.get_theme_stylebox(state) is StyleBoxTexture,
-				"Campaign mission card %s background was not restored" % state,
-			)
+			var surface := mission_card.get_theme_stylebox(state) as StyleBoxFlat
+			_check(surface != null, "Campaign mission card %s is not a solid fill" % state)
+			if surface != null:
+				_check(is_equal_approx(surface.bg_color.a, 1.0), "Campaign mission card %s is not opaque" % state)
+				_check(surface.border_width_left >= 3, "Campaign mission card %s border is not thick" % state)
+				_check(surface.corner_radius_top_left >= 12, "Campaign mission card %s border is not rounded" % state)
+		var normal := mission_card.get_theme_stylebox(&"normal") as StyleBoxFlat
+		var hover := mission_card.get_theme_stylebox(&"hover") as StyleBoxFlat
+		_check(normal != null and hover != null and not normal.bg_color.is_equal_approx(hover.bg_color), "Campaign mission card hover does not change its solid fill")
+		_check(mission_card.get_node_or_null("NextOperationSparkles") == null, "Campaign mission card retained ornamental sparkles")
+		_check(mission_card.get_node_or_null("RouteHoverBackground") == null, "Campaign mission card retained a decorative hover overlay")
 	_check(settings_button != null and settings_button.icon == null, "Campaign Settings still displays an icon")
 	_check(back_label != null and settings_label != null, "Campaign utility presentation labels are missing")
 	_check(

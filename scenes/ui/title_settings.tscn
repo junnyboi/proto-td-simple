@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/ui/title_settings.gd" id="1_script"]
 [ext_resource type="Theme" path="res://data/presentation/ui/threshold_theme.tres" id="2_theme"]
 [ext_resource type="PackedScene" path="res://scenes/ui/components/aetheria_locale_selector.tscn" id="3_locale"]
-[ext_resource type="Texture2D" path="res://assets/ui/staging/icons/lunaris_seal.png" id="4_seal"]
+[ext_resource type="Texture2D" path="res://assets/template/ui/staging/icons/lunaris_seal.png" id="4_seal"]
 
 [node name="TitleSettings" type="Control"]
 layout_mode = 3

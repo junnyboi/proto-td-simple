@@ -99,7 +99,11 @@ func _run() -> void:
 		if button == null:
 			continue
 		for state: StringName in [&"normal", &"hover", &"pressed", &"disabled", &"focus"]:
-			_check_flat_style(button.get_theme_stylebox(state), "%s %s" % [button_name, state])
+			_check_flat_style(
+				button.get_theme_stylebox(state),
+				"%s %s" % [button_name, state],
+				state == &"focus",
+			)
 
 	var locale_row := settings.find_child("LocaleButtons", true, false) as HBoxContainer
 	var english_button := settings.find_child("EnglishLocaleButton", true, false) as Button
@@ -163,14 +167,17 @@ func _check_control_height(settings: Control, node_name: String, expected: float
 		)
 
 
-func _check_flat_style(style: StyleBox, context: String) -> void:
+func _check_flat_style(style: StyleBox, context: String, outline_only := false) -> void:
 	_check(style is StyleBoxFlat, "%s still uses a stylized background" % context)
 	if not style is StyleBoxFlat:
 		return
 	var flat := style as StyleBoxFlat
-	_check(flat.bg_color.a < 1.0, "%s fill is not translucent" % context)
-	_check(flat.border_width_left > 0, "%s is missing its gold border" % context)
-	_check(flat.corner_radius_top_left > 0, "%s is missing rounded corners" % context)
+	if outline_only:
+		_check(flat.bg_color.a <= 0.01, "%s focus ring paints another background" % context)
+	else:
+		_check(is_equal_approx(flat.bg_color.a, 1.0), "%s fill is not opaque" % context)
+	_check(flat.border_width_left >= 3, "%s border is not thick" % context)
+	_check(flat.corner_radius_top_left >= 12, "%s border is not sufficiently rounded" % context)
 	_check(flat.border_color.r > flat.border_color.b, "%s border is not gold-toned" % context)
 
 

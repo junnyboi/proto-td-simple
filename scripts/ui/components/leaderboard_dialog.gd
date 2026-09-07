@@ -544,7 +544,7 @@ func _apply_simple_gold_field(field: LineEdit) -> void:
 	)
 	field.add_theme_stylebox_override(
 		&"read_only",
-		Style.simple_gold_surface(Color(0.025, 0.035, 0.05, 0.64), 12.0, 12, 1),
+		Style.simple_gold_surface(Color("111923"), 12.0, 12, 3),
 	)
 
 

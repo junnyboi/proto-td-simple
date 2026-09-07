@@ -191,7 +191,7 @@ class SamplingAndChromaTests(unittest.TestCase):
             manifest.parent.mkdir(parents=True)
             manifest.write_text(
                 '[gd_resource type="Resource" script_class="AssetManifest" format=3]\n\n'
-                '[ext_resource type="Script" path="res://assets/asset_manifest.gd" id="1_g6syk"]\n\n'
+                '[ext_resource type="Script" path="res://assets/template/asset_manifest.gd" id="1_g6syk"]\n\n'
                 '[resource]\nscript = ExtResource("1_g6syk")\nentries = {\n'
                 '&"fixture": {\n"animations": {\n&"default": {\n&"fps": 1.0,\n'
                 '&"length": 1,\n&"loop": true,\n&"start": 0\n}\n},\n"frames": 1,\n'

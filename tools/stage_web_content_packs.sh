@@ -71,7 +71,7 @@ operator_resources=(
 for class_id in "${classes[@]}"; do
   class_files=()
   for relative_path in "${operator_resources[@]}"; do
-    class_file="assets/sprites/operators/animated/${class_id}/${relative_path}"
+    class_file="assets/template/sprites/operators/animated/${class_id}/${relative_path}"
     if [[ ! -f "$ROOT/$class_file" ]]; then
       printf 'Missing required resource for operator-%s: %s\n' "$class_id" "$class_file" >&2
       exit 1
@@ -79,7 +79,7 @@ for class_id in "${classes[@]}"; do
     class_files+=("$class_file")
   done
   actual_count="$(
-    find "$ROOT/assets/sprites/operators/animated/${class_id}" \
+    find "$ROOT/assets/template/sprites/operators/animated/${class_id}" \
       -mindepth 2 -maxdepth 2 -type f -name '*.webp' -print \
       | wc -l \
       | tr -d '[:space:]'

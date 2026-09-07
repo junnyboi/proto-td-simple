@@ -441,7 +441,7 @@ static func parse_argument(argument: String) -> Dictionary:
 
 
 static func pack_id_for_resource(path: String) -> String:
-	const prefix := "res://assets/sprites/operators/animated/"
+	const prefix := "res://assets/template/sprites/operators/animated/"
 	if not path.begins_with(prefix):
 		return ""
 	var relative := path.substr(prefix.length())

@@ -17,8 +17,6 @@ const ENEMY_Z_OFFSET := 1
 const OPERATOR_Z_OFFSET := 2
 ## Sprite bottom-center sits this far below its cell's face center.
 const FEET_OFFSET := 6.0
-const SPAWN_LANDMARK_SIZE := Vector2(64.0, 64.0)
-const CORE_LANDMARK_SIZE := Vector2(64.0, 80.0)
 
 
 ## Continuous cell space -> grid-local screen point.
@@ -63,6 +61,23 @@ static func face_center(cell: Vector2i, lifted: bool = false) -> Vector2:
 	if lifted:
 		center.y -= ELEV_LIFT_PX
 	return center
+
+
+## Endpoint artwork contacts the front/bottom corner of its owning top face.
+static func endpoint_anchor(cell: Vector2i, lifted: bool = false) -> Vector2:
+	return face_center(cell, lifted) + Vector2(0.0, TILE_H * 0.5)
+
+
+## Aspect-fit includes letterboxing; contact metadata is in native frame pixels.
+## Keep this rectangle shared by rendering and camera framing.
+static func endpoint_rect(art_id: StringName) -> Rect2:
+	var native_size := Vector2(Art.size(art_id))
+	var metadata := Art.metadata(art_id)
+	var display_size := Vector2(metadata.get("display_size", native_size))
+	var contact := Vector2(metadata.get("ground_contact", Vector2(native_size.x * 0.5, native_size.y)))
+	var fit := minf(display_size.x / native_size.x, display_size.y / native_size.y)
+	var inset := (display_size - native_size * fit) * 0.5
+	return Rect2(-(inset + contact * fit), display_size)
 
 
 ## An origin-centered face diamond (top, right, bottom, left) at the given
@@ -164,14 +179,9 @@ static func visual_box(stage: StageDef) -> Rect2:
 			var tile := stage.tile_at(cell)
 			if tile != StageDef.Tile.SPAWN and tile != StageDef.Tile.BASE:
 				continue
-			var landmark_size := (
-				SPAWN_LANDMARK_SIZE if tile == StageDef.Tile.SPAWN else CORE_LANDMARK_SIZE
-			)
-			var center := face_center(cell)
-			var landmark_box := Rect2(
-				center - Vector2(landmark_size.x * 0.5, landmark_size.y),
-				landmark_size,
-			)
+			var art_id := &"world.act1.spawn" if tile == StageDef.Tile.SPAWN else &"world.act1.core"
+			var landmark_box := endpoint_rect(art_id)
+			landmark_box.position += endpoint_anchor(cell, stage.is_elevated_platform(cell))
 			result = result.merge(landmark_box)
 	return result
 
