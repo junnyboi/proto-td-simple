@@ -190,6 +190,21 @@ func _run() -> void:
 	root.size = NARROW
 	for _frame: int in range(3):
 		await process_frame
+	var previous_dp := model.dp
+	var previous_killed := model.killed
+	var text_scale := root.get_node("TextScale")
+	var previous_text_scale := float(text_scale.call("value"))
+	model.dp = 99999999
+	model.killed = 99999999
+	text_scale.call("set_scale", 1.5)
+	for _frame: int in range(4):
+		await process_frame
+	_check(hud.get_visible_line_count() == hud.get_line_count(), "narrow 150% HUD hides long counters")
+	_check(controls_deck.position.y >= hud.get_rect().end.y + 8.0, "battle commands overlap the taller 150% HUD")
+	_check(deployment_deck.position.y >= controls_deck.get_rect().end.y + 8.0, "portrait deployment roster overlaps the larger battle controls")
+	model.dp = previous_dp
+	model.killed = previous_killed
+	text_scale.call("set_scale", previous_text_scale)
 	root.size = SHORT
 	for _frame: int in range(3):
 		await process_frame

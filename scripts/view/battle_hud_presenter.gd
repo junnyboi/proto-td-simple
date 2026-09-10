@@ -13,8 +13,8 @@ static func create(font_size: int, z_index: int, viewport: Vector2) -> Label:
 	var hud := Label.new()
 	hud.name = "BattleHud"
 	hud.position = Vector2(16, 8)
-	hud.autowrap_mode = TextServer.AUTOWRAP_OFF
-	hud.clip_text = true
+	hud.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	hud.clip_text = false
 	hud.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	hud.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	Style.apply_label(hud, &"body")
@@ -34,13 +34,23 @@ static func create(font_size: int, z_index: int, viewport: Vector2) -> Label:
 static func relayout(hud: Label, viewport: Vector2) -> void:
 	if hud == null:
 		return
+	var font_size := hud.get_theme_font_size(&"font_size")
+	var layout_key := [viewport, hud.text, font_size]
+	if hud.get_meta(&"hud_layout_key", []) == layout_key:
+		return
+	hud.set_meta(&"hud_layout_key", layout_key)
 	var compact := _uses_compact_layout(viewport)
-	hud.position = Vector2(12, 8) if compact else Vector2(16, 8)
-	hud.size = (
-		Vector2(viewport.x * 0.50, 164.0)
-		if compact
-		else Vector2(viewport.x - 32.0, 100.0)
+	var margin := 12.0 if compact else 16.0
+	var width := maxf(1.0, viewport.x - margin * 2.0)
+	var padding := hud.get_theme_stylebox(&"normal").get_minimum_size()
+	var text_size := hud.get_theme_font(&"font").get_multiline_string_size(
+		hud.text, HORIZONTAL_ALIGNMENT_CENTER, maxf(1.0, width - padding.x), font_size,
+		-1, TextServer.BREAK_MANDATORY | TextServer.BREAK_WORD_BOUND | TextServer.BREAK_ADAPTIVE,
 	)
+	hud.position = Vector2(margin, 8.0)
+	# Keep every counter visible at the selected accessibility size. The command
+	# deck follows this measured height instead of overlapping a taller HUD.
+	hud.size = Vector2(width, maxf(164.0 if compact else 100.0, ceilf(text_size.y + padding.y)))
 
 
 static func text_for(snapshot: Dictionary, viewport: Vector2) -> String:

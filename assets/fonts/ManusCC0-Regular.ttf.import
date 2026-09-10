@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://don5nqlanjnbe"
-path="res://.godot/imported/Figtree.ttf-6320d2ba9e06bf2fda9f5fda1d8bedf4.fontdata"
+uid="uid://w44x76bmfw8s"
+path="res://.godot/imported/ManusCC0-Regular.ttf-faba95256d5f309b7c8b1ba61b4ec91b.fontdata"
 
 [deps]
 
-source_file="res://assets/fonts/Figtree.ttf"
-dest_files=["res://.godot/imported/Figtree.ttf-6320d2ba9e06bf2fda9f5fda1d8bedf4.fontdata"]
+source_file="res://assets/fonts/ManusCC0-Regular.ttf"
+dest_files=["res://.godot/imported/ManusCC0-Regular.ttf-faba95256d5f309b7c8b1ba61b4ec91b.fontdata"]
 
 [params]
 
@@ -19,7 +19,7 @@ disable_embedded_bitmaps=true
 multichannel_signed_distance_field=false
 msdf_pixel_range=8
 msdf_size=48
-allow_system_fallback=true
+allow_system_fallback=false
 force_autohinter=false
 modulate_color_glyphs=false
 hinting=3

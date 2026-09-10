@@ -46,6 +46,7 @@ var _speed_button: Button = null
 var _resign_button: Button = null
 var _paused_label: Label = null
 var _controls_deck: PanelContainer = null
+var _hud_bottom := 0.0
 var _controls_box: GridContainer = null
 var _confirm: Control = null
 var _confirm_dialog: Dictionary = {}
@@ -97,7 +98,9 @@ func command_deck_rect() -> Rect2:
 	return _controls_deck.get_global_rect() if _controls_deck != null else Rect2()
 
 
-func relayout() -> void:
+func relayout(hud_bottom := -1.0) -> void:
+	if hud_bottom >= 0.0:
+		_hud_bottom = hud_bottom
 	size = get_viewport().get_visible_rect().size
 	if not _confirm_dialog.is_empty():
 		DialogType.relayout(_confirm_dialog)
@@ -113,7 +116,7 @@ func relayout() -> void:
 		var target_width := minf(size.x - 32.0, 360.0 if compact else 620.0)
 		_controls_deck.custom_minimum_size = Vector2(target_width, 0.0)
 		_controls_deck.reset_size()
-		var y := 180.0 if portrait else 112.0
+		var y := maxf(180.0 if portrait else 112.0, _hud_bottom)
 		var deck_size := _controls_deck.get_combined_minimum_size()
 		_controls_deck.size = Vector2(maxf(target_width, deck_size.x), deck_size.y)
 		_controls_deck.position = Vector2(size.x - _controls_deck.size.x - 16.0, y)

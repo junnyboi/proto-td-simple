@@ -12,14 +12,6 @@
   },
   "bundles": {},
   "assets": {
-    "assets/fonts/Figtree.ttf": {
-      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/05/game-template/game-td/2026.09.05-figtree-v1/26ad3db9b31ff7dde67a91ff515d022d2f495cd506590699cf264f0bfe6fb714/assets/fonts/Figtree.ttf",
-      "sha256": "sha256:26ad3db9b31ff7dde67a91ff515d022d2f495cd506590699cf264f0bfe6fb714",
-      "size": 62712,
-      "assetType": "font",
-      "groupId": "fonts",
-      "used": true
-    },
     "assets/template/bundled/fonts/Cinzel-Variable.ttf": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/05/game-template/game-td/2026-09-05-init-audio-v1/f4d83d34d1f6c741193e4acf4b3dff9531e5a67b6aa65228d00a7db72a4e0f34/assets/template/bundled/fonts/Cinzel-Variable.ttf",
       "sha256": "sha256:f4d83d34d1f6c741193e4acf4b3dff9531e5a67b6aa65228d00a7db72a4e0f34",
@@ -1617,6 +1609,30 @@
       "sha256": "sha256:16bae5e73b64e27d53d9d0987ec32f4d20b1573a540270a1d1ab096cb26aeb68",
       "size": 7151520,
       "assetType": "image",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/fonts/ManusCC0-Bold.ttf": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/10/game-template/game-td/2026.09.10-manuscc0-v1.100/099f6d50114f83533f689ddc37028fcff2bd2a2c4871a332488c1a433f440804/Assets/Template/fonts/ManusCC0-Bold.ttf",
+      "sha256": "sha256:099f6d50114f83533f689ddc37028fcff2bd2a2c4871a332488c1a433f440804",
+      "size": 26820,
+      "assetType": "font",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/fonts/ManusCC0-Medium.ttf": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/10/game-template/game-td/2026.09.10-manuscc0-v1.100/f28a0f3aee8f427798bf972504d5640d5d28b8692a73102ac39556fa7ffb1ee2/Assets/Template/fonts/ManusCC0-Medium.ttf",
+      "sha256": "sha256:f28a0f3aee8f427798bf972504d5640d5d28b8692a73102ac39556fa7ffb1ee2",
+      "size": 26912,
+      "assetType": "font",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/fonts/ManusCC0-Regular.ttf": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/10/game-template/game-td/2026.09.10-manuscc0-v1.100/b5124032e8e51434e05a51c327a9a614ac96b85ecf9b6cdcfc58834a9ae1347d/Assets/Template/fonts/ManusCC0-Regular.ttf",
+      "sha256": "sha256:b5124032e8e51434e05a51c327a9a614ac96b85ecf9b6cdcfc58834a9ae1347d",
+      "size": 26872,
+      "assetType": "font",
       "groupId": "template",
       "used": true
     }

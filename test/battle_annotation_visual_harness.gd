@@ -85,6 +85,7 @@ func _capture() -> void:
 		push_error("battle annotation visual harness could not find the composed UI")
 		get_tree().quit(1)
 		return
+	await RenderingServer.frame_post_draw
 	var image := get_viewport().get_texture().get_image()
 	var error := image.save_png(output)
 	if error != OK:

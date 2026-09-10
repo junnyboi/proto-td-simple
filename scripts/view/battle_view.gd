@@ -1116,10 +1116,10 @@ func _relayout() -> void:
 			(viewport.x - _continue_btn.get_combined_minimum_size().x) * 0.5,
 			viewport.y * 0.5 + 120.0
 		)
-	if _deploy_bar != null:
-		_deploy_bar.relayout()
 	if _controls != null:
-		_controls.relayout()
+		_controls.relayout(_hud.get_rect().end.y + 8.0 if _hud != null else 0.0)
+	if _deploy_bar != null:
+		_deploy_bar.relayout(_controls.command_deck_rect().end.y + 8.0 if _controls != null else 0.0)
 	if _map_navigation_overlay != null:
 		_map_navigation_overlay.relayout()
 		_refresh_map_navigation_overlay()
@@ -1271,6 +1271,12 @@ func _refresh_hud_copy() -> void:
 		_hud.text += "  [TWEAKED]"
 	if int(s["result"]) == BattleModel.Result.CLEAR:
 		_hud.text += "  %d*" % int(s["stars"])
+	var previous_height := _hud.size.y
+	BATTLE_HUD_PRESENTER.relayout(_hud, get_viewport_rect().size)
+	if _controls != null and not is_equal_approx(previous_height, _hud.size.y):
+		_controls.relayout(_hud.get_rect().end.y + 8.0)
+		if _deploy_bar != null:
+			_deploy_bar.relayout(_controls.command_deck_rect().end.y + 8.0)
 
 
 ## EnemyAnimator owns body art/state/direction/shadow; this view owns HP bars.

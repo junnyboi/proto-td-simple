@@ -6,8 +6,9 @@ const StagingSkinType := preload("res://scripts/ui/components/staging_skin.gd")
 const LunarisStyleType := preload("res://scripts/ui/components/lunaris_ops_style.gd")
 const CJK_FONT_PATH := "res://assets/template/fonts/GameTemplateTDSansSC.otf"
 const CJK_FONT: FontFile = preload(CJK_FONT_PATH)
-const PRIMARY_FONT := preload("res://assets/fonts/Figtree.ttf")
-const FONT_WEIGHT_AXIS := 0x77676874 # OpenType wght tag.
+const PRIMARY_FONT := preload("res://assets/fonts/ManusCC0-Regular.ttf")
+const MEDIUM_FONT := preload("res://assets/fonts/ManusCC0-Medium.ttf")
+const BOLD_FONT := preload("res://assets/fonts/ManusCC0-Bold.ttf")
 
 const COLORS := {
 	&"backdrop": Color("040a12"),
@@ -40,19 +41,17 @@ var _display_font: FontVariation
 func _init() -> void:
 	_body_font = FontVariation.new()
 	_body_font.base_font = PRIMARY_FONT
-	_body_font.variation_opentype = {FONT_WEIGHT_AXIS: 400.0}
 	var cjk_font := _load_cjk_font()
 	if cjk_font != null:
 		_body_font.fallbacks = [cjk_font, ThemeDB.fallback_font]
 	else:
 		_body_font.fallbacks = [ThemeDB.fallback_font]
-	_body_font.resource_name = "Figtree with Simplified Chinese fallback"
+	_body_font.resource_name = "ManusCC0 with Simplified Chinese fallback"
 
 	_display_font = FontVariation.new()
-	_display_font.base_font = PRIMARY_FONT
+	_display_font.base_font = MEDIUM_FONT
 	_display_font.fallbacks = [_body_font]
-	_display_font.variation_opentype = {FONT_WEIGHT_AXIS: 560.0}
-	_display_font.resource_name = "Figtree display with Simplified Chinese fallback"
+	_display_font.resource_name = "ManusCC0 display with Simplified Chinese fallback"
 
 	default_font = _body_font
 	default_font_size = GameTypographyType.BODY

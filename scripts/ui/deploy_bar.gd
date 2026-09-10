@@ -67,6 +67,7 @@ var _trap_defs: Dictionary = {}
 var _ticket_rows: Dictionary = {}
 var _slot_cooldown_seconds: Dictionary = {}
 var _slot_deck: PanelContainer = null
+var _top_clearance := 0.0
 var _slot_scroll: ScrollContainer = null
 var _slot_box: GridContainer = null
 var _placement_op: StringName = &""
@@ -177,7 +178,9 @@ func command_deck_rect() -> Rect2:
 ## scale recomputes (P14 — a self-owned size_changed listener raced the
 ## view's recompute and re-derived footprints from the STALE scale).
 ## Mid-placement overlays re-derive from the live grid scale.
-func relayout() -> void:
+func relayout(top_clearance := -1.0) -> void:
+	if top_clearance >= 0.0:
+		_top_clearance = top_clearance
 	size = get_viewport().get_visible_rect().size
 	if _slot_box != null:
 		_layout_slot_box()
@@ -463,6 +466,9 @@ func _layout_slot_box() -> void:
 	# on clipping; short landscape retains local scrolling by design.
 	var height_ratio := 0.46 if short_landscape else 0.56
 	var deck_height := minf(content_height, maxf(BAR_HEIGHT, size.y * height_ratio))
+	if size.y > size.x and _top_clearance > 0.0:
+		# Larger HUD type borrows space from this already-scrollable roster.
+		deck_height = minf(deck_height, maxf(BAR_HEIGHT, size.y - SAFE_MARGIN - _top_clearance))
 	_slot_deck.position = Vector2(SAFE_MARGIN, size.y - deck_height - SAFE_MARGIN)
 	_slot_deck.size = Vector2(deck_width, deck_height)
 

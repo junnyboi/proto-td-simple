@@ -1,9 +1,10 @@
 class_name StagingSkin
 extends RefCounted
 
-const PRIMARY_FONT := preload("res://assets/fonts/Figtree.ttf")
+const PRIMARY_FONT := preload("res://assets/fonts/ManusCC0-Regular.ttf")
+const MEDIUM_FONT := preload("res://assets/fonts/ManusCC0-Medium.ttf")
+const BOLD_FONT := preload("res://assets/fonts/ManusCC0-Bold.ttf")
 const CJK_FONT := preload("res://assets/template/fonts/GameTemplateTDSansSC.otf")
-const FONT_WEIGHT_AXIS := 0x77676874 # OpenType wght tag.
 
 const LUNARIS_SEAL := preload("res://assets/template/ui/staging/icons/lunaris_seal.png")
 const MISSION_ICON := preload("res://assets/template/ui/staging/icons/mission.png")
@@ -37,9 +38,8 @@ static func body_font() -> FontVariation:
 		return _body_font
 	_body_font = FontVariation.new()
 	_body_font.base_font = PRIMARY_FONT
-	_body_font.variation_opentype = {FONT_WEIGHT_AXIS: 400.0}
 	_body_font.fallbacks = [CJK_FONT, ThemeDB.fallback_font]
-	_body_font.resource_name = "Figtree with Simplified Chinese fallback"
+	_body_font.resource_name = "ManusCC0 with Simplified Chinese fallback"
 	return _body_font
 
 
@@ -47,10 +47,9 @@ static func display_font() -> FontVariation:
 	if _display_font != null:
 		return _display_font
 	_display_font = FontVariation.new()
-	_display_font.base_font = PRIMARY_FONT
+	_display_font.base_font = MEDIUM_FONT
 	_display_font.fallbacks = [body_font()]
-	_display_font.variation_opentype = {FONT_WEIGHT_AXIS: 520.0}
-	_display_font.resource_name = "Figtree display with Simplified Chinese fallback"
+	_display_font.resource_name = "ManusCC0 display with Simplified Chinese fallback"
 	return _display_font
 
 
@@ -71,9 +70,8 @@ static func apply_display_type(
 	weight: int = 520,
 ) -> void:
 	var font := FontVariation.new()
-	font.base_font = PRIMARY_FONT
+	font.base_font = BOLD_FONT if weight >= 600 else MEDIUM_FONT
 	font.fallbacks = [body_font()]
-	font.variation_opentype = {FONT_WEIGHT_AXIS: float(weight)}
 	control.add_theme_font_override(&"font", font)
 	control.add_theme_font_size_override(&"font_size", size)
 	control.add_theme_color_override(&"font_color", color)
