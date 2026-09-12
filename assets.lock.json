@@ -1,8 +1,8 @@
 {
   "version": 2,
   "groups": {
-    "fonts": {
-      "name": "Fonts",
+    "operators": {
+      "name": "Operators",
       "order": 20
     },
     "template": {
@@ -12,13 +12,421 @@
   },
   "bundles": {},
   "assets": {
+    "assets/fonts/ManusCC0-Bold.ttf": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/10/game-template/game-td/2026.09.10-manuscc0-v1.100/099f6d50114f83533f689ddc37028fcff2bd2a2c4871a332488c1a433f440804/Assets/Template/fonts/ManusCC0-Bold.ttf",
+      "sha256": "sha256:099f6d50114f83533f689ddc37028fcff2bd2a2c4871a332488c1a433f440804",
+      "size": 26820,
+      "assetType": "font",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/fonts/ManusCC0-Medium.ttf": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/10/game-template/game-td/2026.09.10-manuscc0-v1.100/f28a0f3aee8f427798bf972504d5640d5d28b8692a73102ac39556fa7ffb1ee2/Assets/Template/fonts/ManusCC0-Medium.ttf",
+      "sha256": "sha256:f28a0f3aee8f427798bf972504d5640d5d28b8692a73102ac39556fa7ffb1ee2",
+      "size": 26912,
+      "assetType": "font",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/fonts/ManusCC0-Regular.ttf": {
+      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/10/game-template/game-td/2026.09.10-manuscc0-v1.100/b5124032e8e51434e05a51c327a9a614ac96b85ecf9b6cdcfc58834a9ae1347d/Assets/Template/fonts/ManusCC0-Regular.ttf",
+      "sha256": "sha256:b5124032e8e51434e05a51c327a9a614ac96b85ecf9b6cdcfc58834a9ae1347d",
+      "size": 26872,
+      "assetType": "font",
+      "groupId": "template",
+      "used": true
+    },
+    "assets/operators/v3/gunner_female/attack_ne.webp": {
+      "path": "/manus-storage/attack_ne_925814a9.webp",
+      "sha256": "sha256:ae23a3e72e82b0e44f327d0a84e0c74c0a7e287da2ce65ebd54777151c359330",
+      "size": 96446,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/gunner_female/attack_nw.webp": {
+      "path": "/manus-storage/attack_nw_70957961.webp",
+      "sha256": "sha256:3af8c7ca543fa040dc108bb5645acc08b1e7e7c40b7dadbf2787f107fbfd2647",
+      "size": 96156,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/gunner_female/attack_se.webp": {
+      "path": "/manus-storage/attack_se_6b7c533b.webp",
+      "sha256": "sha256:d23e7a31fe8458c8125ed0d92698c429681b967eb52cd301445943c1cd946d26",
+      "size": 98612,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/gunner_female/attack_sw.webp": {
+      "path": "/manus-storage/attack_sw_b7bc1157.webp",
+      "sha256": "sha256:2885ab600e28dd851bcabd00a1db499936d7b9f5ca9d7c53ff2a20d525a8d82d",
+      "size": 103144,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/gunner_female/idle_ne.webp": {
+      "path": "/manus-storage/idle_ne_1e1aff8c.webp",
+      "sha256": "sha256:9079015403fd86cd85fdb0fd82ba3e4992d75fee0e924795f1a8da8253e454f1",
+      "size": 151908,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/gunner_female/idle_nw.webp": {
+      "path": "/manus-storage/idle_nw_2db2a493.webp",
+      "sha256": "sha256:39e0791a850fe65f17756d643a4c9f670f83b49b359e650d2bf79c6fe0855093",
+      "size": 138034,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/gunner_female/idle_se.webp": {
+      "path": "/manus-storage/idle_se_c2fbbbad.webp",
+      "sha256": "sha256:db471e4e2933cbcfe405366c42c13a31ac620c65312303d237689c1ee9d447a3",
+      "size": 168022,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/gunner_female/idle_sw.webp": {
+      "path": "/manus-storage/idle_sw_913c9967.webp",
+      "sha256": "sha256:c8e8b1b973d04fd738c7f1d2a2f43e9f6adef2f58afa08e76fb64b91761e234d",
+      "size": 168604,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/gunner_male/attack_ne.webp": {
+      "path": "/manus-storage/attack_ne_cc5f5641.webp",
+      "sha256": "sha256:66ba96e8f3634fab8e7582a00a4aebc5cdb0f22412951e99ddf5fe6abe358291",
+      "size": 117114,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/gunner_male/attack_nw.webp": {
+      "path": "/manus-storage/attack_nw_b14c88a6.webp",
+      "sha256": "sha256:8b7802c84f7a2cfcf3de645bfe4f24ebce69fe8a8abf0efe283ecd96e27704e9",
+      "size": 113616,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/gunner_male/attack_se.webp": {
+      "path": "/manus-storage/attack_se_25a7f8a8.webp",
+      "sha256": "sha256:e2af9bb79b43e85d213c2f6a3c71d53b529b715ba3b0decfe45ecf22ba961f3b",
+      "size": 123956,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/gunner_male/attack_sw.webp": {
+      "path": "/manus-storage/attack_sw_63677e25.webp",
+      "sha256": "sha256:f1250708ad8a27b8da000524788435e55ca4cd5cc3747c64fe6d2be324b10c14",
+      "size": 120256,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/gunner_male/idle_ne.webp": {
+      "path": "/manus-storage/idle_ne_0160a208.webp",
+      "sha256": "sha256:0683f54b65669e7466ba98cd7027b5a854d48563626dd8eee59a059e650a9941",
+      "size": 182930,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/gunner_male/idle_nw.webp": {
+      "path": "/manus-storage/idle_nw_0ef1acd3.webp",
+      "sha256": "sha256:51eff46fea08d139bc73f41631186d90021ee1b4c59d91c04d1c03192aa5f751",
+      "size": 171052,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/gunner_male/idle_se.webp": {
+      "path": "/manus-storage/idle_se_70f1597c.webp",
+      "sha256": "sha256:9ebd240204819fbe1b107e89fd7968cc3878e0a3459570b0f0406ef553409309",
+      "size": 173664,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/gunner_male/idle_sw.webp": {
+      "path": "/manus-storage/idle_sw_faf65791.webp",
+      "sha256": "sha256:6d6922de753089cb4f0c221ac98080a25e90c7606c52b64a4e5a0357bbba1970",
+      "size": 191526,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/mage_apprentice_female/attack_ne.webp": {
+      "path": "/manus-storage/attack_ne_40b2f878.webp",
+      "sha256": "sha256:924c11c513388dcb3b13a986162895e66aee77c9b80360aafdc42e6cbbc6a6d7",
+      "size": 116074,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/mage_apprentice_female/attack_nw.webp": {
+      "path": "/manus-storage/attack_nw_6b34ce7a.webp",
+      "sha256": "sha256:715ed0cbd66327a60ea9c4af4d1cc3b784854761c3c3fd359d2f684d4be2f981",
+      "size": 117774,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/mage_apprentice_female/attack_se.webp": {
+      "path": "/manus-storage/attack_se_35a2e253.webp",
+      "sha256": "sha256:25ee44cdd1facecced0ff8b73a26798e42b1cc93d3b7e3be8074fd587b61f08f",
+      "size": 118036,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/mage_apprentice_female/attack_sw.webp": {
+      "path": "/manus-storage/attack_sw_c9fbda89.webp",
+      "sha256": "sha256:1ccab87fd2d4d772284f694aa3d99b79c837785f04714e1e1d42d201bdd71fda",
+      "size": 116908,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/mage_apprentice_female/idle_ne.webp": {
+      "path": "/manus-storage/idle_ne_cbd338ac.webp",
+      "sha256": "sha256:4511a206f6580589b06412caf265f66b1882b32ff9923d5fa2505abff9465cf8",
+      "size": 180082,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/mage_apprentice_female/idle_nw.webp": {
+      "path": "/manus-storage/idle_nw_8d7db4aa.webp",
+      "sha256": "sha256:a0e6567e00f180350a2fa6e9ee693f76fae90d6f92b836320ca76cbb54e6efc4",
+      "size": 195948,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/mage_apprentice_female/idle_se.webp": {
+      "path": "/manus-storage/idle_se_ffa1529a.webp",
+      "sha256": "sha256:c03aa4aa937d129fa4698a6e0e31ea026901092e30c8371922ffedf88b688d4e",
+      "size": 195928,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/mage_apprentice_female/idle_sw.webp": {
+      "path": "/manus-storage/idle_sw_6b5eae0f.webp",
+      "sha256": "sha256:f487b9d1e7c547711e2012c91233e15f8ad878a5b75dd33b33cda6f2d508b2b3",
+      "size": 197706,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/mage_apprentice_male/attack_ne.webp": {
+      "path": "/manus-storage/attack_ne_468f0571.webp",
+      "sha256": "sha256:81a6a377b262515ddacc62b2c64c7a7dbb612d2d07014a5c142ff7fc57aa7a84",
+      "size": 119248,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/mage_apprentice_male/attack_nw.webp": {
+      "path": "/manus-storage/attack_nw_0f96de0e.webp",
+      "sha256": "sha256:f0230908ec8c5ae284851757e50460dda6e9a7009ac99d84cd41f5489bb294a8",
+      "size": 115830,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/mage_apprentice_male/attack_se.webp": {
+      "path": "/manus-storage/attack_se_742c1006.webp",
+      "sha256": "sha256:19ec4773d9224f436cc54c6aaa47e3275e155eb0df9cbec70615575dbcc8505c",
+      "size": 126106,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/mage_apprentice_male/attack_sw.webp": {
+      "path": "/manus-storage/attack_sw_bd769504.webp",
+      "sha256": "sha256:dc38d38c4a66135a3fdc206cde85bc10d3dddda55a2b659d66b28b7761ab9dde",
+      "size": 117900,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/mage_apprentice_male/idle_ne.webp": {
+      "path": "/manus-storage/idle_ne_7ea3d145.webp",
+      "sha256": "sha256:9186c0323ec0954f1b7960f465cf0194d943e1d601230b3417d7d0699b9d73c2",
+      "size": 217330,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/mage_apprentice_male/idle_nw.webp": {
+      "path": "/manus-storage/idle_nw_d5ebeaf1.webp",
+      "sha256": "sha256:c3d72a1380d9a3eee1307abcce8289b2bee5b18da3d2c6708829c4fa29b1764b",
+      "size": 202734,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/mage_apprentice_male/idle_se.webp": {
+      "path": "/manus-storage/idle_se_a304d8aa.webp",
+      "sha256": "sha256:e38a2a6a91857a18b64d1601d086e232363ac808fc3e1a7e407f7c54fee55aea",
+      "size": 217460,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/mage_apprentice_male/idle_sw.webp": {
+      "path": "/manus-storage/idle_sw_39e09392.webp",
+      "sha256": "sha256:ee7c954388521833cf782cb6a978b5c8de92242982ceebe14fd7769944da5f6b",
+      "size": 222168,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/swordmaster_female/attack_ne.webp": {
+      "path": "/manus-storage/attack_ne_240cac2f.webp",
+      "sha256": "sha256:9e945e0e3de423fec5187f748f8d891cbe0be10d1441a2bfe64f1f08ef0b700e",
+      "size": 106998,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/swordmaster_female/attack_nw.webp": {
+      "path": "/manus-storage/attack_nw_29006ca6.webp",
+      "sha256": "sha256:c5a3256c0a782fc54cd4602901ac036d7a988f97f9dbb24d10ce7af5db32f085",
+      "size": 101708,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/swordmaster_female/attack_se.webp": {
+      "path": "/manus-storage/attack_se_b6071132.webp",
+      "sha256": "sha256:d40c2d66a5a2c4f65769586b5ba83783c36d7f53945d3243ea138ac1cd6693fe",
+      "size": 103944,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/swordmaster_female/attack_sw.webp": {
+      "path": "/manus-storage/attack_sw_b42f211b.webp",
+      "sha256": "sha256:b14d7645fb0a8041e3340fe1255a641dbcffe0c15b80a9566598ab137487e30d",
+      "size": 113684,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/swordmaster_female/idle_ne.webp": {
+      "path": "/manus-storage/idle_ne_4695931e.webp",
+      "sha256": "sha256:c1f80d5e61d6af8c2c8ba5d0af7126449ab9c44401897907c6ae9f56afa607b6",
+      "size": 181750,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/swordmaster_female/idle_nw.webp": {
+      "path": "/manus-storage/idle_nw_d15cc64d.webp",
+      "sha256": "sha256:be281268d025837c5b65a6c0321015fcc09c59c8cab590a6441293b15413a537",
+      "size": 148164,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/swordmaster_female/idle_se.webp": {
+      "path": "/manus-storage/idle_se_ccbf2fc1.webp",
+      "sha256": "sha256:d9ebe07a098518cd579635178b1793aeba083305a9bc72426d1c7491dfc11892",
+      "size": 159948,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/swordmaster_female/idle_sw.webp": {
+      "path": "/manus-storage/idle_sw_c5d223b5.webp",
+      "sha256": "sha256:be00687c802f19b490adddeb0c2eb0e1a8c528031beeb21d098bc642fe9938b9",
+      "size": 178520,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/swordmaster_male/attack_ne.webp": {
+      "path": "/manus-storage/attack_ne_790f4255.webp",
+      "sha256": "sha256:d237d282e76696df4bbdf697fb5a08d2d9efb6b21af8bd3aa245c2dcbd9821d4",
+      "size": 111070,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/swordmaster_male/attack_nw.webp": {
+      "path": "/manus-storage/attack_nw_3232b20d.webp",
+      "sha256": "sha256:c8ef1e020c80b6b1346da0ca943fc57bf15fda9976c2f8b7324ba0e143a8594b",
+      "size": 111128,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/swordmaster_male/attack_se.webp": {
+      "path": "/manus-storage/attack_se_62828c89.webp",
+      "sha256": "sha256:1b88aa890176e734f8a5713b22ed1f97d437d0d58e6a90c3dd96d47bb8a71a76",
+      "size": 120456,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/swordmaster_male/attack_sw.webp": {
+      "path": "/manus-storage/attack_sw_31772648.webp",
+      "sha256": "sha256:471d55dc5459d8357d1b1273be84ca848e00d3254a31c5b04cadc278125f920c",
+      "size": 122848,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/swordmaster_male/idle_ne.webp": {
+      "path": "/manus-storage/idle_ne_0a87a63f.webp",
+      "sha256": "sha256:db0483baf4208140df487f0b3866d2eeb6c308bf68add4acb3ace3982b15045b",
+      "size": 175302,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/swordmaster_male/idle_nw.webp": {
+      "path": "/manus-storage/idle_nw_5e798eba.webp",
+      "sha256": "sha256:41f85c4e1234f8087830b6a8a65e5bfd616cb693bfcdfaf8ce034e85aaf57810",
+      "size": 190710,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/swordmaster_male/idle_se.webp": {
+      "path": "/manus-storage/idle_se_98772c35.webp",
+      "sha256": "sha256:ffa16ba271a280833928ed7e2de74c8a95219e9a8d01ad91c71ec317ffe33554",
+      "size": 223542,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
+    "assets/operators/v3/swordmaster_male/idle_sw.webp": {
+      "path": "/manus-storage/idle_sw_bcc98aad.webp",
+      "sha256": "sha256:7376d19c8439292ca4b34e851a3b8921472733af4d44ffa5fad76a7c9ea68ea2",
+      "size": 195296,
+      "assetType": "image",
+      "groupId": "operators",
+      "used": true
+    },
     "assets/template/bundled/fonts/Cinzel-Variable.ttf": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/05/game-template/game-td/2026-09-05-init-audio-v1/f4d83d34d1f6c741193e4acf4b3dff9531e5a67b6aa65228d00a7db72a4e0f34/assets/template/bundled/fonts/Cinzel-Variable.ttf",
       "sha256": "sha256:f4d83d34d1f6c741193e4acf4b3dff9531e5a67b6aa65228d00a7db72a4e0f34",
       "size": 125468,
       "assetType": "font",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/bundled/music/lunaris/act2/s09_return_path.ogg": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/05/game-template/game-td/2026-09-05-init-audio-v1/945a24670a5985585fc83c06849736b3893e4d56ded3a1197b0734ccbd8c3388/assets/template/bundled/music/lunaris/act2/s09_return_path.ogg",
@@ -442,7 +850,7 @@
       "size": 2072,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/caster_1_1.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/b4feff42584666912db6fe312ffd963d5c54d14a5ba6af898725a542d2b33d8a/assets/template/sprites/caster_1_1.png",
@@ -450,7 +858,7 @@
       "size": 2119,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/caster_1_2.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/63c5f33108ff3c0df8016710a0fea2d5e87a2b9afda6881b6f3c62764f98a44e/assets/template/sprites/caster_1_2.png",
@@ -458,7 +866,7 @@
       "size": 2078,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/caster_1_3.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/6f9d060a39cdcb922bb78100a2afe6515e63aa8d1a793d739b6e9088d5b5b4e2/assets/template/sprites/caster_1_3.png",
@@ -466,7 +874,7 @@
       "size": 2059,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/caster_1_4.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/0cc89872704d568aab5f5b741b1a3e65269f9075e4e3a3b7050adb445abcb09a/assets/template/sprites/caster_1_4.png",
@@ -474,7 +882,7 @@
       "size": 1923,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/drone_0.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/126da5ae57db70634a93d4e95570d68cf54ed59b19e20e444cb837ece77cf714/assets/template/sprites/drone_0.png",
@@ -482,7 +890,7 @@
       "size": 1786,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/drone_1.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/e456fb33b4c0c3268bed015f9400b2ea0d2a4a6177273d672af4150753e180d5/assets/template/sprites/drone_1.png",
@@ -490,7 +898,7 @@
       "size": 1759,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/enemies/static/breacher.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/b6068b60d50b86bee865a9d588228a5109ab4bf1e327fbc2b4d38f770ca2f0d1/assets/template/sprites/enemies/static/breacher.png",
@@ -562,7 +970,7 @@
       "size": 2669,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/grunt_1.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/ba84893810853133fe8f07fdbe4b227805f93698f10782a58c594584ba124831/assets/template/sprites/grunt_1.png",
@@ -570,7 +978,7 @@
       "size": 2616,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/grunt_anim_attack_ne.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/2e18c6b439fd84a2b1f01a039e5eecfe8398c3d608f2773ac36a19a46a43e8a1/assets/template/sprites/grunt_anim_attack_ne.png",
@@ -642,7 +1050,7 @@
       "size": 2225,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/guard_1_1.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/7af2ec0edce498f5d3a743893c5673e54f6e145f7a04a37307e85a2a3271b6c7/assets/template/sprites/guard_1_1.png",
@@ -650,7 +1058,7 @@
       "size": 2192,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/guard_1_2.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/46f21182f3914bab43b3c2308e38a8d70d35c6399cfb06e3571faa28f6569b12/assets/template/sprites/guard_1_2.png",
@@ -658,7 +1066,7 @@
       "size": 2313,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/guard_1_3.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/05a79533477b41bf0dabc60799dcd67c766639f55b1312a1575a5e05482f5dab/assets/template/sprites/guard_1_3.png",
@@ -666,7 +1074,7 @@
       "size": 2229,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/guard_1_4.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/532a2e17c51a3346315dc11c65111154c2d10d3b425c70a90c597cd6058299c8/assets/template/sprites/guard_1_4.png",
@@ -674,7 +1082,7 @@
       "size": 2093,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/heavy_0.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/0fa082e2206722dc0f1bb2efc4fc337f43a62c09f3b07ecde9426bf846dfa604/assets/template/sprites/heavy_0.png",
@@ -682,7 +1090,7 @@
       "size": 3019,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/heavy_1.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/d85f32769bfc5f5237a899169d392025c6f83759ac6601bc243169545d439fde/assets/template/sprites/heavy_1.png",
@@ -690,7 +1098,7 @@
       "size": 2928,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/mini_boss_0.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/a645421e5d6ed484a6893be821c975858da1419aeb5dd8f49e0f1bafe0751a16/assets/template/sprites/mini_boss_0.png",
@@ -698,7 +1106,7 @@
       "size": 5948,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/mini_boss_1.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/c69c2a96e21771a9d888a2d3f27dee8602145c3b86adcbca810d3a6014496c05/assets/template/sprites/mini_boss_1.png",
@@ -706,7 +1114,7 @@
       "size": 5911,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/operators/animated/caster_1/attack_ne.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/f705203cdbb239e17bc60fd404c8d178529ffa6dc6a002a4ee23070bc35a245f/assets/template/sprites/operators/animated/caster_1/attack_ne.png",
@@ -778,7 +1186,7 @@
       "size": 883858,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/operators/animated/gunner/female/attack_nw.webp": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/b59c2d6953bf1b90596f309d1e840a3be2bd45d01c06b1465281adc642d0e3ea.webp",
@@ -786,7 +1194,7 @@
       "size": 885246,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/operators/animated/gunner/female/idle_ne.webp": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/88979e5e4de276db2cc418c02b5966e3da07397afe99661d15fed6ef9fedfbda.webp",
@@ -794,7 +1202,7 @@
       "size": 1727076,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/operators/animated/gunner/female/idle_nw.webp": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/38edb583913448da40f8b54c3e54c3397ee70e4ca084be0cb4caa827119091da.webp",
@@ -802,7 +1210,7 @@
       "size": 1728110,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/operators/animated/gunner/male/attack_ne.webp": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/96796d453858a0a9b187e89ef9c4313c1d21a52920b0d60f531496a7d6dc2f43.webp",
@@ -810,7 +1218,7 @@
       "size": 1100320,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/operators/animated/gunner/male/attack_nw.webp": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/cf6e13578993899c53054d9ea3f720fca1efc098fddd0b4786761a0cd949a204.webp",
@@ -818,7 +1226,7 @@
       "size": 1098178,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/operators/animated/gunner/male/idle_ne.webp": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/8827f3d3ef77e053d8abe81844ce8d51ec6dd72d7ed5002f09b6f868aefb1caf.webp",
@@ -826,7 +1234,7 @@
       "size": 2197212,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/operators/animated/gunner/male/idle_nw.webp": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/4ffb349a5d19dc73cf497da4be587f968d965895b41e01a15e71a7c0f45dc8c6.webp",
@@ -834,7 +1242,7 @@
       "size": 2186906,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/operators/animated/mage_apprentice/female/attack_ne.webp": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/99f40bfcc0655971f86db9c15128d634281dcee0ae561edaa34fb9402d30ddc7.webp",
@@ -842,7 +1250,7 @@
       "size": 670644,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/operators/animated/mage_apprentice/female/attack_nw.webp": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/7256bf39e49c0cdf529a7f6d2f4733ad5e317aa9afd78f4dc2cf05fece902e44.webp",
@@ -850,7 +1258,7 @@
       "size": 671520,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/operators/animated/mage_apprentice/female/idle_ne.webp": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/35845254c5f9e1e614b1f619a3464215d46ae943dd785f43397966d7b7716530.webp",
@@ -858,7 +1266,7 @@
       "size": 1254594,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/operators/animated/mage_apprentice/female/idle_nw.webp": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/d21bc02b052070b639512543fd0480fa4e087381ee21caef545dd504345c69f7.webp",
@@ -866,7 +1274,7 @@
       "size": 1252470,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/operators/animated/mage_apprentice/male/attack_ne.webp": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/76c7c3130e2835071f7b9fb5ffd860a14018035b69464e8e8d3c1bc8598d26eb.webp",
@@ -874,7 +1282,7 @@
       "size": 810486,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/operators/animated/mage_apprentice/male/attack_nw.webp": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/69f940d0aeb6c55547f556042dac7ddfe8c15ace18b3000fde743fa6eb3f4835.webp",
@@ -882,7 +1290,7 @@
       "size": 808556,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/operators/animated/mage_apprentice/male/idle_ne.webp": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/e217522e4d4a13136d67d0a893f97ed539e8a7b82d6963296bdee7c105e4f9b0.webp",
@@ -890,7 +1298,7 @@
       "size": 1408454,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/operators/animated/mage_apprentice/male/idle_nw.webp": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/67814f19e1a8edaeaa6090e7933a61be34814350deb22c5eb35a751b29230de8.webp",
@@ -898,7 +1306,7 @@
       "size": 1408168,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/operators/animated/recruit_female/attack_ne.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/4b31701c5acb9719ee6af2e2fbcbc94bccd34d9162495d0813d635d198e87ed5/assets/template/sprites/operators/animated/recruit_female/attack_ne.png",
@@ -1002,7 +1410,7 @@
       "size": 714984,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/operators/animated/swordmaster/female/attack_nw.webp": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/2d68e10c5a53d4922605f7bf3b9b1e35c3ae2c32c67463b25842d2162ce75b8a.webp",
@@ -1010,7 +1418,7 @@
       "size": 713474,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/operators/animated/swordmaster/female/idle_ne.webp": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/a151235565213eeea281a83447a617ee8082899fbb967780625c817fc1fb2cba.webp",
@@ -1026,7 +1434,7 @@
       "size": 1184460,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/operators/animated/swordmaster/male/attack_ne.webp": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/24077183a745d68fe849874e3c7703da968317348eb9cb4219be12ff31298a93.webp",
@@ -1034,7 +1442,7 @@
       "size": 829046,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/operators/animated/swordmaster/male/attack_nw.webp": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/3c37e3ebbb8c02a92d73e1431144600080b051b0e07719da40b4cb03858ba71e.webp",
@@ -1042,7 +1450,7 @@
       "size": 829090,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/operators/animated/swordmaster/male/idle_ne.webp": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/7a33cab3a72a82e8f7c5974a2de2fd8403ebd4168d8f83ac98e375f6d537c06d.webp",
@@ -1050,7 +1458,7 @@
       "size": 1416564,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/operators/animated/swordmaster/male/idle_nw.webp": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/c61deaf0738a1a7ddad92bf2d405bb12a0a1f329d57cd1f6b29eaea30b7f5a6a.webp",
@@ -1058,7 +1466,7 @@
       "size": 1419570,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/runner_0.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/4d556f396dbb866c65ec7f9842e0120b5bf667f1223f805454d673f4e10f180a/assets/template/sprites/runner_0.png",
@@ -1066,7 +1474,7 @@
       "size": 2663,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/runner_1.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/2c85e8f1c28080fe233e1fcbd3a3dd9c7086dd6993c7d6d41028682659060ef0/assets/template/sprites/runner_1.png",
@@ -1074,7 +1482,7 @@
       "size": 2642,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/sniper_1_0.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/c86a14f226a633a7fae4735c2eef6a859f598b1bd0f083e93ff7372d550d76aa/assets/template/sprites/sniper_1_0.png",
@@ -1082,7 +1490,7 @@
       "size": 2197,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/sniper_1_1.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/8ebc19cbe8ca8fad33dfe8a0bd1e2564cf000460857b8c7381a6b06ae7c01a0a/assets/template/sprites/sniper_1_1.png",
@@ -1090,7 +1498,7 @@
       "size": 2227,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/sniper_1_2.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/7c22a2e7b216cbd972f92e537ef92478b123bd638c30b8616be917177e3c7fc8/assets/template/sprites/sniper_1_2.png",
@@ -1098,7 +1506,7 @@
       "size": 2165,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/sniper_1_3.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/120f4060b31b8fa46d50d4e686a84f2d6f4c586c80eb2c4bd30edf1137941129/assets/template/sprites/sniper_1_3.png",
@@ -1106,7 +1514,7 @@
       "size": 2197,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/sniper_1_4.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/b061585194aaa129a1e742fa8da355aa759cb43d42cec18d63ffe7c93b1e4932/assets/template/sprites/sniper_1_4.png",
@@ -1114,7 +1522,7 @@
       "size": 2006,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/spellcaster_0.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/9675d455790cdf5a156c530b409a9b0dbccd6b77d3e68c5963d74a31eeb12938/assets/template/sprites/spellcaster_0.png",
@@ -1122,7 +1530,7 @@
       "size": 2535,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/spellcaster_1.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/6a5abbc519bdc7aeb167c5afa9af5c6984f0290ddcb70af78073be8c721ce562/assets/template/sprites/spellcaster_1.png",
@@ -1130,7 +1538,7 @@
       "size": 2486,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/sprites/trap_spike_armed.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/10fa5794d05ddb30bb0e5179447bd5a530b452cea472a25e7b504eede4604b8b/assets/template/sprites/trap_spike_armed.png",
@@ -1162,7 +1570,7 @@
       "size": 395353,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/terrain/proto_isometric/blue_ice.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/9d31884ba91f7a1b707e1a17fd305ef3b7651a315ea74d7ea7f838181b91854c/assets/template/terrain/proto_isometric/blue_ice.png",
@@ -1170,7 +1578,7 @@
       "size": 520527,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/terrain/proto_isometric/dark_mud.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/b7a060ae1e66d39375825b39fb739018081af29664fb345a7cf3069baa062ddb/assets/template/terrain/proto_isometric/dark_mud.png",
@@ -1178,7 +1586,7 @@
       "size": 323940,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/terrain/proto_isometric/desert_sand.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/96f5e9eeafdca7081b57a2bfafd2b86ee63902a980504484c9886798a6c1577f/assets/template/terrain/proto_isometric/desert_sand.png",
@@ -1186,7 +1594,7 @@
       "size": 417721,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/terrain/proto_isometric/iron_rock.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/d7acfcf24771fdf3546698a9576976c227d7757675387a400a467cf19bde29b5/assets/template/terrain/proto_isometric/iron_rock.png",
@@ -1194,7 +1602,7 @@
       "size": 483928,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/terrain/proto_isometric/lava_basalt.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/c92b672b5f72404ca26e7f180b2a699c6c7b9d37fbdc8f8e708db3bfcc372c49/assets/template/terrain/proto_isometric/lava_basalt.png",
@@ -1202,7 +1610,7 @@
       "size": 333598,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/terrain/proto_isometric/lava_flow.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/dcf78cc87d7e878ab563a296db23153204d33e4a765d05f9255f437ed67b0a89/assets/template/terrain/proto_isometric/lava_flow.png",
@@ -1210,7 +1618,7 @@
       "size": 614349,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/terrain/proto_isometric/oasis_wetland.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/17cd8840afcf897e07c952ffde07bab306b9b02de97ba80db49dd63c70d328f2/assets/template/terrain/proto_isometric/oasis_wetland.png",
@@ -1218,7 +1626,7 @@
       "size": 435465,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/terrain/proto_isometric/obstacles/frozen_pine.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/58ebac70b3e946afa16495db8fea890750d6399b87df3dccf8baf62fecf0ebd7/assets/template/terrain/proto_isometric/obstacles/frozen_pine.png",
@@ -1226,7 +1634,7 @@
       "size": 109994,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/terrain/proto_isometric/obstacles/frozen_snow_rock.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/2de7b7199bb5cc91f867601460321d53782dedd726e842db6f402c7d8a8da846/assets/template/terrain/proto_isometric/obstacles/frozen_snow_rock.png",
@@ -1234,7 +1642,7 @@
       "size": 91326,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/terrain/proto_isometric/obstacles/lava_basalt_chimney.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/564774e3de8bf04cbb55cc4491106156ef714bd22f0e1bd1ae11fb41bfda6ec4/assets/template/terrain/proto_isometric/obstacles/lava_basalt_chimney.png",
@@ -1242,7 +1650,7 @@
       "size": 90024,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/terrain/proto_isometric/obstacles/lava_obsidian_cluster.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/3d1b79f29f58ba41bce1e52bfe45cb331ff150ee90bd2ffad69286a558d1a02a/assets/template/terrain/proto_isometric/obstacles/lava_obsidian_cluster.png",
@@ -1250,7 +1658,7 @@
       "size": 86721,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/terrain/proto_isometric/obstacles/wetland_mangrove.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/021049f4d084cfca82c789f0f4c90aae59bca0533aac0bcdc6ba5f47d2ed73e6/assets/template/terrain/proto_isometric/obstacles/wetland_mangrove.png",
@@ -1258,7 +1666,7 @@
       "size": 90216,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/terrain/proto_isometric/obstacles/wetland_stump.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/048353b9dd1d4699a9d96ad464cbc0587c2e012b25742e78dd5e06e452aa81d2/assets/template/terrain/proto_isometric/obstacles/wetland_stump.png",
@@ -1266,7 +1674,7 @@
       "size": 90088,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/terrain/proto_isometric/salt_crust.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/d7c29406b835d7195db1a11dd864f6e6b7ee65e294e8700220e247e6308b601b/assets/template/terrain/proto_isometric/salt_crust.png",
@@ -1274,7 +1682,7 @@
       "size": 404054,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/terrain/proto_isometric/tundra_snow.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/c3d072552d780dbe26e6007483aff5ead902057f324890bb95c233bd74069f01/assets/template/terrain/proto_isometric/tundra_snow.png",
@@ -1282,7 +1690,7 @@
       "size": 380499,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/terrain/proto_isometric/volcanic_ash.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/f2c0ebf37c89829eaa7aaad22cce012c98e66d2d39caa449dfe73c74f814b940/assets/template/terrain/proto_isometric/volcanic_ash.png",
@@ -1290,7 +1698,7 @@
       "size": 363066,
       "assetType": "image",
       "groupId": "template",
-      "used": true
+      "used": false
     },
     "assets/template/tutorial/tutorial_block_shield.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/60a1cc148fc8a360747229f562bf4e9a6498393d5591ca515f6b4fd27a1c2416/assets/template/tutorial/tutorial_block_shield.png",
@@ -1609,30 +2017,6 @@
       "sha256": "sha256:16bae5e73b64e27d53d9d0987ec32f4d20b1573a540270a1d1ab096cb26aeb68",
       "size": 7151520,
       "assetType": "image",
-      "groupId": "template",
-      "used": true
-    },
-    "assets/fonts/ManusCC0-Bold.ttf": {
-      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/10/game-template/game-td/2026.09.10-manuscc0-v1.100/099f6d50114f83533f689ddc37028fcff2bd2a2c4871a332488c1a433f440804/Assets/Template/fonts/ManusCC0-Bold.ttf",
-      "sha256": "sha256:099f6d50114f83533f689ddc37028fcff2bd2a2c4871a332488c1a433f440804",
-      "size": 26820,
-      "assetType": "font",
-      "groupId": "template",
-      "used": true
-    },
-    "assets/fonts/ManusCC0-Medium.ttf": {
-      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/10/game-template/game-td/2026.09.10-manuscc0-v1.100/f28a0f3aee8f427798bf972504d5640d5d28b8692a73102ac39556fa7ffb1ee2/Assets/Template/fonts/ManusCC0-Medium.ttf",
-      "sha256": "sha256:f28a0f3aee8f427798bf972504d5640d5d28b8692a73102ac39556fa7ffb1ee2",
-      "size": 26912,
-      "assetType": "font",
-      "groupId": "template",
-      "used": true
-    },
-    "assets/fonts/ManusCC0-Regular.ttf": {
-      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/10/game-template/game-td/2026.09.10-manuscc0-v1.100/b5124032e8e51434e05a51c327a9a614ac96b85ecf9b6cdcfc58834a9ae1347d/Assets/Template/fonts/ManusCC0-Regular.ttf",
-      "sha256": "sha256:b5124032e8e51434e05a51c327a9a614ac96b85ecf9b6cdcfc58834a9ae1347d",
-      "size": 26872,
-      "assetType": "font",
       "groupId": "template",
       "used": true
     }

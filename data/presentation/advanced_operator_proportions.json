@@ -1,13 +1,31 @@
 {
   "schema_version": 1,
-  "target_runtime_body_height_px": 64,
-  "measurement": "median central 144px alpha silhouette across ten neutral idle samples",
+  "target_runtime_body_height_px": 58,
+  "measurement": "Shared 106px neutral head-to-ground body calibration, authored foot (128,196); weapons excluded from per-frame rescaling.",
   "identities": {
-    "gunner_female": {"normalized_body_height_px": 555, "disposition": "regenerate"},
-    "gunner_male": {"normalized_body_height_px": 596, "disposition": "regenerate"},
-    "mage_apprentice_female": {"normalized_body_height_px": 598, "disposition": "regenerate"},
-    "mage_apprentice_male": {"normalized_body_height_px": 588, "disposition": "regenerate"},
-    "swordmaster_female": {"normalized_body_height_px": 600, "disposition": "regenerate"},
-    "swordmaster_male": {"normalized_body_height_px": 598, "disposition": "preserve"}
+    "gunner_female": {
+      "normalized_body_height_px": 106,
+      "disposition": "regenerated_v3"
+    },
+    "gunner_male": {
+      "normalized_body_height_px": 106,
+      "disposition": "regenerated_v3"
+    },
+    "mage_apprentice_female": {
+      "normalized_body_height_px": 106,
+      "disposition": "regenerated_v3"
+    },
+    "mage_apprentice_male": {
+      "normalized_body_height_px": 106,
+      "disposition": "regenerated_v3"
+    },
+    "swordmaster_female": {
+      "normalized_body_height_px": 106,
+      "disposition": "regenerated_v3"
+    },
+    "swordmaster_male": {
+      "normalized_body_height_px": 106,
+      "disposition": "regenerated_v3"
+    }
   }
 }

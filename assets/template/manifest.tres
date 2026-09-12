@@ -1031,628 +1031,676 @@ entries = {
 },
 ; BEGIN GENERATED ADVANCED OPERATOR ANIMATIONS
 &"op_anim_gunner_female_idle_ne": {
-"animations": {
-&"idle": {
-&"fps": 12.0,
-&"length": 24,
-&"loop": true,
-&"start": 0
-}
-},
+"animations": {&"idle": {&"fps": 12.0, &"length": 24, &"loop": true, &"start": 0}},
 "columns": 8,
 "frames": 24,
-"pattern": "res://assets/template/sprites/operators/animated/gunner/female/idle_ne.webp",
-"pivot": Vector2(0.5, 1),
+"pattern": "res://assets/operators/v3/gunner_female/idle_ne.webp",
+"pivot": Vector2(0.5, 0.765625),
 "placeholder": false,
 "provenance": {
-&"action": "idle",
-&"atlas_sha256": "88979e5e4de276db2cc418c02b5966e3da07397afe99661d15fed6ef9fedfbda",
-&"class_id": "gunner",
-&"direction": "ne",
-&"gender": "female",
-&"mirrored_from": "",
-&"source_kind": "generated",
-&"source_manifest_id": "advanced_operator_sprites_v2"
+&"action": "idle", &"atlas_sha256": "9079015403fd86cd85fdb0fd82ba3e4992d75fee0e924795f1a8da8253e454f1",
+&"class_id": "gunner", &"direction": "ne", &"gender": "female",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
 },
-"size": Vector2i(640, 640)
-},
-&"op_anim_gunner_female_idle_nw": {
-"animations": {
-&"idle": {
-&"fps": 12.0,
-&"length": 24,
-&"loop": true,
-&"start": 0
-}
-},
-"columns": 8,
-"frames": 24,
-"pattern": "res://assets/template/sprites/operators/animated/gunner/female/idle_nw.webp",
-"pivot": Vector2(0.5, 1),
-"placeholder": false,
-"provenance": {
-&"action": "idle",
-&"atlas_sha256": "38edb583913448da40f8b54c3e54c3397ee70e4ca084be0cb4caa827119091da",
-&"class_id": "gunner",
-&"direction": "nw",
-&"gender": "female",
-&"mirrored_from": "ne",
-&"source_kind": "mirrored",
-&"source_manifest_id": "advanced_operator_sprites_v2"
-},
-"size": Vector2i(640, 640)
+"size": Vector2i(256, 256)
 },
 &"op_anim_gunner_female_attack_ne": {
-"animations": {
-&"attack": {
-&"fps": 12.0,
-&"length": 13,
-&"loop": false,
-&"start": 0
-}
-},
+"animations": {&"attack": {&"fps": 12.0, &"length": 13, &"loop": false, &"start": 0}},
 "columns": 8,
 "frames": 13,
-"pattern": "res://assets/template/sprites/operators/animated/gunner/female/attack_ne.webp",
-"pivot": Vector2(0.5, 1),
+"pattern": "res://assets/operators/v3/gunner_female/attack_ne.webp",
+"pivot": Vector2(0.5, 0.765625),
 "placeholder": false,
 "provenance": {
-&"action": "attack",
-&"atlas_sha256": "598fa9e319af20d2e317b00ea4b3c2a6215b59d4c0d3a6ec5a84d8f53d892125",
-&"class_id": "gunner",
-&"direction": "ne",
-&"gender": "female",
-&"mirrored_from": "",
-&"source_kind": "generated",
-&"source_manifest_id": "advanced_operator_sprites_v2"
+&"action": "attack", &"atlas_sha256": "ae23a3e72e82b0e44f327d0a84e0c74c0a7e287da2ce65ebd54777151c359330",
+&"class_id": "gunner", &"direction": "ne", &"gender": "female",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
 },
-"size": Vector2i(640, 640)
+"size": Vector2i(256, 256)
+},
+&"op_anim_gunner_female_idle_se": {
+"animations": {&"idle": {&"fps": 12.0, &"length": 24, &"loop": true, &"start": 0}},
+"columns": 8,
+"frames": 24,
+"pattern": "res://assets/operators/v3/gunner_female/idle_se.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "idle", &"atlas_sha256": "db471e4e2933cbcfe405366c42c13a31ac620c65312303d237689c1ee9d447a3",
+&"class_id": "gunner", &"direction": "se", &"gender": "female",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
+},
+&"op_anim_gunner_female_attack_se": {
+"animations": {&"attack": {&"fps": 12.0, &"length": 13, &"loop": false, &"start": 0}},
+"columns": 8,
+"frames": 13,
+"pattern": "res://assets/operators/v3/gunner_female/attack_se.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "attack", &"atlas_sha256": "d23e7a31fe8458c8125ed0d92698c429681b967eb52cd301445943c1cd946d26",
+&"class_id": "gunner", &"direction": "se", &"gender": "female",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
+},
+&"op_anim_gunner_female_idle_sw": {
+"animations": {&"idle": {&"fps": 12.0, &"length": 24, &"loop": true, &"start": 0}},
+"columns": 8,
+"frames": 24,
+"pattern": "res://assets/operators/v3/gunner_female/idle_sw.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "idle", &"atlas_sha256": "c8e8b1b973d04fd738c7f1d2a2f43e9f6adef2f58afa08e76fb64b91761e234d",
+&"class_id": "gunner", &"direction": "sw", &"gender": "female",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
+},
+&"op_anim_gunner_female_attack_sw": {
+"animations": {&"attack": {&"fps": 12.0, &"length": 13, &"loop": false, &"start": 0}},
+"columns": 8,
+"frames": 13,
+"pattern": "res://assets/operators/v3/gunner_female/attack_sw.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "attack", &"atlas_sha256": "2885ab600e28dd851bcabd00a1db499936d7b9f5ca9d7c53ff2a20d525a8d82d",
+&"class_id": "gunner", &"direction": "sw", &"gender": "female",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
+},
+&"op_anim_gunner_female_idle_nw": {
+"animations": {&"idle": {&"fps": 12.0, &"length": 24, &"loop": true, &"start": 0}},
+"columns": 8,
+"frames": 24,
+"pattern": "res://assets/operators/v3/gunner_female/idle_nw.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "idle", &"atlas_sha256": "39e0791a850fe65f17756d643a4c9f670f83b49b359e650d2bf79c6fe0855093",
+&"class_id": "gunner", &"direction": "nw", &"gender": "female",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
 },
 &"op_anim_gunner_female_attack_nw": {
-"animations": {
-&"attack": {
-&"fps": 12.0,
-&"length": 13,
-&"loop": false,
-&"start": 0
-}
-},
+"animations": {&"attack": {&"fps": 12.0, &"length": 13, &"loop": false, &"start": 0}},
 "columns": 8,
 "frames": 13,
-"pattern": "res://assets/template/sprites/operators/animated/gunner/female/attack_nw.webp",
-"pivot": Vector2(0.5, 1),
+"pattern": "res://assets/operators/v3/gunner_female/attack_nw.webp",
+"pivot": Vector2(0.5, 0.765625),
 "placeholder": false,
 "provenance": {
-&"action": "attack",
-&"atlas_sha256": "b59c2d6953bf1b90596f309d1e840a3be2bd45d01c06b1465281adc642d0e3ea",
-&"class_id": "gunner",
-&"direction": "nw",
-&"gender": "female",
-&"mirrored_from": "ne",
-&"source_kind": "mirrored",
-&"source_manifest_id": "advanced_operator_sprites_v2"
+&"action": "attack", &"atlas_sha256": "3af8c7ca543fa040dc108bb5645acc08b1e7e7c40b7dadbf2787f107fbfd2647",
+&"class_id": "gunner", &"direction": "nw", &"gender": "female",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
 },
-"size": Vector2i(640, 640)
+"size": Vector2i(256, 256)
 },
 &"op_anim_gunner_male_idle_ne": {
-"animations": {
-&"idle": {
-&"fps": 12.0,
-&"length": 24,
-&"loop": true,
-&"start": 0
-}
-},
+"animations": {&"idle": {&"fps": 12.0, &"length": 24, &"loop": true, &"start": 0}},
 "columns": 8,
 "frames": 24,
-"pattern": "res://assets/template/sprites/operators/animated/gunner/male/idle_ne.webp",
-"pivot": Vector2(0.5, 1),
+"pattern": "res://assets/operators/v3/gunner_male/idle_ne.webp",
+"pivot": Vector2(0.5, 0.765625),
 "placeholder": false,
 "provenance": {
-&"action": "idle",
-&"atlas_sha256": "8827f3d3ef77e053d8abe81844ce8d51ec6dd72d7ed5002f09b6f868aefb1caf",
-&"class_id": "gunner",
-&"direction": "ne",
-&"gender": "male",
-&"mirrored_from": "",
-&"source_kind": "generated",
-&"source_manifest_id": "advanced_operator_sprites_v2"
+&"action": "idle", &"atlas_sha256": "0683f54b65669e7466ba98cd7027b5a854d48563626dd8eee59a059e650a9941",
+&"class_id": "gunner", &"direction": "ne", &"gender": "male",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
 },
-"size": Vector2i(640, 640)
-},
-&"op_anim_gunner_male_idle_nw": {
-"animations": {
-&"idle": {
-&"fps": 12.0,
-&"length": 24,
-&"loop": true,
-&"start": 0
-}
-},
-"columns": 8,
-"frames": 24,
-"pattern": "res://assets/template/sprites/operators/animated/gunner/male/idle_nw.webp",
-"pivot": Vector2(0.5, 1),
-"placeholder": false,
-"provenance": {
-&"action": "idle",
-&"atlas_sha256": "4ffb349a5d19dc73cf497da4be587f968d965895b41e01a15e71a7c0f45dc8c6",
-&"class_id": "gunner",
-&"direction": "nw",
-&"gender": "male",
-&"mirrored_from": "ne",
-&"source_kind": "mirrored",
-&"source_manifest_id": "advanced_operator_sprites_v2"
-},
-"size": Vector2i(640, 640)
+"size": Vector2i(256, 256)
 },
 &"op_anim_gunner_male_attack_ne": {
-"animations": {
-&"attack": {
-&"fps": 12.0,
-&"length": 13,
-&"loop": false,
-&"start": 0
-}
-},
+"animations": {&"attack": {&"fps": 12.0, &"length": 13, &"loop": false, &"start": 0}},
 "columns": 8,
 "frames": 13,
-"pattern": "res://assets/template/sprites/operators/animated/gunner/male/attack_ne.webp",
-"pivot": Vector2(0.5, 1),
+"pattern": "res://assets/operators/v3/gunner_male/attack_ne.webp",
+"pivot": Vector2(0.5, 0.765625),
 "placeholder": false,
 "provenance": {
-&"action": "attack",
-&"atlas_sha256": "96796d453858a0a9b187e89ef9c4313c1d21a52920b0d60f531496a7d6dc2f43",
-&"class_id": "gunner",
-&"direction": "ne",
-&"gender": "male",
-&"mirrored_from": "",
-&"source_kind": "generated",
-&"source_manifest_id": "advanced_operator_sprites_v2"
+&"action": "attack", &"atlas_sha256": "66ba96e8f3634fab8e7582a00a4aebc5cdb0f22412951e99ddf5fe6abe358291",
+&"class_id": "gunner", &"direction": "ne", &"gender": "male",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
 },
-"size": Vector2i(640, 640)
+"size": Vector2i(256, 256)
+},
+&"op_anim_gunner_male_idle_se": {
+"animations": {&"idle": {&"fps": 12.0, &"length": 24, &"loop": true, &"start": 0}},
+"columns": 8,
+"frames": 24,
+"pattern": "res://assets/operators/v3/gunner_male/idle_se.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "idle", &"atlas_sha256": "9ebd240204819fbe1b107e89fd7968cc3878e0a3459570b0f0406ef553409309",
+&"class_id": "gunner", &"direction": "se", &"gender": "male",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
+},
+&"op_anim_gunner_male_attack_se": {
+"animations": {&"attack": {&"fps": 12.0, &"length": 13, &"loop": false, &"start": 0}},
+"columns": 8,
+"frames": 13,
+"pattern": "res://assets/operators/v3/gunner_male/attack_se.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "attack", &"atlas_sha256": "e2af9bb79b43e85d213c2f6a3c71d53b529b715ba3b0decfe45ecf22ba961f3b",
+&"class_id": "gunner", &"direction": "se", &"gender": "male",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
+},
+&"op_anim_gunner_male_idle_sw": {
+"animations": {&"idle": {&"fps": 12.0, &"length": 24, &"loop": true, &"start": 0}},
+"columns": 8,
+"frames": 24,
+"pattern": "res://assets/operators/v3/gunner_male/idle_sw.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "idle", &"atlas_sha256": "6d6922de753089cb4f0c221ac98080a25e90c7606c52b64a4e5a0357bbba1970",
+&"class_id": "gunner", &"direction": "sw", &"gender": "male",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
+},
+&"op_anim_gunner_male_attack_sw": {
+"animations": {&"attack": {&"fps": 12.0, &"length": 13, &"loop": false, &"start": 0}},
+"columns": 8,
+"frames": 13,
+"pattern": "res://assets/operators/v3/gunner_male/attack_sw.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "attack", &"atlas_sha256": "f1250708ad8a27b8da000524788435e55ca4cd5cc3747c64fe6d2be324b10c14",
+&"class_id": "gunner", &"direction": "sw", &"gender": "male",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
+},
+&"op_anim_gunner_male_idle_nw": {
+"animations": {&"idle": {&"fps": 12.0, &"length": 24, &"loop": true, &"start": 0}},
+"columns": 8,
+"frames": 24,
+"pattern": "res://assets/operators/v3/gunner_male/idle_nw.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "idle", &"atlas_sha256": "51eff46fea08d139bc73f41631186d90021ee1b4c59d91c04d1c03192aa5f751",
+&"class_id": "gunner", &"direction": "nw", &"gender": "male",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
 },
 &"op_anim_gunner_male_attack_nw": {
-"animations": {
-&"attack": {
-&"fps": 12.0,
-&"length": 13,
-&"loop": false,
-&"start": 0
-}
-},
+"animations": {&"attack": {&"fps": 12.0, &"length": 13, &"loop": false, &"start": 0}},
 "columns": 8,
 "frames": 13,
-"pattern": "res://assets/template/sprites/operators/animated/gunner/male/attack_nw.webp",
-"pivot": Vector2(0.5, 1),
+"pattern": "res://assets/operators/v3/gunner_male/attack_nw.webp",
+"pivot": Vector2(0.5, 0.765625),
 "placeholder": false,
 "provenance": {
-&"action": "attack",
-&"atlas_sha256": "cf6e13578993899c53054d9ea3f720fca1efc098fddd0b4786761a0cd949a204",
-&"class_id": "gunner",
-&"direction": "nw",
-&"gender": "male",
-&"mirrored_from": "ne",
-&"source_kind": "mirrored",
-&"source_manifest_id": "advanced_operator_sprites_v2"
+&"action": "attack", &"atlas_sha256": "8b7802c84f7a2cfcf3de645bfe4f24ebce69fe8a8abf0efe283ecd96e27704e9",
+&"class_id": "gunner", &"direction": "nw", &"gender": "male",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
 },
-"size": Vector2i(640, 640)
+"size": Vector2i(256, 256)
 },
 &"op_anim_mage_apprentice_female_idle_ne": {
-"animations": {
-&"idle": {
-&"fps": 12.0,
-&"length": 24,
-&"loop": true,
-&"start": 0
-}
-},
+"animations": {&"idle": {&"fps": 12.0, &"length": 24, &"loop": true, &"start": 0}},
 "columns": 8,
 "frames": 24,
-"pattern": "res://assets/template/sprites/operators/animated/mage_apprentice/female/idle_ne.webp",
-"pivot": Vector2(0.5, 1),
+"pattern": "res://assets/operators/v3/mage_apprentice_female/idle_ne.webp",
+"pivot": Vector2(0.5, 0.765625),
 "placeholder": false,
 "provenance": {
-&"action": "idle",
-&"atlas_sha256": "35845254c5f9e1e614b1f619a3464215d46ae943dd785f43397966d7b7716530",
-&"class_id": "mage_apprentice",
-&"direction": "ne",
-&"gender": "female",
-&"mirrored_from": "",
-&"source_kind": "generated",
-&"source_manifest_id": "advanced_operator_sprites_v2"
+&"action": "idle", &"atlas_sha256": "4511a206f6580589b06412caf265f66b1882b32ff9923d5fa2505abff9465cf8",
+&"class_id": "mage_apprentice", &"direction": "ne", &"gender": "female",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
 },
-"size": Vector2i(640, 640)
-},
-&"op_anim_mage_apprentice_female_idle_nw": {
-"animations": {
-&"idle": {
-&"fps": 12.0,
-&"length": 24,
-&"loop": true,
-&"start": 0
-}
-},
-"columns": 8,
-"frames": 24,
-"pattern": "res://assets/template/sprites/operators/animated/mage_apprentice/female/idle_nw.webp",
-"pivot": Vector2(0.5, 1),
-"placeholder": false,
-"provenance": {
-&"action": "idle",
-&"atlas_sha256": "d21bc02b052070b639512543fd0480fa4e087381ee21caef545dd504345c69f7",
-&"class_id": "mage_apprentice",
-&"direction": "nw",
-&"gender": "female",
-&"mirrored_from": "ne",
-&"source_kind": "mirrored",
-&"source_manifest_id": "advanced_operator_sprites_v2"
-},
-"size": Vector2i(640, 640)
+"size": Vector2i(256, 256)
 },
 &"op_anim_mage_apprentice_female_attack_ne": {
-"animations": {
-&"attack": {
-&"fps": 12.0,
-&"length": 13,
-&"loop": false,
-&"start": 0
-}
-},
+"animations": {&"attack": {&"fps": 12.0, &"length": 13, &"loop": false, &"start": 0}},
 "columns": 8,
 "frames": 13,
-"pattern": "res://assets/template/sprites/operators/animated/mage_apprentice/female/attack_ne.webp",
-"pivot": Vector2(0.5, 1),
+"pattern": "res://assets/operators/v3/mage_apprentice_female/attack_ne.webp",
+"pivot": Vector2(0.5, 0.765625),
 "placeholder": false,
 "provenance": {
-&"action": "attack",
-&"atlas_sha256": "99f40bfcc0655971f86db9c15128d634281dcee0ae561edaa34fb9402d30ddc7",
-&"class_id": "mage_apprentice",
-&"direction": "ne",
-&"gender": "female",
-&"mirrored_from": "",
-&"source_kind": "generated",
-&"source_manifest_id": "advanced_operator_sprites_v2"
+&"action": "attack", &"atlas_sha256": "924c11c513388dcb3b13a986162895e66aee77c9b80360aafdc42e6cbbc6a6d7",
+&"class_id": "mage_apprentice", &"direction": "ne", &"gender": "female",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
 },
-"size": Vector2i(640, 640)
+"size": Vector2i(256, 256)
+},
+&"op_anim_mage_apprentice_female_idle_se": {
+"animations": {&"idle": {&"fps": 12.0, &"length": 24, &"loop": true, &"start": 0}},
+"columns": 8,
+"frames": 24,
+"pattern": "res://assets/operators/v3/mage_apprentice_female/idle_se.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "idle", &"atlas_sha256": "c03aa4aa937d129fa4698a6e0e31ea026901092e30c8371922ffedf88b688d4e",
+&"class_id": "mage_apprentice", &"direction": "se", &"gender": "female",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
+},
+&"op_anim_mage_apprentice_female_attack_se": {
+"animations": {&"attack": {&"fps": 12.0, &"length": 13, &"loop": false, &"start": 0}},
+"columns": 8,
+"frames": 13,
+"pattern": "res://assets/operators/v3/mage_apprentice_female/attack_se.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "attack", &"atlas_sha256": "25ee44cdd1facecced0ff8b73a26798e42b1cc93d3b7e3be8074fd587b61f08f",
+&"class_id": "mage_apprentice", &"direction": "se", &"gender": "female",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
+},
+&"op_anim_mage_apprentice_female_idle_sw": {
+"animations": {&"idle": {&"fps": 12.0, &"length": 24, &"loop": true, &"start": 0}},
+"columns": 8,
+"frames": 24,
+"pattern": "res://assets/operators/v3/mage_apprentice_female/idle_sw.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "idle", &"atlas_sha256": "f487b9d1e7c547711e2012c91233e15f8ad878a5b75dd33b33cda6f2d508b2b3",
+&"class_id": "mage_apprentice", &"direction": "sw", &"gender": "female",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
+},
+&"op_anim_mage_apprentice_female_attack_sw": {
+"animations": {&"attack": {&"fps": 12.0, &"length": 13, &"loop": false, &"start": 0}},
+"columns": 8,
+"frames": 13,
+"pattern": "res://assets/operators/v3/mage_apprentice_female/attack_sw.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "attack", &"atlas_sha256": "1ccab87fd2d4d772284f694aa3d99b79c837785f04714e1e1d42d201bdd71fda",
+&"class_id": "mage_apprentice", &"direction": "sw", &"gender": "female",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
+},
+&"op_anim_mage_apprentice_female_idle_nw": {
+"animations": {&"idle": {&"fps": 12.0, &"length": 24, &"loop": true, &"start": 0}},
+"columns": 8,
+"frames": 24,
+"pattern": "res://assets/operators/v3/mage_apprentice_female/idle_nw.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "idle", &"atlas_sha256": "a0e6567e00f180350a2fa6e9ee693f76fae90d6f92b836320ca76cbb54e6efc4",
+&"class_id": "mage_apprentice", &"direction": "nw", &"gender": "female",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
 },
 &"op_anim_mage_apprentice_female_attack_nw": {
-"animations": {
-&"attack": {
-&"fps": 12.0,
-&"length": 13,
-&"loop": false,
-&"start": 0
-}
-},
+"animations": {&"attack": {&"fps": 12.0, &"length": 13, &"loop": false, &"start": 0}},
 "columns": 8,
 "frames": 13,
-"pattern": "res://assets/template/sprites/operators/animated/mage_apprentice/female/attack_nw.webp",
-"pivot": Vector2(0.5, 1),
+"pattern": "res://assets/operators/v3/mage_apprentice_female/attack_nw.webp",
+"pivot": Vector2(0.5, 0.765625),
 "placeholder": false,
 "provenance": {
-&"action": "attack",
-&"atlas_sha256": "7256bf39e49c0cdf529a7f6d2f4733ad5e317aa9afd78f4dc2cf05fece902e44",
-&"class_id": "mage_apprentice",
-&"direction": "nw",
-&"gender": "female",
-&"mirrored_from": "ne",
-&"source_kind": "mirrored",
-&"source_manifest_id": "advanced_operator_sprites_v2"
+&"action": "attack", &"atlas_sha256": "715ed0cbd66327a60ea9c4af4d1cc3b784854761c3c3fd359d2f684d4be2f981",
+&"class_id": "mage_apprentice", &"direction": "nw", &"gender": "female",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
 },
-"size": Vector2i(640, 640)
+"size": Vector2i(256, 256)
 },
 &"op_anim_mage_apprentice_male_idle_ne": {
-"animations": {
-&"idle": {
-&"fps": 12.0,
-&"length": 24,
-&"loop": true,
-&"start": 0
-}
-},
+"animations": {&"idle": {&"fps": 12.0, &"length": 24, &"loop": true, &"start": 0}},
 "columns": 8,
 "frames": 24,
-"pattern": "res://assets/template/sprites/operators/animated/mage_apprentice/male/idle_ne.webp",
-"pivot": Vector2(0.5, 1),
+"pattern": "res://assets/operators/v3/mage_apprentice_male/idle_ne.webp",
+"pivot": Vector2(0.5, 0.765625),
 "placeholder": false,
 "provenance": {
-&"action": "idle",
-&"atlas_sha256": "e217522e4d4a13136d67d0a893f97ed539e8a7b82d6963296bdee7c105e4f9b0",
-&"class_id": "mage_apprentice",
-&"direction": "ne",
-&"gender": "male",
-&"mirrored_from": "",
-&"source_kind": "generated",
-&"source_manifest_id": "advanced_operator_sprites_v2"
+&"action": "idle", &"atlas_sha256": "9186c0323ec0954f1b7960f465cf0194d943e1d601230b3417d7d0699b9d73c2",
+&"class_id": "mage_apprentice", &"direction": "ne", &"gender": "male",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
 },
-"size": Vector2i(640, 640)
-},
-&"op_anim_mage_apprentice_male_idle_nw": {
-"animations": {
-&"idle": {
-&"fps": 12.0,
-&"length": 24,
-&"loop": true,
-&"start": 0
-}
-},
-"columns": 8,
-"frames": 24,
-"pattern": "res://assets/template/sprites/operators/animated/mage_apprentice/male/idle_nw.webp",
-"pivot": Vector2(0.5, 1),
-"placeholder": false,
-"provenance": {
-&"action": "idle",
-&"atlas_sha256": "67814f19e1a8edaeaa6090e7933a61be34814350deb22c5eb35a751b29230de8",
-&"class_id": "mage_apprentice",
-&"direction": "nw",
-&"gender": "male",
-&"mirrored_from": "ne",
-&"source_kind": "mirrored",
-&"source_manifest_id": "advanced_operator_sprites_v2"
-},
-"size": Vector2i(640, 640)
+"size": Vector2i(256, 256)
 },
 &"op_anim_mage_apprentice_male_attack_ne": {
-"animations": {
-&"attack": {
-&"fps": 12.0,
-&"length": 13,
-&"loop": false,
-&"start": 0
-}
-},
+"animations": {&"attack": {&"fps": 12.0, &"length": 13, &"loop": false, &"start": 0}},
 "columns": 8,
 "frames": 13,
-"pattern": "res://assets/template/sprites/operators/animated/mage_apprentice/male/attack_ne.webp",
-"pivot": Vector2(0.5, 1),
+"pattern": "res://assets/operators/v3/mage_apprentice_male/attack_ne.webp",
+"pivot": Vector2(0.5, 0.765625),
 "placeholder": false,
 "provenance": {
-&"action": "attack",
-&"atlas_sha256": "76c7c3130e2835071f7b9fb5ffd860a14018035b69464e8e8d3c1bc8598d26eb",
-&"class_id": "mage_apprentice",
-&"direction": "ne",
-&"gender": "male",
-&"mirrored_from": "",
-&"source_kind": "generated",
-&"source_manifest_id": "advanced_operator_sprites_v2"
+&"action": "attack", &"atlas_sha256": "81a6a377b262515ddacc62b2c64c7a7dbb612d2d07014a5c142ff7fc57aa7a84",
+&"class_id": "mage_apprentice", &"direction": "ne", &"gender": "male",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
 },
-"size": Vector2i(640, 640)
+"size": Vector2i(256, 256)
+},
+&"op_anim_mage_apprentice_male_idle_se": {
+"animations": {&"idle": {&"fps": 12.0, &"length": 24, &"loop": true, &"start": 0}},
+"columns": 8,
+"frames": 24,
+"pattern": "res://assets/operators/v3/mage_apprentice_male/idle_se.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "idle", &"atlas_sha256": "e38a2a6a91857a18b64d1601d086e232363ac808fc3e1a7e407f7c54fee55aea",
+&"class_id": "mage_apprentice", &"direction": "se", &"gender": "male",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
+},
+&"op_anim_mage_apprentice_male_attack_se": {
+"animations": {&"attack": {&"fps": 12.0, &"length": 13, &"loop": false, &"start": 0}},
+"columns": 8,
+"frames": 13,
+"pattern": "res://assets/operators/v3/mage_apprentice_male/attack_se.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "attack", &"atlas_sha256": "19ec4773d9224f436cc54c6aaa47e3275e155eb0df9cbec70615575dbcc8505c",
+&"class_id": "mage_apprentice", &"direction": "se", &"gender": "male",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
+},
+&"op_anim_mage_apprentice_male_idle_sw": {
+"animations": {&"idle": {&"fps": 12.0, &"length": 24, &"loop": true, &"start": 0}},
+"columns": 8,
+"frames": 24,
+"pattern": "res://assets/operators/v3/mage_apprentice_male/idle_sw.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "idle", &"atlas_sha256": "ee7c954388521833cf782cb6a978b5c8de92242982ceebe14fd7769944da5f6b",
+&"class_id": "mage_apprentice", &"direction": "sw", &"gender": "male",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
+},
+&"op_anim_mage_apprentice_male_attack_sw": {
+"animations": {&"attack": {&"fps": 12.0, &"length": 13, &"loop": false, &"start": 0}},
+"columns": 8,
+"frames": 13,
+"pattern": "res://assets/operators/v3/mage_apprentice_male/attack_sw.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "attack", &"atlas_sha256": "dc38d38c4a66135a3fdc206cde85bc10d3dddda55a2b659d66b28b7761ab9dde",
+&"class_id": "mage_apprentice", &"direction": "sw", &"gender": "male",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
+},
+&"op_anim_mage_apprentice_male_idle_nw": {
+"animations": {&"idle": {&"fps": 12.0, &"length": 24, &"loop": true, &"start": 0}},
+"columns": 8,
+"frames": 24,
+"pattern": "res://assets/operators/v3/mage_apprentice_male/idle_nw.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "idle", &"atlas_sha256": "c3d72a1380d9a3eee1307abcce8289b2bee5b18da3d2c6708829c4fa29b1764b",
+&"class_id": "mage_apprentice", &"direction": "nw", &"gender": "male",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
 },
 &"op_anim_mage_apprentice_male_attack_nw": {
-"animations": {
-&"attack": {
-&"fps": 12.0,
-&"length": 13,
-&"loop": false,
-&"start": 0
-}
-},
+"animations": {&"attack": {&"fps": 12.0, &"length": 13, &"loop": false, &"start": 0}},
 "columns": 8,
 "frames": 13,
-"pattern": "res://assets/template/sprites/operators/animated/mage_apprentice/male/attack_nw.webp",
-"pivot": Vector2(0.5, 1),
+"pattern": "res://assets/operators/v3/mage_apprentice_male/attack_nw.webp",
+"pivot": Vector2(0.5, 0.765625),
 "placeholder": false,
 "provenance": {
-&"action": "attack",
-&"atlas_sha256": "69f940d0aeb6c55547f556042dac7ddfe8c15ace18b3000fde743fa6eb3f4835",
-&"class_id": "mage_apprentice",
-&"direction": "nw",
-&"gender": "male",
-&"mirrored_from": "ne",
-&"source_kind": "mirrored",
-&"source_manifest_id": "advanced_operator_sprites_v2"
+&"action": "attack", &"atlas_sha256": "f0230908ec8c5ae284851757e50460dda6e9a7009ac99d84cd41f5489bb294a8",
+&"class_id": "mage_apprentice", &"direction": "nw", &"gender": "male",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
 },
-"size": Vector2i(640, 640)
+"size": Vector2i(256, 256)
 },
 &"op_anim_swordmaster_female_idle_ne": {
-"animations": {
-&"idle": {
-&"fps": 12.0,
-&"length": 24,
-&"loop": true,
-&"start": 0
-}
-},
+"animations": {&"idle": {&"fps": 12.0, &"length": 24, &"loop": true, &"start": 0}},
 "columns": 8,
 "frames": 24,
-"pattern": "res://assets/template/sprites/operators/animated/swordmaster/female/idle_ne.webp",
-"pivot": Vector2(0.5, 1),
+"pattern": "res://assets/operators/v3/swordmaster_female/idle_ne.webp",
+"pivot": Vector2(0.5, 0.765625),
 "placeholder": false,
 "provenance": {
-&"action": "idle",
-&"atlas_sha256": "a151235565213eeea281a83447a617ee8082899fbb967780625c817fc1fb2cba",
-&"class_id": "swordmaster",
-&"direction": "ne",
-&"gender": "female",
-&"mirrored_from": "",
-&"source_kind": "generated",
-&"source_manifest_id": "advanced_operator_sprites_v2"
+&"action": "idle", &"atlas_sha256": "c1f80d5e61d6af8c2c8ba5d0af7126449ab9c44401897907c6ae9f56afa607b6",
+&"class_id": "swordmaster", &"direction": "ne", &"gender": "female",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
 },
-"size": Vector2i(640, 640)
-},
-&"op_anim_swordmaster_female_idle_nw": {
-"animations": {
-&"idle": {
-&"fps": 12.0,
-&"length": 24,
-&"loop": true,
-&"start": 0
-}
-},
-"columns": 8,
-"frames": 24,
-"pattern": "res://assets/template/sprites/operators/animated/swordmaster/female/idle_nw.webp",
-"pivot": Vector2(0.5, 1),
-"placeholder": false,
-"provenance": {
-&"action": "idle",
-&"atlas_sha256": "71bf33c820890c634315d42db8b303d2912891cab01f978afa73d4ad3e4fa13e",
-&"class_id": "swordmaster",
-&"direction": "nw",
-&"gender": "female",
-&"mirrored_from": "ne",
-&"source_kind": "mirrored",
-&"source_manifest_id": "advanced_operator_sprites_v2"
-},
-"size": Vector2i(640, 640)
+"size": Vector2i(256, 256)
 },
 &"op_anim_swordmaster_female_attack_ne": {
-"animations": {
-&"attack": {
-&"fps": 12.0,
-&"length": 13,
-&"loop": false,
-&"start": 0
-}
-},
+"animations": {&"attack": {&"fps": 12.0, &"length": 13, &"loop": false, &"start": 0}},
 "columns": 8,
 "frames": 13,
-"pattern": "res://assets/template/sprites/operators/animated/swordmaster/female/attack_ne.webp",
-"pivot": Vector2(0.5, 1),
+"pattern": "res://assets/operators/v3/swordmaster_female/attack_ne.webp",
+"pivot": Vector2(0.5, 0.765625),
 "placeholder": false,
 "provenance": {
-&"action": "attack",
-&"atlas_sha256": "26613d6bdb4ff8eb3eb7cc37f9d2b2fd290f39548f34a513a72171c09b49ba8e",
-&"class_id": "swordmaster",
-&"direction": "ne",
-&"gender": "female",
-&"mirrored_from": "",
-&"source_kind": "generated",
-&"source_manifest_id": "advanced_operator_sprites_v2"
+&"action": "attack", &"atlas_sha256": "9e945e0e3de423fec5187f748f8d891cbe0be10d1441a2bfe64f1f08ef0b700e",
+&"class_id": "swordmaster", &"direction": "ne", &"gender": "female",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
 },
-"size": Vector2i(640, 640)
+"size": Vector2i(256, 256)
+},
+&"op_anim_swordmaster_female_idle_se": {
+"animations": {&"idle": {&"fps": 12.0, &"length": 24, &"loop": true, &"start": 0}},
+"columns": 8,
+"frames": 24,
+"pattern": "res://assets/operators/v3/swordmaster_female/idle_se.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "idle", &"atlas_sha256": "d9ebe07a098518cd579635178b1793aeba083305a9bc72426d1c7491dfc11892",
+&"class_id": "swordmaster", &"direction": "se", &"gender": "female",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
+},
+&"op_anim_swordmaster_female_attack_se": {
+"animations": {&"attack": {&"fps": 12.0, &"length": 13, &"loop": false, &"start": 0}},
+"columns": 8,
+"frames": 13,
+"pattern": "res://assets/operators/v3/swordmaster_female/attack_se.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "attack", &"atlas_sha256": "d40c2d66a5a2c4f65769586b5ba83783c36d7f53945d3243ea138ac1cd6693fe",
+&"class_id": "swordmaster", &"direction": "se", &"gender": "female",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
+},
+&"op_anim_swordmaster_female_idle_sw": {
+"animations": {&"idle": {&"fps": 12.0, &"length": 24, &"loop": true, &"start": 0}},
+"columns": 8,
+"frames": 24,
+"pattern": "res://assets/operators/v3/swordmaster_female/idle_sw.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "idle", &"atlas_sha256": "be00687c802f19b490adddeb0c2eb0e1a8c528031beeb21d098bc642fe9938b9",
+&"class_id": "swordmaster", &"direction": "sw", &"gender": "female",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
+},
+&"op_anim_swordmaster_female_attack_sw": {
+"animations": {&"attack": {&"fps": 12.0, &"length": 13, &"loop": false, &"start": 0}},
+"columns": 8,
+"frames": 13,
+"pattern": "res://assets/operators/v3/swordmaster_female/attack_sw.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "attack", &"atlas_sha256": "b14d7645fb0a8041e3340fe1255a641dbcffe0c15b80a9566598ab137487e30d",
+&"class_id": "swordmaster", &"direction": "sw", &"gender": "female",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
+},
+&"op_anim_swordmaster_female_idle_nw": {
+"animations": {&"idle": {&"fps": 12.0, &"length": 24, &"loop": true, &"start": 0}},
+"columns": 8,
+"frames": 24,
+"pattern": "res://assets/operators/v3/swordmaster_female/idle_nw.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "idle", &"atlas_sha256": "be281268d025837c5b65a6c0321015fcc09c59c8cab590a6441293b15413a537",
+&"class_id": "swordmaster", &"direction": "nw", &"gender": "female",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
 },
 &"op_anim_swordmaster_female_attack_nw": {
-"animations": {
-&"attack": {
-&"fps": 12.0,
-&"length": 13,
-&"loop": false,
-&"start": 0
-}
-},
+"animations": {&"attack": {&"fps": 12.0, &"length": 13, &"loop": false, &"start": 0}},
 "columns": 8,
 "frames": 13,
-"pattern": "res://assets/template/sprites/operators/animated/swordmaster/female/attack_nw.webp",
-"pivot": Vector2(0.5, 1),
+"pattern": "res://assets/operators/v3/swordmaster_female/attack_nw.webp",
+"pivot": Vector2(0.5, 0.765625),
 "placeholder": false,
 "provenance": {
-&"action": "attack",
-&"atlas_sha256": "2d68e10c5a53d4922605f7bf3b9b1e35c3ae2c32c67463b25842d2162ce75b8a",
-&"class_id": "swordmaster",
-&"direction": "nw",
-&"gender": "female",
-&"mirrored_from": "ne",
-&"source_kind": "mirrored",
-&"source_manifest_id": "advanced_operator_sprites_v2"
+&"action": "attack", &"atlas_sha256": "c5a3256c0a782fc54cd4602901ac036d7a988f97f9dbb24d10ce7af5db32f085",
+&"class_id": "swordmaster", &"direction": "nw", &"gender": "female",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
 },
-"size": Vector2i(640, 640)
+"size": Vector2i(256, 256)
 },
 &"op_anim_swordmaster_male_idle_ne": {
-"animations": {
-&"idle": {
-&"fps": 12.0,
-&"length": 24,
-&"loop": true,
-&"start": 0
-}
-},
+"animations": {&"idle": {&"fps": 12.0, &"length": 24, &"loop": true, &"start": 0}},
 "columns": 8,
 "frames": 24,
-"pattern": "res://assets/template/sprites/operators/animated/swordmaster/male/idle_ne.webp",
-"pivot": Vector2(0.5, 1),
+"pattern": "res://assets/operators/v3/swordmaster_male/idle_ne.webp",
+"pivot": Vector2(0.5, 0.765625),
 "placeholder": false,
 "provenance": {
-&"action": "idle",
-&"atlas_sha256": "7a33cab3a72a82e8f7c5974a2de2fd8403ebd4168d8f83ac98e375f6d537c06d",
-&"class_id": "swordmaster",
-&"direction": "ne",
-&"gender": "male",
-&"mirrored_from": "",
-&"source_kind": "generated",
-&"source_manifest_id": "advanced_operator_sprites_v2"
+&"action": "idle", &"atlas_sha256": "db0483baf4208140df487f0b3866d2eeb6c308bf68add4acb3ace3982b15045b",
+&"class_id": "swordmaster", &"direction": "ne", &"gender": "male",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
 },
-"size": Vector2i(640, 640)
-},
-&"op_anim_swordmaster_male_idle_nw": {
-"animations": {
-&"idle": {
-&"fps": 12.0,
-&"length": 24,
-&"loop": true,
-&"start": 0
-}
-},
-"columns": 8,
-"frames": 24,
-"pattern": "res://assets/template/sprites/operators/animated/swordmaster/male/idle_nw.webp",
-"pivot": Vector2(0.5, 1),
-"placeholder": false,
-"provenance": {
-&"action": "idle",
-&"atlas_sha256": "c61deaf0738a1a7ddad92bf2d405bb12a0a1f329d57cd1f6b29eaea30b7f5a6a",
-&"class_id": "swordmaster",
-&"direction": "nw",
-&"gender": "male",
-&"mirrored_from": "ne",
-&"source_kind": "mirrored",
-&"source_manifest_id": "advanced_operator_sprites_v2"
-},
-"size": Vector2i(640, 640)
+"size": Vector2i(256, 256)
 },
 &"op_anim_swordmaster_male_attack_ne": {
-"animations": {
-&"attack": {
-&"fps": 12.0,
-&"length": 13,
-&"loop": false,
-&"start": 0
-}
-},
+"animations": {&"attack": {&"fps": 12.0, &"length": 13, &"loop": false, &"start": 0}},
 "columns": 8,
 "frames": 13,
-"pattern": "res://assets/template/sprites/operators/animated/swordmaster/male/attack_ne.webp",
-"pivot": Vector2(0.5, 1),
+"pattern": "res://assets/operators/v3/swordmaster_male/attack_ne.webp",
+"pivot": Vector2(0.5, 0.765625),
 "placeholder": false,
 "provenance": {
-&"action": "attack",
-&"atlas_sha256": "24077183a745d68fe849874e3c7703da968317348eb9cb4219be12ff31298a93",
-&"class_id": "swordmaster",
-&"direction": "ne",
-&"gender": "male",
-&"mirrored_from": "",
-&"source_kind": "generated",
-&"source_manifest_id": "advanced_operator_sprites_v2"
+&"action": "attack", &"atlas_sha256": "d237d282e76696df4bbdf697fb5a08d2d9efb6b21af8bd3aa245c2dcbd9821d4",
+&"class_id": "swordmaster", &"direction": "ne", &"gender": "male",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
 },
-"size": Vector2i(640, 640)
+"size": Vector2i(256, 256)
+},
+&"op_anim_swordmaster_male_idle_se": {
+"animations": {&"idle": {&"fps": 12.0, &"length": 24, &"loop": true, &"start": 0}},
+"columns": 8,
+"frames": 24,
+"pattern": "res://assets/operators/v3/swordmaster_male/idle_se.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "idle", &"atlas_sha256": "ffa16ba271a280833928ed7e2de74c8a95219e9a8d01ad91c71ec317ffe33554",
+&"class_id": "swordmaster", &"direction": "se", &"gender": "male",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
+},
+&"op_anim_swordmaster_male_attack_se": {
+"animations": {&"attack": {&"fps": 12.0, &"length": 13, &"loop": false, &"start": 0}},
+"columns": 8,
+"frames": 13,
+"pattern": "res://assets/operators/v3/swordmaster_male/attack_se.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "attack", &"atlas_sha256": "1b88aa890176e734f8a5713b22ed1f97d437d0d58e6a90c3dd96d47bb8a71a76",
+&"class_id": "swordmaster", &"direction": "se", &"gender": "male",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
+},
+&"op_anim_swordmaster_male_idle_sw": {
+"animations": {&"idle": {&"fps": 12.0, &"length": 24, &"loop": true, &"start": 0}},
+"columns": 8,
+"frames": 24,
+"pattern": "res://assets/operators/v3/swordmaster_male/idle_sw.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "idle", &"atlas_sha256": "7376d19c8439292ca4b34e851a3b8921472733af4d44ffa5fad76a7c9ea68ea2",
+&"class_id": "swordmaster", &"direction": "sw", &"gender": "male",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
+},
+&"op_anim_swordmaster_male_attack_sw": {
+"animations": {&"attack": {&"fps": 12.0, &"length": 13, &"loop": false, &"start": 0}},
+"columns": 8,
+"frames": 13,
+"pattern": "res://assets/operators/v3/swordmaster_male/attack_sw.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "attack", &"atlas_sha256": "471d55dc5459d8357d1b1273be84ca848e00d3254a31c5b04cadc278125f920c",
+&"class_id": "swordmaster", &"direction": "sw", &"gender": "male",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
+},
+&"op_anim_swordmaster_male_idle_nw": {
+"animations": {&"idle": {&"fps": 12.0, &"length": 24, &"loop": true, &"start": 0}},
+"columns": 8,
+"frames": 24,
+"pattern": "res://assets/operators/v3/swordmaster_male/idle_nw.webp",
+"pivot": Vector2(0.5, 0.765625),
+"placeholder": false,
+"provenance": {
+&"action": "idle", &"atlas_sha256": "41f85c4e1234f8087830b6a8a65e5bfd616cb693bfcdfaf8ce034e85aaf57810",
+&"class_id": "swordmaster", &"direction": "nw", &"gender": "male",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
+},
+"size": Vector2i(256, 256)
 },
 &"op_anim_swordmaster_male_attack_nw": {
-"animations": {
-&"attack": {
-&"fps": 12.0,
-&"length": 13,
-&"loop": false,
-&"start": 0
-}
-},
+"animations": {&"attack": {&"fps": 12.0, &"length": 13, &"loop": false, &"start": 0}},
 "columns": 8,
 "frames": 13,
-"pattern": "res://assets/template/sprites/operators/animated/swordmaster/male/attack_nw.webp",
-"pivot": Vector2(0.5, 1),
+"pattern": "res://assets/operators/v3/swordmaster_male/attack_nw.webp",
+"pivot": Vector2(0.5, 0.765625),
 "placeholder": false,
 "provenance": {
-&"action": "attack",
-&"atlas_sha256": "3c37e3ebbb8c02a92d73e1431144600080b051b0e07719da40b4cb03858ba71e",
-&"class_id": "swordmaster",
-&"direction": "nw",
-&"gender": "male",
-&"mirrored_from": "ne",
-&"source_kind": "mirrored",
-&"source_manifest_id": "advanced_operator_sprites_v2"
+&"action": "attack", &"atlas_sha256": "c8ef1e020c80b6b1346da0ca943fc57bf15fda9976c2f8b7324ba0e143a8594b",
+&"class_id": "swordmaster", &"direction": "nw", &"gender": "male",
+&"mirrored_from": "", &"source_kind": "generated", &"source_manifest_id": "operator_sprites_v3"
 },
-"size": Vector2i(640, 640)
+"size": Vector2i(256, 256)
 }
 ; END GENERATED ADVANCED OPERATOR ANIMATIONS
 }

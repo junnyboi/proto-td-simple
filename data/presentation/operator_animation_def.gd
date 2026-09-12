@@ -5,6 +5,7 @@ extends Resource
 ## loads or hashes this presentation contract.
 
 const DIRECTIONS: Array[StringName] = [&"ne", &"nw"]
+const FULL_DIRECTIONS: Array[StringName] = [&"ne", &"se", &"sw", &"nw"]
 
 @export var schema_version: int = 1
 @export var visual_id: StringName = &""
@@ -23,8 +24,8 @@ const DIRECTIONS: Array[StringName] = [&"ne", &"nw"]
 
 func validate_contract() -> PackedStringArray:
 	var errors := PackedStringArray()
-	if schema_version not in [1, 2]:
-		errors.append("schema_version: expected 1 or 2")
+	if schema_version not in [1, 2, 3]:
+		errors.append("schema_version: expected 1, 2 or 3")
 	if visual_id.is_empty():
 		errors.append("visual_id: expected nonempty StringName")
 	_validate_direction_map(&"idle", idle_by_direction, errors)
@@ -43,6 +44,15 @@ func validate_contract() -> PackedStringArray:
 		errors.append("source_cell_px: schema 2 expected 640")
 	if schema_version == 2 and not pivot.is_equal_approx(Vector2(0.5, 1.0)):
 		errors.append("pivot: schema 2 expected bottom-center (0.5, 1.0)")
+	if schema_version == 3:
+		if source_cell_px != 256:
+			errors.append("source_cell_px: schema 3 expected 256")
+		if not pivot.is_equal_approx(Vector2(0.5, 196.0 / 256.0)):
+			errors.append("pivot: schema 3 expected authored foot (128,196)")
+		if display_height_px != 58 or normalized_subject_height_px != 106:
+			errors.append("scale: schema 3 expected recruit body calibration 58/106")
+		if placeholder:
+			errors.append("placeholder: schema 3 must be production art")
 	if display_height_px <= 0:
 		errors.append("display_height_px: expected positive int")
 	if normalized_subject_height_px <= 0 or normalized_subject_height_px > source_cell_px:
@@ -51,6 +61,10 @@ func validate_contract() -> PackedStringArray:
 		errors.append("placeholder: schema 2 generated animation must be production art")
 	_validate_placeholders(errors)
 	return errors
+
+
+func supported_directions() -> Array[StringName]:
+	return FULL_DIRECTIONS if schema_version == 3 else DIRECTIONS
 
 
 func is_placeholder(logical_id: StringName) -> bool:
@@ -75,20 +89,20 @@ func _validate_placeholders(errors: PackedStringArray) -> void:
 			errors.append("placeholder_source_by_logical_id: unknown logical id %s" % raw_id)
 			continue
 		var raw_direction: Variant = placeholder_source_by_logical_id[raw_id]
-		if typeof(raw_direction) != TYPE_STRING_NAME or raw_direction not in DIRECTIONS:
+		if typeof(raw_direction) != TYPE_STRING_NAME or raw_direction not in supported_directions():
 			errors.append(
 				"placeholder_source_by_logical_id.%s: expected admitted source direction" % raw_id
 			)
 
 
-static func _validate_direction_map(
+func _validate_direction_map(
 	label: StringName, value: Dictionary, errors: PackedStringArray
 ) -> void:
-	if value.size() != DIRECTIONS.size():
-		errors.append("%s_by_direction: expected exact NE/NW directions" % label)
+	if value.size() != supported_directions().size():
+		errors.append("%s_by_direction: expected exact schema directions" % label)
 		return
 	var seen_ids: Dictionary = {}
-	for direction: StringName in DIRECTIONS:
+	for direction: StringName in supported_directions():
 		if not value.has(direction):
 			errors.append("%s_by_direction: missing %s" % [label, direction])
 			continue
@@ -100,5 +114,5 @@ static func _validate_direction_map(
 			errors.append("%s_by_direction: duplicate logical id %s" % [label, logical_id])
 		seen_ids[logical_id] = true
 	for raw_direction: Variant in value:
-		if typeof(raw_direction) != TYPE_STRING_NAME or raw_direction not in DIRECTIONS:
+		if typeof(raw_direction) != TYPE_STRING_NAME or raw_direction not in supported_directions():
 			errors.append("%s_by_direction: unknown direction %s" % [label, raw_direction])

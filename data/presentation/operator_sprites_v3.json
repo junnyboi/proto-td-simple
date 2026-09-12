@@ -1,0 +1,650 @@
+{
+  "schema_version": 3,
+  "source_manifest_id": "operator_sprites_v3",
+  "identity_count": 6,
+  "directions": [
+    "ne",
+    "se",
+    "sw",
+    "nw"
+  ],
+  "sequence_count": 48,
+  "frame_count": 888,
+  "cell": [
+    256,
+    256
+  ],
+  "contact": [
+    128,
+    196
+  ],
+  "display_body_height": 58,
+  "source_kind": "generated",
+  "mirrored_directions": [],
+  "sequences": [
+    {
+      "id": "op_anim_gunner_female_idle_ne",
+      "path": "assets/operators/v3/gunner_female/idle_ne.webp",
+      "sha256": "9079015403fd86cd85fdb0fd82ba3e4992d75fee0e924795f1a8da8253e454f1",
+      "frame_count": 24,
+      "direction": "ne",
+      "action": "idle",
+      "carrier_sha256": "6567359eb89cc4d833fd165c7ede29c561ec36072132e1b44e9bb686d330bf89",
+      "source_window": [
+        0.4,
+        2.2
+      ]
+    },
+    {
+      "id": "op_anim_gunner_female_attack_ne",
+      "path": "assets/operators/v3/gunner_female/attack_ne.webp",
+      "sha256": "ae23a3e72e82b0e44f327d0a84e0c74c0a7e287da2ce65ebd54777151c359330",
+      "frame_count": 13,
+      "direction": "ne",
+      "action": "attack",
+      "carrier_sha256": "6567359eb89cc4d833fd165c7ede29c561ec36072132e1b44e9bb686d330bf89",
+      "source_window": [
+        3,
+        5.7
+      ]
+    },
+    {
+      "id": "op_anim_gunner_female_idle_se",
+      "path": "assets/operators/v3/gunner_female/idle_se.webp",
+      "sha256": "db471e4e2933cbcfe405366c42c13a31ac620c65312303d237689c1ee9d447a3",
+      "frame_count": 24,
+      "direction": "se",
+      "action": "idle",
+      "carrier_sha256": "6567359eb89cc4d833fd165c7ede29c561ec36072132e1b44e9bb686d330bf89",
+      "source_window": [
+        7.9,
+        9.7
+      ]
+    },
+    {
+      "id": "op_anim_gunner_female_attack_se",
+      "path": "assets/operators/v3/gunner_female/attack_se.webp",
+      "sha256": "d23e7a31fe8458c8125ed0d92698c429681b967eb52cd301445943c1cd946d26",
+      "frame_count": 13,
+      "direction": "se",
+      "action": "attack",
+      "carrier_sha256": "6567359eb89cc4d833fd165c7ede29c561ec36072132e1b44e9bb686d330bf89",
+      "source_window": [
+        10.5,
+        13.2
+      ]
+    },
+    {
+      "id": "op_anim_gunner_female_idle_sw",
+      "path": "assets/operators/v3/gunner_female/idle_sw.webp",
+      "sha256": "c8e8b1b973d04fd738c7f1d2a2f43e9f6adef2f58afa08e76fb64b91761e234d",
+      "frame_count": 24,
+      "direction": "sw",
+      "action": "idle",
+      "carrier_sha256": "6567359eb89cc4d833fd165c7ede29c561ec36072132e1b44e9bb686d330bf89",
+      "source_window": [
+        15.4,
+        17.2
+      ]
+    },
+    {
+      "id": "op_anim_gunner_female_attack_sw",
+      "path": "assets/operators/v3/gunner_female/attack_sw.webp",
+      "sha256": "2885ab600e28dd851bcabd00a1db499936d7b9f5ca9d7c53ff2a20d525a8d82d",
+      "frame_count": 13,
+      "direction": "sw",
+      "action": "attack",
+      "carrier_sha256": "6567359eb89cc4d833fd165c7ede29c561ec36072132e1b44e9bb686d330bf89",
+      "source_window": [
+        18,
+        20.7
+      ]
+    },
+    {
+      "id": "op_anim_gunner_female_idle_nw",
+      "path": "assets/operators/v3/gunner_female/idle_nw.webp",
+      "sha256": "39e0791a850fe65f17756d643a4c9f670f83b49b359e650d2bf79c6fe0855093",
+      "frame_count": 24,
+      "direction": "nw",
+      "action": "idle",
+      "carrier_sha256": "6567359eb89cc4d833fd165c7ede29c561ec36072132e1b44e9bb686d330bf89",
+      "source_window": [
+        22.9,
+        24.7
+      ]
+    },
+    {
+      "id": "op_anim_gunner_female_attack_nw",
+      "path": "assets/operators/v3/gunner_female/attack_nw.webp",
+      "sha256": "3af8c7ca543fa040dc108bb5645acc08b1e7e7c40b7dadbf2787f107fbfd2647",
+      "frame_count": 13,
+      "direction": "nw",
+      "action": "attack",
+      "carrier_sha256": "6567359eb89cc4d833fd165c7ede29c561ec36072132e1b44e9bb686d330bf89",
+      "source_window": [
+        25.5,
+        28.2
+      ]
+    },
+    {
+      "id": "op_anim_gunner_male_idle_ne",
+      "path": "assets/operators/v3/gunner_male/idle_ne.webp",
+      "sha256": "0683f54b65669e7466ba98cd7027b5a854d48563626dd8eee59a059e650a9941",
+      "frame_count": 24,
+      "direction": "ne",
+      "action": "idle",
+      "carrier_sha256": "6e1399920e78890e70a3e2f893e5da9fddea92b66024e72c9d0d4ef9b403ad99",
+      "source_window": [
+        0.4,
+        2.2
+      ]
+    },
+    {
+      "id": "op_anim_gunner_male_attack_ne",
+      "path": "assets/operators/v3/gunner_male/attack_ne.webp",
+      "sha256": "66ba96e8f3634fab8e7582a00a4aebc5cdb0f22412951e99ddf5fe6abe358291",
+      "frame_count": 13,
+      "direction": "ne",
+      "action": "attack",
+      "carrier_sha256": "6e1399920e78890e70a3e2f893e5da9fddea92b66024e72c9d0d4ef9b403ad99",
+      "source_window": [
+        3,
+        5.7
+      ]
+    },
+    {
+      "id": "op_anim_gunner_male_idle_se",
+      "path": "assets/operators/v3/gunner_male/idle_se.webp",
+      "sha256": "9ebd240204819fbe1b107e89fd7968cc3878e0a3459570b0f0406ef553409309",
+      "frame_count": 24,
+      "direction": "se",
+      "action": "idle",
+      "carrier_sha256": "6e1399920e78890e70a3e2f893e5da9fddea92b66024e72c9d0d4ef9b403ad99",
+      "source_window": [
+        7.9,
+        9.7
+      ]
+    },
+    {
+      "id": "op_anim_gunner_male_attack_se",
+      "path": "assets/operators/v3/gunner_male/attack_se.webp",
+      "sha256": "e2af9bb79b43e85d213c2f6a3c71d53b529b715ba3b0decfe45ecf22ba961f3b",
+      "frame_count": 13,
+      "direction": "se",
+      "action": "attack",
+      "carrier_sha256": "6e1399920e78890e70a3e2f893e5da9fddea92b66024e72c9d0d4ef9b403ad99",
+      "source_window": [
+        10.5,
+        13.2
+      ]
+    },
+    {
+      "id": "op_anim_gunner_male_idle_sw",
+      "path": "assets/operators/v3/gunner_male/idle_sw.webp",
+      "sha256": "6d6922de753089cb4f0c221ac98080a25e90c7606c52b64a4e5a0357bbba1970",
+      "frame_count": 24,
+      "direction": "sw",
+      "action": "idle",
+      "carrier_sha256": "6e1399920e78890e70a3e2f893e5da9fddea92b66024e72c9d0d4ef9b403ad99",
+      "source_window": [
+        15.4,
+        17.2
+      ]
+    },
+    {
+      "id": "op_anim_gunner_male_attack_sw",
+      "path": "assets/operators/v3/gunner_male/attack_sw.webp",
+      "sha256": "f1250708ad8a27b8da000524788435e55ca4cd5cc3747c64fe6d2be324b10c14",
+      "frame_count": 13,
+      "direction": "sw",
+      "action": "attack",
+      "carrier_sha256": "6e1399920e78890e70a3e2f893e5da9fddea92b66024e72c9d0d4ef9b403ad99",
+      "source_window": [
+        18,
+        20.7
+      ]
+    },
+    {
+      "id": "op_anim_gunner_male_idle_nw",
+      "path": "assets/operators/v3/gunner_male/idle_nw.webp",
+      "sha256": "51eff46fea08d139bc73f41631186d90021ee1b4c59d91c04d1c03192aa5f751",
+      "frame_count": 24,
+      "direction": "nw",
+      "action": "idle",
+      "carrier_sha256": "6e1399920e78890e70a3e2f893e5da9fddea92b66024e72c9d0d4ef9b403ad99",
+      "source_window": [
+        22.9,
+        24.7
+      ]
+    },
+    {
+      "id": "op_anim_gunner_male_attack_nw",
+      "path": "assets/operators/v3/gunner_male/attack_nw.webp",
+      "sha256": "8b7802c84f7a2cfcf3de645bfe4f24ebce69fe8a8abf0efe283ecd96e27704e9",
+      "frame_count": 13,
+      "direction": "nw",
+      "action": "attack",
+      "carrier_sha256": "6e1399920e78890e70a3e2f893e5da9fddea92b66024e72c9d0d4ef9b403ad99",
+      "source_window": [
+        25.5,
+        28.2
+      ]
+    },
+    {
+      "id": "op_anim_mage_apprentice_female_idle_ne",
+      "path": "assets/operators/v3/mage_apprentice_female/idle_ne.webp",
+      "sha256": "4511a206f6580589b06412caf265f66b1882b32ff9923d5fa2505abff9465cf8",
+      "frame_count": 24,
+      "direction": "ne",
+      "action": "idle",
+      "carrier_sha256": "1e77a370fb9344c02b064de7d939b5392290bfd0bfb279c65914273be153fb6f",
+      "source_window": [
+        0.4,
+        2.2
+      ]
+    },
+    {
+      "id": "op_anim_mage_apprentice_female_attack_ne",
+      "path": "assets/operators/v3/mage_apprentice_female/attack_ne.webp",
+      "sha256": "924c11c513388dcb3b13a986162895e66aee77c9b80360aafdc42e6cbbc6a6d7",
+      "frame_count": 13,
+      "direction": "ne",
+      "action": "attack",
+      "carrier_sha256": "1e77a370fb9344c02b064de7d939b5392290bfd0bfb279c65914273be153fb6f",
+      "source_window": [
+        3.1,
+        5.3
+      ]
+    },
+    {
+      "id": "op_anim_mage_apprentice_female_idle_se",
+      "path": "assets/operators/v3/mage_apprentice_female/idle_se.webp",
+      "sha256": "c03aa4aa937d129fa4698a6e0e31ea026901092e30c8371922ffedf88b688d4e",
+      "frame_count": 24,
+      "direction": "se",
+      "action": "idle",
+      "carrier_sha256": "1e77a370fb9344c02b064de7d939b5392290bfd0bfb279c65914273be153fb6f",
+      "source_window": [
+        7.9,
+        9.7
+      ]
+    },
+    {
+      "id": "op_anim_mage_apprentice_female_attack_se",
+      "path": "assets/operators/v3/mage_apprentice_female/attack_se.webp",
+      "sha256": "25ee44cdd1facecced0ff8b73a26798e42b1cc93d3b7e3be8074fd587b61f08f",
+      "frame_count": 13,
+      "direction": "se",
+      "action": "attack",
+      "carrier_sha256": "1e77a370fb9344c02b064de7d939b5392290bfd0bfb279c65914273be153fb6f",
+      "source_window": [
+        11.0,
+        13.3
+      ]
+    },
+    {
+      "id": "op_anim_mage_apprentice_female_idle_sw",
+      "path": "assets/operators/v3/mage_apprentice_female/idle_sw.webp",
+      "sha256": "f487b9d1e7c547711e2012c91233e15f8ad878a5b75dd33b33cda6f2d508b2b3",
+      "frame_count": 24,
+      "direction": "sw",
+      "action": "idle",
+      "carrier_sha256": "1e77a370fb9344c02b064de7d939b5392290bfd0bfb279c65914273be153fb6f",
+      "source_window": [
+        15.4,
+        17.2
+      ]
+    },
+    {
+      "id": "op_anim_mage_apprentice_female_attack_sw",
+      "path": "assets/operators/v3/mage_apprentice_female/attack_sw.webp",
+      "sha256": "1ccab87fd2d4d772284f694aa3d99b79c837785f04714e1e1d42d201bdd71fda",
+      "frame_count": 13,
+      "direction": "sw",
+      "action": "attack",
+      "carrier_sha256": "1e77a370fb9344c02b064de7d939b5392290bfd0bfb279c65914273be153fb6f",
+      "source_window": [
+        18.5,
+        20.8
+      ]
+    },
+    {
+      "id": "op_anim_mage_apprentice_female_idle_nw",
+      "path": "assets/operators/v3/mage_apprentice_female/idle_nw.webp",
+      "sha256": "a0e6567e00f180350a2fa6e9ee693f76fae90d6f92b836320ca76cbb54e6efc4",
+      "frame_count": 24,
+      "direction": "nw",
+      "action": "idle",
+      "carrier_sha256": "1e77a370fb9344c02b064de7d939b5392290bfd0bfb279c65914273be153fb6f",
+      "source_window": [
+        22.9,
+        24.7
+      ]
+    },
+    {
+      "id": "op_anim_mage_apprentice_female_attack_nw",
+      "path": "assets/operators/v3/mage_apprentice_female/attack_nw.webp",
+      "sha256": "715ed0cbd66327a60ea9c4af4d1cc3b784854761c3c3fd359d2f684d4be2f981",
+      "frame_count": 13,
+      "direction": "nw",
+      "action": "attack",
+      "carrier_sha256": "1e77a370fb9344c02b064de7d939b5392290bfd0bfb279c65914273be153fb6f",
+      "source_window": [
+        26.0,
+        28.3
+      ]
+    },
+    {
+      "id": "op_anim_mage_apprentice_male_idle_ne",
+      "path": "assets/operators/v3/mage_apprentice_male/idle_ne.webp",
+      "sha256": "9186c0323ec0954f1b7960f465cf0194d943e1d601230b3417d7d0699b9d73c2",
+      "frame_count": 24,
+      "direction": "ne",
+      "action": "idle",
+      "carrier_sha256": "caf2956a2d364d6e7876563b74eb6579523af1794de531e3ef70c32bde87587b",
+      "source_window": [
+        0.4,
+        2.2
+      ]
+    },
+    {
+      "id": "op_anim_mage_apprentice_male_attack_ne",
+      "path": "assets/operators/v3/mage_apprentice_male/attack_ne.webp",
+      "sha256": "81a6a377b262515ddacc62b2c64c7a7dbb612d2d07014a5c142ff7fc57aa7a84",
+      "frame_count": 13,
+      "direction": "ne",
+      "action": "attack",
+      "carrier_sha256": "caf2956a2d364d6e7876563b74eb6579523af1794de531e3ef70c32bde87587b",
+      "source_window": [
+        3.3,
+        6.2
+      ]
+    },
+    {
+      "id": "op_anim_mage_apprentice_male_idle_se",
+      "path": "assets/operators/v3/mage_apprentice_male/idle_se.webp",
+      "sha256": "e38a2a6a91857a18b64d1601d086e232363ac808fc3e1a7e407f7c54fee55aea",
+      "frame_count": 24,
+      "direction": "se",
+      "action": "idle",
+      "carrier_sha256": "caf2956a2d364d6e7876563b74eb6579523af1794de531e3ef70c32bde87587b",
+      "source_window": [
+        7.9,
+        9.7
+      ]
+    },
+    {
+      "id": "op_anim_mage_apprentice_male_attack_se",
+      "path": "assets/operators/v3/mage_apprentice_male/attack_se.webp",
+      "sha256": "19ec4773d9224f436cc54c6aaa47e3275e155eb0df9cbec70615575dbcc8505c",
+      "frame_count": 13,
+      "direction": "se",
+      "action": "attack",
+      "carrier_sha256": "caf2956a2d364d6e7876563b74eb6579523af1794de531e3ef70c32bde87587b",
+      "source_window": [
+        10.5,
+        13.1
+      ]
+    },
+    {
+      "id": "op_anim_mage_apprentice_male_idle_sw",
+      "path": "assets/operators/v3/mage_apprentice_male/idle_sw.webp",
+      "sha256": "ee7c954388521833cf782cb6a978b5c8de92242982ceebe14fd7769944da5f6b",
+      "frame_count": 24,
+      "direction": "sw",
+      "action": "idle",
+      "carrier_sha256": "caf2956a2d364d6e7876563b74eb6579523af1794de531e3ef70c32bde87587b",
+      "source_window": [
+        15.4,
+        17.2
+      ]
+    },
+    {
+      "id": "op_anim_mage_apprentice_male_attack_sw",
+      "path": "assets/operators/v3/mage_apprentice_male/attack_sw.webp",
+      "sha256": "dc38d38c4a66135a3fdc206cde85bc10d3dddda55a2b659d66b28b7761ab9dde",
+      "frame_count": 13,
+      "direction": "sw",
+      "action": "attack",
+      "carrier_sha256": "caf2956a2d364d6e7876563b74eb6579523af1794de531e3ef70c32bde87587b",
+      "source_window": [
+        18,
+        20.6
+      ]
+    },
+    {
+      "id": "op_anim_mage_apprentice_male_idle_nw",
+      "path": "assets/operators/v3/mage_apprentice_male/idle_nw.webp",
+      "sha256": "c3d72a1380d9a3eee1307abcce8289b2bee5b18da3d2c6708829c4fa29b1764b",
+      "frame_count": 24,
+      "direction": "nw",
+      "action": "idle",
+      "carrier_sha256": "caf2956a2d364d6e7876563b74eb6579523af1794de531e3ef70c32bde87587b",
+      "source_window": [
+        22.9,
+        24.7
+      ]
+    },
+    {
+      "id": "op_anim_mage_apprentice_male_attack_nw",
+      "path": "assets/operators/v3/mage_apprentice_male/attack_nw.webp",
+      "sha256": "f0230908ec8c5ae284851757e50460dda6e9a7009ac99d84cd41f5489bb294a8",
+      "frame_count": 13,
+      "direction": "nw",
+      "action": "attack",
+      "carrier_sha256": "caf2956a2d364d6e7876563b74eb6579523af1794de531e3ef70c32bde87587b",
+      "source_window": [
+        25.2,
+        27.7
+      ]
+    },
+    {
+      "id": "op_anim_swordmaster_female_idle_ne",
+      "path": "assets/operators/v3/swordmaster_female/idle_ne.webp",
+      "sha256": "c1f80d5e61d6af8c2c8ba5d0af7126449ab9c44401897907c6ae9f56afa607b6",
+      "frame_count": 24,
+      "direction": "ne",
+      "action": "idle",
+      "carrier_sha256": "c0b01900d43173cb0f0f0d350ec34c86944b16d022258250ae178827b3caa4a8",
+      "source_window": [
+        0.4,
+        2.2
+      ]
+    },
+    {
+      "id": "op_anim_swordmaster_female_attack_ne",
+      "path": "assets/operators/v3/swordmaster_female/attack_ne.webp",
+      "sha256": "9e945e0e3de423fec5187f748f8d891cbe0be10d1441a2bfe64f1f08ef0b700e",
+      "frame_count": 13,
+      "direction": "ne",
+      "action": "attack",
+      "carrier_sha256": "c0b01900d43173cb0f0f0d350ec34c86944b16d022258250ae178827b3caa4a8",
+      "source_window": [
+        3,
+        5.7
+      ]
+    },
+    {
+      "id": "op_anim_swordmaster_female_idle_se",
+      "path": "assets/operators/v3/swordmaster_female/idle_se.webp",
+      "sha256": "d9ebe07a098518cd579635178b1793aeba083305a9bc72426d1c7491dfc11892",
+      "frame_count": 24,
+      "direction": "se",
+      "action": "idle",
+      "carrier_sha256": "c0b01900d43173cb0f0f0d350ec34c86944b16d022258250ae178827b3caa4a8",
+      "source_window": [
+        7.9,
+        9.7
+      ]
+    },
+    {
+      "id": "op_anim_swordmaster_female_attack_se",
+      "path": "assets/operators/v3/swordmaster_female/attack_se.webp",
+      "sha256": "d40c2d66a5a2c4f65769586b5ba83783c36d7f53945d3243ea138ac1cd6693fe",
+      "frame_count": 13,
+      "direction": "se",
+      "action": "attack",
+      "carrier_sha256": "c0b01900d43173cb0f0f0d350ec34c86944b16d022258250ae178827b3caa4a8",
+      "source_window": [
+        10.5,
+        13.2
+      ]
+    },
+    {
+      "id": "op_anim_swordmaster_female_idle_sw",
+      "path": "assets/operators/v3/swordmaster_female/idle_sw.webp",
+      "sha256": "be00687c802f19b490adddeb0c2eb0e1a8c528031beeb21d098bc642fe9938b9",
+      "frame_count": 24,
+      "direction": "sw",
+      "action": "idle",
+      "carrier_sha256": "c0b01900d43173cb0f0f0d350ec34c86944b16d022258250ae178827b3caa4a8",
+      "source_window": [
+        15.4,
+        17.2
+      ]
+    },
+    {
+      "id": "op_anim_swordmaster_female_attack_sw",
+      "path": "assets/operators/v3/swordmaster_female/attack_sw.webp",
+      "sha256": "b14d7645fb0a8041e3340fe1255a641dbcffe0c15b80a9566598ab137487e30d",
+      "frame_count": 13,
+      "direction": "sw",
+      "action": "attack",
+      "carrier_sha256": "c0b01900d43173cb0f0f0d350ec34c86944b16d022258250ae178827b3caa4a8",
+      "source_window": [
+        18,
+        20.7
+      ]
+    },
+    {
+      "id": "op_anim_swordmaster_female_idle_nw",
+      "path": "assets/operators/v3/swordmaster_female/idle_nw.webp",
+      "sha256": "be281268d025837c5b65a6c0321015fcc09c59c8cab590a6441293b15413a537",
+      "frame_count": 24,
+      "direction": "nw",
+      "action": "idle",
+      "carrier_sha256": "c0b01900d43173cb0f0f0d350ec34c86944b16d022258250ae178827b3caa4a8",
+      "source_window": [
+        22.9,
+        24.7
+      ]
+    },
+    {
+      "id": "op_anim_swordmaster_female_attack_nw",
+      "path": "assets/operators/v3/swordmaster_female/attack_nw.webp",
+      "sha256": "c5a3256c0a782fc54cd4602901ac036d7a988f97f9dbb24d10ce7af5db32f085",
+      "frame_count": 13,
+      "direction": "nw",
+      "action": "attack",
+      "carrier_sha256": "c0b01900d43173cb0f0f0d350ec34c86944b16d022258250ae178827b3caa4a8",
+      "source_window": [
+        25.5,
+        28.2
+      ]
+    },
+    {
+      "id": "op_anim_swordmaster_male_idle_ne",
+      "path": "assets/operators/v3/swordmaster_male/idle_ne.webp",
+      "sha256": "db0483baf4208140df487f0b3866d2eeb6c308bf68add4acb3ace3982b15045b",
+      "frame_count": 24,
+      "direction": "ne",
+      "action": "idle",
+      "carrier_sha256": "1f940a73096e88f82e098af0b221ced8afd5b732e8674c15335273d631f462f7",
+      "source_window": [
+        0.4,
+        2.2
+      ]
+    },
+    {
+      "id": "op_anim_swordmaster_male_attack_ne",
+      "path": "assets/operators/v3/swordmaster_male/attack_ne.webp",
+      "sha256": "d237d282e76696df4bbdf697fb5a08d2d9efb6b21af8bd3aa245c2dcbd9821d4",
+      "frame_count": 13,
+      "direction": "ne",
+      "action": "attack",
+      "carrier_sha256": "1f940a73096e88f82e098af0b221ced8afd5b732e8674c15335273d631f462f7",
+      "source_window": [
+        3,
+        5.7
+      ]
+    },
+    {
+      "id": "op_anim_swordmaster_male_idle_se",
+      "path": "assets/operators/v3/swordmaster_male/idle_se.webp",
+      "sha256": "ffa16ba271a280833928ed7e2de74c8a95219e9a8d01ad91c71ec317ffe33554",
+      "frame_count": 24,
+      "direction": "se",
+      "action": "idle",
+      "carrier_sha256": "1f940a73096e88f82e098af0b221ced8afd5b732e8674c15335273d631f462f7",
+      "source_window": [
+        7.9,
+        9.7
+      ]
+    },
+    {
+      "id": "op_anim_swordmaster_male_attack_se",
+      "path": "assets/operators/v3/swordmaster_male/attack_se.webp",
+      "sha256": "1b88aa890176e734f8a5713b22ed1f97d437d0d58e6a90c3dd96d47bb8a71a76",
+      "frame_count": 13,
+      "direction": "se",
+      "action": "attack",
+      "carrier_sha256": "1f940a73096e88f82e098af0b221ced8afd5b732e8674c15335273d631f462f7",
+      "source_window": [
+        10.5,
+        13.2
+      ]
+    },
+    {
+      "id": "op_anim_swordmaster_male_idle_sw",
+      "path": "assets/operators/v3/swordmaster_male/idle_sw.webp",
+      "sha256": "7376d19c8439292ca4b34e851a3b8921472733af4d44ffa5fad76a7c9ea68ea2",
+      "frame_count": 24,
+      "direction": "sw",
+      "action": "idle",
+      "carrier_sha256": "1f940a73096e88f82e098af0b221ced8afd5b732e8674c15335273d631f462f7",
+      "source_window": [
+        15.4,
+        17.2
+      ]
+    },
+    {
+      "id": "op_anim_swordmaster_male_attack_sw",
+      "path": "assets/operators/v3/swordmaster_male/attack_sw.webp",
+      "sha256": "471d55dc5459d8357d1b1273be84ca848e00d3254a31c5b04cadc278125f920c",
+      "frame_count": 13,
+      "direction": "sw",
+      "action": "attack",
+      "carrier_sha256": "1f940a73096e88f82e098af0b221ced8afd5b732e8674c15335273d631f462f7",
+      "source_window": [
+        18,
+        20.7
+      ]
+    },
+    {
+      "id": "op_anim_swordmaster_male_idle_nw",
+      "path": "assets/operators/v3/swordmaster_male/idle_nw.webp",
+      "sha256": "41f85c4e1234f8087830b6a8a65e5bfd616cb693bfcdfaf8ce034e85aaf57810",
+      "frame_count": 24,
+      "direction": "nw",
+      "action": "idle",
+      "carrier_sha256": "1f940a73096e88f82e098af0b221ced8afd5b732e8674c15335273d631f462f7",
+      "source_window": [
+        22.9,
+        24.7
+      ]
+    },
+    {
+      "id": "op_anim_swordmaster_male_attack_nw",
+      "path": "assets/operators/v3/swordmaster_male/attack_nw.webp",
+      "sha256": "c8ef1e020c80b6b1346da0ca943fc57bf15fda9976c2f8b7324ba0e143a8594b",
+      "frame_count": 13,
+      "direction": "nw",
+      "action": "attack",
+      "carrier_sha256": "1f940a73096e88f82e098af0b221ced8afd5b732e8674c15335273d631f462f7",
+      "source_window": [
+        25.5,
+        28.2
+      ]
+    }
+  ]
+}

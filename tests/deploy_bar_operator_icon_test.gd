@@ -6,9 +6,9 @@ const OperatorVisualCatalogType := preload(
 
 const FIXED_EXPECTED := {
 	&"recruit": &"op_anim_recruit_female_idle_nw",
-	&"sniper_1": &"op_anim_sniper_1_idle_nw",
-	&"guard_1": &"op_anim_guard_1_idle_nw",
-	&"caster_1": &"op_anim_caster_1_idle_nw",
+	&"sniper_1": &"op_anim_gunner_female_idle_nw",
+	&"guard_1": &"op_anim_swordmaster_female_idle_nw",
+	&"caster_1": &"op_anim_mage_apprentice_female_idle_nw",
 }
 
 var _failures: Array[String] = []
@@ -46,12 +46,13 @@ func _run() -> void:
 			_check(slot != null, "%s deploy card is missing" % operator_id)
 			if slot == null or definition == null:
 				continue
+			_check(slot.icon.get_size() == Vector2(192, 192), "%s preview canvas differs from recruit scale" % operator_id)
 			_check(
-				slot.icon == Art.texture(expected_art_id, 0),
+				_same_frame_texture(slot.icon, Art.texture(expected_art_id, 0)),
 				"%s deploy card does not show actual idle frame 0" % operator_id,
 			)
 			_check(
-				slot.icon != Art.texture(definition.sprite_id, 0),
+				not _same_frame_texture(slot.icon, Art.texture(definition.sprite_id, 0)),
 				"%s deploy card still shows the legacy placeholder" % operator_id,
 			)
 			_check(
@@ -123,6 +124,22 @@ func _check_slot_art(
 		not bool(Art.metadata(actual).get(&"placeholder", true)),
 		"%s card still resolves placeholder art" % operator_id,
 	)
+
+
+## Generated frames intentionally avoid process-lifetime object caching.
+## Compare the selected pixels, not AtlasTexture instance identity.
+func _same_frame_texture(actual: Texture2D, expected: Texture2D) -> bool:
+	if actual == null or expected == null:
+		return false
+	if actual == expected:
+		return true
+	var actual_image := actual.get_image()
+	var expected_image := expected.get_image()
+	if actual_image == null or expected_image == null:
+		return false
+	if actual.get_size() == Vector2(192, 192) and expected.get_size() == Vector2(256, 256):
+		expected_image = expected_image.get_region(Rect2i(32, 32, 192, 192))
+	return actual_image.get_size() == expected_image.get_size() and actual_image.get_data() == expected_image.get_data()
 
 
 func _check(condition: bool, message: String) -> void:

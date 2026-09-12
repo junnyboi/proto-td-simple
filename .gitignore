@@ -7,3 +7,8 @@ override.cfg
 __pycache__/
 *.py[cod]
 server-data/
+
+# Operator V3 media is restored from the runtime-owned assets.lock.json.
+/assets/operators/v3/**/*.webp
+.manus-assets-*.json
+.manus-artifacts*.json

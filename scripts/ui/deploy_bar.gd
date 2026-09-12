@@ -397,6 +397,14 @@ static func _operator_slot_icon(
 	var art_id := operator_slot_art_id(deployment_id, definition, row)
 	var texture := Art.texture(art_id, 0) if not art_id.is_empty() else null
 	if texture != null:
+		if texture.get_size() == Vector2(256, 256) and texture is AtlasTexture:
+			# Match the recruit's 192px preview canvas and foot at (96,164).
+			# Extra combat-atlas padding is action clearance, not a smaller body.
+			var preview := AtlasTexture.new()
+			preview.atlas = (texture as AtlasTexture).atlas
+			preview.region = Rect2((texture as AtlasTexture).region.position + Vector2(32, 32), Vector2(192, 192))
+			preview.filter_clip = true
+			return preview
 		return texture
 	var fallback_id := definition.sprite_id
 	if not row.is_empty():

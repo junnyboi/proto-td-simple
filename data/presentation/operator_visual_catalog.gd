@@ -26,6 +26,9 @@ const ADVANCED_CLASS_IDS: Dictionary = {
 	&"mage_apprentice": true,
 	&"swordmaster": true,
 }
+const LEGACY_CLASS_IDS: Dictionary = {
+	&"sniper_1": &"gunner", &"guard_1": &"swordmaster", &"caster_1": &"mage_apprentice",
+}
 const VISUAL_ALIASES: Dictionary = {}
 static func template_for_unit(
 	op_id: StringName,
@@ -34,7 +37,9 @@ static func template_for_unit(
 	unit_id: int,
 	class_id: StringName = &"",
 ) -> StringName:
-	var advanced_class: Variant = class_id if ADVANCED_CLASS_IDS.has(class_id) else null
+	var advanced_class: Variant = (
+		class_id if ADVANCED_CLASS_IDS.has(class_id) else LEGACY_CLASS_IDS.get(op_id)
+	)
 	if typeof(advanced_class) == TYPE_STRING_NAME:
 		var identity_gender := OperatorPortraitCatalogType.explicit_identity_variant(
 			portrait_asset_id,
@@ -132,7 +137,7 @@ static func _validate_manifest(
 		var expected_frames := (
 			animation.idle_frame_count if family == &"idle" else animation.attack_frame_count
 		)
-		for direction: StringName in OperatorAnimationDefType.DIRECTIONS:
+		for direction: StringName in animation.supported_directions():
 			if not mapping.has(direction):
 				continue
 			var logical_id := StringName(mapping[direction])
@@ -151,7 +156,7 @@ static func _validate_manifest(
 				var expected_placeholder := animation.is_placeholder(logical_id)
 				if bool(metadata.get(&"placeholder", true)) != expected_placeholder:
 					errors.append("%s/%s/%s: placeholder mismatch" % [template_id, family, direction])
-				if animation.schema_version == 2:
+				if animation.schema_version in [2, 3]:
 					if int(metadata.get(&"columns", 0)) != 8:
 						errors.append("%s/%s/%s: generated columns mismatch" % [template_id, family, direction])
 					if Art.pivot(logical_id) != animation.pivot:

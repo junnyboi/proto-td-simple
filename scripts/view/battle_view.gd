@@ -1448,12 +1448,16 @@ func _refresh_unit_facing_chevron(u: UnitState, body: ColorRect) -> void:
 	var chevron := body.get_parent().get_node_or_null("FacingChevron") as Polygon2D
 	if chevron == null:
 		return
-	var dir := _operator_facing_screen_direction(u.facing)
-	chevron.position = dir * (maxf(UNIT_PX, body.size.x) * 0.5 + 6.0)
+	var animation := OPERATOR_VISUAL_CATALOG_SCRIPT.get_animation(_operator_visual_template_id(u))
+	var dir := _operator_facing_screen_direction(u.facing, animation)
+	chevron.position = dir * (maxf(UNIT_PX, _operator_visible_width(body)) * 0.5 + 6.0)
 	chevron.rotation = dir.angle()
 
 
-func _operator_facing_screen_direction(facing: int) -> Vector2:
+func _operator_facing_screen_direction(facing: int, animation: OperatorAnimationDef = null) -> Vector2:
+	if animation != null and animation.schema_version == 3:
+		var axes := [Vector2.RIGHT, Vector2.DOWN, Vector2.LEFT, Vector2.UP]
+		return IsoProjection.project(axes[posmod(facing, axes.size())]).normalized()
 	var grid_direction := (
 		Vector2.UP
 		if OPERATOR_ANIMATOR_SCRIPT.direction_for_facing(facing) == &"ne"
@@ -1472,15 +1476,18 @@ func _activate_unit_animation_body(
 	body.size = OPERATOR_ANIMATOR_SCRIPT.body_size(animation)
 	body.position = Vector2(
 		-body.size.x * 0.5,
-		IsoProjection.FEET_OFFSET - body.size.y * animation.pivot.y,
+		OPERATOR_ANIMATOR_SCRIPT.ground_offset(animation) - body.size.y * animation.pivot.y,
 	)
 	body.set_meta(&"operator_animation", true)
 	body.set_meta(&"operator_template_id", visual_template_id)
+	_set_operator_visual_bounds(body, animation)
 	sprite.size = body.size
 	sprite.flip_h = false
 	var shadow := body.get_node_or_null("Shadow") as Polygon2D
 	if shadow != null:
-		shadow.position = Vector2(body.size.x * 0.5, body.size.y)
+		shadow.position = Vector2(body.size.x * 0.5, body.size.y * animation.pivot.y if animation.schema_version == 3 else body.size.y)
+		if animation.schema_version == 3:
+			shadow.scale = Vector2.ONE * (float(animation.display_height_px) / body.size.x)
 	var hp_bar := body.get_node_or_null("HpBarBg") as ColorRect
 	if hp_bar != null:
 		BATTLE_HEALTH_BAR_SCRIPT.layout(body, body.size.x)
@@ -1489,7 +1496,7 @@ func _activate_unit_animation_body(
 		_layout_sp_bar(body)
 	var chevron := body.get_parent().get_node_or_null("FacingChevron") as Polygon2D
 	if chevron != null:
-		chevron.position = chevron.position.normalized() * (maxf(UNIT_PX, body.size.x) * 0.5 + 6.0)
+		chevron.position = chevron.position.normalized() * (maxf(UNIT_PX, _operator_visible_width(body)) * 0.5 + 6.0)
 
 
 ## Skill trigger flashes the portrait, bursts at the unit, and plays its sting.
@@ -1550,13 +1557,24 @@ func _add_sp_bar(body: ColorRect) -> void:
 
 func _layout_sp_bar(body: ColorRect) -> void:
 	var bg := body.get_node("SpBarBg") as ColorRect
-	var bar_width := body.size.x * SP_BAR_WIDTH_SCALE
+	var visible := Rect2(body.get_meta(&"operator_visual_bounds", Rect2(Vector2.ZERO, body.size)))
+	var bar_width := visible.size.x * SP_BAR_WIDTH_SCALE
 	bg.size = Vector2(bar_width, SP_BAR_HEIGHT)
-	bg.position = Vector2((body.size.x - bar_width) * 0.5, body.size.y + 3.0)
+	bg.position = Vector2((body.size.x - bar_width) * 0.5, visible.end.y + 3.0)
 	var fill := bg.get_node("SpBarFill") as ColorRect
 	fill.size.y = SP_BAR_HEIGHT
 
 
+func _set_operator_visual_bounds(body: ColorRect, animation: OperatorAnimationDef) -> void:
+	if animation == null or animation.schema_version != 3:
+		if body.has_meta(&"operator_visual_bounds"):
+			body.remove_meta(&"operator_visual_bounds")
+		return
+	var height := float(animation.display_height_px)
+	var contact_y := body.size.y * animation.pivot.y
+	body.set_meta(&"operator_visual_bounds", Rect2(Vector2((body.size.x - height) * 0.5, contact_y - height), Vector2.ONE * height))
+func _operator_visible_width(body: ColorRect) -> float:
+	return Rect2(body.get_meta(&"operator_visual_bounds", Rect2(Vector2.ZERO, body.size))).size.x
 func _make_unit_node(u: UnitState) -> Node2D:
 	var node := Node2D.new()
 	node.position = IsoProjection.face_center(u.cell, _is_lifted_cell(u.cell))
@@ -1568,7 +1586,7 @@ func _make_unit_node(u: UnitState) -> Node2D:
 	var op_class := def.op_class if def != null else OperatorDef.OpClass.GUARD
 	var visual_template_id := _operator_visual_template_id(u)
 	var animation := OPERATOR_VISUAL_CATALOG_SCRIPT.get_animation(visual_template_id)
-	var direction := OPERATOR_ANIMATOR_SCRIPT.direction_for_facing(u.facing)
+	var direction := OPERATOR_ANIMATOR_SCRIPT.direction_for_facing(u.facing, animation)
 	var animation_id := (
 		StringName(animation.idle_by_direction.get(direction, &"")) if animation != null else &""
 	)
@@ -1601,8 +1619,13 @@ func _make_unit_node(u: UnitState) -> Node2D:
 	# Feet stay on the face through each admitted animation definition's versioned
 	# pivot; legacy sprites remain bottom-center anchored exactly as before.
 	var pivot_y := animation.pivot.y if animated else 1.0
-	rect.position = Vector2(-rect.size.x * 0.5, IsoProjection.FEET_OFFSET - rect.size.y * pivot_y)
+	rect.position = Vector2(-rect.size.x * 0.5, OPERATOR_ANIMATOR_SCRIPT.ground_offset(animation if animated else null) - rect.size.y * pivot_y)
+	_set_operator_visual_bounds(rect, animation if animated else null)
 	EnemyAnimator.add_shadow(rect, false)
+	if animated and animation.schema_version == 3:
+		var shadow := rect.get_node("Shadow") as Polygon2D
+		shadow.position.y = rect.size.y * animation.pivot.y
+		shadow.scale = Vector2.ONE * (float(animation.display_height_px) / rect.size.x)
 	_add_hp_bar(rect, rect.size.x)
 	if u.sp_cost > 0:
 		_add_sp_bar(rect)
@@ -1611,8 +1634,8 @@ func _make_unit_node(u: UnitState) -> Node2D:
 	chevron.name = "FacingChevron"
 	chevron.color = CHEVRON_COLOR
 	chevron.polygon = PackedVector2Array([Vector2(-5, -7), Vector2(-5, 7), Vector2(7, 0)])
-	var dir := _operator_facing_screen_direction(u.facing)
-	chevron.position = dir * (maxf(UNIT_PX, rect.size.x) * 0.5 + 6.0)
+	var dir := _operator_facing_screen_direction(u.facing, animation)
+	chevron.position = dir * (maxf(UNIT_PX, _operator_visible_width(rect)) * 0.5 + 6.0)
 	chevron.rotation = dir.angle()
 	node.add_child(chevron)
 	_grid_root.add_child(node)

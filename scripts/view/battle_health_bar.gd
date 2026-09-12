@@ -37,9 +37,10 @@ static func layout(body: ColorRect, width: float) -> void:
 	var bg := body.get_node_or_null("HpBarBg") as ColorRect
 	if bg == null:
 		return
-	var bar_width := width * WIDTH_SCALE
+	var visible := Rect2(body.get_meta(&"operator_visual_bounds", Rect2(Vector2.ZERO, Vector2(width, body.size.y))))
+	var bar_width := visible.size.x * WIDTH_SCALE
 	bg.size = Vector2(bar_width, HEIGHT)
-	bg.position = Vector2((width - bar_width) * 0.5, -HEIGHT - BODY_GAP)
+	bg.position = Vector2((width - bar_width) * 0.5, visible.position.y - HEIGHT - BODY_GAP)
 	var fill := bg.get_node_or_null("HpBarFill") as ColorRect
 	if fill != null:
 		fill.size.y = HEIGHT

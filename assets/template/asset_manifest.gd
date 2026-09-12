@@ -43,6 +43,9 @@ func entry_diagnostics(id: StringName, entry: Dictionary) -> PackedStringArray:
 		if generated
 		else (LEGACY_ATLAS_ENTRY_KEYS if legacy_atlas else LEGACY_ENTRY_KEYS)
 	)
+	if legacy_atlas and entry.has("ground_contact"):
+		expected_keys = expected_keys.duplicate()
+		expected_keys.append("ground_contact")
 	if entry.size() != expected_keys.size():
 		errors.append(
 			(
@@ -97,6 +100,13 @@ func _validate_legacy_atlas_entry(
 	var display_size: Variant = entry.get(&"display_size")
 	if typeof(display_size) != TYPE_VECTOR2I or display_size.x <= 0 or display_size.y <= 0:
 		errors.append("display_size: expected positive Vector2i")
+	if entry.has("ground_contact"):
+		var contact: Variant = entry.get("ground_contact")
+		var native_size: Variant = entry.get("size")
+		if typeof(contact) != TYPE_VECTOR2 or not contact.is_finite():
+			errors.append("ground_contact: expected finite Vector2")
+		elif typeof(native_size) == TYPE_VECTOR2I and (contact.x < 0 or contact.y < 0 or contact.x > native_size.x or contact.y > native_size.y):
+			errors.append("ground_contact: outside native frame")
 
 
 func _validate_generated_entry(
@@ -105,12 +115,16 @@ func _validate_generated_entry(
 	var columns: Variant = entry.get(&"columns")
 	if typeof(columns) != TYPE_INT or int(columns) != 8:
 		errors.append("columns: generated atlas expected exactly 8")
-	if typeof(size) == TYPE_VECTOR2I and size != Vector2i(640, 640):
-		errors.append("size: generated atlas expected 640x640 cell")
 	var provenance: Variant = entry.get(&"provenance")
 	if typeof(provenance) != TYPE_DICTIONARY:
 		errors.append("provenance: expected Dictionary")
 		return
+	var compact_four_direction := String(provenance.get(&"source_manifest_id", "")) == "operator_sprites_v3"
+	var expected_cell := Vector2i(256, 256) if compact_four_direction else Vector2i(640, 640)
+	if typeof(size) == TYPE_VECTOR2I and size != expected_cell:
+		errors.append("size: generated atlas cell does not match its profile")
+	if compact_four_direction and not Vector2(entry.get(&"pivot", Vector2.ZERO)).is_equal_approx(Vector2(0.5, 196.0 / 256.0)):
+		errors.append("pivot: compact operator expected authored foot anchor")
 	for key: StringName in [
 		&"class_id", &"gender", &"action", &"direction", &"source_kind",
 		&"mirrored_from", &"source_manifest_id", &"atlas_sha256",
@@ -128,11 +142,14 @@ func _validate_generated_entry(
 		errors.append("provenance.gender: expected female or male")
 	if action not in ["idle", "attack"]:
 		errors.append("provenance.action: expected idle or attack")
-	if direction not in ["ne", "nw"]:
-		errors.append("provenance.direction: expected NE or NW")
+	var allowed_directions := ["ne", "se", "sw", "nw"] if compact_four_direction else ["ne", "nw"]
+	if direction not in allowed_directions:
+		errors.append("provenance.direction: unsupported profile direction")
+	if compact_four_direction and (source_kind != "generated" or not mirrored_from.is_empty()):
+		errors.append("provenance: all compact operator directions must be generated")
 	if source_kind not in ["generated", "mirrored"]:
 		errors.append("provenance.source_kind: expected generated or mirrored")
-	elif source_kind == "generated" and (direction != "ne" or not mirrored_from.is_empty()):
+	elif source_kind == "generated" and ((not compact_four_direction and direction != "ne") or not mirrored_from.is_empty()):
 		errors.append("provenance: generated atlas must be NE with empty mirrored_from")
 	elif source_kind == "mirrored":
 		var expected_source := "ne" if direction == "nw" else ""

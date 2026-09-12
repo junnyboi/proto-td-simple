@@ -7,12 +7,30 @@ extends RefCounted
 const OperatorAnimationDefType := preload("res://data/presentation/operator_animation_def.gd")
 const UnitStateType := preload("res://sim/unit_state.gd")
 
+const IsoProjectionType := preload("res://scripts/view/iso_projection.gd")
+
 const MODEL_TICKS_PER_SECOND := 30.0
 const NO_ATTACK_AGE := 1_000_000
 const IDLE_FRAMES := 24
 
 
-static func direction_for_facing(facing: int) -> StringName:
+static func direction_for_facing(
+	facing: int, animation: OperatorAnimationDefType = null,
+) -> StringName:
+	# Schema 3 represents all four actual projected tactical axes. Recruits
+	# deliberately retain their original two-view contract.
+	if animation != null and animation.schema_version == 3:
+		match facing:
+			UnitStateType.Facing.RIGHT:
+				return &"se"
+			UnitStateType.Facing.DOWN:
+				return &"sw"
+			UnitStateType.Facing.LEFT:
+				return &"nw"
+			UnitStateType.Facing.UP:
+				return &"ne"
+			_:
+				return &"nw"
 	match facing:
 		UnitStateType.Facing.RIGHT, UnitStateType.Facing.UP:
 			return &"ne"
@@ -51,7 +69,7 @@ static func selection(
 	idle_seconds: float,
 	animation: OperatorAnimationDefType,
 ) -> Dictionary:
-	var direction := direction_for_facing(u.facing)
+	var direction := direction_for_facing(u.facing, animation)
 	var age := attack_age(model_tick, u.last_attack_tick)
 	if attack_active(age, animation.attack_frame_count, animation.fps):
 		return {
@@ -66,6 +84,12 @@ static func selection(
 		&"frame": idle_frame(idle_seconds),
 		&"logical_id": StringName(animation.idle_by_direction.get(direction, &"")),
 	}
+
+
+static func ground_offset(animation: OperatorAnimationDefType) -> float:
+	return (IsoProjectionType.TILE_H * 0.5
+		if animation != null and animation.schema_version == 3
+		else IsoProjectionType.FEET_OFFSET)
 
 
 static func body_size(animation: OperatorAnimationDefType) -> Vector2:
