@@ -22,6 +22,9 @@ signal deployment_committed(deployment_id: StringName, cell: Vector2i, facing: i
 
 const HealingRulesScript := preload("res://sim/healing_rules.gd")
 const SELECTION_RING_SCRIPT := preload("res://scripts/view/selection_ring.gd")
+const OPERATOR_RANGE_OVERLAY_SCRIPT := preload(
+	"res://scripts/view/operator_range_overlay.gd"
+)
 const OPERATOR_VISUAL_CATALOG_SCRIPT := preload(
 	"res://data/presentation/operator_visual_catalog.gd"
 )
@@ -88,6 +91,8 @@ var _heal_source_unit_id: int = -1
 var _heal_cursor: Polygon2D = null
 var _selected_unit_id: int = -1
 var _selection_ring: Node2D = null
+var _range_overlay = null
+var _range_hit_images: Dictionary = {}
 var _operator_interaction_enabled := true
 var _interaction_enabled := true
 
@@ -112,6 +117,7 @@ func setup(
 	size = get_viewport().get_visible_rect().size
 	_build_slots(_op_defs)
 	_build_overlays()
+	_build_range_overlay()
 	_pointer = get_viewport().get_mouse_position()
 	_refresh_pointer_cursor()
 	if not I18n.locale_changed.is_connected(_on_locale_changed):
@@ -153,11 +159,27 @@ func transient_intent_active() -> bool:
 	)
 
 
+## Test-facing presentation state. The overlay is deliberately read-only with
+## respect to BattleModel, so callers can verify what the player is shown.
+func selected_unit_id() -> int:
+	return _selected_unit_id
+
+
+func hovered_unit_id() -> int:
+	return int(_range_overlay.hovered_unit_id()) if _range_overlay != null else -1
+
+
+func painted_range_cells() -> Array[Vector2i]:
+	return _range_overlay.painted_cells() if _range_overlay != null else []
+
+
 func cancel_transient_intent() -> void:
 	if _placement_op != &"" or _placement_trap != &"":
 		_cancel_placement()
 	_cancel_heal_targeting()
 	_select_unit(-1)
+	if _range_overlay != null:
+		_range_overlay.set_hovered_unit_id(-1)
 
 
 func first_deployment_id() -> StringName:
@@ -199,6 +221,8 @@ func relayout(top_clearance := -1.0) -> void:
 	if _heal_source_unit_id >= 0:
 		_show_heal_highlights()
 	_update_selection_ring()
+	if _range_overlay != null:
+		_range_overlay.refresh()
 	_layout_operator_action_panel()
 
 
@@ -209,6 +233,7 @@ func _process(_delta: float) -> void:
 	if _slots.size() != _deployment_ids().size():
 		_rebuild_slots()
 	_update_selection_ring()
+	_refresh_range_overlay_hover()
 	for op_id: StringName in _slots:
 		var slot: Button = _slots[op_id]
 		_refresh_operator_slot(op_id, slot)
@@ -240,6 +265,8 @@ func _input(event: InputEvent) -> void:
 		return
 	if event is InputEventMouseButton:
 		var cancel_button := event as InputEventMouseButton
+		_pointer = cancel_button.position
+		_refresh_pointer_cursor()
 		if cancel_button.button_index == MOUSE_BUTTON_RIGHT and not cancel_button.pressed:
 			if _heal_source_unit_id >= 0:
 				_cancel_heal_targeting()
@@ -278,6 +305,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		var mb := event as InputEventMouseButton
 		if mb.button_index == MOUSE_BUTTON_LEFT and not mb.pressed:
+			if _ui_owns_pointer():
+				return
 			if bool(view.call("consume_map_primary_click_suppression")):
 				return
 			_handle_grid_click(mb.position)
@@ -513,6 +542,13 @@ func _build_overlays() -> void:
 	_selection_ring.visible = false
 	_selection_ring.z_index = -1
 	add_child(_selection_ring)
+
+
+func _build_range_overlay() -> void:
+	_range_overlay = OPERATOR_RANGE_OVERLAY_SCRIPT.new()
+	if not _range_overlay.setup(model, view):
+		_range_overlay.free()
+		_range_overlay = null
 
 
 func _build_operator_action_panel() -> void:
@@ -784,8 +820,7 @@ func _cancel_placement() -> void:
 
 
 func _handle_grid_click(screen_pos: Vector2) -> void:
-	var cell: Vector2i = view.call("cell_at", screen_pos)
-	var unit: UnitState = model.alive_unit_at(cell)
+	var unit := _unit_at_screen_position(screen_pos)
 	if _heal_source_unit_id >= 0:
 		if unit == null or not HealingRulesScript.is_valid(model, _heal_source_unit_id, unit.id):
 			return
@@ -844,6 +879,8 @@ func _select_unit(unit_id: int) -> void:
 	else:
 		_hide_operator_actions()
 	_update_selection_ring()
+	if _range_overlay != null:
+		_range_overlay.set_selected_unit_id(unit_id)
 
 
 func _update_selection_ring() -> void:
@@ -1252,29 +1289,133 @@ func _cancel_heal_targeting() -> void:
 	_refresh_pointer_cursor()
 
 
+func _refresh_range_overlay_hover() -> void:
+	if _range_overlay == null:
+		return
+	var allowed := _range_inspection_allowed()
+	_range_overlay.visible = allowed
+	if not allowed:
+		_range_overlay.set_hovered_unit_id(-1)
+	_range_overlay.refresh()
+
+
+func _range_inspection_allowed() -> bool:
+	if not _interaction_enabled or not _operator_interaction_enabled or model == null or view == null:
+		return false
+	if model.result != BattleModel.Result.RUNNING or _heal_source_unit_id >= 0 or _placement_op != &"" or _placement_trap != &"":
+		return false
+	if view.has_method("battle_confirmation_active") and bool(view.call("battle_confirmation_active")):
+		return false
+	if view.has_method("_tutorial_holding_battle") and bool(view.call("_tutorial_holding_battle")):
+		return false
+	var time_scale: Variant = view.get("ticks_per_frame_scale")
+	return time_scale == null or float(time_scale) > 0.0
+
+
 func _refresh_pointer_cursor() -> void:
+	_refresh_range_overlay_hover()
+	if not _range_inspection_allowed() and _heal_source_unit_id < 0 and _placement_op == &"" and _placement_trap == &"":
+		_set_range_hover(-1)
+		_release_cursor_claim()
+		return
 	if not _interaction_enabled or model == null or view == null:
+		_set_range_hover(-1)
 		_release_cursor_claim()
 		return
 	if _heal_source_unit_id >= 0:
+		_set_range_hover(-1)
 		_update_heal_hover()
 		return
 	if _placement_op != &"" or _placement_trap != &"":
+		_set_range_hover(-1)
 		_update_placement_hover()
 		return
 	if not _operator_interaction_enabled:
+		_set_range_hover(-1)
+		_release_cursor_claim()
+		return
+	if _ui_owns_pointer():
+		_set_range_hover(-1)
 		_release_cursor_claim()
 		return
 	var map_rect: Rect2 = view.call("map_screen_rect")
 	if not map_rect.has_point(_pointer):
+		_set_range_hover(-1)
 		_release_cursor_claim()
 		return
-	var cell: Vector2i = view.call("cell_at", _pointer)
-	var unit: UnitState = model.alive_unit_at(cell)
+	var unit := _unit_at_screen_position(_pointer)
+	_set_range_hover(unit.id if unit != null else -1)
 	if unit != null:
 		_claim_cursor(CursorManager.ROLE_SELECT, CURSOR_CLAIM_PRIORITY)
 	else:
 		_release_cursor_claim()
+
+
+## The grid still selects by its foot tile, but body hit bounds let the player
+## select an operator through the visible sprite silhouette too. UI controls
+## own their pointer first, so neither selection nor hover leaks through a HUD.
+func _unit_at_screen_position(screen_pos: Vector2) -> UnitState:
+	if model == null or view == null:
+		return null
+	var world := view.get_node_or_null("GridRoot") as Node2D
+	if world != null:
+		var candidates: Array[Node2D] = []
+		for child: Node in world.get_children():
+			if child is Node2D and child.has_node("Body"):
+				candidates.append(child)
+		candidates.sort_custom(func(a: Node2D, b: Node2D) -> bool: return a.z_index > b.z_index)
+		for child: Node2D in candidates:
+			var body := child.get_node("Body") as Control
+			if not _operator_body_contains(body, screen_pos):
+				continue
+			for unit: UnitState in model.units:
+				if unit.alive:
+					var expected: Vector2 = view.call("cell_center", unit.cell)
+					if child.global_position.distance_squared_to(expected) < 1.0:
+						return unit
+	var cell: Vector2i = view.call("cell_at", screen_pos)
+	return model.alive_unit_at(cell)
+
+
+func _operator_body_contains(body: Control, point: Vector2) -> bool:
+	if body == null or not body.is_visible_in_tree() or not body.get_global_rect().has_point(point):
+		return false
+	var sprite := body.get_node_or_null("Sprite") as TextureRect
+	if sprite == null or sprite.texture == null:
+		return true
+	var local: Vector2 = sprite.get_global_transform_with_canvas().affine_inverse() * point
+	if not Rect2(Vector2.ZERO, sprite.size).has_point(local):
+		return false
+	var texture_id := str(sprite.texture.get_instance_id())
+	if sprite.texture is AtlasTexture:
+		var atlas := sprite.texture as AtlasTexture
+		texture_id = "%s:%s" % [atlas.atlas.get_instance_id(), atlas.region]
+	if not _range_hit_images.has(texture_id):
+		if _range_hit_images.size() >= 12:
+			_range_hit_images.erase(_range_hit_images.keys()[0])
+		var image := sprite.texture.get_image()
+		if image == null:
+			return false
+		if image.is_compressed():
+			image.decompress()
+		_range_hit_images[texture_id] = image
+	var image: Image = _range_hit_images[texture_id]
+	var pixel := Vector2i(local * Vector2(image.get_size()) / sprite.size)
+	if sprite.flip_h:
+		pixel.x = image.get_width() - pixel.x - 1
+	if sprite.flip_v:
+		pixel.y = image.get_height() - pixel.y - 1
+	return image.get_pixelv(pixel).a > 0.12
+
+
+func _ui_owns_pointer() -> bool:
+	var hovered := get_viewport().gui_get_hovered_control()
+	return hovered != null and hovered.mouse_filter != Control.MOUSE_FILTER_IGNORE
+
+
+func _set_range_hover(unit_id: int) -> void:
+	if _range_overlay != null:
+		_range_overlay.set_hovered_unit_id(unit_id)
 
 
 func _claim_cursor(role: StringName, priority: int) -> void:
@@ -1286,4 +1427,9 @@ func _release_cursor_claim() -> void:
 
 
 func _exit_tree() -> void:
+	_range_hit_images.clear()
 	_release_cursor_claim()
+	if is_instance_valid(_range_overlay):
+		_range_overlay.clear()
+		_range_overlay.queue_free()
+		_range_overlay = null

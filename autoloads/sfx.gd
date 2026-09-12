@@ -36,6 +36,7 @@ var _last_hover_play_msec := -HOVER_DEBOUNCE_MSEC
 var _hover_binding_count := 0
 var _hover_play_count := 0
 var _prepared_streams: Dictionary = {}
+var _world_voices: Dictionary = {}
 
 
 func _ready() -> void:
@@ -101,6 +102,20 @@ func _aliases_contract_valid(entries: Dictionary, aliases: Dictionary) -> bool:
 
 ## A true return means one AudioStreamPlayer started.
 func play(id: String) -> bool:
+	return _play_cue(id, null, Vector2.ZERO)
+
+
+func play_world(id: String, owner: Node2D, local_origin: Vector2) -> bool:
+	if not _world_origin_visible(owner, local_origin):
+		return false
+	return _play_cue(id, owner, local_origin)
+
+
+func _world_origin_visible(owner: Node2D, local_origin: Vector2) -> bool:
+	return is_instance_valid(owner) and owner.is_inside_tree() and owner.has_method("world_audio_visible") and bool(owner.call("world_audio_visible", local_origin))
+
+
+func _play_cue(id: String, world_owner: Node2D, local_origin: Vector2) -> bool:
 	var raw_id := StringName(id)
 	if raw_id.is_empty():
 		return false
@@ -130,6 +145,11 @@ func play(id: String) -> bool:
 		player.stop()
 		player.stream = stream
 		player.pitch_scale = 1.0
+		var entry: Dictionary = (_catalog.get("entries") as Dictionary)[resolved_id]
+		player.volume_db = clampf(float(entry.get("volume_db", 0.0)), -24.0, 0.0)
+		_world_voices.erase(_voice_cursor)
+		if world_owner != null:
+			_world_voices[_voice_cursor] = {"owner": weakref(world_owner), "origin": local_origin}
 		player.play()
 		_voice_cursor = (_voice_cursor + 1) % VOICE_COUNT
 	_audible_start_count += 1
@@ -183,6 +203,7 @@ func resolved_id_for(raw_id: StringName) -> StringName:
 
 
 func stop_all() -> bool:
+	_world_voices.clear()
 	var stopped := false
 	for player: AudioStreamPlayer in _ensure_players():
 		if player.stream != null:
@@ -405,3 +426,27 @@ func _hover_hierarchy_visible(control: Control) -> bool:
 			return false
 		cursor = cursor.get_parent()
 	return true
+
+
+func _process(_delta: float) -> void:
+	for index: int in _world_voices.keys():
+		var record: Dictionary = _world_voices[index]
+		var owner := (record["owner"] as WeakRef).get_ref() as Node2D
+		if not _world_origin_visible(owner, record["origin"]):
+			_players[index].stop()
+			_players[index].stream = null
+			_world_voices.erase(index)
+		elif not _players[index].playing:
+			_world_voices.erase(index)
+
+
+func stop_world_owner(owner: Node2D) -> void:
+	for index: int in _world_voices.keys():
+		if (_world_voices[index]["owner"] as WeakRef).get_ref() == owner:
+			_players[index].stop()
+			_players[index].stream = null
+			_world_voices.erase(index)
+
+
+func world_voice_count() -> int:
+	return _world_voices.size()

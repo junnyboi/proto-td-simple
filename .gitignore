@@ -12,3 +12,6 @@ server-data/
 /assets/operators/v3/**/*.webp
 .manus-assets-*.json
 .manus-artifacts*.json
+
+# Generated operator combat audio is restored through assets.lock.json.
+/assets/audio/operator_attacks/*.ogg

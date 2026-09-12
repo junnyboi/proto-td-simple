@@ -1,0 +1,84 @@
+{
+  "scope": "Approved operator attack audio/particles and hover/click range overlays",
+  "unchanged_existing_media": 251,
+  "new_audio": {
+    "gunner_female": {
+      "source_sha256": "7f5e56a9a64a01ded27407380f1d3cf5825faabb77bfde7c0f6090154ecbf199",
+      "runtime_sha256": "2ffb5d35af28eaa361185e6edea602d547e93962964cc3a94431469a0e82cf8c",
+      "duration_seconds": 0.5446041666666667,
+      "trim_start_seconds": 0.015395833333333333,
+      "peak_dbfs": -14,
+      "cue_gain_db": -4,
+      "channels": 1,
+      "sample_rate": 48000
+    },
+    "gunner_male": {
+      "source_sha256": "45bd70de16add8a28b770223412724b8737759fb1b2265ea073fcd6857a883f6",
+      "runtime_sha256": "ab822992819051dfef57adfdbb3ff8ddbb40731adf046fb745378b202182c8c9",
+      "duration_seconds": 1.0989791666666666,
+      "trim_start_seconds": 0.0076875,
+      "peak_dbfs": -14,
+      "cue_gain_db": -4,
+      "channels": 1,
+      "sample_rate": 48000
+    },
+    "mage_apprentice_female": {
+      "source_sha256": "c1493c9149b39e619b851c4f090af080fc046f9acacf5e61be16941241272acf",
+      "runtime_sha256": "5a12d62a15b0251a2f481418fbc98fa9e901277ef196b1914f53bac13f1c04a1",
+      "duration_seconds": 0.5825625,
+      "trim_start_seconds": 0.0,
+      "peak_dbfs": -14,
+      "cue_gain_db": -4,
+      "channels": 1,
+      "sample_rate": 48000
+    },
+    "mage_apprentice_male": {
+      "source_sha256": "d21ed4487b8320acca07dc2aef6bf3de3fdd82d68ced1514def2205d55b32435",
+      "runtime_sha256": "560955388d38a20eff53a1506b22a66289c8d635136c40e3c983bbc61857e820",
+      "duration_seconds": 0.7074166666666667,
+      "trim_start_seconds": 0.0,
+      "peak_dbfs": -14,
+      "cue_gain_db": -4,
+      "channels": 1,
+      "sample_rate": 48000
+    },
+    "swordmaster_female": {
+      "source_sha256": "f02a7941df54821705c23384ee649bd2d4aced3ce52e4a0f69c3fa3cbcda7142",
+      "runtime_sha256": "9fa1279ece7b181a23596d29ecafd1d641f4f1849f0b60814a86238a3c175f6a",
+      "duration_seconds": 0.4181458333333333,
+      "trim_start_seconds": 0.0,
+      "peak_dbfs": -14,
+      "cue_gain_db": -4,
+      "channels": 1,
+      "sample_rate": 48000
+    },
+    "swordmaster_male": {
+      "source_sha256": "eca1da91b59b2fb4e03079664e71a70fe4bb793a9ec833e8c9e3916e1ee51632",
+      "runtime_sha256": "7beff3d517963853bf027850e777405ab70a231a8cb4023586e54bb618db92f6",
+      "duration_seconds": 0.5250833333333333,
+      "trim_start_seconds": 0.06595833333333333,
+      "peak_dbfs": -14,
+      "cue_gain_db": -4,
+      "channels": 1,
+      "sample_rate": 48000
+    }
+  },
+  "gunfire_source": {
+    "gunner_female": {
+      "carrier_sha256": "3a38d36fbee85da80b23597cb61350e99bacc6104c5ee039ceaf6679d26fa9c2",
+      "source_start": 1.0012916666666667,
+      "source_end": 1.6312916666666666,
+      "production": "built-in video-audio fallback"
+    },
+    "gunner_male": {
+      "carrier_sha256": "3a38d36fbee85da80b23597cb61350e99bacc6104c5ee039ceaf6679d26fa9c2",
+      "source_start": 4.0355,
+      "source_end": 4.8655,
+      "production": "built-in video-audio fallback"
+    }
+  },
+  "mix_processing": {
+    "gunner_female": "asetrate 54000; resample 48000; highpass 150Hz; treble +3dB 3500Hz",
+    "gunner_male": "asetrate 36000; resample 48000; lowpass 5000Hz; bass +6dB 180Hz"
+  }
+}

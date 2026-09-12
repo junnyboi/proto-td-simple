@@ -1,5 +1,6 @@
 extends Node2D
 
+const OPERATOR_ATTACK_FEEDBACK_SCRIPT := preload("res://scripts/view/operator_attack_feedback.gd")
 const WEB_MAP_ZOOM_SCRIPT := preload("res://scripts/view/web_map_zoom.gd")
 const MAP_NAVIGATOR_SCRIPT: GDScript = preload("res://scripts/view/map_navigator.gd")
 const BATTLE_HUD_PRESENTER := preload("res://scripts/view/battle_hud_presenter.gd")
@@ -130,6 +131,7 @@ var _music_elapsed_seconds := 0.0
 var _music_last_leaked_count := 0
 var _music_recent_danger_until_seconds := 0.0
 var _pointer := Vector2.ZERO
+var _operator_attack_feedback: Node2D = null
 
 
 func _init() -> void:
@@ -191,6 +193,9 @@ func _ready() -> void:
 	Sfx.prepare_cues([&"victory", &"defeat"])
 	if not _build_grid(stage):
 		return
+	_operator_attack_feedback = OPERATOR_ATTACK_FEEDBACK_SCRIPT.new()
+	_grid_root.add_child(_operator_attack_feedback)
+	_operator_attack_feedback.call("configure", self)
 	cfg = load("res://data/juice_config.tres") as JuiceConfig
 	_juice = JuiceLayer.new()
 	_juice.name = "JuiceLayer"
@@ -1259,6 +1264,8 @@ func _project() -> void:
 	_project_traps()
 	_project_units()
 	_project_tracers()
+	if _operator_attack_feedback != null:
+		_operator_attack_feedback.call("sync_attacks", model)
 	_refresh_hud_copy()
 
 
@@ -1357,6 +1364,10 @@ func _make_trap_rect(t: TrapState) -> ColorRect:
 ## Ranged attacks leave a short-lived unit-to-target tracer.
 func _project_tracers() -> void:
 	for u: UnitState in model.units:
+		# New operators own their class-specific muzzle/cast trails. Retain the
+		# legacy tracer path unchanged for other sprites, including recruits.
+		if OPERATOR_ATTACK_FEEDBACK_SCRIPT.PROFILES.has(_operator_visual_template_id(u)):
+			continue
 		var is_ranged := (
 			u.op_class == OperatorDef.OpClass.SNIPER or u.op_class == OperatorDef.OpClass.CASTER
 		)

@@ -1,6 +1,10 @@
 {
   "version": 2,
   "groups": {
+    "audio": {
+      "name": "Audio",
+      "order": 30
+    },
     "operators": {
       "name": "Operators",
       "order": 20
@@ -12,6 +16,54 @@
   },
   "bundles": {},
   "assets": {
+    "assets/audio/operator_attacks/gunner_female.ogg": {
+      "path": "/manus-storage/gunner_female_4e9d451e.ogg",
+      "sha256": "sha256:2ffb5d35af28eaa361185e6edea602d547e93962964cc3a94431469a0e82cf8c",
+      "size": 8985,
+      "assetType": "audio",
+      "groupId": "audio",
+      "used": true
+    },
+    "assets/audio/operator_attacks/gunner_male.ogg": {
+      "path": "/manus-storage/gunner_male_5442cc48.ogg",
+      "sha256": "sha256:ab822992819051dfef57adfdbb3ff8ddbb40731adf046fb745378b202182c8c9",
+      "size": 11456,
+      "assetType": "audio",
+      "groupId": "audio",
+      "used": true
+    },
+    "assets/audio/operator_attacks/mage_apprentice_female.ogg": {
+      "path": "/manus-storage/mage_apprentice_female_f94892c9.ogg",
+      "sha256": "sha256:5a12d62a15b0251a2f481418fbc98fa9e901277ef196b1914f53bac13f1c04a1",
+      "size": 9859,
+      "assetType": "audio",
+      "groupId": "audio",
+      "used": true
+    },
+    "assets/audio/operator_attacks/mage_apprentice_male.ogg": {
+      "path": "/manus-storage/mage_apprentice_male_0fcf404f.ogg",
+      "sha256": "sha256:560955388d38a20eff53a1506b22a66289c8d635136c40e3c983bbc61857e820",
+      "size": 11837,
+      "assetType": "audio",
+      "groupId": "audio",
+      "used": true
+    },
+    "assets/audio/operator_attacks/swordmaster_female.ogg": {
+      "path": "/manus-storage/swordmaster_female_972fc270.ogg",
+      "sha256": "sha256:9fa1279ece7b181a23596d29ecafd1d641f4f1849f0b60814a86238a3c175f6a",
+      "size": 8563,
+      "assetType": "audio",
+      "groupId": "audio",
+      "used": true
+    },
+    "assets/audio/operator_attacks/swordmaster_male.ogg": {
+      "path": "/manus-storage/swordmaster_male_cdc3885b.ogg",
+      "sha256": "sha256:7beff3d517963853bf027850e777405ab70a231a8cb4023586e54bb618db92f6",
+      "size": 8600,
+      "assetType": "audio",
+      "groupId": "audio",
+      "used": true
+    },
     "assets/fonts/ManusCC0-Bold.ttf": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/10/game-template/game-td/2026.09.10-manuscc0-v1.100/099f6d50114f83533f689ddc37028fcff2bd2a2c4871a332488c1a433f440804/Assets/Template/fonts/ManusCC0-Bold.ttf",
       "sha256": "sha256:099f6d50114f83533f689ddc37028fcff2bd2a2c4871a332488c1a433f440804",

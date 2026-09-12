@@ -5,6 +5,12 @@
 [resource]
 script = ExtResource("1_sfx")
 entries = {
+&"attack_gunner_female": {"path": "res://assets/audio/operator_attacks/gunner_female.ogg", "volume_db": -4.0},
+&"attack_gunner_male": {"path": "res://assets/audio/operator_attacks/gunner_male.ogg", "volume_db": -4.0},
+&"attack_swordmaster_female": {"path": "res://assets/audio/operator_attacks/swordmaster_female.ogg", "volume_db": -4.0},
+&"attack_swordmaster_male": {"path": "res://assets/audio/operator_attacks/swordmaster_male.ogg", "volume_db": -4.0},
+&"attack_mage_apprentice_female": {"path": "res://assets/audio/operator_attacks/mage_apprentice_female.ogg", "volume_db": -4.0},
+&"attack_mage_apprentice_male": {"path": "res://assets/audio/operator_attacks/mage_apprentice_male.ogg", "volume_db": -4.0},
 &"operator_select": {"path": "res://assets/template/bundled/sfx/ui/operator_select.wav"},
 &"ability_ready": {"path": "res://assets/template/bundled/sfx/ui/ability_ready.wav"},
 &"action_reject": {"path": "res://assets/template/bundled/sfx/ui/action_reject.wav"},
