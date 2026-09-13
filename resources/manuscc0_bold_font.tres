@@ -1,0 +1,8 @@
+[gd_resource type="FontVariation" load_steps=3 format=3]
+
+[ext_resource type="FontFile" path="res://assets/fonts/ManusCC0-Bold.ttf" id="1_manuscc0"]
+[ext_resource type="FontFile" path="res://assets/template/fonts/GameTemplateTDSansSC.otf" id="2_cjk"]
+
+[resource]
+base_font = ExtResource("1_manuscc0")
+fallbacks = Array[Font]([ExtResource("2_cjk")])
