@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "project": "proto-td-simple",
+  "owner": "export_presets.cfg html/head_include",
+  "sourceFont": {
+    "path": "assets/template/fonts/GameTemplateTDSansSC.otf",
+    "sha256": "2c76254f6fc379fddfce0a7e84fb5385bb135d3e399294f6eeb6680d0365b74b",
+    "license": "OFL-1.1",
+    "copyright": "© 2014-2021 Adobe (http://www.adobe.com/)."
+  },
+  "primary": {
+    "Regular": {
+      "weight": 400,
+      "sha256": "b5124032e8e51434e05a51c327a9a614ac96b85ecf9b6cdcfc58834a9ae1347d"
+    },
+    "Medium": {
+      "weight": 500,
+      "sha256": "f28a0f3aee8f427798bf972504d5640d5d28b8692a73102ac39556fa7ffb1ee2"
+    },
+    "Bold": {
+      "weight": 700,
+      "sha256": "099f6d50114f83533f689ddc37028fcff2bd2a2c4871a332488c1a433f440804"
+    }
+  },
+  "sharedCompatibilityStrings": [
+    "正在加载…",
+    "重试",
+    "下载进度",
+    "游戏加载失败，请重试。",
+    "正在启动游戏…"
+  ],
+  "sharedCompatibilitySource": "manus-addon-webdev/runtime-src/game-dev/loading-shell.html",
+  "actualHeadNonAsciiCodepoints": [],
+  "subset": {
+    "format": "woff2",
+    "sha256": "f5809f30ef23efb2bd10d7910462668c6198752540fc530d0555daadedc43ef1",
+    "bytes": 5592,
+    "requiredCodepoints": [
+      12290,
+      19979,
+      21152,
+      21160,
+      21551,
+      22312,
+      22833,
+      24230,
+      25103,
+      27491,
+      28216,
+      35797,
+      35831,
+      36133,
+      36733,
+      36827,
+      37325,
+      65292
+    ],
+    "coveredCodepoints": [
+      12290,
+      19979,
+      21152,
+      21160,
+      21551,
+      22312,
+      22833,
+      24230,
+      25103,
+      27491,
+      28216,
+      35797,
+      35831,
+      36133,
+      36733,
+      36827,
+      37325,
+      65292
+    ]
+  },
+  "webPresetCount": 1,
+  "fontLicenseDelivery": "Full CC0 and OFL text embedded in each export head.",
+  "behavior": "Existing loader copy, audio hooks, safe-area styles and project settings preserved.",
+  "generation": "fontTools.subset, recalc_timestamp=false; required glyphs verified against source and subset cmap."
+}

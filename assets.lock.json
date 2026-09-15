@@ -472,14 +472,6 @@
       "groupId": "operators",
       "used": true
     },
-    "assets/template/bundled/fonts/Cinzel-Variable.ttf": {
-      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/05/game-template/game-td/2026-09-05-init-audio-v1/f4d83d34d1f6c741193e4acf4b3dff9531e5a67b6aa65228d00a7db72a4e0f34/assets/template/bundled/fonts/Cinzel-Variable.ttf",
-      "sha256": "sha256:f4d83d34d1f6c741193e4acf4b3dff9531e5a67b6aa65228d00a7db72a4e0f34",
-      "size": 125468,
-      "assetType": "font",
-      "groupId": "template",
-      "used": false
-    },
     "assets/template/bundled/music/lunaris/act2/s09_return_path.ogg": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/05/game-template/game-td/2026-09-05-init-audio-v1/945a24670a5985585fc83c06849736b3893e4d56ded3a1197b0734ccbd8c3388/assets/template/bundled/music/lunaris/act2/s09_return_path.ogg",
       "sha256": "sha256:945a24670a5985585fc83c06849736b3893e4d56ded3a1197b0734ccbd8c3388",
