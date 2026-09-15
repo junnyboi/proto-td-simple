@@ -4,7 +4,7 @@ extends RefCounted
 const PRIMARY_FONT := preload("res://assets/fonts/ManusCC0-Regular.ttf")
 const MEDIUM_FONT := preload("res://assets/fonts/ManusCC0-Medium.ttf")
 const BOLD_FONT := preload("res://assets/fonts/ManusCC0-Bold.ttf")
-const CJK_FONT := preload("res://assets/template/fonts/GameTemplateTDSansSC.otf")
+const CJK_FONT := preload("res://assets/template/fonts/ManusGameSC-Common.woff2")
 
 const LUNARIS_SEAL := preload("res://assets/template/ui/staging/icons/lunaris_seal.png")
 const MISSION_ICON := preload("res://assets/template/ui/staging/icons/mission.png")
@@ -38,7 +38,7 @@ static func body_font() -> FontVariation:
 		return _body_font
 	_body_font = FontVariation.new()
 	_body_font.base_font = PRIMARY_FONT
-	_body_font.fallbacks = [CJK_FONT, ThemeDB.fallback_font]
+	_body_font.fallbacks = [CJK_FONT]
 	_body_font.resource_name = "ManusCC0 with Simplified Chinese fallback"
 	return _body_font
 

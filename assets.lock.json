@@ -728,14 +728,6 @@
       "groupId": "template",
       "used": true
     },
-    "assets/template/fonts/GameTemplateTDSansSC.otf": {
-      "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/03/2c76254f6fc379fddfce0a7e84fb5385bb135d3e399294f6eeb6680d0365b74b.otf",
-      "sha256": "sha256:2c76254f6fc379fddfce0a7e84fb5385bb135d3e399294f6eeb6680d0365b74b",
-      "size": 16437364,
-      "assetType": "font",
-      "groupId": "template",
-      "used": true
-    },
     "assets/template/loading/command_backdrop.png": {
       "path": "https://d1oupeiobkpcny.cloudfront.net/assets/dashboard/materials/2026/09/04/game-template/game-td/2026.09.04-plain-ui-v2/0e9a1b2bb40629ca51cef84f5ef0b3b17a87e8ea0df845e57f810f51e36eabc1/assets/template/loading/command_backdrop.png",
       "sha256": "sha256:0e9a1b2bb40629ca51cef84f5ef0b3b17a87e8ea0df845e57f810f51e36eabc1",

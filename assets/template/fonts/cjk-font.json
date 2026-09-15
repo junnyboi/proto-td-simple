@@ -1,0 +1,20 @@
+{
+  "schema": 2,
+  "family": "ManusGameSC Common",
+  "style": "Regular",
+  "primaryFamily": "ManusCC0",
+  "role": "In-game common Simplified Chinese glyph fallback",
+  "sourceFamily": "Noto Sans CJK SC",
+  "sourceSha256": "2c76254f6fc379fddfce0a7e84fb5385bb135d3e399294f6eeb6680d0365b74b",
+  "source": "https://github.com/notofonts/noto-cjk",
+  "sha256": "150544e032d5a266d214799dbab5c6b6e9bad78645bdeaff5d11aba8cae43f7c",
+  "bytes": 992160,
+  "maximumFontBytes": 1000000,
+  "subset": true,
+  "unicodeCodepoints": 6547,
+  "repertoire": "All 3500 first-level and 3000 second-level TGH 2013 characters, plus 47 shipped UI/name/symbol codepoints",
+  "codepointsFile": "assets/template/fonts/cjk-codepoints.json",
+  "codepointsSha256": "12f677fdbc8c1890f9362d55b5090fc4d1c813f4e0150363bbae19528a82b92b",
+  "license": "assets/template/fonts/NotoSansCJK-COPYRIGHT.txt",
+  "coverageLimit": "Common Simplified Chinese only; rare names, every CJK extension, Traditional Chinese, other scripts and emoji are not guaranteed. Small loader fonts remain separate and unchanged."
+}

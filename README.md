@@ -391,7 +391,7 @@ Main screens and ordinary player-facing copy must flow through `scripts/ui/compo
 - Preserve canonical root order, sorted keys, LF line endings, final newline, nonempty strings, and exact placeholder-name parity.
 - Add typed placeholder schemas before calling `UiCopy.format_text()`.
 - Subscribe cached UI to `I18n.locale_changed` and refresh visible and accessible text together.
-- Prefer ManusCC0 from `assets/fonts/ManusCC0-Regular.ttf` for body and display type. Preserve `assets/template/fonts/GameTemplateTDSansSC.otf` and the display-to-body fallback for CJK glyphs.
+- Prefer ManusCC0 from `assets/fonts/ManusCC0-Regular.ttf` for body and display type. Preserve `assets/template/fonts/ManusGameSC-Common.woff2` and the display-to-body fallback for CJK glyphs.
 - Repair layout with wrapping, scrolling, and responsive composition, never by clipping Chinese or shrinking below the shared hierarchy.
 ## Local leaderboard and optional global implementation reference
 The Title and Results screens share one dialog. After an accepted direct result or durable campaign resolution, every valid `s1`–`s10` **clear or defeat** creates a local record. Score version 1 is `max(0, clear*2,000,000 + stage*100,000 + stars*20,000 + kills*50 - leaks*500)`. The local ledger retains its best 50 rows, the UI shows 10, and the FIFO pending queue keeps only its newest 100 submissions.

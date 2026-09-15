@@ -5,7 +5,7 @@ const StagingSkinType := preload("res://scripts/ui/components/staging_skin.gd")
 const LunarisStyleType := preload("res://scripts/ui/components/lunaris_ops_style.gd")
 const RuntimeTweakCatalogType := preload("res://scripts/tuning/runtime_tweak_catalog.gd")
 const CHINESE_CATALOG_PATH := "res://localization/zh-CN.json"
-const BUNDLED_CHINESE_FONT_PATH := "res://assets/template/fonts/GameTemplateTDSansSC.otf"
+const BUNDLED_CHINESE_FONT_PATH := "res://assets/template/fonts/ManusGameSC-Common.woff2"
 const GLOBAL_THEME_PATH := "res://data/presentation/ui/threshold_theme.tres"
 const BUNDLED_CHINESE_FONT: FontFile = preload(BUNDLED_CHINESE_FONT_PATH)
 const SOURCE_ROOTS := ["res://scripts/ui", "res://scripts/view"]
@@ -65,7 +65,7 @@ func _run() -> void:
 		var required := _required_codepoints(entries)
 		for codepoint: int in required:
 			var label := "U+%04X '%s'" % [codepoint, String.chr(codepoint)]
-			_check(BUNDLED_CHINESE_FONT.has_char(codepoint), "bundled Chinese font lacks %s" % label)
+			_check(ThemeType.PRIMARY_FONT.has_char(codepoint) or BUNDLED_CHINESE_FONT.has_char(codepoint), "bundled font pair lacks %s" % label)
 			_check(body_font != null and body_font.has_char(codepoint), "body font chain lacks %s" % label)
 			_check(display_font != null and display_font.has_char(codepoint), "display font chain lacks %s" % label)
 			_check(staged_body_font.has_char(codepoint), "standalone body font chain lacks %s" % label)

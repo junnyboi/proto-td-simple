@@ -4,7 +4,7 @@ extends Theme
 const GameTypographyType := preload("res://scripts/ui/game_typography.gd")
 const StagingSkinType := preload("res://scripts/ui/components/staging_skin.gd")
 const LunarisStyleType := preload("res://scripts/ui/components/lunaris_ops_style.gd")
-const CJK_FONT_PATH := "res://assets/template/fonts/GameTemplateTDSansSC.otf"
+const CJK_FONT_PATH := "res://assets/template/fonts/ManusGameSC-Common.woff2"
 const CJK_FONT: FontFile = preload(CJK_FONT_PATH)
 const PRIMARY_FONT := preload("res://assets/fonts/ManusCC0-Regular.ttf")
 const MEDIUM_FONT := preload("res://assets/fonts/ManusCC0-Medium.ttf")
@@ -43,9 +43,9 @@ func _init() -> void:
 	_body_font.base_font = PRIMARY_FONT
 	var cjk_font := _load_cjk_font()
 	if cjk_font != null:
-		_body_font.fallbacks = [cjk_font, ThemeDB.fallback_font]
+		_body_font.fallbacks = [cjk_font]
 	else:
-		_body_font.fallbacks = [ThemeDB.fallback_font]
+		_body_font.fallbacks = []
 	_body_font.resource_name = "ManusCC0 with Simplified Chinese fallback"
 
 	_display_font = FontVariation.new()

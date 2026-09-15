@@ -466,24 +466,34 @@ static func mission_number(stage_id: String) -> int:
 
 static func normalize_player_name(value: String) -> String:
 	var normalized := ""
+	var chinese := RegEx.create_from_string("^\\p{Han}$")
+	var mark := RegEx.create_from_string("^\\p{M}$")
+	var can_attach_mark := false
 	var previous_space := false
 	var previous_hyphen := false
 	for index: int in value.length():
 		var character := value.substr(index, 1).to_upper()
 		if character == " ":
+			can_attach_mark = false
 			if not normalized.is_empty() and not previous_space:
 				normalized += character
 			previous_space = true
 			previous_hyphen = false
 		elif character == "-":
+			can_attach_mark = false
 			if not normalized.is_empty() and not previous_hyphen:
 				normalized += character
 			previous_space = false
 			previous_hyphen = true
-		elif character == "_" or "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".contains(character):
+		elif character == "_" or "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".contains(character) or chinese.search(character) != null:
 			normalized += character
+			can_attach_mark = character != "_"
 			previous_space = false
 			previous_hyphen = false
+		elif can_attach_mark and mark.search(character) != null:
+			normalized += character
+		else:
+			can_attach_mark = false
 		if normalized.length() >= MAX_PLAYER_NAME_LENGTH:
 			break
 	normalized = normalized.strip_edges().trim_suffix("-")
